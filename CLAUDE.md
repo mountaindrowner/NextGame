@@ -90,9 +90,17 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
 
 ## Phase status
 
-- **Phase 0** — done (2026-06-12). Resolutions recorded above and in GDD §1.
-- **Phase 1 — GDD** — drafted, in `docs/GDD.md`, awaiting Mark's approval.
-  Open `[PROPOSAL]`s listed in GDD §1.2 and HANDOVER.md.
-- **Phase 2** — World & Ohm Compendium: not started.
+- **Phase 0** — done (2026-06-12). Resolutions in GDD §1.1.
+- **Phase 1 — GDD** — **approved 2026-06-12** (incl. second round, GDD §1.2:
+  SAL+WREN, stat names INTEGRITY/OUTPUT/ARMOR/SURGE/SHIELDING/CLOCK, 11-type
+  chart with rare VERDANT, Expansion Board −10% OUTPUT/SURGE, nine Bench
+  parts, Scrap/Alloy/Relic + Resonance/Prime Cores, SHEAR gates Region 1,
+  starter trio by Core, colonies under parodied real North Texas sites).
+  Tag `phase1-gdd` → commit 282ea9f (remote refuses tag pushes; apply on
+  merge).
+- **Phase 2 — World & Ohm Compendium** — drafted, awaiting Mark's approval:
+  `docs/compendium/` (ohms.md — all 150; factions.md — the eight Downtowns
+  colonies + factions; characters.md; beats.md — replaces GDD §5 on
+  approval). Draft content is proposed canon only.
 - **Phase 3** — Implementation Contract: not started.
 - **Phase 4** — Vertical Slice: not started.

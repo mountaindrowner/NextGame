@@ -1,45 +1,50 @@
 # HANDOVER
 
-*Updated 2026-06-12 — session: Phase 0 + Phase 1 GDD.*
+*Updated 2026-06-12 — session 2: Phase 1 approval + Phase 2 compendium draft.*
 
 ## Done
 
-- **Phase 0 complete.** All Section 17 slates resolved with Mark via question
-  batches (4×4). Decisions recorded in CLAUDE.md and GDD §1.1. Headlines:
-  the Manifest · Patches/mod chips · PERSISTENCE · the Waking · the Downtowns ·
-  the Garrison · Redbed · the Yard · the Attuned · Reunion Tower as itself ·
-  2 protagonist presets · Bench = Locomotion + Core + Plating · name bundle
-  approved (statuses, field abilities, "Set Free", Repair Kits) · Resonance
-  Cores.
-- **Phase 1 GDD drafted** — `docs/GDD.md`, covering master prompt §§2–13 with
-  Phase 0 integrated, plus the Phase 1 audio track list (15 tracks) and SFX
-  spec.
-- Master prompt archived as source of record: `docs/master-prompt-v4.md`.
-- CLAUDE.md project constitution written.
+- **Phase 1 GDD approved by Mark** (second-round decisions locked, GDD §1.2):
+  SAL + WREN presets · stat names · 11-type chart, VERDANT kept rare ·
+  Expansion Board (−10% OUTPUT/SURGE) · nine Bench parts · Scrap/Alloy/Relic
+  + Resonance/Prime Cores · SHEAR gates Region 1 · starter trio (one line per
+  Core) · the Downtowns sit under **parodied real North Texas sites**.
+- **Type-chart erratum fixed** (drafted chart referenced a nonexistent GLITCH
+  type; matrix now mirrors). Noted in GDD §1.2.
+- **Phase 2 drafted** — `docs/compendium/`:
+  - `ohms.md` — all **150** Ohms, Manifest-ordered (16 three-stage lines, 32
+    two-stage, 31 singles, 7 legendaries), with types, evo levels/items, move
+    themes, lore lines, Ohmgrown notes, field-ability and rideable coverage.
+  - `factions.md` — the eight colonies (Ohmstead, Possum Crown, Cray Wells,
+    the Loop, Holdyard, the Bowl, Lowfield, Deep Hum) with creeds, leaders,
+    dungeons, Patches; the Yard, the Garrison, Redbed, the Attuned,
+    PERSISTENCE, scavengers; trainer classes.
+  - `characters.md` — SAL, WREN, Grandpa Harlan, Banjo, Clay (Redbed rival),
+    Archivist Vera, Marshal Crowe, Faraday, "Slowtalk" Sam, PERSISTENCE
+    voice bible, *Ohm's Law* act quotes.
+  - `beats.md` — full 23-beat sheet (replaces GDD §5 on approval), Patch/level
+    ladder, 6 side quests, 3 Ohmsick quests, legendary placement.
 
-## Awaiting Mark (gates Phase 2)
+## Awaiting Mark (gates Phase 3)
 
-GDD `[PROPOSAL]`s needing written approval (see GDD §1.2):
+The entire Phase 2 compendium is **draft** — proposed canon only. Review
+order suggestion: beats.md → factions.md → characters.md → ohms.md. Specific
+flagged calls:
 
-1. Preset protagonist pair — §4.2 (recommended: SAL + WREN).
-2. Stat names — §10.2 (recommended: INTEGRITY/OUTPUT/ARMOR/SURGE/SHIELDING/CLOCK).
-3. Type chart — §10.3 (10 types + optional VERDANT; starter triangle
-   THERM→VOLT→COOLANT).
-4. 5th-move tradeoff — §10.5 (recommended: Expansion Board, −10% OUTPUT/SURGE).
-5. Nine Bench parts — §8.2.
-6. Salvage tiers + Core grades — §10.7 (Scrap/Alloy/Relic; Resonance/Prime Core).
-7. Which field ability gates Region 1 — §9 (recommended: SHEAR).
+1. Banjo's ending note (beats.md beat 23): keep / soften / cut.
+2. Any Ohm names that miss the tone bar — alternates bench at the foot of
+   ohms.md.
+3. Grandpa's name (**Harlan**), rival's name (**Clay**), leader names.
 
-On GDD approval: tag `phase1-gdd`.
+## Housekeeping
+
+- Tag `phase1-gdd` belongs on commit **282ea9f**; the remote refuses tag
+  pushes (branch-only policy), so apply it after merge.
+- No code yet; smoke-test ritual activates at Phase 4.
+- Weekly off-site zip (§18.8) pending a cloud destination from Mark.
 
 ## Next
 
-- **Phase 2 — World & Ohm Compendium:** ~150 Ohms line-by-line, faction bible,
-  character sheets, full beat sheet replacing GDD §5. One milestone per
-  session — the compendium may itself take more than one.
-
-## Known issues
-
-- None. No code exists yet; smoke-test ritual activates at Phase 4.
-- Off-site weekly zip (§18.8) not yet started — begin once assets exist, or
-  earlier if Mark sends a cloud-storage destination.
+- **Phase 3 — Implementation Contract:** milestones, Phaser 3 file
+  architecture, asset lists with counts, acceptance criteria. After that,
+  Phase 4 vertical slice.
