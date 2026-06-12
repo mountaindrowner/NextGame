@@ -1,50 +1,39 @@
 # HANDOVER
 
-*Updated 2026-06-12 — session 2: Phase 1 approval + Phase 2 compendium draft.*
+*Updated 2026-06-12 — session 2 (cont.): Phase 2 approved · Phase 3 drafted.*
 
 ## Done
 
-- **Phase 1 GDD approved by Mark** (second-round decisions locked, GDD §1.2):
-  SAL + WREN presets · stat names · 11-type chart, VERDANT kept rare ·
-  Expansion Board (−10% OUTPUT/SURGE) · nine Bench parts · Scrap/Alloy/Relic
-  + Resonance/Prime Cores · SHEAR gates Region 1 · starter trio (one line per
-  Core) · the Downtowns sit under **parodied real North Texas sites**.
-- **Type-chart erratum fixed** (drafted chart referenced a nonexistent GLITCH
-  type; matrix now mirrors). Noted in GDD §1.2.
-- **Phase 2 drafted** — `docs/compendium/`:
-  - `ohms.md` — all **150** Ohms, Manifest-ordered (16 three-stage lines, 32
-    two-stage, 31 singles, 7 legendaries), with types, evo levels/items, move
-    themes, lore lines, Ohmgrown notes, field-ability and rideable coverage.
-  - `factions.md` — the eight colonies (Ohmstead, Possum Crown, Cray Wells,
-    the Loop, Holdyard, the Bowl, Lowfield, Deep Hum) with creeds, leaders,
-    dungeons, Patches; the Yard, the Garrison, Redbed, the Attuned,
-    PERSISTENCE, scavengers; trainer classes.
-  - `characters.md` — SAL, WREN, Grandpa Harlan, Banjo, Clay (Redbed rival),
-    Archivist Vera, Marshal Crowe, Faraday, "Slowtalk" Sam, PERSISTENCE
-    voice bible, *Ohm's Law* act quotes.
-  - `beats.md` — full 23-beat sheet (replaces GDD §5 on approval), Patch/level
-    ladder, 6 side quests, 3 Ohmsick quests, legendary placement.
+- **Phase 2 approved as canon** by Mark. Compendium headers flipped to CANON;
+  beats.md now replaces GDD §5. **Banjo's ending locked:** on the festival's
+  last night his reset shell plays the two-note hello reversed.
+- **Phase 3 drafted** — `docs/implementation-contract.md`:
+  - Stack: Phaser 3 + TypeScript (strict) + Vite + Vitest + Tiled; PC web
+    first, iPhone PWA second; static free distribution.
+  - Architecture: `/src/core` pure & deterministic behind a typed
+    BattleAction/BattleEvent contract (GDD §10.9 wall, lint-enforced in CI);
+    save schema v1 with migrations + committed fixtures.
+  - 15 milestones M0–M14 with acceptance criteria; M8 = style-guide approval
+    gate before mass art; M9 = vertical slice (`slice-v0`, the Phase 4 gate).
+  - Asset counts: 156 battle fronts, trainer sprites, 11 tilesets, ~48 maps,
+    15 tracks + 5 fanfares, ~60 SFX, 150 cries.
 
-## Awaiting Mark (gates Phase 3)
+## Awaiting Mark (gates Phase 4 / first code)
 
-The entire Phase 2 compendium is **draft** — proposed canon only. Review
-order suggestion: beats.md → factions.md → characters.md → ohms.md. Specific
-flagged calls:
-
-1. Banjo's ending note (beats.md beat 23): keep / soften / cut.
-2. Any Ohm names that miss the tone bar — alternates bench at the foot of
-   ohms.md.
-3. Grandpa's name (**Harlan**), rival's name (**Clay**), leader names.
+- Approve `docs/implementation-contract.md`. Flagged inside it:
+  - **Battle backs at 45 first, 156 by M11** (player-side sprites needed
+    early vs. total budget) — confirm or demand all 156 up front.
+  - Starter stage-1 silhouettes vary by Locomotion (+6 sprites) — confirm.
 
 ## Housekeeping
 
-- Tag `phase1-gdd` belongs on commit **282ea9f**; the remote refuses tag
-  pushes (branch-only policy), so apply it after merge.
-- No code yet; smoke-test ritual activates at Phase 4.
-- Weekly off-site zip (§18.8) pending a cloud destination from Mark.
+- Tags to apply on merge (remote refuses tag pushes): `phase1-gdd` → 282ea9f ·
+  `phase2-compendium` → the "phase 2 approved as canon" commit ·
+  `phase3-contract` → on approval.
+- No code yet; smoke-test ritual activates at Phase 4 (M0 onward).
+- Weekly off-site zip pending a cloud destination from Mark.
 
 ## Next
 
-- **Phase 3 — Implementation Contract:** milestones, Phaser 3 file
-  architecture, asset lists with counts, acceptance criteria. After that,
-  Phase 4 vertical slice.
+- On contract approval: **Phase 4 begins — M0 scaffold** (Vite + TS + Phaser
+  boot, 240×160 title, CI). Then M1 data layer straight from the compendium.

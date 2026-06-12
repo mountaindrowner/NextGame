@@ -1,7 +1,6 @@
 # OHMFRONT — Character Sheets (Phase 2)
 
-*DRAFT 2026-06-12 — proposal until the creator approves. SAL and WREN as
-presets are locked; everything written for them here is draft.*
+*CANON — approved 2026-06-12.*
 
 -----
 
@@ -47,8 +46,9 @@ presets are locked; everything written for them here is draft.*
 - **The oldest known Jukeboxer.** Dented, warm-toned, plays a two-note hello
   for the protagonist from childhood on.
 - **Role:** The beloved ally reset to factory settings on-screen in Act II
-  beat 9. His silenced two-note hello is the gut punch. The finale's
-  Ohmcoming scene decides what's left of him `[creator call, see beats]`.
+  beat 9. His silenced two-note hello is the gut punch. Ending (locked): on
+  the festival's last night his shell plays two notes, order reversed —
+  something new in there, learning the old hello.
 
 ## CLAY — the Redbed rival
 

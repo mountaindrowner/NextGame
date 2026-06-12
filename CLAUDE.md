@@ -98,9 +98,13 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   starter trio by Core, colonies under parodied real North Texas sites).
   Tag `phase1-gdd` → commit 282ea9f (remote refuses tag pushes; apply on
   merge).
-- **Phase 2 — World & Ohm Compendium** — drafted, awaiting Mark's approval:
+- **Phase 2 — World & Ohm Compendium** — **approved as canon 2026-06-12**:
   `docs/compendium/` (ohms.md — all 150; factions.md — the eight Downtowns
-  colonies + factions; characters.md; beats.md — replaces GDD §5 on
-  approval). Draft content is proposed canon only.
-- **Phase 3** — Implementation Contract: not started.
-- **Phase 4** — Vertical Slice: not started.
+  colonies + factions; characters.md; beats.md — replaces GDD §5). Banjo's
+  ending (two notes, reversed) locked. Tag `phase2-compendium` → apply on
+  merge.
+- **Phase 3 — Implementation Contract** — drafted, awaiting Mark's approval:
+  `docs/implementation-contract.md` (stack, core/scene wall, 15 milestones
+  M0–M14, asset counts, acceptance criteria, save schema v1).
+- **Phase 4** — Vertical Slice: starts at contract approval; gate is
+  milestone M9 (`slice-v0`), style guide gate M8 before mass art.

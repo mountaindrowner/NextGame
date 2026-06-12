@@ -1,6 +1,6 @@
 # OHMFRONT — Full Beat Sheet (Phase 2)
 
-*DRAFT 2026-06-12 — replaces GDD §5 on creator approval. Hours are targets for
+*CANON — approved 2026-06-12; replaces GDD §5. Hours are targets for
 the ~30-hour single run. Gates marked ⟦…⟧.*
 
 -----
@@ -118,8 +118,8 @@ the ~30-hour single run. Gates marked ⟦…⟧.*
     Ohmstead; Patches on every jacket; the Attuned and the Yard at one table;
     Crowe's Garrison standing guard, unasked, at the gate. Banjo's shell sits
     in Grandpa's garage — and on the last night plays two notes, order
-    reversed: something new in there, learning the old hello `[creator call:
-    keep, soften, or cut]`. Grandpa's final *Ohm's Law* quote. Credits.
+    reversed: something new in there, learning the old hello (locked
+    2026-06-12). Grandpa's final *Ohm's Law* quote. Credits.
     Hooks: PERSISTENCE was one node of something larger; other regions still
     hum; the virus's origin stays unanswered.
 

@@ -1,7 +1,6 @@
 # OHMFRONT — Faction Bible (Phase 2)
 
-*DRAFT 2026-06-12 — proposal until the creator approves. All faction names are
-locked canon (Phase 0); everything inside each entry is Phase 2 draft.*
+*CANON — approved 2026-06-12. All faction names are locked canon (Phase 0).*
 
 -----
 

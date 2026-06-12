@@ -1,7 +1,7 @@
 # OHMFRONT — The Manifest (Ohm Compendium, Phase 2)
 
-*DRAFT 2026-06-12 — the whole roster is a proposal until the creator approves
-it. Numbering is Manifest order (rough first-encounter order through Region 1).*
+*CANON — approved 2026-06-12. Numbering is Manifest order (rough
+first-encounter order through Region 1).*
 
 **Bookkeeping:** 16 three-stage lines (48) + 32 two-stage lines (64) +
 31 singles + 7 legendaries = **150**. Stage ratios copy the original
