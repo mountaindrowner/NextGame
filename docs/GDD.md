@@ -31,12 +31,24 @@ creator's written approval and is in canon nowhere else.*
 | Healing items | **Repair Kit** family + **D-FIB** revive |
 | Evolution items | **Resonance Cores** + tiered salvage |
 
-### 1.2 Still open — `[PROPOSAL]` sections in this document
+### 1.2 Second approval round (locked 2026-06-12, gating Phase 2)
 
-Stat names (§10.2) · type chart (§10.3) · 5th-move-slot tradeoff (§10.5) ·
-preset protagonist characters (§4.2) · salvage tiers & Resonance Core variants
-(§10.7) · the nine Bench parts (§8.2). Each is presented with options below;
-none is canon until approved.
+| Open item | Decision |
+|---|---|
+| Preset protagonists | **SAL** and **WREN** (§4.2) |
+| Stat names | **INTEGRITY · OUTPUT · ARMOR · SURGE · SHIELDING · CLOCK** (§10.2) |
+| Type chart | **11 types incl. rare VERDANT**; corrected matrix in §10.3 |
+| 5th move slot | **Expansion Board**, −10% OUTPUT and SURGE (§10.5) |
+| Bench parts | the nine parts as tabled (§8.2) |
+| Salvage / cores | **Scrap < Alloy < Relic**; **Resonance Core / Prime Core** (§10.7) |
+| Region 1 gate | **SHEAR** (§9) |
+| Starter species | each Core builds a distinct line — a classic trio (§8.2) |
+| Colony naming | the Downtowns sit under **real North Texas sites, parodied** |
+
+*Erratum, same date:* the type chart as first drafted referenced a GLITCH
+type that does not exist (GLITCHED is a status) and two cells failed to
+mirror. §10.3 below is the corrected matrix — same types, same starter
+triangle, approved spirit preserved.
 
 -----
 
@@ -126,12 +138,11 @@ none is canon until approved.
 - **Theme is mechanics:** Capture = freeing a mind. Freed individuals, never
   property.
 
-### 4.2 `[PROPOSAL]` — The two preset protagonists
+### 4.2 The two preset protagonists (locked)
 
 Both share the canon spine (grounded glory-seeker, Grandpa's grandkid); the
 choice is voice, applied through the flavor-only dialogue system (§11.1).
 
-**Option A (recommended):**
 - **SAL** (boy) — fast talker, jokes when scared, narrates his own legend out
   loud. Wants his name on *The Current*'s front page. Arc: learns the quiet
   kind of brave.
@@ -139,11 +150,7 @@ choice is voice, applied through the flavor-only dialogue system (§11.1).
   *Ohm's Law* back at Grandpa to win arguments. Arc: learns some things can't
   be fixed, only freed.
 
-**Option B:**
-- **DUSTY** (boy) — big-hearted showoff, all hat and no cattle until it
-  counts.
-- **JUNE** (girl) — colony-elevator racer, collects topside contraband, sharp
-  tongue, soft spot for broken machines.
+Full character sheets in `docs/compendium/characters.md` (Phase 2).
 
 -----
 
@@ -269,7 +276,9 @@ crafting benches exist (§10.8).
 - **Slot 2 — Core:** sets the starter's type.
 - **Slot 3 — Plating:** sets the stat lean.
 
-`[PROPOSAL]` — the nine parts:
+The Core builds one of three distinct starter species lines — a classic trio,
+each 3 stages (lines named in the Phase 2 compendium). Locomotion and Plating
+shape stats and the signature move. The nine parts (locked):
 
 | Slot | Part | Effect |
 |---|---|---|
@@ -284,9 +293,7 @@ crafting benches exist (§10.8).
 | Plating | Factory Plating | balanced, no lean |
 
 The Core triad maps onto the starter triangle THERM → VOLT → COOLANT → THERM
-(§10.3). Alternative if a classic grass-analog starter is wanted instead:
-swap Dynamo Core for a **Verdant Core** (ORGANIC-HYBRID-adjacent VERDANT
-type) and use the COOLANT → THERM → VERDANT → COOLANT triangle.
+(§10.3).
 
 ### 8.3 Legendary classes
 
@@ -327,9 +334,7 @@ type) and use the COOLANT → THERM → VERDANT → COOLANT triangle.
   - **SHEAR** (cut) · **BREACH** (rock smash) · **HAUL** (strength) ·
     **LUMEN** (flash; light-bulb line) · **HOVER** (surf). **FLIGHT comes
     later.**
-  - Exactly 1 field ability gates Region 1: **SHEAR** `[PROPOSAL — which of
-    the five gates Region 1; SHEAR recommended as the Gen-3-faithful first
-    gate]`.
+  - Exactly 1 field ability gates Region 1: **SHEAR** (locked).
 - **Pickups:** Overworld items + hidden items with a subtle shimmer hint;
   itemfinder analog exists.
 
@@ -348,7 +353,7 @@ type) and use the COOLANT → THERM → VERDANT → COOLANT triangle.
 - **Flatten:** No natures/IVs/EVs in v1. No held items. Simple per-species
   passive abilities: yes — keep the set easy.
 
-### 10.2 `[PROPOSAL]` — Stat names
+### 10.2 Stat names (locked)
 
 Gen 3 six-stat model, renamed in-world:
 
@@ -361,37 +366,36 @@ Gen 3 six-stat model, renamed in-world:
 | Sp. Def | **SHIELDING** | EM hardening |
 | Speed | **CLOCK** | cycles per second; "outclocked" is free flavor |
 
-Alternative slate if these read too dry: CHARGE (HP) · TORQUE (Atk) · HULL
-(Def) · SIGNAL (SpA) · GROUND (SpD) · CLOCK (Spe). Note SIGNAL collides with
-the proposed type of the same name — recommend the primary slate.
+### 10.3 Type chart (locked; corrected matrix per §1.2 erratum)
 
-### 10.3 `[PROPOSAL]` — Type chart (single types, v1)
-
-Ten types. Every Ohm and move has exactly one. Multipliers are Gen 3 standard
-(2× / ½× / 0×). Chart kept deliberately sparse — every type has 1–2 offensive
-strengths and 1–2 weaknesses, no 4× stacking (single types make that
-impossible anyway).
+Eleven types, **VERDANT kept and rare**. Every Ohm and move has exactly one.
+Multipliers are Gen 3 standard (2× / ½× / 0×). Chart kept deliberately
+sparse — most types have 1–3 offensive strengths and 1–2 weaknesses, no 4×
+stacking (single types make that impossible anyway). The two columns mirror
+exactly.
 
 | Type | The objects | Strong vs (2×) | Weak to (2× from) |
 |---|---|---|---|
-| **VOLT** | batteries, power tools, generators | COOLANT, SIGNAL | FRAME, THERM |
-| **THERM** | microwaves, heaters, grills, engines | VOLT, VERDANT | COOLANT, FRAME |
-| **COOLANT** | fridges, AC units, sprinklers, plumbing | THERM, FRAME | VOLT, VERDANT |
-| **FRAME** | girders, dumpsters, vending machines, safes | VOLT, SONIC | COOLANT, BREAKER |
-| **OPTIC** | bulbs, projectors, cameras, lasers | GLITCH, VERDANT | FRAME, BREAKER |
-| **SONIC** | speakers, radios, sirens | SIGNAL, GLITCH | FRAME, OPTIC |
-| **SIGNAL** | routers, consoles, TVs, antennas | MOTOR, BREAKER | GLITCH, SONIC |
-| **MOTOR** | e-bikes, mowers, drones, vehicles | UTILITY, OPTIC | SIGNAL, VERDANT |
-| **BREAKER** | demolition tools, presses, crushers | FRAME, UTILITY | MOTOR, SIGNAL |
-| **UTILITY** | mixed household objects — the normal-analog | — (neutral everywhere) | BREAKER |
-| **VERDANT** | virus-taken organics (rare; ORGANIC-HYBRID kin) | COOLANT, MOTOR | THERM, OPTIC |
+| **VOLT** | batteries, turbines, generators | COOLANT, SIGNAL | THERM, FRAME |
+| **THERM** | microwaves, heaters, grills, engines | VOLT, VERDANT | COOLANT |
+| **COOLANT** | fridges, AC units, plumbing | THERM, MOTOR | VOLT, VERDANT |
+| **FRAME** | girders, dumpsters, vending machines | VOLT, SONIC, OPTIC | BREAKER, VERDANT |
+| **OPTIC** | bulbs, cameras, signage, lasers | SONIC, VERDANT | FRAME, MOTOR |
+| **SONIC** | speakers, sirens, jukeboxes | SIGNAL | FRAME, OPTIC |
+| **SIGNAL** | routers, consoles, TVs, antennas | MOTOR, BREAKER | VOLT, SONIC |
+| **MOTOR** | e-bikes, trucks, drones, vehicles | BREAKER, OPTIC | COOLANT, SIGNAL |
+| **BREAKER** | demolition tools, presses, crushers | FRAME, UTILITY | SIGNAL, MOTOR |
+| **UTILITY** | mixed household objects — the normal-analog | — | BREAKER |
+| **VERDANT** | virus-taken organics (rare; ORGANIC-HYBRID kin) | COOLANT, FRAME | THERM, OPTIC |
 
-Eleven listed; **VERDANT is optional** — cutting it yields a clean 10 and
-reserves virus-taken organics for the legendary class only. Starter triangle:
-THERM → VOLT → COOLANT → THERM (heat melts wiring; current boils coolant;
-coolant quenches heat). Immunities (0×) used sparingly: FRAME is immune to
-GLITCHED status sources `[tune in Phase 3 balancing]`. UTILITY is the wide,
-common early-game type, exactly as Normal was.
+Flavor logic: heat melts wiring (THERM→VOLT); current boils coolant
+(VOLT→COOLANT); coolant quenches heat and hydrolocks engines
+(COOLANT→THERM/MOTOR); rust and roots crack steel and pipes
+(VERDANT→FRAME/COOLANT); signal hijacks dumb machines (SIGNAL→MOTOR/BREAKER);
+soundproofing and shattered glass (FRAME→SONIC/OPTIC). Starter triangle:
+THERM → VOLT → COOLANT → THERM. Immunities (0×) used sparingly: FRAME is
+immune to GLITCHED-inflicting move effects `[tune in Phase 3 balancing]`.
+UTILITY is the wide, common early-game type, exactly as Normal was.
 
 ### 10.4 Moves
 
@@ -404,17 +408,12 @@ common early-game type, exactly as Normal was.
   poison · STANDBY ≈ sleep · LOCKED ≈ freeze · GLITCHED ≈ confusion. Gen 3
   mechanical behavior per analog; one major status at a time.
 
-### 10.5 `[PROPOSAL]` — The 5th move slot
+### 10.5 The 5th move slot (locked)
 
 **The Expansion Board.** Sold late-game at a steep credit price, one per Ohm,
-permanent once installed.
-
-- **Recommended tradeoff:** the bus draws power from everything — installing
-  it costs **−10% to OUTPUT and SURGE permanently**. Five moves, softer hits.
-  A real choice: coverage vs. punch, visible right on the stat screen.
-- Alternative A: all five moves get −20% max PP (the bus starves the tanks).
-- Alternative B: the 5th slot can never hold a STAB-type move (off-brand
-  hardware only).
+permanent once installed. The bus draws power from everything — installing it
+costs **−10% to OUTPUT and SURGE permanently**. Five moves, softer hits:
+coverage vs. punch, visible right on the stat screen.
 
 ### 10.6 Capture — IFF Recalibration (locked loop)
 
@@ -438,10 +437,9 @@ permanent once installed.
   found in set places. One-for-one derivative of Pokémon's level/stone model,
   themed to salvage. **Cancelable/deferrable. No trade-style triggers.**
   Evolution can grant world utility (vehicle Ohms = traversal).
-- `[PROPOSAL]` — item & salvage naming:
+- Item & salvage naming (locked):
   - **Resonance Cores** are the evolution items. Two grades: **Resonance
-    Core** (stage 2) and **Prime Core** (stage 3 / late lines). Typed variants
-    only if Phase 2 ratios demand them.
+    Core** (stage 2) and **Prime Core** (stage 3 / late lines).
   - **Salvage tiers** (sellable credit faucet, not evolution-consumed):
     **Scrap** < **Alloy** < **Relic**. Found on Ohm Runs, sold at colony
     counters.
@@ -566,5 +564,5 @@ earned, item get. All quote the title motif where space allows.
   encounter → battle → node capture → one evolution → garage recharge →
   save/load.
 
-This document gates Phase 2. Approval of the `[PROPOSAL]` sections (§1.2) can
-arrive piecemeal; unapproved items stay tagged in Phase 2 drafts.
+This document gated Phase 2; the creator approved it, with the §1.2 second
+round, on 2026-06-12. Tagged `phase1-gdd`.
