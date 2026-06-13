@@ -98,9 +98,19 @@
   arc-cannons, aqueduct water-cannons, burner crown + oven maw, chandelier
   crystal drips, icicle spikes). Expressive faces throughout (pupils, glints,
   brows, maws) — Digimon-ish creature read within the Gen 3 budget.
+- **Batch 2 (027–048):** the rest of the Field — Sudsle/Laundrotaur,
+  Registill, Vendetta, Snoozebox, Inklet/Qwertyrant, Digitall, Flashbat,
+  Spoutlet/Hydrantler, Suppressure, Thistlebale, Pricklet/Cactacomb,
+  Bonnetbloom, Barbwyre, Mowlet/Mowrauder — same simple→weaponized arc
+  (Hydrantler water antlers, Qwertyrant ribbon banners + key maw, Cactacomb
+  saguaro arms, Mowrauder blade wheels). **48 battle fronts now total** (001–048
+  except 49+; species 1–48 complete).
 - **Wired in:** BattleScene shows real foe fronts and player backs (entry
   slide preserved, trainer switch-ins swap); OverworldScene uses the player
   micro. Species without art still fall back to tinted rects. 49 tests green.
+- **Kit fix:** `line()` now rounds endpoints — fractional Bresenham endpoints
+  (from trig) never landed exactly and spun forever; central fix unblocked the
+  trig-heavy batch-2 sprites.
 - **Kit hardened:** `tools/spritekit.ts` now floors coordinates at the pixel
   boundary (fractional inputs from trig/scaling were silently corrupting the
   buffer → stray colors); per-sprite palette consolidated to ≤2 ramps to hold

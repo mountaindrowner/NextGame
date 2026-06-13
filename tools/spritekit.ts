@@ -206,11 +206,16 @@ export class Sprite {
     for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) this.set(x, y, c);
   }
 
-  line(x0: number, y0: number, x1: number, y1: number, c: RGBA): void {
-    let dx = Math.abs(x1 - x0);
-    let dy = -Math.abs(y1 - y0);
-    let sx = x0 < x1 ? 1 : -1;
-    let sy = y0 < y1 ? 1 : -1;
+  line(x0i: number, y0i: number, x1i: number, y1i: number, c: RGBA): void {
+    // integer endpoints — Bresenham must land exactly on the end or it loops
+    const x0 = Math.round(x0i);
+    const y0 = Math.round(y0i);
+    const x1 = Math.round(x1i);
+    const y1 = Math.round(y1i);
+    const dx = Math.abs(x1 - x0);
+    const dy = -Math.abs(y1 - y0);
+    const sx = x0 < x1 ? 1 : -1;
+    const sy = y0 < y1 ? 1 : -1;
     let err = dx + dy;
     let x = x0;
     let y = y0;

@@ -644,6 +644,373 @@ function tumblet(): Sprite {
   return s;
 }
 
+// ========================================================= rest of Field 27-48
+function sudsle(): Sprite {
+  const s = S();
+  const body = ramp('cdd2d8');
+  const glass = ramp('4a7a9a');
+  s.contactShadow(32, 57, 16, 4, SHADOW);
+  s.roundedRect(18, 16, 28, 32, 5, body, { dither: true }); // washer body
+  s.sphere(32, 30, 10, glass, { dither: true }); // porthole face
+  eye(s, 28, 28, 2.5);
+  eye(s, 36, 28, 2.5);
+  s.ellipse(32, 34, 3, 1, DARK);
+  s.set(27, 26, COOL); // suds
+  s.set(37, 33, COOL);
+  s.rect(22, 19, 20, 3, body[1] ?? OUTLINE); // control strip
+  s.set(24, 20, COOL);
+  s.line(22, 48, 22, 51, OUTLINE);
+  s.line(42, 48, 42, 51, OUTLINE);
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function laundrotaur(): Sprite {
+  const s = S();
+  const body = ramp('c2c8d0');
+  const glass = ramp('4a7a9a');
+  s.contactShadow(32, 59, 21, 5, SHADOW);
+  // charging arms (appendages)
+  s.roundedRect(6, 30, 12, 7, 3, body, { dither: true });
+  s.roundedRect(46, 30, 12, 7, 3, body, { dither: true });
+  s.roundedRect(16, 16, 32, 34, 6, body, { dither: true }); // bulk body
+  s.sphere(32, 28, 12, glass, { dither: true }); // lowered porthole head
+  // spin-cycle swirl
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    s.set(32 + Math.cos(a) * 7, 28 + Math.sin(a) * 7, COOL);
+  }
+  eye(s, 27, 26, 3);
+  eye(s, 37, 26, 3);
+  brow(s, 23, 22, 30, 24);
+  brow(s, 41, 22, 34, 24);
+  s.ellipse(32, 33, 4, 1, DARK);
+  s.line(20, 50, 20, 54, OUTLINE);
+  s.line(44, 50, 44, 54, OUTLINE);
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function registill(): Sprite {
+  const s = S();
+  const body = ramp('8a8478');
+  s.contactShadow(32, 57, 16, 4, SHADOW);
+  s.roundedRect(16, 18, 32, 26, 4, body, { dither: true }); // register body
+  s.rect(20, 20, 24, 8, DARK); // total display
+  s.set(24, 24, EMBER);
+  s.set(28, 24, EMBER);
+  s.set(36, 24, EMBER); // digits
+  eye(s, 25, 33, 3, EMBER);
+  eye(s, 39, 33, 3, EMBER);
+  maw(s, 20, 40, 24, 6, EMBER); // drawer jaw
+  for (let x = 20; x < 44; x += 4) for (let y = 30; y < 38; y += 4) s.set(x, y, body[1] ?? OUTLINE); // keys hint
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function vendetta(): Sprite {
+  const s = S();
+  const glass = ramp('2e4636', { spread: 0.3 });
+  s.contactShadow(32, 59, 19, 5, SHADOW);
+  // lean-forward arms (appendages)
+  s.roundedRect(8, 30, 9, 7, 3, VEND, { dither: true });
+  s.roundedRect(47, 30, 9, 7, 3, VEND, { dither: true });
+  s.roundedRect(16, 12, 32, 40, 4, VEND, { dither: true }); // big machine
+  s.roundedRect(20, 16, 18, 26, 2, glass, { dither: true });
+  for (let y = 18; y < 40; y += 6) for (let x = 22; x < 36; x += 5) s.ellipse(x, y, 1, 2, EMBER);
+  s.rect(40, 18, 6, 12, VEND[1] ?? OUTLINE);
+  s.rect(41, 20, 4, 4, EMBER); // EXACT CHANGE display
+  s.set(20, 30, DARK); // dents
+  s.set(44, 38, DARK);
+  eye(s, 25, 47, 2.5, EMBER);
+  eye(s, 39, 47, 2.5, EMBER);
+  brow(s, 21, 43, 28, 45);
+  brow(s, 43, 43, 36, 45);
+  s.outline(OUTLINE, VEND[4]);
+  return s;
+}
+function snoozebox(): Sprite {
+  const s = S();
+  const body = ramp('b84838');
+  const brass = ramp('c8a838');
+  s.contactShadow(32, 55, 16, 4, SHADOW);
+  // twin bells (appendages) + hammer
+  s.sphere(21, 16, 6, brass, { dither: true });
+  s.sphere(43, 16, 6, brass, { dither: true });
+  s.line(32, 14, 32, 20, OUTLINE);
+  s.set(32, 12, brass[3] ?? EMBER);
+  s.sphere(32, 32, 14, body, { dither: true }); // clock body
+  s.ellipse(32, 32, 11, 11, ramp('e8dcc0')[3] ?? WHITE); // clock face
+  eye(s, 27, 30, 2.5);
+  eye(s, 37, 30, 2.5);
+  s.line(32, 32, 32, 26, OUTLINE); // 9:09 hands
+  s.line(32, 32, 27, 33, OUTLINE);
+  s.ellipse(32, 37, 3, 1, DARK);
+  s.line(24, 24, 27, 27, OUTLINE); // crack
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function inklet(): Sprite {
+  const s = S();
+  const body = ramp('45454e');
+  s.contactShadow(32, 56, 17, 4, SHADOW);
+  s.rect(26, 12, 12, 8, WHITE); // paper tongue
+  s.line(30, 12, 36, 12, body[1] ?? OUTLINE);
+  s.roundedRect(16, 20, 32, 24, 5, body, { dither: true }); // typewriter body
+  eye(s, 25, 27, 3, EMBER);
+  eye(s, 39, 27, 3, EMBER);
+  for (let x = 20; x < 45; x += 4) for (let y = 34; y < 42; y += 4) s.ellipse(x, y, 1, 1, ramp('d0d0c8')[3] ?? WHITE); // keys
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function qwertyrant(): Sprite {
+  const s = S();
+  const body = ramp('3a3a44');
+  s.contactShadow(32, 58, 21, 5, SHADOW);
+  // carriage-return crown (appendage) — reuse body ramp to hold the budget
+  s.roundedRect(14, 10, 36, 6, 2, body, { dither: true });
+  // ribbon banners (weapons/appendages)
+  const ribbon = hexRGBA('b03028');
+  spike(s, 14, 13, 4, 22, 2, ribbon);
+  spike(s, 50, 13, 60, 22, 2, ribbon);
+  s.roundedRect(14, 18, 36, 30, 6, body, { dither: true });
+  // side arms
+  s.roundedRect(8, 30, 8, 6, 2, body, { dither: true });
+  s.roundedRect(48, 30, 8, 6, 2, body, { dither: true });
+  eye(s, 25, 26, 3, EMBER);
+  eye(s, 39, 26, 3, EMBER);
+  brow(s, 21, 22, 29, 24);
+  brow(s, 43, 22, 35, 24);
+  maw(s, 22, 38, 20, 6, EMBER); // key-teeth maw
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function digitall(): Sprite {
+  const s = S();
+  const body = ramp('3c4450');
+  const lcd = ramp('3a6a4a', { spread: 0.3 });
+  s.contactShadow(32, 56, 15, 4, SHADOW);
+  s.roundedRect(18, 14, 28, 34, 4, body, { dither: true }); // calculator
+  s.rect(22, 10, 20, 6, DARK); // solar strip brow
+  s.roundedRect(21, 18, 22, 12, 2, lcd, { dither: true }); // LCD screen face
+  eye(s, 27, 24, 2.5, hexRGBA('a8ffc0'));
+  eye(s, 37, 24, 2.5, hexRGBA('a8ffc0'));
+  for (let y = 32; y < 46; y += 4) for (let x = 22; x < 42; x += 5) s.ellipse(x, y, 1, 1, body[3] ?? WHITE); // buttons
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function flashbat(): Sprite {
+  const s = S();
+  const body = ramp('586e7a');
+  const lens = ramp('f6e08a', { spread: 0.3 });
+  s.contactShadow(32, 56, 13, 4, SHADOW);
+  // bat wing flaps (appendages)
+  spike(s, 22, 26, 8, 20, 4, body[2] ?? OUTLINE);
+  spike(s, 42, 26, 56, 20, 4, body[2] ?? OUTLINE);
+  s.roundedRect(24, 22, 16, 24, 5, body, { dither: true }); // flashlight body
+  s.sphere(32, 22, 9, lens, { dither: true }); // lens head
+  eye(s, 29, 21, 2);
+  eye(s, 35, 21, 2);
+  s.ellipse(32, 25, 2, 1, DARK);
+  for (let y = 30; y < 44; y += 3) s.line(26, y, 38, y, body[1] ?? OUTLINE); // grip ridges
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function spoutlet(): Sprite {
+  const s = S();
+  const body = ramp('a83028');
+  s.contactShadow(32, 56, 14, 4, SHADOW);
+  // cap ears
+  s.sphere(22, 22, 4, body, { dither: true });
+  s.sphere(42, 22, 4, body, { dither: true });
+  s.roundedRect(22, 22, 20, 26, 6, body, { dither: true }); // hydrant body
+  s.rect(20, 30, 24, 4, body[1] ?? OUTLINE); // side nozzle band
+  eye(s, 28, 30, 3);
+  eye(s, 36, 30, 3);
+  s.ellipse(32, 36, 3, 1, DARK);
+  s.set(32, 47, COOL); // drip
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function hydrantler(): Sprite {
+  const s = S();
+  const body = ramp('a02820');
+  s.contactShadow(32, 58, 18, 5, SHADOW);
+  // burst-pressure water antlers (weapons)
+  spike(s, 22, 18, 12, 4, 2.5, COOL);
+  spike(s, 26, 16, 22, 2, 2, COOL);
+  spike(s, 42, 18, 52, 4, 2.5, COOL);
+  spike(s, 38, 16, 42, 2, 2, COOL);
+  s.roundedRect(18, 18, 28, 32, 7, body, { dither: true });
+  s.rect(14, 28, 36, 5, body[1] ?? OUTLINE); // pressure band
+  s.sphere(16, 30, 4, body, { dither: true }); // side nozzles
+  s.sphere(48, 30, 4, body, { dither: true });
+  eye(s, 26, 28, 3, COOL);
+  eye(s, 38, 28, 3, COOL);
+  brow(s, 22, 24, 30, 26);
+  brow(s, 42, 24, 34, 26);
+  maw(s, 24, 38, 16, 5, COOL);
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function suppressure(): Sprite {
+  const s = S();
+  const body = ramp('b03028');
+  s.contactShadow(32, 57, 14, 4, SHADOW);
+  s.roundedRect(22, 18, 20, 30, 8, body, { dither: true }); // tank
+  s.roundedRect(26, 10, 12, 8, 3, ramp('555560'), { dither: true }); // valve head
+  s.line(32, 10, 32, 6, OUTLINE); // pin pull
+  s.ellipse(32, 6, 2, 2, body[3] ?? EMBER);
+  // hose arm (appendage)
+  s.line(42, 24, 52, 30, ramp('303038')[2] ?? OUTLINE);
+  s.line(52, 30, 51, 38, ramp('303038')[2] ?? OUTLINE);
+  s.set(51, 39, WHITE); // foam
+  s.set(53, 41, WHITE);
+  eye(s, 28, 28, 3);
+  eye(s, 36, 28, 3);
+  s.ellipse(32, 33, 3, 1, DARK);
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function thistlebale(): Sprite {
+  const s = S();
+  const wire = ramp('7a6848');
+  s.contactShadow(32, 57, 20, 5, SHADOW);
+  s.sphere(32, 32, 19, ramp('342e20'), { dither: true, ambient: 0.42 }); // bigger core
+  for (let i = 0; i < 12; i++) {
+    const a = (i / 12) * Math.PI * 2;
+    const x1 = 32 + Math.cos(a + 0.5) * 20;
+    const y1 = 32 + Math.sin(a + 0.5) * 20;
+    s.line(32 + Math.cos(a) * 7, 32 + Math.sin(a) * 7, x1, y1, wire[2] ?? OUTLINE);
+    spike(s, 32 + Math.cos(a) * 14, 32 + Math.sin(a) * 14, x1, y1, 1.5, wire[3] ?? OUTLINE); // barbs
+  }
+  eye(s, 28, 31, 2.5, HIVE);
+  eye(s, 37, 32, 2.5, HIVE);
+  brow(s, 24, 27, 31, 29);
+  brow(s, 41, 27, 34, 29);
+  s.outline(OUTLINE, wire[4]);
+  return s;
+}
+function pricklet(): Sprite {
+  const s = S();
+  const body = ramp('5a7a40');
+  s.contactShadow(32, 57, 13, 4, SHADOW);
+  s.roundedRect(24, 18, 16, 30, 7, body, { dither: true }); // cactus pad
+  // spines
+  for (let y = 20; y < 46; y += 4) {
+    s.set(23, y, WHITE);
+    s.set(41, y + 2, WHITE);
+  }
+  // cable veins
+  s.line(32, 20, 32, 46, body[1] ?? OUTLINE);
+  s.set(28, 16, hexRGBA('e8b0c0')); // glass flower
+  s.set(36, 15, hexRGBA('e8b0c0'));
+  eye(s, 29, 28, 2.5);
+  eye(s, 35, 28, 2.5);
+  s.ellipse(32, 33, 2, 1, DARK);
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function cactacomb(): Sprite {
+  const s = S();
+  const body = ramp('4e7038');
+  s.contactShadow(32, 59, 20, 5, SHADOW);
+  // saguaro arms (appendages)
+  s.roundedRect(8, 26, 8, 18, 4, body, { dither: true });
+  s.roundedRect(48, 22, 8, 22, 4, body, { dither: true });
+  s.roundedRect(22, 12, 20, 40, 8, body, { dither: true }); // central column
+  // spines (weapons)
+  for (let y = 16; y < 50; y += 4) {
+    s.set(21, y, WHITE);
+    s.set(43, y, WHITE);
+  }
+  s.set(9, 28, WHITE);
+  s.set(55, 24, WHITE);
+  s.rect(28, 40, 8, 8, DARK); // sheltered machine niche
+  s.set(30, 43, EMBER);
+  eye(s, 28, 24, 3);
+  eye(s, 36, 24, 3);
+  brow(s, 24, 20, 31, 22);
+  brow(s, 40, 20, 33, 22);
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function bonnetbloom(): Sprite {
+  const s = S();
+  const petal = ramp('5a5ab8');
+  const stem = ramp('4e7038');
+  s.contactShadow(32, 57, 15, 4, SHADOW);
+  s.roundedRect(28, 30, 8, 18, 3, stem, { dither: true }); // stem base
+  // bluebonnet cluster
+  for (let i = 0; i < 7; i++) {
+    const x = 22 + (i % 4) * 6;
+    const y = 16 + Math.floor(i / 4) * 7;
+    s.sphere(x, y, 3, petal, { dither: true });
+    s.set(x, y - 1, WHITE); // white tips
+  }
+  eye(s, 28, 30, 2.5);
+  eye(s, 36, 30, 2.5);
+  s.ellipse(32, 34, 3, 1, DARK);
+  s.set(24, 24, HIVE); // pollen static
+  s.set(40, 20, HIVE);
+  s.outline(OUTLINE, petal[4]);
+  return s;
+}
+function barbwyre(): Sprite {
+  const s = S();
+  const body = ramp('7e7468');
+  s.contactShadow(32, 56, 17, 4, SHADOW);
+  s.sphere(30, 32, 14, body, { dither: true }); // coiled spool
+  for (let r = 5; r <= 13; r += 4) s.ellipse(30, 32, r, r, body[1] ?? OUTLINE); // coils
+  // raised strand head with barbs (weapons)
+  s.line(40, 24, 50, 14, body[2] ?? OUTLINE);
+  spike(s, 48, 16, 51, 12, 1.5, body[3] ?? WHITE);
+  spike(s, 46, 18, 49, 14, 1.5, body[3] ?? WHITE);
+  eye(s, 49, 13, 2, hexRGBA('ff5040'));
+  // barbs around the spool
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    s.set(30 + Math.cos(a) * 15, 32 + Math.sin(a) * 15, WHITE);
+  }
+  eye(s, 26, 30, 2.5);
+  eye(s, 33, 32, 2.5);
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function mowlet(): Sprite {
+  const s = S();
+  const body = ramp('b8543a');
+  s.contactShadow(32, 56, 17, 4, SHADOW);
+  s.roundedRect(16, 26, 32, 16, 5, body, { dither: true }); // mower deck
+  maw(s, 18, 38, 28, 5, ramp('cfd6dc')[3] ?? WHITE); // blade grin
+  eye(s, 25, 31, 3);
+  eye(s, 39, 31, 3);
+  s.line(44, 24, 50, 14, body[1] ?? OUTLINE); // handle
+  s.set(50, 13, body[3] ?? EMBER); // pull-cord knob
+  s.sphere(22, 44, 4, ramp('46464e'), { dither: true }); // wheels
+  s.sphere(42, 44, 4, ramp('46464e'), { dither: true });
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+function mowrauder(): Sprite {
+  const s = S();
+  const body = ramp('b04832');
+  const metal = ramp('3a3a44'); // one dark-metal ramp for seat/wheels/exhaust
+  s.contactShadow(32, 59, 23, 5, SHADOW);
+  s.roundedRect(14, 28, 40, 18, 5, body, { dither: true }); // rider deck
+  s.roundedRect(34, 16, 14, 14, 4, body, { dither: true }); // engine hood
+  s.roundedRect(20, 18, 12, 10, 3, metal, { dither: true }); // seat
+  // front blade weapons (spinning)
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    spike(s, 14, 40, 14 + Math.cos(a) * 9, 40 + Math.sin(a) * 9, 2, WHITE);
+  }
+  eye(s, 39, 22, 3, EMBER);
+  eye(s, 45, 22, 3, EMBER);
+  s.rect(49, 12, 3, 5, metal[1] ?? OUTLINE); // exhaust stack
+  s.sphere(22, 46, 5, metal, { dither: true }); // big wheels
+  s.sphere(46, 46, 6, metal, { dither: true });
+  s.outline(OUTLINE, body[4]);
+  return s;
+}
+
 // ---- backs (player-side: starter lines) ---------------------------------
 function chassisBack(baseHex: string, accent: RGBA, scale: number): Sprite {
   const s = S();
@@ -691,9 +1058,28 @@ add(23, 'front', percolatte(), 'Percolatte, coffee maker');
 add(24, 'front', mailstrom(), 'Mailstrom, mailbox with flag and letter');
 add(25, 'front', frostbox(), 'Frostbox, refrigerator');
 add(26, 'front', glacierator(), 'Glacierator, icicle spikes and frost beard');
+add(27, 'front', sudsle(), 'Sudsle, washing machine');
+add(28, 'front', laundrotaur(), 'Laundrotaur, charging washer with arms');
+add(29, 'front', registill(), 'Registill, cash register');
 add(30, 'front', vendlet(), 'Vendlet, vending machine');
+add(31, 'front', vendetta(), 'Vendetta, dented lean-forward vending machine');
 add(32, 'front', staplejaw(), 'Staplejaw, stapler');
+add(33, 'front', snoozebox(), 'Snoozebox, twin-bell alarm clock');
+add(34, 'front', inklet(), 'Inklet, typewriter');
+add(35, 'front', qwertyrant(), 'Qwertyrant, carriage crown and ribbon banners');
+add(36, 'front', digitall(), 'Digitall, calculator');
+add(37, 'front', flashbat(), 'Flashbat, flashlight with bat wings (LUMEN)');
+add(38, 'front', spoutlet(), 'Spoutlet, fire hydrant');
+add(39, 'front', hydrantler(), 'Hydrantler, water-antler hydrant');
+add(40, 'front', suppressure(), 'Suppressure, fire extinguisher');
 add(41, 'front', tumblet(), 'Tumblet, virus-taken tumbleweed (VERDANT)');
+add(42, 'front', thistlebale(), 'Thistlebale, baling-wire tumbleweed with barbs');
+add(43, 'front', pricklet(), 'Pricklet, cactus pad (VERDANT)');
+add(44, 'front', cactacomb(), 'Cactacomb, saguaro arms sheltering machines');
+add(45, 'front', bonnetbloom(), 'Bonnetbloom, bluebonnet patch (VERDANT)');
+add(46, 'front', barbwyre(), 'Barbwyre, barbed-wire spool');
+add(47, 'front', mowlet(), 'Mowlet, push mower');
+add(48, 'front', mowrauder(), 'Mowrauder, riding mower with blade weapons');
 
 add(1, 'back', chassisBack('a85420', EMBER, 1), 'Charkit rear');
 add(2, 'back', chassisBack('a85420', EMBER, 1.15), 'Smolderig rear');
