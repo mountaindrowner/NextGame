@@ -103,8 +103,11 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   colonies + factions; characters.md; beats.md — replaces GDD §5). Banjo's
   ending (two notes, reversed) locked. Tag `phase2-compendium` → apply on
   merge.
-- **Phase 3 — Implementation Contract** — drafted, awaiting Mark's approval:
-  `docs/implementation-contract.md` (stack, core/scene wall, 15 milestones
-  M0–M14, asset counts, acceptance criteria, save schema v1).
-- **Phase 4** — Vertical Slice: starts at contract approval; gate is
-  milestone M9 (`slice-v0`), style guide gate M8 before mass art.
+- **Phase 3 — Implementation Contract** — **approved as binding 2026-06-12**
+  (backs staged 45→156; starter stage-1 silhouettes vary by Locomotion).
+- **Phase 4 — Vertical Slice** — in progress. **M0–M7 done 2026-06-13**
+  (scaffold, data layer, battle core w/ goldens, overworld, battle UI,
+  capture puzzle, Bench, save v1 + headless smoke test — 38 tests green;
+  placeholder art only). **M8 style guide submitted, awaiting Mark**
+  (`docs/style-guide.md` + `assets/styleguide/`). M9 slice content next;
+  gate tag `slice-v0`.

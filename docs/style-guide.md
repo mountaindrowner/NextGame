@@ -1,0 +1,68 @@
+# OHMFRONT — Art Style Guide (Contract M8 — approval gate)
+
+*Submitted 2026-06-13. Mass sprite production waits on Mark's approval of
+this document and the reference assets in `assets/styleguide/`.*
+
+## The law (GDD §12, non-negotiable)
+
+Exactly golden-era Gen 3 GBA, every part. 240×160 native, integer-scaled,
+landscape. Battle sprites 64×64, ≤16 colors including transparency, entry
+animation only. Overworld 16×16 tiles, Gen 3 proportions. Hoenn-grade craft
+translated to sun-bleached Texas ruin.
+
+## Palettes
+
+Master ramps in `palette_ramps_v1.png` (top to bottom): **caliche** (bone
+whites/tans), **rust** (oranges into oxblood), **ember** (glow whites into
+fire), **steel** (warm greys), **mesquite** (dusty greens), **sky**
+(heat-haze creams into dusk). Five steps each.
+
+- Every sprite palette is built from these ramps plus at most 2 accent
+  colors; ≤16 total including transparency.
+- The world reads *bleached*: midtones dominate, true black never appears —
+  the darkest value is a warm near-black (`#2a1c14` family).
+- VERDANT and hive-touched things may break warmth with one cold accent;
+  that contrast is reserved meaning, spend it deliberately.
+
+## Outlines & lighting
+
+- **Light source: top-left, always.**
+- Dark outline on every silhouette edge, in the sprite's own darkest ramp
+  step, never pure black.
+- **Sel-out:** inside edges facing the light lift one ramp step; edges in
+  shadow sink into the outline. No outline between two touching dark areas.
+- Dither sparingly: 2×2 checker only, for large flat metal or sky-bounce on
+  chassis. Never on faces/readable details.
+
+## Proportions & posing
+
+- Battle: Ohmlets occupy ~26–36 px of the 64 canvas, mid stages ~40–52,
+  finals/Ohmega ~56–64. Grounded near the canvas bottom (stage feel), 3/4
+  or front-facing, weight visible — these are heavy machines.
+- Function first: every Ohm reads as its object in silhouette before any
+  face is added. Faces are minimal — lights, grilles, lenses doing double
+  duty (EM-residue lore: the object stays true to what it was).
+- Overworld 16×16: Gen 3 head-heavy proportions; object identity carried by
+  the top half; ≤8 colors.
+
+## Reference set (this gate's deliverables)
+
+| Asset | What to judge |
+|---|---|
+| `ohm_charkit_battle_v1.png` | starter weight, ember-glow accent rules, tread texture |
+| `ohm_toastlet_battle_v1.png` | chrome ramp use, face-from-function (slots glow) |
+| `ohm_filaglow_battle_v1.png` | emissive object handling, glass vs. metal base |
+| `ohm_*_overworld_v1.png` ×3 | 16×16 readability of the same three |
+| `tileset_field_strip_v1.png` | caliche dirt, dry/tall grass, road, rubble, debris, fence, garage pad |
+| `palette_ramps_v1.png` | the six master ramps |
+
+Every asset ships with a `.prompt.txt` sidecar (generation provenance,
+master-prompt §18.5). Approved files are never overwritten — revisions bump
+`_v2`, `_v3`.
+
+## Pipeline (locked)
+
+Claude authors sprites first (these references are hand-placed pixel grids
+rendered by `tools/gen-styleguide.ts`); PixelLab joins as the later-stage
+tool. Tiled for maps. On approval of this guide: production order is slice
+set (9 starters + 10 Field wilds + player + Field tileset) → Act I → outward.
