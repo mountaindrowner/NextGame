@@ -60,16 +60,15 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   puzzle; statuses slow the timer; failure = rage and flee.
 - **Architecture (firm):** battle system behind a clean interface so a future
   isometric tactical mode can land without a rewrite. Do not build it in v1.
-- **Art (non-negotiable):** exactly Gen 3 GBA. 64×64 battle sprites, ≤16
-  colors incl. transparency, entry animation only. 16×16 overworld tiles,
-  Gen 3 proportions, sun-bleached Texas ruin. Gen 3 textboxes/menus/fonts.
-  Artist **Chajipudi** is slated to produce Ohm graphics to the approved
-  style guide; **interim (2026-06-13), Mark asked Claude to generate the
-  sprites** at a high craft bar — style homage to Arc Raiders / Gen 3
-  Pokémon / Digimon energy, but **original designs only, never traced or
-  ripped** (IP guardrails §15.2). Claude owns spec, the sprite brief
-  (`docs/art/sprite-brief.md`), the sprite toolkit, style review, and
-  integration. Style-guide approval gate before mass production.
+- **Art (DIRECTION CHANGED 2026-06-13):** moved from Gen 3 GBA to a
+  **higher-fidelity HD top-down** style, matching creator-owned cattle-town
+  art in `assets/reference/cattle-town/`. Gen-3 spec superseded (history in
+  GDD §12.x). HD target = the Field's western/rural look (barn, storefronts,
+  windmill, water tower, fences, creek). Concrete HD spec (resolution, ~32px
+  tiles, palette) + migration of the 48 existing Ohm sprites and UI tracked
+  in `docs/style-guide.md` + HANDOVER; exact numbers pending Mark. Claude
+  generates art for now (Chajipudi later); original designs only, never
+  traced/ripped (§15.2). Claude owns spec, toolkit, review, integration.
 - **Audio:** GBA chiptune, exactly. Suno + licensed packs from Mark; Claude
   layers as needed.
 

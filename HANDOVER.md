@@ -1,5 +1,33 @@
 # HANDOVER
 
+## ⚠ ART DIRECTION CHANGED 2026-06-13 → HD top-down
+
+Mark pivoted the art target from Gen 3 GBA to a **higher-fidelity HD top-down**
+style, matching creator-owned cattle-town art now in
+`assets/reference/cattle-town/` (example-map + objects-sheet + terrain-tiles,
+with PROVENANCE.md). Canon updated (GDD §12, CLAUDE.md, style-guide — Gen-3
+spec marked superseded, kept for history).
+
+**Open decisions (need Mark) before executing the pivot:**
+1. **Native resolution + tile size** — proposal: 480×320 native, 32×32 tiles,
+   integer-scaled. Their map is 4:3, so 480×360 is also an option.
+2. **The 48 existing Ohm sprites** — full HD rework to match, or a hybrid
+   (keep the pixel Ohms over HD environments)? This is the expensive call.
+3. **Source tiles** — the supplied PNGs are scaled showcases (1448×1086, grid
+   doesn't divide cleanly); to embed tiles 1:1 I need grid-aligned source
+   exports or Tiled tileset files. Otherwise I author HD tiles in this style.
+
+**Migration scope once confirmed:** bump Phaser native res + integer zoom;
+move overworld to 32px tiles + a real tileset-blitting renderer (replacing the
+colored-rect placeholders); rebuild the Field map off the example layout;
+HD-rework the Ohm sprites + battle backdrop + Gen-3 UI. The game still runs on
+the current GBA assets meanwhile (transitional).
+
+Everything below predates the pivot.
+
+---
+
+
 *Updated 2026-06-13 — session 2 (cont.): Phase 4 code push, M0–M8.*
 
 ## Done

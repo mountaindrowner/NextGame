@@ -1,7 +1,31 @@
-# OHMFRONT — Art Style Guide (Contract M8 — approval gate)
+# OHMFRONT — Art Style Guide
 
-*Submitted 2026-06-13. Mass sprite production waits on Mark's approval of
-this document and the reference assets in `assets/styleguide/`.*
+> **ART DIRECTION CHANGED 2026-06-13 → HD top-down.** Mark moved the target
+> from Gen 3 GBA to a higher-fidelity HD style, matching creator-owned
+> cattle-town art in `assets/reference/cattle-town/` (rural/western tileset +
+> object atlas + example map). The Gen-3 rules below are **superseded** and
+> kept for history. The HD spec is being defined; current working proposal
+> (pending Mark's confirmation):
+>
+> - **Native resolution:** `[PROPOSAL]` 480×320 (3:2) or 480×270 (16:9),
+>   integer-scaled. (Their map is 4:3 — a 4:3 native like 480×360 also fits.)
+> - **Tiles:** `[PROPOSAL]` 32×32, Tiled-authored, from grid-aligned source
+>   exports of the cattle-town atlases.
+> - **Palette:** full color (drop the ≤16-color limit), cohesive per-area
+>   palettes, soft top-down lighting + cast shadows like the reference.
+> - **Ohms:** the 48 existing GBA sprites get an HD rework pass (higher res,
+>   richer shading) to sit on the HD environments — OR a confirmed hybrid
+>   (pixel creatures over HD ground). Decision pending.
+> - **Source need:** to embed the creator tiles 1:1 the engine needs the
+>   original grid-aligned exports (the supplied PNGs are scaled showcases).
+>
+> Migration steps tracked in HANDOVER.
+
+---
+
+## SUPERSEDED — original Gen 3 GBA guide (history)
+
+*Submitted 2026-06-13 (superseded same day by the HD pivot).*
 
 ## The law (GDD §12, non-negotiable)
 

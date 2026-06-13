@@ -486,7 +486,22 @@ in v1.
 
 -----
 
-## 12. ART DIRECTION (NON-NEGOTIABLE)
+## 12. ART DIRECTION
+
+> **DIRECTION CHANGED 2026-06-13 (chat overrides files, §0.4).** Mark moved
+> the art target from Gen 3 GBA to a **higher-fidelity HD top-down** style,
+> matching creator-provided cattle-town art (`assets/reference/cattle-town/`:
+> a rural/western tileset + object atlas + example map he owns). The Gen-3
+> spec below is **superseded** and kept only for history. The concrete HD
+> spec (native resolution, tile size, palette policy) and the migration of
+> the existing pixel work are tracked in `docs/style-guide.md` and HANDOVER;
+> exact numbers pending Mark's confirmation. Implications: the engine canvas
+> grows beyond 240×160; tiles move to ~32px; the 48 GBA Ohm sprites and the
+> UI get an HD rework pass. The HD environment reference is the Field's
+> cattle-town look — barn, western storefronts, windmill, water tower,
+> fences, creek, crop fields, dirt roads.
+
+### 12.x SUPERSEDED — original Gen 3 GBA spec (history)
 
 **Exactly golden-era Pokémon Ruby/Sapphire (GBA Gen 3), all around, every
 part.**
