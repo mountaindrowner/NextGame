@@ -14,12 +14,15 @@
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { PNG } from 'pngjs';
 import { hexRGBA, ramp, Sprite, type RGBA } from './spritekit';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const OUT = join(ROOT, 'public/sprites/ohms');
-mkdirSync(OUT, { recursive: true });
+// run as a script (not when imported by the HD generator)
+const isMainModule = import.meta.url === pathToFileURL(process.argv[1] ?? '').href;
+if (isMainModule) mkdirSync(OUT, { recursive: true });
 
 const OUTLINE = hexRGBA('1a1410');
 const SHADOW: RGBA = [22, 16, 14, 120];
@@ -1109,7 +1112,21 @@ function playerMicro(): Sprite {
 }
 add(0, 'over', playerMicro(), 'Player overworld sprite');
 
+/** Front-sprite builders by species number — the single source of Ohm
+ * designs, reused by the HD generator (gen-sprites-hd.ts). */
+export const FRONT_BUILDERS: Record<number, () => Sprite> = {
+  1: charkit, 2: smolderig, 3: pyrofurnax, 4: sparkit, 5: amperig, 6: generatlas,
+  7: dripkit, 8: flowrig, 9: aquaducton, 10: toastlet, 11: crumbustion, 12: wavelet,
+  13: nukenook, 14: gourmagnet, 15: filaglow, 16: lumenaire, 17: chandelux, 18: beeplet,
+  19: vacuette, 20: dustdevil, 21: fanlet, 22: oscillord, 23: percolatte, 24: mailstrom,
+  25: frostbox, 26: glacierator, 27: sudsle, 28: laundrotaur, 29: registill, 30: vendlet,
+  31: vendetta, 32: staplejaw, 33: snoozebox, 34: inklet, 35: qwertyrant, 36: digitall,
+  37: flashbat, 38: spoutlet, 39: hydrantler, 40: suppressure, 41: tumblet, 42: thistlebale,
+  43: pricklet, 44: cactacomb, 45: bonnetbloom, 46: barbwyre, 47: mowlet, 48: mowrauder,
+};
+
 // --------------------------------------------------------- write & validate
+if (isMainModule) {
 let failed = 0;
 const manifest: Record<string, number[]> = { front: [], back: [], over: [] };
 for (const b of built) {
@@ -1147,3 +1164,4 @@ if (failed > 0) {
   console.error(`${failed} over the 16-color budget.`);
   process.exit(1);
 }
+} // isMainModule

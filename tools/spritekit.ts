@@ -325,3 +325,44 @@ function normalize3(x: number, y: number, z: number): [number, number, number] {
   const len = Math.sqrt(x * x + y * y + z * z) || 1;
   return [x / len, y / len, z / len];
 }
+
+/**
+ * Supersampled area-downsample: renders a small hard-edged design into a
+ * larger smooth one. Averaging KxK samples per output pixel dissolves the
+ * Bayer dither into true gradients and anti-aliases the silhouette — the
+ * grainy GBA look becomes soft/painterly HD. Alpha-weighted so edges don't
+ * pick up dark halos.
+ */
+export function hdSmooth(src: Sprite, target: number, k = 4): Sprite {
+  const out = new Sprite(target, target);
+  const sx = src.w / target;
+  const sy = src.h / target;
+  for (let ty = 0; ty < target; ty++) {
+    for (let tx = 0; tx < target; tx++) {
+      let r = 0;
+      let g = 0;
+      let b = 0;
+      let aSum = 0;
+      let cover = 0;
+      for (let j = 0; j < k; j++) {
+        for (let i = 0; i < k; i++) {
+          const fx = Math.floor((tx + (i + 0.5) / k) * sx);
+          const fy = Math.floor((ty + (j + 0.5) / k) * sy);
+          const c = src.get(fx, fy);
+          const al = (c[3] ?? 0) / 255;
+          r += c[0] * al;
+          g += c[1] * al;
+          b += c[2] * al;
+          aSum += c[3];
+          cover += al;
+        }
+      }
+      const n = k * k;
+      const alpha = Math.round(aSum / n);
+      if (cover > 0 && alpha > 8) {
+        out.set(tx, ty, [Math.round(r / cover), Math.round(g / cover), Math.round(b / cover), alpha]);
+      }
+    }
+  }
+  return out;
+}

@@ -21,17 +21,25 @@ spec marked superseded, kept for history).
 color, **full HD rework of all Ohms** (battle fronts → **96×96**).
 
 **Done so far:**
-- Toolkit upgraded for HD: `ramp(hex,{steps})` N-step gradients +
-  `Sprite.antialias()` soft edge (`tools/spritekit.ts`).
-- **HD rework batch 1** (`npm run gen:sprites:hd`): the 3 starters (Charkit/
-  Sparkit/Dripkit) re-authored at 96×96, 7–8 band shading, rivets/seams/drive
-  wheels, gradient-iris eyes, AA outline → `public/sprites/ohms/<n>_front_hd.png`.
-  Not wired in yet (engine still 240×160 / 64px; HD shows once the res bump
-  lands). Comparison: `/tmp/hd_compare.png`.
-- **Style caveat:** these are high-fidelity *HD-pixel* renders (still carry the
-  Bayer-dither grain), not painterly like the cattle-town tiles. Coherent on
-  their own; if Mark wants the Ohms truly *painted* to match the environments,
-  that's a different (hand-painted) pipeline — flag for decision.
+- Toolkit upgraded for HD: `ramp(hex,{steps})` N-step gradients,
+  `Sprite.antialias()`, and **`hdSmooth()`** — a supersampling area-downsample
+  that dissolves Bayer dither into gradients and AAs the silhouette.
+- **All 48 Ohms HD-reworked** (`npm run gen:sprites:hd`): the single design
+  source (`gen-sprites.ts` now exports `FRONT_BUILDERS`, guarded so importing
+  it doesn't regenerate the GBA set) is rendered through `hdSmooth` → 96×96
+  smooth fronts at `public/sprites/ohms/<n>_front_hd.png`, manifest
+  `src/data/sprite-manifest-hd.ts`. The grain is gone → soft/painterly-leaning,
+  uniform across the roster. Comparison `/tmp/hd_all.png`.
+- **Slicing/extraction tool built** (`npm run extract -- <file.png>`): the
+  cattle-town sheets are sliceable after all — connected-component extraction
+  pulled **62 clean transparent objects** from the object atlas into
+  `assets/extracted/`. Terrain ground autotiles partly merge (want a source
+  export or authored 32px tiles).
+- **Trade-off (honest):** the HD pass is supersampled from 64px designs, so
+  it's smooth but soft — detail is capped by the source. Per-sprite native-96px
+  hand-detailing (rivets/panels, like the abandoned starter pass) is a future
+  polish. It's painterly-*leaning*, not hand-painted; good enough to sit on the
+  extracted environment art.
 
 **Migration scope remaining:** bump Phaser native res + integer zoom and
 reposition every scene's UI from 240×160 to 480×320; move overworld to 32px
