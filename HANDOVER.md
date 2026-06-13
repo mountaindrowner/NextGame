@@ -87,13 +87,24 @@
   not traced (§15.2). Built a real toolkit `tools/spritekit.ts`: hue-shifted
   ramps, shaded sphere/rounded-rect primitives, 4×4 Bayer dithering, auto
   outline + sel-out, rim light, contact shadow, hard ≤16-color enforcement.
-- **16 slice sprites authored** (`npm run gen:sprites` → `public/sprites/ohms/`,
-  with prompt sidecars): battle fronts for 1/4/7 (starters) + 10/12/15/18/19/
-  21/30/32/41 (the whole Field encounter table), backs for the 3 starters, and
-  the player overworld micro. Manifest `src/data/sprite-manifest.ts` drives
-  preload; species without art still fall back to tinted rects.
+- **39 slice sprites authored** (`npm run gen:sprites` → `public/sprites/ohms/`,
+  prompt sidecars each): **29 battle fronts** = the first 25 Ohms encountered +
+  full evolution lines (species 1–26: the three starter trios, Toastlet,
+  Wavelet, Filaglow, Vacuette, Fanlet, Frostbox lines + Beeplet/Percolatte/
+  Mailstrom) plus Field bonuses 30/32/41; **9 backs** for the starter lines
+  (1–9, scaled up per stage); and the player overworld micro.
+- **Design language:** stage 1 clean/cute, stage 2 grows limbs/vents, stage 3
+  sprouts appendages + "weapons" (chimney horns + molten claws, pylon
+  arc-cannons, aqueduct water-cannons, burner crown + oven maw, chandelier
+  crystal drips, icicle spikes). Expressive faces throughout (pupils, glints,
+  brows, maws) — Digimon-ish creature read within the Gen 3 budget.
 - **Wired in:** BattleScene shows real foe fronts and player backs (entry
-  slide preserved); OverworldScene uses the player micro. 49 tests still green.
+  slide preserved, trainer switch-ins swap); OverworldScene uses the player
+  micro. Species without art still fall back to tinted rects. 49 tests green.
+- **Kit hardened:** `tools/spritekit.ts` now floors coordinates at the pixel
+  boundary (fractional inputs from trig/scaling were silently corrupting the
+  buffer → stray colors); per-sprite palette consolidated to ≤2 ramps to hold
+  the ≤16-color budget (enforced, all pass).
 
 ## Next
 

@@ -101,11 +101,16 @@ export class Sprite {
     this.data = new Uint8ClampedArray(w * h * 4);
   }
 
+  // Coordinates are floored at the pixel boundary so fractional inputs from
+  // trig/scaling write to a real pixel instead of silently corrupting the
+  // typed array.
   private idx(x: number, y: number): number {
-    return (y * this.w + x) * 4;
+    return (Math.floor(y) * this.w + Math.floor(x)) * 4;
   }
   inBounds(x: number, y: number): boolean {
-    return x >= 0 && y >= 0 && x < this.w && y < this.h;
+    const fx = Math.floor(x);
+    const fy = Math.floor(y);
+    return fx >= 0 && fy >= 0 && fx < this.w && fy < this.h;
   }
   opaque(x: number, y: number): boolean {
     return this.inBounds(x, y) && (this.data[this.idx(x, y) + 3] ?? 0) > 0;
@@ -128,7 +133,9 @@ export class Sprite {
     const f = Math.max(0, Math.min(1, t)) * n;
     let base = Math.floor(f);
     const frac = f - base;
-    if (dither && frac > (BAYER4[(y % 4) * 4 + (x % 4)] ?? 0.5)) base += 1;
+    const bx = ((Math.floor(x) % 4) + 4) % 4;
+    const by = ((Math.floor(y) % 4) + 4) % 4;
+    if (dither && frac > (BAYER4[by * 4 + bx] ?? 0.5)) base += 1;
     return steps[Math.max(0, Math.min(n, base))] ?? CLEAR;
   }
 
@@ -229,7 +236,7 @@ export class Sprite {
   }
 
   /** A pixel counts as solid body (not a semi-transparent contact shadow). */
-  private solid(x: number, y: number): boolean {
+  solid(x: number, y: number): boolean {
     return this.inBounds(x, y) && (this.data[this.idx(x, y) + 3] ?? 0) >= 255;
   }
 
