@@ -63,8 +63,10 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
 - **Art (non-negotiable):** exactly Gen 3 GBA. 64×64 battle sprites, ≤16
   colors incl. transparency, entry animation only. 16×16 overworld tiles,
   Gen 3 proportions, sun-bleached Texas ruin. Gen 3 textboxes/menus/fonts.
-  Claude generates sprites first; PixelLab is the later-stage tool. Style
-  guide approval gate before mass production.
+  Artist **Chajipudi** produces the Ohm graphics to the approved style guide
+  (pipeline updated 2026-06-13); Claude owns spec, the sprite brief
+  (`docs/art/sprite-brief.md`), style review, and integration. Style-guide
+  approval gate before mass production.
 - **Audio:** GBA chiptune, exactly. Suno + licensed packs from Mark; Claude
   layers as needed.
 

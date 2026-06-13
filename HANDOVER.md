@@ -27,10 +27,23 @@
   (6 ramps, Charkit/Toastlet/Filaglow at 64×64 and 16×16, Field tile strip,
   prompt sidecars).
 
-## Awaiting Mark (gates M9 + mass art)
+## Art pipeline change (2026-06-13)
 
-- **Approve/redline the style guide and reference sprites.** Everything
-  in-game is runtime placeholder rectangles until this gate clears.
+- **Chajipudi now produces the Ohm graphics**, not Claude/PixelLab. Recorded
+  in CLAUDE.md, GDD §12, the contract, and the style guide (archived
+  master-prompt left as the historical snapshot). Claude keeps spec, review,
+  and integration.
+- **`docs/art/sprite-brief.md`** is the full production list: all 150 Ohms
+  with object, type, master-ramp palette, canvas-fill by stage, per-Ohm
+  silhouette/face notes, and flags for the 6 starter Locomotion variants, the
+  45 first-wave back sprites, and 12 overworld forms. Four priority tiers,
+  Tier 1 = the slice set.
+
+## Awaiting Mark / Chajipudi (gates M9 + mass art)
+
+- **Approve/redline the style guide and reference sprites**, then Chajipudi
+  works the brief Tier 1 first. Everything in-game is runtime placeholder
+  rectangles until real sprites land.
 
 ## Known issues / deviations (transparent)
 

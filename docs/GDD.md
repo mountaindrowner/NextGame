@@ -500,13 +500,18 @@ part.**
   Hoenn-grade craft translated to sun-bleached Texas ruin — caliche whites,
   rust oranges, faded signage, heat-haze skies.
 - **UI:** Gen 3 textboxes, menus, fonts, battle HUD.
-- **Pipeline:** Claude generates the sprites first, applying its own artistic
-  judgment inside the Gen 3 style; PixelLab is the later-stage tool. Tiled
-  for maps. **Gate before mass production:** a style guide — palettes,
-  outline/lighting rules, 3 reference Ohms at both scales (64×64 battle,
-  16×16-grid overworld), 1 tileset strip — submitted for approval.
-- Every generated asset ships with its generation prompt/settings stored
-  beside it. Approved assets are never overwritten — version them.
+- **Pipeline (updated 2026-06-13):** the artist **Chajipudi** produces the
+  Ohm graphics, working to this GDD and the approved style guide
+  (`docs/style-guide.md`). Claude authored the style-guide reference set
+  (`assets/styleguide/`) and the production brief (`docs/art/sprite-brief.md`)
+  that defines every sprite's object, type, stage fill, and back/overworld
+  needs; Claude stays responsible for spec, review against the Gen 3 rules,
+  and engine integration. Tiled for maps. **Gate before mass production:** the
+  style guide — palettes, outline/lighting rules, 3 reference Ohms at both
+  scales (64×64 battle, 16×16-grid overworld), 1 tileset strip — submitted
+  for approval.
+- Every delivered asset ships with its source/settings stored beside it.
+  Approved assets are never overwritten — version them.
 
 -----
 

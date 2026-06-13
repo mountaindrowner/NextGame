@@ -113,9 +113,10 @@ on green smoke test. Tags at gates: `phase3-contract`, `slice-v0`, `act1`,
 | SFX | ~60 | families per GDD §13.2 |
 | Cries | 150 | synthesized chip cries, one signature per species |
 
-Pipeline: Claude generates sprites first (post-M8 style guide); PixelLab
-later-stage; prompt sidecars beside every asset; approved assets versioned,
-never overwritten.
+Pipeline (updated 2026-06-13): artist **Chajipudi** produces Ohm sprites to
+the approved style guide and `docs/art/sprite-brief.md` (post-M8 gate); Claude
+owns spec, review, and integration. Source/settings stored beside every asset;
+approved assets versioned, never overwritten.
 
 ## 5. Debug tooling (built alongside, not after)
 

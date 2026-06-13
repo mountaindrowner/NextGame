@@ -62,7 +62,10 @@ master-prompt §18.5). Approved files are never overwritten — revisions bump
 
 ## Pipeline (locked)
 
-Claude authors sprites first (these references are hand-placed pixel grids
-rendered by `tools/gen-styleguide.ts`); PixelLab joins as the later-stage
-tool. Tiled for maps. On approval of this guide: production order is slice
-set (9 starters + 10 Field wilds + player + Field tileset) → Act I → outward.
+Claude authored this reference set (hand-placed pixel grids rendered by
+`tools/gen-styleguide.ts`) to fix the target. Production sprites are made by
+the artist **Chajipudi** to this guide and `docs/art/sprite-brief.md`
+(pipeline updated 2026-06-13); Claude reviews deliveries against these rules
+and integrates them. Tiled for maps. On approval of this guide: production
+order is the slice set (9 starters + variants + the Field wilds + player +
+Field tileset) → Act I → outward, per the brief's priority tiers.
