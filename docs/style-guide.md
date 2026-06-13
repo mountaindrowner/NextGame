@@ -4,20 +4,21 @@
 > from Gen 3 GBA to a higher-fidelity HD style, matching creator-owned
 > cattle-town art in `assets/reference/cattle-town/` (rural/western tileset +
 > object atlas + example map). The Gen-3 rules below are **superseded** and
-> kept for history. The HD spec is being defined; current working proposal
-> (pending Mark's confirmation):
+> kept for history. **HD spec, confirmed 2026-06-13:**
 >
-> - **Native resolution:** `[PROPOSAL]` 480×320 (3:2) or 480×270 (16:9),
->   integer-scaled. (Their map is 4:3 — a 4:3 native like 480×360 also fits.)
-> - **Tiles:** `[PROPOSAL]` 32×32, Tiled-authored, from grid-aligned source
->   exports of the cattle-town atlases.
-> - **Palette:** full color (drop the ≤16-color limit), cohesive per-area
->   palettes, soft top-down lighting + cast shadows like the reference.
-> - **Ohms:** the 48 existing GBA sprites get an HD rework pass (higher res,
->   richer shading) to sit on the HD environments — OR a confirmed hybrid
->   (pixel creatures over HD ground). Decision pending.
-> - **Source need:** to embed the creator tiles 1:1 the engine needs the
->   original grid-aligned exports (the supplied PNGs are scaled showcases).
+> - **Native resolution:** **480x320** (3:2), integer-scaled (x2 -> 960x640,
+>   x3 -> 1440x960). Keyboard on PC, virtual d-pad on touch.
+> - **Tiles:** **32x32**, Tiled-authored.
+> - **Palette:** **full color** (the <=16-color cap is dropped). Cohesive
+>   per-area palettes; soft top-down lighting + cast shadows like the
+>   reference. Sprite toolkit gains N-step ramps + anti-aliased edges.
+> - **Ohms:** **full HD rework** of all 48 (and the ~108 to come). Battle
+>   fronts move to **96x96** (3x a tile, 1.5x the old 64), richer shading,
+>   anti-aliased outline. Done in batches; the engine shows the new sprites
+>   once the resolution bump lands.
+> - **Source need:** to embed the creator's environment tiles 1:1 the engine
+>   needs grid-aligned source exports (the supplied PNGs are scaled
+>   showcases). Until then I author HD tiles to match the reference.
 >
 > Migration steps tracked in HANDOVER.
 

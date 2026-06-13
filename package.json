@@ -11,7 +11,8 @@
     "test": "vitest run",
     "gen:maps": "tsx tools/build-maps.ts",
     "gen:styleguide": "tsx tools/gen-styleguide.ts",
-    "gen:sprites": "tsx tools/gen-sprites.ts"
+    "gen:sprites": "tsx tools/gen-sprites.ts",
+    "gen:sprites:hd": "tsx tools/gen-sprites-hd.ts"
   },
   "dependencies": {
     "phaser": "^3.85.2"

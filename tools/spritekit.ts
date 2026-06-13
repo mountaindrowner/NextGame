@@ -68,19 +68,24 @@ function hslToRGBA(c: HSL, a = 255): RGBA {
  * darks rotate toward blue/purple and desaturate-down, lights rotate toward
  * yellow and brighten — the single most important pixel-art lighting trick.
  */
-export function ramp(baseHex: string, opts: { hueShift?: number; spread?: number } = {}): RGBA[] {
+export function ramp(
+  baseHex: string,
+  opts: { hueShift?: number; spread?: number; steps?: number } = {},
+): RGBA[] {
   const hueShift = opts.hueShift ?? 0.06;
   const spread = opts.spread ?? 0.34;
+  const n = opts.steps ?? 5; // HD sprites use 7–9 for smoother gradients
   const base = hexToHsl(baseHex);
-  const steps: RGBA[] = [];
-  for (let i = 0; i < 5; i++) {
-    const t = (i - 2) / 2; // -1..1, 0 = base
+  const half = (n - 1) / 2;
+  const out: RGBA[] = [];
+  for (let i = 0; i < n; i++) {
+    const t = (i - half) / half; // -1..1, 0 = base
     const l = Math.max(0.05, Math.min(0.96, base.l + t * spread));
     const h = (base.h + hueShift * t * 0.5 + 1) % 1; // warm up, cool down
     const s = Math.max(0, Math.min(1, base.s + (t > 0 ? -0.08 : 0.05) * Math.abs(t)));
-    steps.push(hslToRGBA({ h, s, l }));
+    out.push(hslToRGBA({ h, s, l }));
   }
-  return steps;
+  return out;
 }
 
 const key = (c: RGBA): string => `${c[0]},${c[1]},${c[2]},${c[3]}`;
@@ -289,6 +294,21 @@ export class Sprite {
         if (nx * nx + ny * ny <= 1 && !this.opaque(x, y)) this.set(x, y, c);
       }
     }
+  }
+
+  /** Soft anti-aliased edge: one half-alpha ring just outside the outline,
+   * for the smoother HD silhouette. Call after outline(). */
+  antialias(color: RGBA, alpha = 110): void {
+    const ring: Array<[number, number]> = [];
+    for (let y = 0; y < this.h; y++) {
+      for (let x = 0; x < this.w; x++) {
+        if (this.opaque(x, y)) continue;
+        if (this.opaque(x - 1, y) || this.opaque(x + 1, y) || this.opaque(x, y - 1) || this.opaque(x, y + 1)) {
+          ring.push([x, y]);
+        }
+      }
+    }
+    for (const [x, y] of ring) this.set(x, y, [color[0], color[1], color[2], alpha]);
   }
 
   colorCount(): number {

@@ -17,11 +17,29 @@ spec marked superseded, kept for history).
    doesn't divide cleanly); to embed tiles 1:1 I need grid-aligned source
    exports or Tiled tileset files. Otherwise I author HD tiles in this style.
 
-**Migration scope once confirmed:** bump Phaser native res + integer zoom;
-move overworld to 32px tiles + a real tileset-blitting renderer (replacing the
-colored-rect placeholders); rebuild the Field map off the example layout;
-HD-rework the Ohm sprites + battle backdrop + Gen-3 UI. The game still runs on
-the current GBA assets meanwhile (transitional).
+**Confirmed spec (2026-06-13):** native **480×320**, **32px** tiles, full
+color, **full HD rework of all Ohms** (battle fronts → **96×96**).
+
+**Done so far:**
+- Toolkit upgraded for HD: `ramp(hex,{steps})` N-step gradients +
+  `Sprite.antialias()` soft edge (`tools/spritekit.ts`).
+- **HD rework batch 1** (`npm run gen:sprites:hd`): the 3 starters (Charkit/
+  Sparkit/Dripkit) re-authored at 96×96, 7–8 band shading, rivets/seams/drive
+  wheels, gradient-iris eyes, AA outline → `public/sprites/ohms/<n>_front_hd.png`.
+  Not wired in yet (engine still 240×160 / 64px; HD shows once the res bump
+  lands). Comparison: `/tmp/hd_compare.png`.
+- **Style caveat:** these are high-fidelity *HD-pixel* renders (still carry the
+  Bayer-dither grain), not painterly like the cattle-town tiles. Coherent on
+  their own; if Mark wants the Ohms truly *painted* to match the environments,
+  that's a different (hand-painted) pipeline — flag for decision.
+
+**Migration scope remaining:** bump Phaser native res + integer zoom and
+reposition every scene's UI from 240×160 to 480×320; move overworld to 32px
+tiles + a real tileset-blitting renderer (replacing colored-rect placeholders);
+rebuild the Field map off the example layout; finish HD rework of the other
+45 Ohms + backs + battle backdrop + UI. Need grid-aligned source exports of
+the cattle-town atlases to embed the environment tiles 1:1. Game still runs on
+the current assets meanwhile (transitional).
 
 Everything below predates the pivot.
 
