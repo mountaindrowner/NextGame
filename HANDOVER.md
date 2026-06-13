@@ -72,8 +72,16 @@
   options (plating, expansion board) now persist on the Battler; level-up and
   evolution both honor them. Regression test added.
 
+- **Out-of-battle menu hub done** (`MenuScene`, GDD §11): START opens a pause
+  overlay over the overworld with PARTY (per-Ohm stats, types, moves+PP, XP
+  progress, passive), the MANIFEST (all 150, freed/seen/unknown, live counts —
+  the Pokédex analog), BAG (items with one-line use blurbs), and SAVE (3
+  slots). Replaces the inline save menu the overworld carried; overworld
+  flushes queued input on resume. New `xpProgress` core helper, tested.
+  49 tests green.
+
 ## Next (M9 remainder, still art-independent)
 
 - Elevator ascent cutscene framing, garage scene dressing, real Field maps in
-  Tiled. Then, on style-guide approval, drop in Chajipudi's slice sprites over
-  the placeholders and tag `slice-v0`.
+  Tiled, the Ohmwork/quest-log shell. Then, on style-guide approval, drop in
+  Chajipudi's slice sprites over the placeholders and tag `slice-v0`.

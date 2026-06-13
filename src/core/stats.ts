@@ -71,3 +71,16 @@ export function accuracyMultiplier(stage: number): number {
   const s = Math.max(-6, Math.min(6, stage));
   return s >= 0 ? (3 + s) / 3 : 3 / (3 - s);
 }
+
+/** Progress through the current level: XP earned into it and the level's span.
+ * At level 100 the span is 0 (capped). */
+export function xpProgress(
+  growth: SpeciesDef['growth'],
+  level: number,
+  xp: number,
+): { into: number; span: number } {
+  if (level >= 100) return { into: 0, span: 0 };
+  const floor = xpForLevel(growth, level);
+  const ceil = xpForLevel(growth, level + 1);
+  return { into: Math.max(0, xp - floor), span: Math.max(1, ceil - floor) };
+}

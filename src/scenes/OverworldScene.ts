@@ -6,7 +6,6 @@ import { GAME_DATA } from '../data/dataview';
 import { ZONES_BY_ID } from '../data/encounters';
 import { getGameState, nextSeed } from '../game/state';
 import { isSolid, parseTmj, tileAt, type LoadedMap } from '../game/tilemap';
-import { browserStorage, SaveSlots, SLOT_COUNT } from '../save/save';
 import { Controls } from '../input/controls';
 
 const TILE_COLORS: Record<number, number> = {
@@ -80,6 +79,8 @@ export class OverworldScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, this.map.width * 16, this.map.height * 16);
     this.cameras.main.startFollow(this.player, true);
     this.controls = new Controls(this);
+    // drop any presses queued while the pause menu was up
+    this.events.on('resume', () => this.controls.clearQueue());
 
     this.add
       .text(2, 2, id.toUpperCase().replace(/-/g, ' '), { fontFamily: 'monospace', fontSize: '8px', color: '#ffffff' })
@@ -89,13 +90,10 @@ export class OverworldScene extends Phaser.Scene {
   }
 
   override update(): void {
-    if (this.menuOpen) {
-      this.updateMenu();
-      return;
-    }
     if (this.moving) return;
     if (this.controls.consume('start')) {
-      this.openMenu();
+      this.scene.launch('menu');
+      this.scene.pause();
       return;
     }
     if (this.controls.consume('a')) {
@@ -106,63 +104,6 @@ export class OverworldScene extends Phaser.Scene {
       if (this.controls.isHeld(dir)) {
         this.step(dir);
         return;
-      }
-    }
-  }
-
-  // ---- pause menu: manual save anywhere, multiple slots (GDD §11) ---------
-
-  private menuOpen = false;
-  private menuCursor = 0;
-  private menuObjects: Phaser.GameObjects.GameObject[] = [];
-  private menuLines: Phaser.GameObjects.Text[] = [];
-  private slots = new SaveSlots(browserStorage());
-
-  private openMenu(): void {
-    this.menuOpen = true;
-    this.menuCursor = 0;
-    const panel = this.add.rectangle(120, 80, 200, 100, 0xf8f8e8).setScrollFactor(0).setDepth(300).setStrokeStyle(2, 0x586068);
-    this.menuObjects = [panel];
-    const labels = [
-      ...Array.from({ length: SLOT_COUNT }, (_, s) => `SAVE ${s + 1}  ${this.slots.summary(s) ?? '— empty —'}`),
-      'CLOSE',
-    ];
-    this.menuLines = labels.map((l, i) =>
-      this.add
-        .text(32, 44 + i * 16, l, { fontFamily: 'monospace', fontSize: '8px', color: '#303030' })
-        .setScrollFactor(0)
-        .setDepth(301),
-    );
-    this.refreshMenu();
-  }
-
-  private refreshMenu(): void {
-    this.menuLines.forEach((t, i) => t.setFontStyle(i === this.menuCursor ? 'bold' : 'normal'));
-  }
-
-  private closeMenu(): void {
-    this.menuOpen = false;
-    for (const o of [...this.menuObjects, ...this.menuLines]) o.destroy();
-    this.menuObjects = [];
-    this.menuLines = [];
-  }
-
-  private updateMenu(): void {
-    const count = this.menuLines.length;
-    if (this.controls.consume('up')) this.menuCursor = (this.menuCursor + count - 1) % count;
-    if (this.controls.consume('down')) this.menuCursor = (this.menuCursor + 1) % count;
-    this.refreshMenu();
-    if (this.controls.consume('b') || this.controls.consume('start')) {
-      this.closeMenu();
-      return;
-    }
-    if (this.controls.consume('a')) {
-      if (this.menuCursor < SLOT_COUNT) {
-        this.slots.save(this.menuCursor, getGameState());
-        this.closeMenu();
-        this.toast('Progress saved. Stay current.');
-      } else {
-        this.closeMenu();
       }
     }
   }
