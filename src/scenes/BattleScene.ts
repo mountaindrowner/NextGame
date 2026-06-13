@@ -3,6 +3,7 @@ import type { BattleEvent, Battler } from '../core/battle/contract';
 import { Battle } from '../core/battle/engine';
 import { pendingEvolutions } from '../core/evolution';
 import { GAME_DATA } from '../data/dataview';
+import { hasBack, hasFront } from '../data/sprite-manifest';
 import { ITEMS_BY_ID } from '../data/items';
 import { getGameState } from '../game/state';
 import { Controls } from '../input/controls';
@@ -18,6 +19,10 @@ interface BattleInit {
 type Mode = 'anim' | 'command' | 'moves' | 'party' | 'pack' | 'puzzle' | 'over';
 
 const COMMANDS = ['FIGHT', 'SWAP', 'PACK', 'RUN'] as const;
+const FOE_X = 176;
+const FOE_Y = 44;
+const PLAYER_X = 58;
+const PLAYER_Y = 96;
 
 export class BattleScene extends Phaser.Scene {
   private battle!: Battle;
@@ -27,8 +32,8 @@ export class BattleScene extends Phaser.Scene {
   private cursor = 0;
   private text!: Phaser.GameObjects.Text;
   private menuTexts: Phaser.GameObjects.Text[] = [];
-  private playerSprite!: Phaser.GameObjects.Rectangle;
-  private foeSprite!: Phaser.GameObjects.Rectangle;
+  private playerSprite!: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
+  private foeSprite!: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
   private playerHud!: Phaser.GameObjects.Text;
   private foeHud!: Phaser.GameObjects.Text;
   private outcome: string | undefined;
@@ -42,6 +47,18 @@ export class BattleScene extends Phaser.Scene {
     this.init_ = data;
   }
 
+  preload(): void {
+    const state = getGameState();
+    const nums = new Set<number>([
+      ...this.init_.foes.map((f) => f.speciesNum),
+      ...state.party.map((p) => p.speciesNum),
+    ]);
+    for (const n of nums) {
+      if (hasFront(n)) this.load.image(`ohm_${n}_front`, `sprites/ohms/${n}_front.png`);
+      if (hasBack(n)) this.load.image(`ohm_${n}_back`, `sprites/ohms/${n}_back.png`);
+    }
+  }
+
   create(): void {
     const state = getGameState();
     this.battle = new Battle(
@@ -53,10 +70,9 @@ export class BattleScene extends Phaser.Scene {
     this.add.rectangle(120, 56, 240, 112, 0xd8c8a0); // field
     this.add.rectangle(120, 134, 240, 52, UI.paper).setStrokeStyle(2, UI.frame);
 
-    const foeType = GAME_DATA.species(this.battle.foe.speciesNum).type;
-    this.foeSprite = this.add.rectangle(300, 40, 36, 36, TYPE_COLORS[foeType]); // slides in (entry anim only)
-    this.tweens.add({ targets: this.foeSprite, x: 178, duration: 350, ease: 'Cubic.Out' });
-    this.playerSprite = this.add.rectangle(-60, 84, 36, 36, 0x000000);
+    this.foeSprite = this.makeOhmSprite(this.battle.foe.speciesNum, 'front', 300, FOE_Y); // slides in
+    this.tweens.add({ targets: this.foeSprite, x: FOE_X, duration: 350, ease: 'Cubic.Out' });
+    this.playerSprite = this.makeOhmSprite(this.battle.active.speciesNum, 'back', -60, PLAYER_Y);
     this.foeHud = this.add.text(6, 6, '', { fontFamily: 'monospace', fontSize: '9px', color: '#303030' });
     this.playerHud = this.add.text(132, 88, '', { fontFamily: 'monospace', fontSize: '9px', color: '#303030' });
     this.text = this.add.text(8, 116, '', { fontFamily: 'monospace', fontSize: '9px', color: '#303030', wordWrap: { width: 224 } });
@@ -91,9 +107,13 @@ export class BattleScene extends Phaser.Scene {
         break;
       case 'switchIn': {
         if (ev.side === 'player') {
-          const t = GAME_DATA.species(ev.speciesNum).type;
-          this.playerSprite.setFillStyle(TYPE_COLORS[t]).setPosition(-60, 84);
-          this.tweens.add({ targets: this.playerSprite, x: 62, duration: 350, ease: 'Cubic.Out' });
+          this.playerSprite.destroy();
+          this.playerSprite = this.makeOhmSprite(ev.speciesNum, 'back', -60, PLAYER_Y);
+          this.tweens.add({ targets: this.playerSprite, x: PLAYER_X, duration: 350, ease: 'Cubic.Out' });
+        } else if (this.battle.setup.kind === 'trainer') {
+          this.foeSprite.destroy();
+          this.foeSprite = this.makeOhmSprite(ev.speciesNum, 'front', 300, FOE_Y);
+          this.tweens.add({ targets: this.foeSprite, x: FOE_X, duration: 350, ease: 'Cubic.Out' });
         }
         next(380);
         break;
@@ -291,6 +311,21 @@ export class BattleScene extends Phaser.Scene {
     this.mode = 'anim';
     this.queue.push(...run());
     this.pump();
+  }
+
+  /** Real sprite where one exists; back falls back to front, then a tinted
+   * rectangle for species without art yet. */
+  private makeOhmSprite(
+    num: number,
+    side: 'front' | 'back',
+    x: number,
+    y: number,
+  ): Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle {
+    const want = `ohm_${num}_${side}`;
+    const front = `ohm_${num}_front`;
+    const texKey = this.textures.exists(want) ? want : this.textures.exists(front) ? front : undefined;
+    if (texKey) return this.add.image(x, y, texKey).setOrigin(0.5);
+    return this.add.rectangle(x, y, 40, 40, TYPE_COLORS[GAME_DATA.species(num).type]);
   }
 
   // ---- hud -----------------------------------------------------------------

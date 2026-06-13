@@ -10,7 +10,8 @@
     "lint": "tsx tools/check-canon.ts",
     "test": "vitest run",
     "gen:maps": "tsx tools/build-maps.ts",
-    "gen:styleguide": "tsx tools/gen-styleguide.ts"
+    "gen:styleguide": "tsx tools/gen-styleguide.ts",
+    "gen:sprites": "tsx tools/gen-sprites.ts"
   },
   "dependencies": {
     "phaser": "^3.85.2"

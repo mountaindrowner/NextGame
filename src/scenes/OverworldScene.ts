@@ -32,7 +32,7 @@ const DELTA: Record<Dir, [number, number]> = { up: [0, -1], down: [0, 1], left: 
 export class OverworldScene extends Phaser.Scene {
   private map!: LoadedMap;
   private controls!: Controls;
-  private player!: Phaser.GameObjects.Rectangle;
+  private player!: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
   private facingTick!: Phaser.GameObjects.Rectangle;
   private px = 0;
   private py = 0;
@@ -48,6 +48,7 @@ export class OverworldScene extends Phaser.Scene {
   preload(): void {
     const id = getGameState().location.map;
     this.load.json(`map-${id}`, `maps/${id}.tmj`);
+    if (!this.textures.exists('player_over')) this.load.image('player_over', 'sprites/ohms/player_over.png');
   }
 
   create(): void {
@@ -72,7 +73,9 @@ export class OverworldScene extends Phaser.Scene {
       this.npcs.push({ x: s.tileX, y: s.tileY, sprite, defeated });
     }
 
-    this.player = this.add.rectangle(0, 0, 12, 14, 0x2858a0).setDepth(10);
+    this.player = this.textures.exists('player_over')
+      ? this.add.image(0, 0, 'player_over').setDepth(10)
+      : this.add.rectangle(0, 0, 12, 14, 0x2858a0).setDepth(10);
     this.facingTick = this.add.rectangle(0, 0, 4, 4, 0xffffff).setDepth(11);
     this.placePlayer();
 

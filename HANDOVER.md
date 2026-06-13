@@ -80,8 +80,23 @@
   flushes queued input on resume. New `xpProgress` core helper, tested.
   49 tests green.
 
-## Next (M9 remainder, still art-independent)
+## Sprites — Claude generating for now (2026-06-13)
 
-- Elevator ascent cutscene framing, garage scene dressing, real Field maps in
-  Tiled, the Ohmwork/quest-log shell. Then, on style-guide approval, drop in
-  Chajipudi's slice sprites over the placeholders and tag `slice-v0`.
+- Mark asked Claude to produce sprites in the interim (Chajipudi later), at a
+  high craft bar, homage to Gen 3 / Arc Raiders / Digimon — original designs,
+  not traced (§15.2). Built a real toolkit `tools/spritekit.ts`: hue-shifted
+  ramps, shaded sphere/rounded-rect primitives, 4×4 Bayer dithering, auto
+  outline + sel-out, rim light, contact shadow, hard ≤16-color enforcement.
+- **16 slice sprites authored** (`npm run gen:sprites` → `public/sprites/ohms/`,
+  with prompt sidecars): battle fronts for 1/4/7 (starters) + 10/12/15/18/19/
+  21/30/32/41 (the whole Field encounter table), backs for the 3 starters, and
+  the player overworld micro. Manifest `src/data/sprite-manifest.ts` drives
+  preload; species without art still fall back to tinted rects.
+- **Wired in:** BattleScene shows real foe fronts and player backs (entry
+  slide preserved); OverworldScene uses the player micro. 49 tests still green.
+
+## Next
+
+- More sprite batches toward the full 156 (next: rest of Field 011–048, then
+  overworld micros for roamers). Plus the remaining art-independent M9 content
+  (elevator framing, real Field maps, quest-log shell). Then tag `slice-v0`.

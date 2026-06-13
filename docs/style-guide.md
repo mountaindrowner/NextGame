@@ -62,10 +62,15 @@ master-prompt §18.5). Approved files are never overwritten — revisions bump
 
 ## Pipeline (locked)
 
-Claude authored this reference set (hand-placed pixel grids rendered by
-`tools/gen-styleguide.ts`) to fix the target. Production sprites are made by
-the artist **Chajipudi** to this guide and `docs/art/sprite-brief.md`
-(pipeline updated 2026-06-13); Claude reviews deliveries against these rules
-and integrates them. Tiled for maps. On approval of this guide: production
-order is the slice set (9 starters + variants + the Field wilds + player +
-Field tileset) → Act I → outward, per the brief's priority tiers.
+**Interim pipeline (2026-06-13):** Mark asked Claude to generate the sprites
+for now (Chajipudi later). Sprites are authored with the **sprite toolkit**
+(`tools/spritekit.ts`, run via `npm run gen:sprites`): hue-shifted ramps,
+shaded primitives (sphere/rounded-rect with Lambert + bevel), 4×4 Bayer
+dithering, automatic outline + sel-out, rim light, contact shadow, and a
+hard ≤16-color check per sprite. The generator emits PNGs to
+`public/sprites/ohms/`, a `.prompt.txt` provenance sidecar per asset, and
+`src/data/sprite-manifest.ts` (which species have art) that the battle and
+overworld scenes preload from — missing species fall back to tinted
+placeholders. Designs are original (style homage to Gen 3 / Arc Raiders /
+Digimon energy, never traced; IP guardrails §15.2). Production order: the
+slice set (started — starters + Field wilds + player) → Act I → outward.
