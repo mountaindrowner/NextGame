@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { fitLegacy } from './legacy';
 import { rollEncounter } from '../core/encounter';
 import { Rng } from '../core/rng';
 import { makeBattler } from '../core/battle/engine';
@@ -52,6 +53,7 @@ export class OverworldScene extends Phaser.Scene {
   }
 
   create(): void {
+    fitLegacy(this);
     const state = getGameState();
     const id = state.location.map;
     this.map = parseTmj(id, this.cache.json.get(`map-${id}`));

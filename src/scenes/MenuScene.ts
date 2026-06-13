@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { fitLegacy } from './legacy';
 import { STAT_KEYS } from '../core/defs';
 import { xpProgress } from '../core/stats';
 import { GAME_DATA } from '../data/dataview';
@@ -35,7 +36,14 @@ export class MenuScene extends Phaser.Scene {
     super('menu');
   }
 
+  private launcher = 'overworld';
+
+  init(data: { from?: string }): void {
+    this.launcher = data?.from ?? 'overworld';
+  }
+
   create(): void {
+    fitLegacy(this);
     this.mode = 'hub';
     this.cursor = 0;
     this.controls = new Controls(this);
@@ -84,7 +92,7 @@ export class MenuScene extends Phaser.Scene {
   private back(): void {
     if (this.mode === 'hub') {
       this.scene.stop();
-      this.scene.resume('overworld');
+      this.scene.resume(this.launcher);
       return;
     }
     if (this.mode === 'detail') {

@@ -16,10 +16,22 @@ block; roads/grass pass). `FieldHDScene` renders it, walks the player on the
 32px grid with camera follow; grass steps roll an encounter banner. Engine
 native bumped to **480×320**; Boot routes to `fieldhd` for the demo.
 
-⚠ The other scenes (Title/NewGame/Bench/Battle/Puzzle/Evolution/Menu) are still
-laid out for 240×160 and will sit in the top-left quarter at 480×320 — they
-need a layout-migration pass before the full flow works again. The HD Field
-demo is self-contained and doesn't touch them.
+**Full HD flow wired (2026-06-13):** all eight legacy scenes now call
+`fitLegacy(this)` (`src/scenes/legacy.ts`) — a 2× camera zoom centered on the
+old (120,80) midpoint, so their 240×160 layouts fill the 480×320 screen with
+zero per-coordinate rework. Flow restored and routed through the HD Field:
+Boot → Title → New Game → Bench → **FieldHDScene** → grass encounter → Battle
+→ (Evolution) → back to the Field. `BattleInit.returnScene` / `EvolutionInit
+.returnScene` carry the return target; `MenuScene` resumes its launcher
+(`{from}`); Title "Continue" loads → Field. FieldHD now reads game state, rolls
+real `field-grass` encounters, opens the pause menu (START), and persists the
+player's tile in `state.location`. Typecheck/lint/build/49 tests green.
+
+Follow-ups: (1) battle still shows the **64px** sprite set (scaled 2× by the
+zoom) — wiring the 96px `_hd` sprites into battle needs native repositioning;
+(2) virtual d-pad placement under zoom (keyboard is fine); (3) compose the
+Field from the extracted objects / a real tileset instead of the flat backdrop;
+(4) a garage tile for defeat respawn (currently recharges in place).
 
 **Open decisions (need Mark) before executing the pivot:**
 1. **Native resolution + tile size** — proposal: 480×320 native, 32×32 tiles,

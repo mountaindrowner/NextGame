@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { fitLegacy } from './legacy';
 import type { BattleEvent, Battler } from '../core/battle/contract';
 import { Battle } from '../core/battle/engine';
 import { pendingEvolutions } from '../core/evolution';
@@ -14,6 +15,8 @@ interface BattleInit {
   foes: Battler[];
   foeName?: string;
   seed: number;
+  /** scene to return to when the battle ends (default the old overworld) */
+  returnScene?: string;
 }
 
 type Mode = 'anim' | 'command' | 'moves' | 'party' | 'pack' | 'puzzle' | 'over';
@@ -60,6 +63,7 @@ export class BattleScene extends Phaser.Scene {
   }
 
   create(): void {
+    fitLegacy(this);
     const state = getGameState();
     this.battle = new Battle(
       { kind: this.init_.kind, seed: this.init_.seed, party: state.party, foes: this.init_.foes, foeName: this.init_.foeName },
@@ -190,13 +194,13 @@ export class BattleScene extends Phaser.Scene {
   private finish(): void {
     this.mode = 'over';
     const state = getGameState();
+    const back = this.init_.returnScene ?? 'overworld';
     if (this.outcome === 'victory' && this.init_.kind === 'trainer') {
       state.credits += 120;
       this.say('Won 120 credits!');
     }
     if (this.outcome === 'defeat') {
-      // party wipe loses nothing (GDD §6): wake at the garage, recharged
-      state.location = { map: 'ohmstead-garage', x: 0, y: 0 };
+      // party wipe loses nothing (GDD §6): recharge and return
       for (const b of state.party) {
         b.integrity = b.stats.integrity;
         b.status = undefined;
@@ -206,8 +210,8 @@ export class BattleScene extends Phaser.Scene {
     // evolution check after a won fight (GDD §10.7) — defer to its own scene
     const offers = this.outcome !== 'defeat' ? pendingEvolutions(state.party, state.bag, GAME_DATA) : [];
     this.time.delayedCall(900, () => {
-      if (offers.length > 0) this.scene.start('evolution', { offers });
-      else this.scene.start('overworld');
+      if (offers.length > 0) this.scene.start('evolution', { offers, returnScene: back });
+      else this.scene.start(back);
     });
   }
 

@@ -1,5 +1,11 @@
 import Phaser from 'phaser';
 import { Controls } from '../input/controls';
+import { makeBattler } from '../core/battle/engine';
+import { rollEncounter } from '../core/encounter';
+import { Rng } from '../core/rng';
+import { GAME_DATA } from '../data/dataview';
+import { ZONES_BY_ID } from '../data/encounters';
+import { getGameState, hasGameState, nextSeed } from '../game/state';
 
 interface FieldData {
   tile: number;
@@ -46,8 +52,14 @@ export class FieldHDScene extends Phaser.Scene {
     this.field = this.cache.json.get('field-hd-data') as FieldData;
     this.add.image(0, 0, 'field-hd').setOrigin(0, 0);
 
-    // spawn on the first open cell near the centre
-    [this.px, this.py] = this.findOpenSpawn();
+    // restore position if returning here, else spawn near the centre
+    const loc = hasGameState() ? getGameState().location : undefined;
+    if (loc && loc.map === 'fieldhd' && !this.solid(loc.x, loc.y)) {
+      this.px = loc.x;
+      this.py = loc.y;
+    } else {
+      [this.px, this.py] = this.findOpenSpawn();
+    }
 
     this.player = this.add.image(0, 0, 'player_over').setOrigin(0.5, 0.7).setScale(2).setDepth(10);
     this.placePlayer();
@@ -57,11 +69,17 @@ export class FieldHDScene extends Phaser.Scene {
     this.cameras.main.setRoundPixels(true);
 
     this.controls = new Controls(this);
+    this.events.on('resume', () => this.controls.clearQueue());
     this.banner('THE FIELD — Ohmstead surface');
   }
 
   override update(): void {
     if (this.moving) return;
+    if (this.controls.consume('start') && hasGameState()) {
+      this.scene.launch('menu', { from: 'fieldhd' });
+      this.scene.pause();
+      return;
+    }
     for (const dir of ['up', 'down', 'left', 'right'] as Dir[]) {
       if (this.controls.isHeld(dir)) {
         this.step(dir);
@@ -114,11 +132,28 @@ export class FieldHDScene extends Phaser.Scene {
       duration: run ? RUN_MS : WALK_MS,
       onComplete: () => {
         this.moving = false;
-        if (this.isGrass(this.px, this.py) && Phaser.Math.Between(0, 100) < 22) {
-          this.banner('The grass rustles — a wild Ohm is near!');
-        }
+        if (hasGameState()) getGameState().location = { map: 'fieldhd', x: this.px, y: this.py };
+        if (this.isGrass(this.px, this.py)) this.tryEncounter();
       },
     });
+  }
+
+  private rng = new Rng(Date.now() >>> 0);
+
+  private tryEncounter(): void {
+    if (!hasGameState()) {
+      if (Phaser.Math.Between(0, 100) < 22) this.banner('The grass rustles — a wild Ohm is near!');
+      return;
+    }
+    const zone = ZONES_BY_ID.get('field-grass');
+    if (!zone) return;
+    const state = getGameState();
+    const dampened = state.flags['dampener'] === true;
+    const spawn = rollEncounter(zone, this.rng, dampened);
+    if (!spawn) return;
+    if (!state.manifest.seen.includes(spawn.speciesNum)) state.manifest.seen.push(spawn.speciesNum);
+    const foe = makeBattler(GAME_DATA.species(spawn.speciesNum), spawn.level, GAME_DATA);
+    this.scene.start('battle', { kind: 'wild', foes: [foe], seed: nextSeed(state), returnScene: 'fieldhd' });
   }
 
   private placePlayer(): void {

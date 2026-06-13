@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { fitLegacy } from './legacy';
 import { applyEvolution, type EvoOffer } from '../core/evolution';
 import { GAME_DATA } from '../data/dataview';
 import { ITEMS_BY_ID } from '../data/items';
@@ -8,6 +9,7 @@ import { TYPE_COLORS, UI } from '../ui/colors';
 
 interface EvolutionInit {
   offers: EvoOffer[];
+  returnScene?: string;
 }
 
 type Phase = 'prompt' | 'animating' | 'done';
@@ -32,11 +34,15 @@ export class EvolutionScene extends Phaser.Scene {
     super('evolution');
   }
 
+  private returnScene = 'overworld';
+
   init(data: EvolutionInit): void {
     this.offers = data.offers ?? [];
+    this.returnScene = data.returnScene ?? 'overworld';
   }
 
   create(): void {
+    fitLegacy(this);
     this.index = 0;
     this.canceled = false;
     this.controls = new Controls(this);
@@ -55,7 +61,7 @@ export class EvolutionScene extends Phaser.Scene {
   private present(): void {
     const offer = this.offers[this.index];
     if (!offer) {
-      this.scene.start('overworld');
+      this.scene.start(this.returnScene);
       return;
     }
     const state = getGameState();

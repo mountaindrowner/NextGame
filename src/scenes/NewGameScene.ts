@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { fitLegacy } from './legacy';
 import { Controls } from '../input/controls';
 import { UI } from '../ui/colors';
 
@@ -27,6 +28,7 @@ export class NewGameScene extends Phaser.Scene {
   }
 
   create(): void {
+    fitLegacy(this);
     this.stage = 'preset';
     this.cursor = 0;
     this.introIndex = 0;

@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { fitLegacy } from './legacy';
 import { setGameState } from '../game/state';
 import { browserStorage, SaveSlots, SLOT_COUNT } from '../save/save';
 import { Controls } from '../input/controls';
@@ -17,6 +18,7 @@ export class TitleScene extends Phaser.Scene {
   }
 
   create(): void {
+    fitLegacy(this);
     this.add.rectangle(120, 80, 240, 160, SKY);
     this.add.rectangle(120, 120, 240, 80, RUST).setAlpha(0.35);
     this.add
@@ -35,7 +37,7 @@ export class TitleScene extends Phaser.Scene {
             const state = slots.load(s);
             if (state) {
               setGameState(state);
-              this.scene.start('overworld');
+              this.scene.start('fieldhd');
             }
           },
         });

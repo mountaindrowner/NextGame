@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { fitLegacy } from './legacy';
 import { newGame, setGameState, type BenchPicks, type CoreChoice, type Locomotion } from '../game/state';
 import type { Plating } from '../core/stats';
 import { Controls } from '../input/controls';
@@ -53,6 +54,7 @@ export class BenchScene extends Phaser.Scene {
   }
 
   create(): void {
+    fitLegacy(this);
     this.slotIndex = 0;
     this.cursor = 0;
     this.picks = {};
@@ -114,7 +116,7 @@ export class BenchScene extends Phaser.Scene {
       setGameState(state);
       const starter = state.party[0];
       this.blurb.setText(`${starter?.name ?? 'It'} whirs awake on the Bench. It chooses a chirp just for you.`);
-      this.time.delayedCall(2200, () => this.scene.start('overworld'));
+      this.time.delayedCall(2200, () => this.scene.start('fieldhd'));
       this.slotIndex = 3; // stop input
       return;
     }

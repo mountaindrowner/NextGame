@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { fitLegacy } from './legacy';
 import { connections, generatePuzzle, isSolved, rotateCell, type Puzzle } from '../core/puzzle';
 import { Rng } from '../core/rng';
 import { Controls } from '../input/controls';
@@ -34,6 +35,7 @@ export class PuzzleScene extends Phaser.Scene {
   }
 
   create(): void {
+    fitLegacy(this);
     this.done = false;
     this.puzzle = generatePuzzle(this.init_.gridSize, new Rng((Date.now() ^ 0x5eed) >>> 0));
     this.totalMs = this.init_.timerSeconds * 1000;
