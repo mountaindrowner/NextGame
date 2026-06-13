@@ -8,9 +8,11 @@ import { BattleScene } from './scenes/BattleScene';
 import { PuzzleScene } from './scenes/PuzzleScene';
 import { EvolutionScene } from './scenes/EvolutionScene';
 import { MenuScene } from './scenes/MenuScene';
+import { FieldHDScene } from './scenes/FieldHDScene';
 
-export const NATIVE_W = 240;
-export const NATIVE_H = 160;
+// HD direction (2026-06-13): native bumped from 240×160 to 480×320.
+export const NATIVE_W = 480;
+export const NATIVE_H = 320;
 
 function integerZoom(): number {
   return Math.max(
@@ -27,7 +29,7 @@ const game = new Phaser.Game({
   pixelArt: true,
   backgroundColor: '#181410',
   scale: { mode: Phaser.Scale.NONE, zoom: integerZoom() },
-  scene: [BootScene, TitleScene, NewGameScene, BenchScene, OverworldScene, BattleScene, PuzzleScene, EvolutionScene, MenuScene],
+  scene: [BootScene, FieldHDScene, TitleScene, NewGameScene, BenchScene, OverworldScene, BattleScene, PuzzleScene, EvolutionScene, MenuScene],
 });
 
 window.addEventListener('resize', () => {

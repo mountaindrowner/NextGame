@@ -8,6 +8,19 @@ style, matching creator-owned cattle-town art now in
 with PROVENANCE.md). Canon updated (GDD §12, CLAUDE.md, style-guide — Gen-3
 spec marked superseded, kept for history).
 
+**HD Field is live (2026-06-13):** the creator's painted example map is now the
+playable Field. `npm run gen:field` (`tools/build-field-hd.ts`) area-downscales
+`example-map.png` → `public/field/the-field.png` (960×704, 30×22 @32px) and
+derives collision + grass-encounter masks from the art (water/buildings/trees
+block; roads/grass pass). `FieldHDScene` renders it, walks the player on the
+32px grid with camera follow; grass steps roll an encounter banner. Engine
+native bumped to **480×320**; Boot routes to `fieldhd` for the demo.
+
+⚠ The other scenes (Title/NewGame/Bench/Battle/Puzzle/Evolution/Menu) are still
+laid out for 240×160 and will sit in the top-left quarter at 480×320 — they
+need a layout-migration pass before the full flow works again. The HD Field
+demo is self-contained and doesn't touch them.
+
 **Open decisions (need Mark) before executing the pivot:**
 1. **Native resolution + tile size** — proposal: 480×320 native, 32×32 tiles,
    integer-scaled. Their map is 4:3, so 480×360 is also an option.

@@ -18,6 +18,8 @@ export class BootScene extends Phaser.Scene {
     g.generateTexture('px', 1, 1);
     g.clear();
 
-    this.scene.start('title');
+    // HD direction demo: boot into the painted Field. The 240×160-laid-out
+    // flow (title → bench → battle) awaits the 480×320 layout migration.
+    this.scene.start('fieldhd');
   }
 }
