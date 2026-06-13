@@ -59,8 +59,21 @@
 - Tags to apply on merge: `phase1-gdd` → 282ea9f · `phase2-compendium` →
   342aec0 · `phase3-contract` → fd33dc0 (remote refuses tag pushes).
 
-## Next
+## M9 progress (art-independent slice content, started 2026-06-13)
 
-- On style-guide approval: **M9 slice content** — elevator sequence,
-  garage scene dressing, evolution moment (starter Lv16 + Resonance Core),
-  real Field maps in Tiled, slice sprite set production, then `slice-v0`.
+- **Evolution moment done** (slice deliverable; GDD §10.7): pure
+  `src/core/evolution.ts` (level + Resonance/Prime Core, core-reservation so
+  one core can't evolve two Ohms, cancelable) + `EvolutionScene` (B defers
+  without spending the core, B mid-animation aborts). Wired into the
+  post-victory flow. Starter bag now carries one Resonance Core (Grandpa's
+  gift) so the slice's evolution is reachable. 8 new tests; 46 green total.
+- **Bug fixed:** level-up recomputed stats without the Bench Plating lean, so
+  a Heavy/Light starter silently lost its lean on first level-up. Build
+  options (plating, expansion board) now persist on the Battler; level-up and
+  evolution both honor them. Regression test added.
+
+## Next (M9 remainder, still art-independent)
+
+- Elevator ascent cutscene framing, garage scene dressing, real Field maps in
+  Tiled. Then, on style-guide approval, drop in Chajipudi's slice sprites over
+  the placeholders and tag `slice-v0`.

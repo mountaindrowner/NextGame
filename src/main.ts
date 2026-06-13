@@ -6,6 +6,7 @@ import { BenchScene } from './scenes/BenchScene';
 import { OverworldScene } from './scenes/OverworldScene';
 import { BattleScene } from './scenes/BattleScene';
 import { PuzzleScene } from './scenes/PuzzleScene';
+import { EvolutionScene } from './scenes/EvolutionScene';
 
 export const NATIVE_W = 240;
 export const NATIVE_H = 160;
@@ -25,7 +26,7 @@ const game = new Phaser.Game({
   pixelArt: true,
   backgroundColor: '#181410',
   scale: { mode: Phaser.Scale.NONE, zoom: integerZoom() },
-  scene: [BootScene, TitleScene, NewGameScene, BenchScene, OverworldScene, BattleScene, PuzzleScene],
+  scene: [BootScene, TitleScene, NewGameScene, BenchScene, OverworldScene, BattleScene, PuzzleScene, EvolutionScene],
 });
 
 window.addEventListener('resize', () => {

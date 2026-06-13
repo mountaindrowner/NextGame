@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import type { BattleEvent, Battler } from '../core/battle/contract';
 import { Battle } from '../core/battle/engine';
+import { pendingEvolutions } from '../core/evolution';
 import { GAME_DATA } from '../data/dataview';
 import { ITEMS_BY_ID } from '../data/items';
 import { getGameState } from '../game/state';
@@ -182,7 +183,12 @@ export class BattleScene extends Phaser.Scene {
         for (const m of b.moves) m.pp = m.maxPp;
       }
     }
-    this.time.delayedCall(900, () => this.scene.start('overworld'));
+    // evolution check after a won fight (GDD §10.7) — defer to its own scene
+    const offers = this.outcome !== 'defeat' ? pendingEvolutions(state.party, state.bag, GAME_DATA) : [];
+    this.time.delayedCall(900, () => {
+      if (offers.length > 0) this.scene.start('evolution', { offers });
+      else this.scene.start('overworld');
+    });
   }
 
   // ---- menus ---------------------------------------------------------------

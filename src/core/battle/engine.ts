@@ -47,6 +47,8 @@ export function makeBattler(
     glitchedTurns: 0,
     stages: { integrity: 0, output: 0, armor: 0, surge: 0, shielding: 0, clock: 0, accuracy: 0, evasion: 0 },
     rage: 0,
+    ...(opts.plating ? { plating: opts.plating } : {}),
+    ...(opts.expansionBoard ? { expansionBoard: true } : {}),
   };
 }
 
@@ -477,9 +479,10 @@ export class Battle {
       const ms = this.data.species(member.speciesNum);
       let newLevel = levelForXp(ms.growth, member.xp);
       newLevel = Math.min(100, newLevel);
+      const build = { plating: member.plating, expansionBoard: member.expansionBoard };
       while (member.level < newLevel) {
         member.level += 1;
-        const grown = computeStats(ms, member.level);
+        const grown = computeStats(ms, member.level, build);
         const gainedIntegrity = grown.integrity - member.stats.integrity;
         member.stats = grown;
         member.integrity = Math.min(grown.integrity, member.integrity + Math.max(0, gainedIntegrity));

@@ -53,7 +53,8 @@ export function newGame(preset: 'SAL' | 'WREN', picks: BenchPicks): GameState {
     garage: [],
     manifest: { seen: [CORE_SPECIES[picks.core]], freed: [CORE_SPECIES[picks.core]] },
     patches: [],
-    bag: { 'storage-node': 5, 'repair-kit': 3 },
+    // Grandpa slips you one rare core off the Bench — the slice's evolution seed
+    bag: { 'storage-node': 5, 'repair-kit': 3, 'resonance-core': 1 },
     credits: 600,
     location: { map: 'ohmstead-garage', x: 5, y: 4 },
     flags: {},

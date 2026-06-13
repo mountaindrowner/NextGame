@@ -39,6 +39,9 @@ export interface Battler {
   glitchedTurns: number; // volatile
   stages: Record<BattleStatKey, number>;
   rage: number;
+  /** persisted Bench build so stats recompute correctly on level-up/evolution */
+  plating?: 'heavy' | 'light' | 'factory';
+  expansionBoard?: boolean;
 }
 
 export interface BattleSetup {
