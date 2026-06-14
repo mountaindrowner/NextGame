@@ -5,6 +5,7 @@ import { Battle } from '../core/battle/engine';
 import { pendingEvolutions } from '../core/evolution';
 import { GAME_DATA } from '../data/dataview';
 import { hasBack, hasFront } from '../data/sprite-manifest';
+import { hasHdBack, hasHdFront } from '../data/sprite-manifest-hd';
 import { ITEMS_BY_ID } from '../data/items';
 import { getGameState } from '../game/state';
 import { Controls } from '../input/controls';
@@ -26,6 +27,7 @@ const FOE_X = 176;
 const FOE_Y = 44;
 const PLAYER_X = 58;
 const PLAYER_Y = 96;
+const BATTLE_SPRITE_PX = 60; // on-screen footprint in the 240-layout (zoomed ×2)
 
 export class BattleScene extends Phaser.Scene {
   private battle!: Battle;
@@ -57,8 +59,11 @@ export class BattleScene extends Phaser.Scene {
       ...state.party.map((p) => p.speciesNum),
     ]);
     for (const n of nums) {
-      if (hasFront(n)) this.load.image(`ohm_${n}_front`, `sprites/ohms/${n}_front.png`);
-      if (hasBack(n)) this.load.image(`ohm_${n}_back`, `sprites/ohms/${n}_back.png`);
+      // prefer HD (96px), fall back to the GBA set
+      if (hasHdFront(n)) this.load.image(`ohm_${n}_front_hd`, `sprites/ohms/${n}_front_hd.png`);
+      else if (hasFront(n)) this.load.image(`ohm_${n}_front`, `sprites/ohms/${n}_front.png`);
+      if (hasHdBack(n)) this.load.image(`ohm_${n}_back_hd`, `sprites/ohms/${n}_back_hd.png`);
+      else if (hasBack(n)) this.load.image(`ohm_${n}_back`, `sprites/ohms/${n}_back.png`);
     }
   }
 
@@ -200,12 +205,13 @@ export class BattleScene extends Phaser.Scene {
       this.say('Won 120 credits!');
     }
     if (this.outcome === 'defeat') {
-      // party wipe loses nothing (GDD §6): recharge and return
+      // party wipe loses nothing (GDD §6): recharge and wake at the garage
       for (const b of state.party) {
         b.integrity = b.stats.integrity;
         b.status = undefined;
         for (const m of b.moves) m.pp = m.maxPp;
       }
+      state.flags['respawn-garage'] = true;
     }
     // evolution check after a won fight (GDD §10.7) — defer to its own scene
     const offers = this.outcome !== 'defeat' ? pendingEvolutions(state.party, state.bag, GAME_DATA) : [];
@@ -325,10 +331,19 @@ export class BattleScene extends Phaser.Scene {
     x: number,
     y: number,
   ): Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle {
-    const want = `ohm_${num}_${side}`;
-    const front = `ohm_${num}_front`;
-    const texKey = this.textures.exists(want) ? want : this.textures.exists(front) ? front : undefined;
-    if (texKey) return this.add.image(x, y, texKey).setOrigin(0.5);
+    // preference order: HD side · HD front · GBA side · GBA front
+    const candidates = [
+      `ohm_${num}_${side}_hd`,
+      `ohm_${num}_front_hd`,
+      `ohm_${num}_${side}`,
+      `ohm_${num}_front`,
+    ];
+    const texKey = candidates.find((k) => this.textures.exists(k));
+    if (texKey) {
+      const img = this.add.image(x, y, texKey).setOrigin(0.5);
+      img.setDisplaySize(BATTLE_SPRITE_PX, BATTLE_SPRITE_PX); // keep the 240-layout footprint
+      return img;
+    }
     return this.add.rectangle(x, y, 40, 40, TYPE_COLORS[GAME_DATA.species(num).type]);
   }
 

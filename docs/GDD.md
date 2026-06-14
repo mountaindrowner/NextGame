@@ -488,18 +488,17 @@ in v1.
 
 ## 12. ART DIRECTION
 
-> **DIRECTION CHANGED 2026-06-13 (chat overrides files, §0.4).** Mark moved
-> the art target from Gen 3 GBA to a **higher-fidelity HD top-down** style,
-> matching creator-provided cattle-town art (`assets/reference/cattle-town/`:
-> a rural/western tileset + object atlas + example map he owns). The Gen-3
-> spec below is **superseded** and kept only for history. The concrete HD
-> spec (native resolution, tile size, palette policy) and the migration of
-> the existing pixel work are tracked in `docs/style-guide.md` and HANDOVER;
-> exact numbers pending Mark's confirmation. Implications: the engine canvas
-> grows beyond 240×160; tiles move to ~32px; the 48 GBA Ohm sprites and the
-> UI get an HD rework pass. The HD environment reference is the Field's
-> cattle-town look — barn, western storefronts, windmill, water tower,
-> fences, creek, crop fields, dirt roads.
+> **DIRECTION CHANGED 2026-06-13, CONFIRMED LOCKED 2026-06-14 (chat overrides
+> files, §0.4).** Mark moved the art target from Gen 3 GBA to a
+> **higher-fidelity HD top-down** style, matching creator-owned cattle-town
+> art (`assets/reference/cattle-town/`: rural/western tileset + object atlas +
+> example map + villager sheet). The Gen-3 spec below is **superseded**, kept
+> only for history. **Locked HD spec:** native **480×320**, integer-scaled;
+> **32×32** tiles; **full colour** (≤16-cap dropped); soft top-down lighting +
+> cast shadows. Ohm battle fronts **96×96**, HD-reworked. The HD environment
+> reference is the Field's cattle-town look — barn, storefronts, windmill,
+> water tower, fences, creek, crop fields, dirt roads — with painted NPC
+> villagers.
 
 ### 12.x SUPERSEDED — original Gen 3 GBA spec (history)
 

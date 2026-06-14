@@ -116,7 +116,7 @@ export class BenchScene extends Phaser.Scene {
       setGameState(state);
       const starter = state.party[0];
       this.blurb.setText(`${starter?.name ?? 'It'} whirs awake on the Bench. It chooses a chirp just for you.`);
-      this.time.delayedCall(2200, () => this.scene.start('fieldhd'));
+      this.time.delayedCall(2200, () => this.scene.start('elevator'));
       this.slotIndex = 3; // stop input
       return;
     }

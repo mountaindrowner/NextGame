@@ -14,6 +14,9 @@
   - `terrain-tiles.png` — terrain atlas: grass, dirt roads (corners +
     intersections), tilled field, water + banks, wood fences/gates, plants,
     cactus, rocks, stairs.
+  - `villagers.png` — NPC character atlas (added 2026-06-14): western/rural
+    townsfolk — ranchers, traders, nurses, elders, kids. Extracted to
+    `assets/extracted/villagers/` (98 frames).
 - **Note:** these three are scaled showcase exports (1448×1086; the grid does
   not divide cleanly to 16 or 32), not grid-aligned spritesheets. To embed
   tiles 1:1 the engine needs the original grid-aligned source export (clean

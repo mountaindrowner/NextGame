@@ -1125,6 +1125,13 @@ export const FRONT_BUILDERS: Record<number, () => Sprite> = {
   43: pricklet, 44: cactacomb, 45: bonnetbloom, 46: barbwyre, 47: mowlet, 48: mowrauder,
 };
 
+/** Back-sprite builders (player side) — currently the starter lines. */
+export const BACK_BUILDERS: Record<number, () => Sprite> = {
+  1: () => chassisBack('a85420', EMBER, 1), 2: () => chassisBack('a85420', EMBER, 1.15), 3: () => chassisBack('a85420', EMBER, 1.3),
+  4: () => chassisBack('8088a0', VOLT, 1), 5: () => chassisBack('8088a0', VOLT, 1.15), 6: () => chassisBack('8088a0', VOLT, 1.3),
+  7: () => chassisBack('5a86a8', COOL, 1), 8: () => chassisBack('5a86a8', COOL, 1.15), 9: () => chassisBack('5a86a8', COOL, 1.3),
+};
+
 // --------------------------------------------------------- write & validate
 if (isMainModule) {
 let failed = 0;

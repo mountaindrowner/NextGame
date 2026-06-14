@@ -52,13 +52,22 @@ export class FieldHDScene extends Phaser.Scene {
     this.field = this.cache.json.get('field-hd-data') as FieldData;
     this.add.image(0, 0, 'field-hd').setOrigin(0, 0);
 
-    // restore position if returning here, else spawn near the centre
-    const loc = hasGameState() ? getGameState().location : undefined;
-    if (loc && loc.map === 'fieldhd' && !this.solid(loc.x, loc.y)) {
+    // the garage / elevator exit (heal point) is the deterministic central
+    // open tile — the elevator brings you up here
+    [this.garage[0], this.garage[1]] = this.findOpenSpawn();
+    this.drawGarage();
+
+    const state = hasGameState() ? getGameState() : undefined;
+    const loc = state?.location;
+    if (state?.flags['respawn-garage']) {
+      [this.px, this.py] = this.garage;
+      delete state.flags['respawn-garage'];
+      this.time.delayedCall(200, () => this.banner("You're all recharged — stay current out there."));
+    } else if (loc && loc.map === 'fieldhd' && !this.solid(loc.x, loc.y)) {
       this.px = loc.x;
       this.py = loc.y;
     } else {
-      [this.px, this.py] = this.findOpenSpawn();
+      [this.px, this.py] = this.garage;
     }
 
     this.player = this.add.image(0, 0, 'player_over').setOrigin(0.5, 0.7).setScale(2).setDepth(10);
@@ -73,11 +82,43 @@ export class FieldHDScene extends Phaser.Scene {
     this.banner('THE FIELD — Ohmstead surface');
   }
 
+  private garage: [number, number] = [1, 1];
+
+  private drawGarage(): void {
+    const t = this.field.tile;
+    const gx = this.garage[0] * t;
+    const gy = this.garage[1] * t;
+    // a small recharge pad marker (the colony garage door / elevator head)
+    this.add.rectangle(gx + t / 2, gy + t / 2, t - 4, t - 4, 0x3a78a0, 0.5).setStrokeStyle(2, 0x9fe0ff).setDepth(1);
+    this.add.text(gx + t / 2, gy + t / 2, '⤓', { fontFamily: 'monospace', fontSize: '14px', color: '#e8f4ff' }).setOrigin(0.5).setDepth(1);
+  }
+
+  private atGarage(): boolean {
+    return Math.abs(this.px - this.garage[0]) + Math.abs(this.py - this.garage[1]) <= 1;
+  }
+
+  private recharge(): void {
+    if (!hasGameState()) return;
+    const state = getGameState();
+    for (const b of state.party) {
+      b.integrity = b.stats.integrity;
+      b.status = undefined;
+      b.statusTurns = 0;
+      b.glitchedTurns = 0;
+      for (const m of b.moves) m.pp = m.maxPp;
+    }
+    this.banner("Garage: you're all recharged — stay current.");
+  }
+
   override update(): void {
     if (this.moving) return;
     if (this.controls.consume('start') && hasGameState()) {
       this.scene.launch('menu', { from: 'fieldhd' });
       this.scene.pause();
+      return;
+    }
+    if (this.controls.consume('a') && this.atGarage()) {
+      this.recharge();
       return;
     }
     for (const dir of ['up', 'down', 'left', 'right'] as Dir[]) {

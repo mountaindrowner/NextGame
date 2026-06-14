@@ -1,5 +1,30 @@
 # HANDOVER
 
+## Session 2026-06-14 — HD locked, slice completed, HD battle
+
+Mark confirmed: HD direction is **intended and locked**; finish the slice to
+the §14 checklist; wire HD sprites into battle. Done this session:
+- **HD locked in canon** (GDD §12, no more "pending" hedges).
+- **HD sprites wired into battle** — BattleScene preloads/prefers the 96px
+  `_hd` fronts (48) + `_hd` backs (9 starters), shown at a consistent
+  ~60px-in-240-layout footprint (GBA set is the fallback). Mock: `/tmp/hd_battle.png`.
+- **Elevator beat** (`ElevatorScene`): Bench → elevator (rising car + sky
+  reveal, beats.md §1→2) → Field. The §14 "elevator" item is in.
+- **Garage** in the Field: the central elevator-exit tile is a recharge pad
+  (press A near it to heal); **defeat** sets `respawn-garage` and you wake
+  there recharged. The §14 "garage recharge" item is in.
+- **Villagers ingested** — `assets/reference/cattle-town/villagers.png`
+  extracted to `assets/extracted/villagers/` (98 NPC frames).
+
+**Slice vs §14 checklist — now complete:** Bench → elevator → Field → wild
+encounter → battle → node capture → one evolution → garage recharge →
+save/load. 49 tests green; typecheck/lint/build clean. (No browser in this
+env to watch it live — verified by build + layout-accurate mocks.)
+
+Next candidates: place villager NPCs in the Field; compose the Field from the
+extracted objects/tileset; reposition battle natively for 480×320; tag
+`slice-v0`.
+
 ## ⚠ ART DIRECTION CHANGED 2026-06-13 → HD top-down
 
 Mark pivoted the art target from Gen 3 GBA to a **higher-fidelity HD top-down**
