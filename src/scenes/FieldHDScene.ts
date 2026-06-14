@@ -19,7 +19,22 @@ interface FieldData {
   water?: number[];
   placements?: Array<{ type: string; col: number; row: number }>;
   npcs?: Array<{ char: string; col: number; row: number }>;
+  spawn?: { x: number; y: number };
+  exits?: Array<{ x: number; y: number; scene: string }>;
+  interacts?: Array<{ x: number; y: number; kind: string }>;
 }
+
+interface MapDef {
+  png: string;
+  json: string;
+  banner: string;
+  garage: boolean; // does this map have the surface recharge pad?
+}
+
+const MAPS: Record<string, MapDef> = {
+  'the-field': { png: 'world/the-field.png', json: 'world/the-field.json', banner: 'THE FIELD — Ohmstead surface', garage: true },
+  ohmstead: { png: 'world/ohmstead.png', json: 'world/ohmstead.json', banner: 'OHMSTEAD — the colony, sublevel garage', garage: false },
+};
 
 const NPC_CHARS = ['npc_rancher', 'npc_elder', 'npc_kid'] as const;
 const FX = ['grass_0', 'grass_1', 'grass_2', 'leaf_0', 'leaf_1', 'leaf_2', 'trunk'] as const;
@@ -44,6 +59,8 @@ const RUN_MS = 90;
  * scenes still await the 480×320 layout migration — this proves the art.
  */
 export class FieldHDScene extends Phaser.Scene {
+  private mapId = 'the-field';
+  private mapDef: MapDef = MAPS['the-field']!;
   private field!: FieldData;
   private controls!: Controls;
   private player!: Phaser.GameObjects.Image;
@@ -60,6 +77,18 @@ export class FieldHDScene extends Phaser.Scene {
 
   constructor() {
     super('fieldhd');
+  }
+
+  init(data: { mapId?: string }): void {
+    this.mapId = data.mapId && MAPS[data.mapId] ? data.mapId : 'the-field';
+    this.mapDef = MAPS[this.mapId]!;
+  }
+
+  private mapKey(): string {
+    return `map-${this.mapId}`;
+  }
+  private dataKey(): string {
+    return `mapdata-${this.mapId}`;
   }
 
   /** Build the moving overlay layers: animated water, swaying grass tufts,
@@ -123,8 +152,8 @@ export class FieldHDScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.image('field-hd', 'world/the-field.png');
-    this.load.json('field-hd-data', 'world/the-field.json');
+    if (!this.textures.exists(this.mapKey())) this.load.image(this.mapKey(), this.mapDef.png);
+    if (!this.cache.json.exists(this.dataKey())) this.load.json(this.dataKey(), this.mapDef.json);
     // pixelified protagonist sprites (from real art via the pixelify pipeline)
     // original protagonist sprites (YoYoPixel grid method)
     if (!this.textures.exists('sal_yoyo')) this.load.image('sal_yoyo', 'world/char/sal_yoyo.png');
@@ -138,26 +167,33 @@ export class FieldHDScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.field = this.cache.json.get('field-hd-data') as FieldData;
-    this.add.image(0, 0, 'field-hd').setOrigin(0, 0).setDepth(0);
+    this.field = this.cache.json.get(this.dataKey()) as FieldData;
+    this.add.image(0, 0, this.mapKey()).setOrigin(0, 0).setDepth(0);
     this.buildAnimatedLayers();
 
-    // the garage / elevator exit (heal point) is the deterministic central
-    // open tile — the elevator brings you up here
-    [this.garage[0], this.garage[1]] = this.findOpenSpawn();
-    this.drawGarage();
+    // the garage / elevator exit (heal point) — the surface map has the
+    // recharge pad; the colony garage uses the Bench interact instead
+    const open = this.findOpenSpawn();
+    const home = this.field.spawn ?? { x: open[0], y: open[1] };
+    if (this.mapDef.garage) {
+      [this.garage[0], this.garage[1]] = this.findOpenSpawn();
+      this.drawGarage();
+    } else {
+      this.garage = [-99, -99]; // no recharge pad underground
+    }
 
     const state = hasGameState() ? getGameState() : undefined;
     const loc = state?.location;
-    if (state?.flags['respawn-garage']) {
+    if (this.mapDef.garage && state?.flags['respawn-garage']) {
       [this.px, this.py] = this.garage;
       delete state.flags['respawn-garage'];
       this.time.delayedCall(200, () => this.banner("You're all recharged — stay current out there."));
-    } else if (loc && loc.map === 'fieldhd' && !this.solid(loc.x, loc.y)) {
+    } else if (loc && loc.map === this.mapId && !this.solid(loc.x, loc.y)) {
       this.px = loc.x;
       this.py = loc.y;
     } else {
-      [this.px, this.py] = this.garage;
+      this.px = home.x;
+      this.py = home.y;
     }
 
     // NPCs (placed townsfolk; block their tile)
@@ -182,7 +218,7 @@ export class FieldHDScene extends Phaser.Scene {
 
     this.controls = new Controls(this);
     this.events.on('resume', () => this.controls.clearQueue());
-    this.banner('THE FIELD — Ohmstead surface');
+    this.banner(this.mapDef.banner);
   }
 
   private garage: [number, number] = [1, 1];
@@ -221,9 +257,12 @@ export class FieldHDScene extends Phaser.Scene {
       this.scene.pause();
       return;
     }
-    if (this.controls.consume('a') && this.atGarage()) {
-      this.recharge();
-      return;
+    if (this.controls.consume('a')) {
+      if (this.atGarage()) {
+        this.recharge();
+        return;
+      }
+      if (this.tryInteract()) return;
     }
     for (const dir of ['up', 'down', 'left', 'right'] as Dir[]) {
       if (this.controls.isHeld(dir)) {
@@ -234,6 +273,37 @@ export class FieldHDScene extends Phaser.Scene {
   }
 
   private npcCells = new Set<string>();
+
+  /** Face-adjacent interact: bench (the colony garage Bench), etc. */
+  private tryInteract(): boolean {
+    const [dx, dy] = DELTA[this.facing];
+    const fx = this.px + dx;
+    const fy = this.py + dy;
+    for (const it of this.field.interacts ?? []) {
+      if ((it.x === fx && it.y === fy) || (it.x === this.px && it.y === this.py)) {
+        if (it.kind === 'bench') {
+          this.banner("Grandpa's Bench — your starter was built here. (Press ⤓ topside to recharge.)");
+        } else {
+          this.banner('You poke at it. Nothing happens.');
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** Exit warp: stepping onto an exit cell hands off to its target scene. */
+  private checkExit(): boolean {
+    for (const ex of this.field.exits ?? []) {
+      if (ex.x === this.px && ex.y === this.py) {
+        if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
+        this.cameras.main.fade(360, 12, 10, 8);
+        this.time.delayedCall(380, () => this.scene.start(ex.scene));
+        return true;
+      }
+    }
+    return false;
+  }
 
   private solid(cx: number, cy: number): boolean {
     if (cx < 0 || cy < 0 || cx >= this.field.cols || cy >= this.field.rows) return true;
@@ -280,7 +350,8 @@ export class FieldHDScene extends Phaser.Scene {
       duration: run ? RUN_MS : WALK_MS,
       onComplete: () => {
         this.moving = false;
-        if (hasGameState()) getGameState().location = { map: 'fieldhd', x: this.px, y: this.py };
+        if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
+        if (this.checkExit()) return;
         if (this.isGrass(this.px, this.py)) this.tryEncounter();
       },
     });

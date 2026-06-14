@@ -1,5 +1,29 @@
 # HANDOVER
 
+## Session 2026-06-14 (cont.) — Stages: Ohmstead underground + walkable maps
+
+Per Mark "do all the terrains and assets for the stages, start with the colony
+underground." Done:
+- **Ohmstead colony stage built** — `tools/gen-underground.ts`
+  (`npm run gen:underground`) generates `public/world/ohmstead.png` (960×576,
+  30×18 @32px) + `ohmstead.json`. Grid-method (shared palette) industrial
+  bunker: riveted steel walls, plated floor (3 variants), amber lamps,
+  Grandpa's Bench (glowing core), console, crates, barrel, and the elevator
+  up to the Field. JSON carries `collision`, `spawn`, `exits`, `interacts`,
+  `npcs` (Grandpa `npc_elder` at the Bench + a `npc_rancher`).
+- **FieldHDScene generalized to a multi-map walker** — `init({mapId})`,
+  map registry (`the-field`, `ohmstead`), map-specific texture/json keys,
+  spawn from `json.spawn`, the recharge pad gated to surface maps only,
+  `interacts` (Bench → flavor line), and `exits` that fade-warp to a target
+  scene (the colony elevator pad → `ElevatorScene`).
+- **Opening flow rewired:** Bench → **Ohmstead** (walk the garage, talk to
+  Grandpa) → elevator pad → `ElevatorScene` (rising beat) → the Field.
+- 49 tests green; typecheck/build clean. dist rebuilt + force-added.
+
+Next stages to build (terrains/assets): the eight Downtowns colonies + the
+Field's neighbor routes; retool the 48 Ohm sprites onto the grid method;
+4-dir walk frames.
+
 ## Session 2026-06-14 — HD locked, slice completed, HD battle
 
 Mark confirmed: HD direction is **intended and locked**; finish the slice to

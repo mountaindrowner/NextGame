@@ -17,6 +17,7 @@
     "gen:world": "tsx tools/gen-world.ts",
     "pixelify": "tsx tools/pixelify.ts",
     "gen:foliage": "tsx tools/gen-foliage.ts",
+    "gen:underground": "tsx tools/gen-underground.ts",
     "yoyo2png": "tsx tools/yoyo2png.ts",
     "gen:protag": "tsx tools/gen-protag.ts"
   },
