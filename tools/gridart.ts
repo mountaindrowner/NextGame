@@ -39,7 +39,19 @@ export const PALETTE: Record<string, string> = {
   // glass / glow
   i: '#9ad6dd', I: '#5f9aa1', // glass
   z: '#ffd27a', // ember / lamp glow
+  Z: '#ff9a3c', // torch flame / hot core
   '*': '#f4f0e6', // white (eye catchlight, highlights)
+  // --- underground / cavern set (2026-06-14) ---
+  // cave rock (organic walls): hi / base / shadow
+  N: '#5a4632', d: '#382a1b', D: '#1c140c',
+  // earthen cobble floor: hi / base / shadow
+  T: '#7a5c38', M: '#574028', Q: '#33260f',
+  // glowing crystals — blue
+  '1': '#9fe2ff', '2': '#3f8fd6', '3': '#234e86',
+  // glowing crystals — violet
+  '4': '#e0b0ff', '5': '#9a63cf', '6': '#5f3a8f',
+  // glowing crystals — teal
+  '7': '#7df0d2', '8': '#2f9c84',
 };
 
 const hex = (s: string): RGBA =>
