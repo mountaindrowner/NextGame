@@ -43,8 +43,9 @@ generated. Output follows the spec's file layout:
   Rook's home); treat every "Caliche" as **Redbed**.
 - **⚠ Name collision — "Wren".** The Bastion scout in the Principal Cast
   (Colony 3) is named **Wren**, but **WREN** is a locked protagonist preset
-  (SAL/WREN). The scout must be renamed before this enters canon. `[PROPOSAL]`
-  rename options pending Mark's pick.
+  (SAL/WREN). **Resolution (proposed 2026-06-14): the Bastion scout is renamed
+  Wren → Flint** (quarry-flavored, in the regional name pool) — pending Mark's
+  final lock. Sprites/IDs use `flint`, never `wren`, for the scout.
 - The protagonist family name is **Vane** (grandchild of **Eli Vane** =
   "Grandpa"). Consistent with locked canon (Grandpa's Bench, *Ohm's Law*).
 - Per the docs, all cast names are **proposals pending lock** before scripting —

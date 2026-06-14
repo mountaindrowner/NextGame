@@ -25,6 +25,7 @@
     "assets:building": "tsx tools/assets/kit-building.ts",
     "assets:cave": "tsx tools/assets/kit-cave.ts",
     "assets:clutter": "tsx tools/assets/kit-clutter.ts",
+    "assets:chars": "tsx tools/assets/char.ts",
     "assets:field": "tsx tools/assets/kit-field.ts",
     "assets:railhead": "tsx tools/assets/kit-railhead.ts",
     "gen:field": "tsx tools/gen-field.ts",

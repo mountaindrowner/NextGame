@@ -64,7 +64,9 @@ export class FieldHDScene extends Phaser.Scene {
   private mapDef: MapDef = MAPS['the-field']!;
   private field!: FieldData;
   private controls!: Controls;
-  private player!: Phaser.GameObjects.Image;
+  private player!: Phaser.GameObjects.Sprite;
+  private walkKey = 'sal_walk';
+  private useSheet = false;
   private px = 0;
   private py = 0;
   private facing: Dir = 'down';
@@ -157,9 +159,10 @@ export class FieldHDScene extends Phaser.Scene {
     if (!this.cache.json.exists(this.dataKey())) this.load.json(this.dataKey(), this.mapDef.json);
     // pixelified protagonist sprites (from real art via the pixelify pipeline)
     // original protagonist sprites (YoYoPixel grid method)
-    if (!this.textures.exists('sal_yoyo')) this.load.image('sal_yoyo', 'world/char/sal_yoyo.png');
-    if (!this.textures.exists('wren_yoyo')) this.load.image('wren_yoyo', 'world/char/wren_yoyo.png');
     if (!this.textures.exists('player')) this.load.image('player', 'world/char/player.png');
+    // 4-direction walk sheets (grid char pipeline): 3 frames × 3 dirs on a 20×32 cell
+    const sheets = ['sal_walk', 'wren_walk', 'npc_rancher_walk', 'npc_elder_walk', 'npc_kid_walk'];
+    for (const s of sheets) if (!this.textures.exists(s)) this.load.spritesheet(s, `world/char/${s}.png`, { frameWidth: 20, frameHeight: 32 });
     for (const n of NPC_CHARS) if (!this.textures.exists(n)) this.load.image(n, `world/char/${n}.png`);
     // animated world-layer assets
     for (const f of FX) if (!this.textures.exists(f)) this.load.image(f, `world/fx/${f}.png`);
@@ -197,20 +200,27 @@ export class FieldHDScene extends Phaser.Scene {
       this.py = home.y;
     }
 
-    // NPCs (placed townsfolk; block their tile)
+    for (const k of ['sal_walk', 'wren_walk', 'npc_rancher_walk', 'npc_elder_walk', 'npc_kid_walk']) this.makeWalk(k);
+
+    // NPCs (placed townsfolk; block their tile) — facing the player, idle
     const t = this.field.tile;
     for (const npc of this.field.npcs ?? []) {
-      if (!this.textures.exists(npc.char)) continue;
-      this.add.image(npc.col * t + t / 2, npc.row * t + t, npc.char).setOrigin(0.5, 0.92).setScale(1.3).setDepth(npc.row);
+      const sk = `${npc.char}_walk`;
+      const px = npc.col * t + t / 2;
+      const py = npc.row * t + t;
+      if (this.textures.exists(sk)) this.add.sprite(px, py, sk, 0).setOrigin(0.5, 0.92).setScale(1.25).setDepth(npc.row);
+      else if (this.textures.exists(npc.char)) this.add.image(px, py, npc.char).setOrigin(0.5, 0.92).setScale(1.3).setDepth(npc.row);
+      else continue;
       this.npcCells.add(`${npc.col},${npc.row}`);
     }
 
-    // player = the chosen preset's pixelified sprite, sized for the overworld
+    // player = the chosen preset's 4-direction walk sprite
     const preset = hasGameState() ? getGameState().preset : 'SAL';
-    const pkey = preset === 'WREN' ? 'wren_yoyo' : 'sal_yoyo';
-    const key = this.textures.exists(pkey) ? pkey : 'player';
-    this.player = this.add.image(0, 0, key).setOrigin(0.5, 0.92).setDepth(50);
-    this.player.setScale(1.3); // 18×30 Pokémon-style art → ~39px in-world
+    this.walkKey = preset === 'WREN' ? 'wren_walk' : 'sal_walk';
+    this.useSheet = this.textures.exists(this.walkKey);
+    const key = this.useSheet ? this.walkKey : this.textures.exists('player') ? 'player' : this.walkKey;
+    this.player = this.add.sprite(0, 0, key, 0).setOrigin(0.5, 0.92).setDepth(50);
+    this.player.setScale(this.useSheet ? 1.25 : 1.3);
     this.placePlayer();
 
     this.cameras.main.setBounds(0, 0, this.field.width, this.field.height);
@@ -220,6 +230,22 @@ export class FieldHDScene extends Phaser.Scene {
     this.controls = new Controls(this);
     this.events.on('resume', () => this.controls.clearQueue());
     this.banner(this.mapDef.banner);
+  }
+
+  /** Build per-direction walk anims for a 3×3 walk sheet (S=0-2,N=3-5,W=6-8). */
+  private makeWalk(key: string): void {
+    if (!this.textures.exists(key)) return;
+    const fps = key.includes('run') ? 11 : 7;
+    const mk = (d: string, frames: number[]): void => {
+      const k = `${key}-${d}`;
+      if (!this.anims.exists(k)) this.anims.create({ key: k, frames: frames.map((f) => ({ key, frame: f })), frameRate: fps, repeat: -1 });
+    };
+    mk('s', [0, 1, 0, 2]);
+    mk('n', [3, 4, 3, 5]);
+    mk('w', [6, 7, 6, 8]);
+  }
+  private idleFrame(d: string): number {
+    return d === 'n' ? 3 : d === 'w' ? 6 : 0;
   }
 
   private garage: [number, number] = [1, 1];
@@ -344,7 +370,9 @@ export class FieldHDScene extends Phaser.Scene {
     this.px = nx;
     this.py = ny;
     const run = this.controls.isHeld('b');
-    this.player.setFlipX(dir === 'left');
+    const d = dir === 'up' ? 'n' : dir === 'down' ? 's' : 'w';
+    this.player.setFlipX(dir === 'right'); // W faces left; mirror for E
+    if (this.useSheet) this.player.play(`${this.walkKey}-${d}`, true);
     this.tweens.add({
       targets: this.player,
       x: nx * this.field.tile + this.field.tile / 2,
@@ -352,6 +380,10 @@ export class FieldHDScene extends Phaser.Scene {
       duration: run ? RUN_MS : WALK_MS,
       onComplete: () => {
         this.moving = false;
+        if (this.useSheet) {
+          this.player.anims.stop();
+          this.player.setFrame(this.idleFrame(d));
+        }
         if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
         if (this.checkExit()) return;
         if (this.isGrass(this.px, this.py)) this.tryEncounter();

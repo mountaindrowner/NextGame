@@ -66,8 +66,8 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   Odessa (archivist/comms), Mabel Vane (Grandma), Warden Hollis Boone, Cass;
   Wardens Marrow·Bloom·Stone·Pike·Hale·Sol·Frost·Amos; Rook (rival, home =
   **Redbed** — *the doc's "Caliche" = Redbed*), Cmdr. Reyes, the Cantor,
-  Marshal Drake, the Monad (PERSISTENCE's avatar). **⚠ Conflict:** the Bastion
-  scout "Wren" collides with the WREN preset — needs a rename before it locks.
+  Marshal Drake, the Monad (PERSISTENCE's avatar). The Bastion scout "Wren"
+  collides with the WREN preset → **renamed Flint [proposed, pending lock]**.
   NPC sprites: HD-reconciled spec in `docs/npc-pipeline.md`.
 - **Battle:** Gen 3 damage formula cloned exactly. Party of 3. No
   natures/IVs/EVs, no held items, single types in v1, simple per-species
