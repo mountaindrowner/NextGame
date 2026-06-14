@@ -26,7 +26,9 @@
     "assets:cave": "tsx tools/assets/kit-cave.ts",
     "assets:clutter": "tsx tools/assets/kit-clutter.ts",
     "assets:field": "tsx tools/assets/kit-field.ts",
+    "assets:railhead": "tsx tools/assets/kit-railhead.ts",
     "gen:field": "tsx tools/gen-field.ts",
+    "gen:railhead": "tsx tools/gen-railhead.ts",
     "yoyo2png": "tsx tools/yoyo2png.ts",
     "gen:protag": "tsx tools/gen-protag.ts"
   },

@@ -217,6 +217,7 @@ writeFileSync(
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: waterArr, placements,
     spawn: { x: 20, y: 18 }, // just below the elevator hatch
+    exits: [{ x: 20, y: 1, scene: 'fieldhd', mapId: 'railhead' }], // north up the road → Railhead
     npcs: [
       { char: 'npc_rancher', col: 16, row: 13 },
       { char: 'npc_kid', col: 9, row: 13 },

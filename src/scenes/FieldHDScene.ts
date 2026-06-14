@@ -20,7 +20,7 @@ interface FieldData {
   placements?: Array<{ type: string; col: number; row: number }>;
   npcs?: Array<{ char: string; col: number; row: number }>;
   spawn?: { x: number; y: number };
-  exits?: Array<{ x: number; y: number; scene: string }>;
+  exits?: Array<{ x: number; y: number; scene: string; mapId?: string }>;
   interacts?: Array<{ x: number; y: number; kind: string }>;
 }
 
@@ -34,6 +34,7 @@ interface MapDef {
 const MAPS: Record<string, MapDef> = {
   'the-field': { png: 'world/the-field.png', json: 'world/the-field.json', banner: 'THE FIELD — Ohmstead surface', garage: true },
   ohmstead: { png: 'world/ohmstead.png', json: 'world/ohmstead.json', banner: 'OHMSTEAD — the colony, sublevel garage', garage: false },
+  railhead: { png: 'world/railhead.png', json: 'world/railhead.json', banner: 'RAILHEAD — Colony 1, the rail junction', garage: true },
 };
 
 const NPC_CHARS = ['npc_rancher', 'npc_elder', 'npc_kid'] as const;
@@ -298,7 +299,8 @@ export class FieldHDScene extends Phaser.Scene {
       if (ex.x === this.px && ex.y === this.py) {
         if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
         this.cameras.main.fade(360, 12, 10, 8);
-        this.time.delayedCall(380, () => this.scene.start(ex.scene));
+        const { scene, mapId } = ex;
+        this.time.delayedCall(380, () => (mapId ? this.scene.start(scene, { mapId }) : this.scene.start(scene)));
         return true;
       }
     }
