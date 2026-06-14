@@ -1,0 +1,14 @@
+{
+  "generated": "2026-06-14",
+  "records": 230,
+  "blocks": 643,
+  "areas": 19,
+  "kits": [
+    "building",
+    "dungeon.cave",
+    "primary",
+    "sec.field",
+    "sec.ohmstead"
+  ],
+  "violations": 0
+}

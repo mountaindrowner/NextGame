@@ -1,5 +1,35 @@
 # HANDOVER
 
+## Session 2026-06-14 (cont.) — Full scope locked + asset SYSTEM stood up
+
+Mark delivered five design bibles (story, critical-path locations, wider world,
+level-building assets, the governing asset bible) → committed to `docs/design/`
+as canon-of-record. The full game scope is now explicit: the ~30h spine
+(Ohmstead → Field → 8 colonies → Dallas/Spire → Ohmcoming) + the wider optional
+world, built from a shared Primary Kit + ~18 per-area Secondary Kits + a Hive
+Overlay (a few thousand labeled tiles).
+
+**Two decisions (Mark):** (1) keep the locked **HD grid method** — adopt the
+Asset Bible's *system* but treat its Gen-3 art numbers as superseded (32px,
+limited palette, grid method); (2) **system first, then kits in production
+order.**
+
+Done this session:
+- **Asset system** (`tools/assets/`, `docs/asset-pipeline.md`): label/record
+  schema, the 19-area allow matrix, the R1–R12 validator + per-kit budget,
+  `npm run assets:build` → `assets/manifest.json` + `asset_index.json`. Catalog
+  seeded in build order with the Primary, Building/Interior, Cave, and the two
+  slice secondaries (`sec.ohmstead`, `sec.field`) — **230 records, 0
+  violations.** `tests/assets.test.ts` gates it (57 tests green total).
+- Canon updated: CLAUDE.md source-of-record + phase status; HD reconciliation
+  documented. **Dead-name flag:** the bibles use "Ohmdex" + "Build-A-MAC" —
+  reference only, never in game text/asset IDs (Manifest / the Bench are canon).
+
+**Next (locked order):** generate kit ART — Primary Kit grounds/grass/water/
+trees/props first (unblocks every map), then Hive Overlay, then per-area
+secondaries in critical-path order (Railhead onward; Ohmstead art already exists
+via `gen-underground.ts`, Field needs the depth/density upgrade).
+
 ## Session 2026-06-14 (cont.) — Stages: Ohmstead underground + walkable maps
 
 Per Mark "do all the terrains and assets for the stages, start with the colony

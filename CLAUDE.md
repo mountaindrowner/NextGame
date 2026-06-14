@@ -2,8 +2,13 @@
 
 Read this first, every session. Then read HANDOVER.md. Source of record:
 `docs/master-prompt-v4.md` (creator canon) and `docs/GDD.md` (Phase 1, locked
-2026-06-12). If later chat conflicts with these files, the chat wins — update
-the files immediately.
+2026-06-12). **World/story/asset bibles (2026-06-14, canon-of-record):**
+`docs/design/` — story-bible, critical-path-locations (the A→Z spine: Ohmstead
+→ Field → 8 colonies → Dallas/Spire → Ohmcoming), wider-world (optional
+content), level-building-assets + asset-bible (the governing asset system).
+Asset system implemented + HD-reconciled in `docs/asset-pipeline.md` +
+`tools/assets/`. If later chat conflicts with these files, the chat wins —
+update the files immediately.
 
 ## What this is
 
@@ -132,3 +137,11 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   placeholder art only). **M8 style guide submitted, awaiting Mark**
   (`docs/style-guide.md` + `assets/styleguide/`). M9 slice content next;
   gate tag `slice-v0`.
+- **Asset production (started 2026-06-14):** the full world/asset scope is now
+  canon (`docs/design/`). Governing asset SYSTEM stood up + HD-reconciled
+  (`tools/assets/`, `docs/asset-pipeline.md`): label schema, the 19-area allow
+  matrix, the R1–R12 validator + budget, `npm run assets:build` →
+  `assets/manifest.json`. Catalog seeded with the Primary, Building, Cave, and
+  the two slice secondary kits (`sec.ohmstead`, `sec.field`) — 230 records, 0
+  violations, gated in CI. **Now building kit art in locked production order**
+  (Primary → Hive Overlay → Cave/Building → per-area critical-path → optional).

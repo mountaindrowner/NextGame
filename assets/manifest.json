@@ -1,0 +1,4330 @@
+[
+  {
+    "id": "primary.ground.dirt",
+    "display_name": "Dirt path",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Dirt path",
+    "blocks": 4
+  },
+  {
+    "id": "primary.ground.asphalt",
+    "display_name": "Cracked asphalt",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cracked asphalt",
+    "blocks": 4
+  },
+  {
+    "id": "primary.ground.earth",
+    "display_name": "Packed earth",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Packed earth",
+    "blocks": 4
+  },
+  {
+    "id": "primary.ground.gravel",
+    "display_name": "Gravel",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Gravel",
+    "blocks": 4
+  },
+  {
+    "id": "primary.ground.sand",
+    "display_name": "Sand",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Sand",
+    "blocks": 4
+  },
+  {
+    "id": "primary.ground.mud",
+    "display_name": "Mud",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Mud",
+    "blocks": 4
+  },
+  {
+    "id": "primary.ground.concrete",
+    "display_name": "Concrete slab",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Concrete slab",
+    "blocks": 4
+  },
+  {
+    "id": "primary.ground.cobble",
+    "display_name": "Brick cobble",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Brick cobble",
+    "blocks": 4
+  },
+  {
+    "id": "primary.ground.road_lines",
+    "display_name": "Painted road lines",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Painted road lines",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ground.curb",
+    "display_name": "Curb",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "edge16",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Curb",
+    "blocks": 3
+  },
+  {
+    "id": "primary.ground.manhole",
+    "display_name": "Manhole",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Manhole",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ground.pothole",
+    "display_name": "Pothole",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Pothole",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ground.puddle",
+    "display_name": "Puddle",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Puddle",
+    "blocks": 1
+  },
+  {
+    "id": "primary.grass.short",
+    "display_name": "Short prairie grass",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Short prairie grass",
+    "blocks": 4
+  },
+  {
+    "id": "primary.grass.tall",
+    "display_name": "Tall grass (encounter)",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; tall prairie grass, encounter cover, swaying",
+    "blocks": 4
+  },
+  {
+    "id": "primary.grass.dead",
+    "display_name": "Dry/dead grass",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Dry/dead grass",
+    "blocks": 4
+  },
+  {
+    "id": "primary.grass.weeds",
+    "display_name": "Weeds",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Weeds",
+    "blocks": 1
+  },
+  {
+    "id": "primary.grass.flowers",
+    "display_name": "Flower cluster",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Flower cluster",
+    "blocks": 1
+  },
+  {
+    "id": "primary.grass.scrub",
+    "display_name": "Ground scrub",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Ground scrub",
+    "blocks": 1
+  },
+  {
+    "id": "primary.grass.static_field",
+    "display_name": "Static-field cover",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Static-field cover",
+    "blocks": 1
+  },
+  {
+    "id": "primary.grass.debris_cover",
+    "display_name": "Debris-pile cover",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Debris-pile cover",
+    "blocks": 1
+  },
+  {
+    "id": "primary.water.still",
+    "display_name": "Still water",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "water",
+    "elev": "0",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Still water",
+    "blocks": 4
+  },
+  {
+    "id": "primary.water.deep",
+    "display_name": "Deep water",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "water",
+    "elev": "0",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Deep water",
+    "blocks": 4
+  },
+  {
+    "id": "primary.water.shoreline",
+    "display_name": "Shoreline edge",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "edge16",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Shoreline edge",
+    "blocks": 3
+  },
+  {
+    "id": "primary.water.shallows",
+    "display_name": "Shallows",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "edge16",
+    "layer": "bottom",
+    "collision": "water",
+    "elev": "0",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Shallows",
+    "blocks": 3
+  },
+  {
+    "id": "primary.water.flowing",
+    "display_name": "Flowing water",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 6,
+      "fps": 6
+    },
+    "layer": "bottom",
+    "collision": "water",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Flowing water, 6-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "primary.water.ripples",
+    "display_name": "Ripples",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Ripples, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "primary.water.lily",
+    "display_name": "Lily pad",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Lily pad",
+    "blocks": 1
+  },
+  {
+    "id": "primary.water.foam",
+    "display_name": "Foam",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Foam",
+    "blocks": 1
+  },
+  {
+    "id": "primary.tree.mesquite",
+    "display_name": "Mesquite tree",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      3,
+      4
+    ],
+    "anchor": [
+      0,
+      3
+    ],
+    "layer_split": {
+      "bottom": [
+        3
+      ],
+      "top": [
+        0,
+        1,
+        2
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Mesquite tree, canopy walk-behind top + solid trunk base",
+    "blocks": 12
+  },
+  {
+    "id": "primary.tree.oak",
+    "display_name": "Oak tree",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      3,
+      5
+    ],
+    "anchor": [
+      0,
+      4
+    ],
+    "layer_split": {
+      "bottom": [
+        4
+      ],
+      "top": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Oak tree, canopy walk-behind top + solid trunk base",
+    "blocks": 15
+  },
+  {
+    "id": "primary.tree.cypress",
+    "display_name": "Cypress tree",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      3,
+      5
+    ],
+    "anchor": [
+      0,
+      4
+    ],
+    "layer_split": {
+      "bottom": [
+        4
+      ],
+      "top": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cypress tree, canopy walk-behind top + solid trunk base",
+    "blocks": 15
+  },
+  {
+    "id": "primary.tree.dead",
+    "display_name": "Dead/bare tree",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      3,
+      4
+    ],
+    "anchor": [
+      0,
+      3
+    ],
+    "layer_split": {
+      "bottom": [
+        3
+      ],
+      "top": [
+        0,
+        1,
+        2
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Dead/bare tree, canopy walk-behind top + solid trunk base",
+    "blocks": 12
+  },
+  {
+    "id": "primary.veg.bush",
+    "display_name": "Bush",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Bush",
+    "blocks": 1
+  },
+  {
+    "id": "primary.veg.shrub",
+    "display_name": "Shrub",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Shrub",
+    "blocks": 1
+  },
+  {
+    "id": "primary.veg.stump",
+    "display_name": "Stump",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Stump",
+    "blocks": 1
+  },
+  {
+    "id": "primary.veg.cactus",
+    "display_name": "Cactus",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cactus",
+    "blocks": 1
+  },
+  {
+    "id": "primary.veg.log",
+    "display_name": "Fallen log",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Fallen log",
+    "blocks": 1
+  },
+  {
+    "id": "primary.veg.vine",
+    "display_name": "Hanging vine",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Hanging vine",
+    "blocks": 1
+  },
+  {
+    "id": "primary.veg.moss",
+    "display_name": "Hanging moss",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Hanging moss",
+    "blocks": 1
+  },
+  {
+    "id": "primary.veg.tumbleweed",
+    "display_name": "Tumbleweed",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Tumbleweed",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ruin.car_sedan",
+    "display_name": "Wrecked sedan",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      3,
+      2
+    ],
+    "anchor": [
+      0,
+      1
+    ],
+    "layer_split": {
+      "bottom": [
+        0,
+        1
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Wrecked sedan",
+    "variants": [
+      "intact",
+      "burned"
+    ],
+    "blocks": 12
+  },
+  {
+    "id": "primary.ruin.car_truck",
+    "display_name": "Wrecked truck",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      3,
+      2
+    ],
+    "anchor": [
+      0,
+      1
+    ],
+    "layer_split": {
+      "bottom": [
+        0,
+        1
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Wrecked truck",
+    "variants": [
+      "intact",
+      "burned"
+    ],
+    "blocks": 12
+  },
+  {
+    "id": "primary.ruin.car_bus",
+    "display_name": "Wrecked bus",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      5,
+      2
+    ],
+    "anchor": [
+      0,
+      1
+    ],
+    "layer_split": {
+      "bottom": [
+        0,
+        1
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Wrecked bus",
+    "variants": [
+      "intact",
+      "burned"
+    ],
+    "blocks": 20
+  },
+  {
+    "id": "primary.ruin.scrap_heap",
+    "display_name": "Scrap heap",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Scrap heap",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ruin.rubble_pile",
+    "display_name": "Rubble pile",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Rubble pile",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ruin.debris",
+    "display_name": "Debris",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Debris",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ruin.oil_drum",
+    "display_name": "Oil drum",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Oil drum",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ruin.crate",
+    "display_name": "Crate",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Crate",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ruin.barrel",
+    "display_name": "Barrel",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Barrel",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ruin.tire",
+    "display_name": "Tire",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Tire",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ruin.crater",
+    "display_name": "Crater",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Crater",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ruin.utility_pole",
+    "display_name": "Broken utility pole",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      1,
+      4
+    ],
+    "anchor": [
+      0,
+      3
+    ],
+    "layer_split": {
+      "bottom": [
+        3
+      ],
+      "top": [
+        0,
+        1,
+        2
+      ]
+    },
+    "collision_mask": [
+      [
+        0
+      ],
+      [
+        0
+      ],
+      [
+        0
+      ],
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Broken utility pole",
+    "blocks": 4
+  },
+  {
+    "id": "primary.ruin.power_line",
+    "display_name": "Downed power line",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Downed power line",
+    "blocks": 1
+  },
+  {
+    "id": "primary.ruin.fallen_sign",
+    "display_name": "Fallen signage",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Fallen signage",
+    "blocks": 1
+  },
+  {
+    "id": "primary.boundary.mountain",
+    "display_name": "Region-edge mountain barrier",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "cliff",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Region-edge mountain barrier",
+    "blocks": 6
+  },
+  {
+    "id": "primary.boundary.treeline",
+    "display_name": "Tree-line wall",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "wall_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Tree-line wall",
+    "blocks": 8
+  },
+  {
+    "id": "primary.boundary.void",
+    "display_name": "Off-map void fill",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Off-map void fill",
+    "blocks": 1
+  },
+  {
+    "id": "primary.glue.drop_shadow",
+    "display_name": "Drop shadow",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Drop shadow",
+    "blocks": 1
+  },
+  {
+    "id": "primary.glue.blend",
+    "display_name": "Terrain blend",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "edge16",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 0,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Terrain blend",
+    "blocks": 3
+  },
+  {
+    "id": "primary.vert.cliff",
+    "display_name": "Cliff system",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "cliff",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cliff system",
+    "blocks": 6
+  },
+  {
+    "id": "primary.vert.ramp_earth",
+    "display_name": "Earth ramp",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Earth ramp",
+    "blocks": 1
+  },
+  {
+    "id": "primary.vert.stairs_concrete",
+    "display_name": "Concrete stairs",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Concrete stairs",
+    "blocks": 1
+  },
+  {
+    "id": "primary.vert.stairs_metal",
+    "display_name": "Metal stairs",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Metal stairs",
+    "blocks": 1
+  },
+  {
+    "id": "primary.vert.steps_stone",
+    "display_name": "Stone steps",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Stone steps",
+    "blocks": 1
+  },
+  {
+    "id": "primary.vert.ledge_s",
+    "display_name": "Ledge (jump-down s)",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "ledge_s",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Ledge (jump-down s)",
+    "blocks": 1
+  },
+  {
+    "id": "primary.vert.ledge_e",
+    "display_name": "Ledge (jump-down e)",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "ledge_e",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Ledge (jump-down e)",
+    "blocks": 1
+  },
+  {
+    "id": "primary.vert.ledge_w",
+    "display_name": "Ledge (jump-down w)",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "ledge_w",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Ledge (jump-down w)",
+    "blocks": 1
+  },
+  {
+    "id": "primary.vert.canopy_top",
+    "display_name": "Canopy overlap",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Canopy overlap",
+    "blocks": 1
+  },
+  {
+    "id": "primary.vert.roof_eave",
+    "display_name": "Roof eave overlap",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Roof eave overlap",
+    "blocks": 1
+  },
+  {
+    "id": "primary.vert.awning",
+    "display_name": "Awning overlap",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Awning overlap",
+    "blocks": 1
+  },
+  {
+    "id": "primary.vert.bridge",
+    "display_name": "Footbridge",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      4,
+      2
+    ],
+    "anchor": [
+      0,
+      1
+    ],
+    "layer_split": {
+      "bottom": [
+        0,
+        1
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Footbridge",
+    "blocks": 8
+  },
+  {
+    "id": "primary.vert.catwalk",
+    "display_name": "Catwalk/grating",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      4,
+      1
+    ],
+    "anchor": [
+      0,
+      0
+    ],
+    "layer_split": {
+      "bottom": [
+        0
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Catwalk/grating",
+    "blocks": 4
+  },
+  {
+    "id": "primary.vert.railing",
+    "display_name": "Floor-edge railing",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "wall_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Floor-edge railing",
+    "blocks": 8
+  },
+  {
+    "id": "primary.vert.pit",
+    "display_name": "Pit/hole",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Pit/hole",
+    "blocks": 1
+  },
+  {
+    "id": "primary.fence.wood",
+    "display_name": "Wood post-and-rail fence",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "fence_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Wood post-and-rail fence",
+    "blocks": 8
+  },
+  {
+    "id": "primary.fence.chain",
+    "display_name": "Chain-link fence",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "fence_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Chain-link fence",
+    "blocks": 8
+  },
+  {
+    "id": "primary.fence.sheet",
+    "display_name": "Sheet-metal fence",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "fence_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Sheet-metal fence",
+    "blocks": 8
+  },
+  {
+    "id": "primary.fence.scrap",
+    "display_name": "Scrap fence",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "fence_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Scrap fence",
+    "blocks": 8
+  },
+  {
+    "id": "primary.fence.picket",
+    "display_name": "Picket fence",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "fence_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Picket fence",
+    "blocks": 8
+  },
+  {
+    "id": "primary.wall.concrete",
+    "display_name": "Concrete wall",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "wall_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Concrete wall",
+    "blocks": 8
+  },
+  {
+    "id": "primary.wall.brick",
+    "display_name": "Brick wall",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "wall_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Brick wall",
+    "blocks": 8
+  },
+  {
+    "id": "primary.wall.cinder",
+    "display_name": "Cinderblock wall",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "wall_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cinderblock wall",
+    "blocks": 8
+  },
+  {
+    "id": "primary.wall.scrap",
+    "display_name": "Scrap-metal wall",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "wall_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Scrap-metal wall",
+    "blocks": 8
+  },
+  {
+    "id": "primary.wall.sandbag",
+    "display_name": "Sandbag wall",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "autotile",
+    "template": "wall_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Sandbag wall",
+    "blocks": 8
+  },
+  {
+    "id": "primary.wall.razorwire",
+    "display_name": "Razor wire",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Razor wire",
+    "blocks": 1
+  },
+  {
+    "id": "primary.barrier.boulder",
+    "display_name": "Boulder cluster",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      2,
+      2
+    ],
+    "anchor": [
+      0,
+      1
+    ],
+    "layer_split": {
+      "bottom": [
+        0,
+        1
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Boulder cluster",
+    "blocks": 4
+  },
+  {
+    "id": "primary.barrier.rubble_block",
+    "display_name": "Rubble blockade",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      2,
+      2
+    ],
+    "anchor": [
+      0,
+      1
+    ],
+    "layer_split": {
+      "bottom": [
+        0,
+        1
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 5,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Rubble blockade",
+    "blocks": 4
+  },
+  {
+    "id": "primary.door.locked",
+    "display_name": "Locked door",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 3,
+      "fps": 8
+    },
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; locked door, closed/mid/open",
+    "blocks": 1
+  },
+  {
+    "id": "primary.door.blast",
+    "display_name": "Blast door",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 3,
+      "fps": 8
+    },
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; heavy blast door, closed/mid/open",
+    "blocks": 1
+  },
+  {
+    "id": "primary.gate.overgrowth.blocked",
+    "display_name": "Cuttable overgrowth (blocked)",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 1,
+    "phase": "optional",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cuttable overgrowth, blocked state",
+    "gate": "shear",
+    "state": "blocked",
+    "blocks": 1
+  },
+  {
+    "id": "primary.gate.overgrowth.cleared",
+    "display_name": "Cuttable overgrowth (cleared)",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 1,
+    "phase": "optional",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cuttable overgrowth, cleared state",
+    "gate": "shear",
+    "state": "cleared",
+    "blocks": 1
+  },
+  {
+    "id": "primary.gate.rockblock.blocked",
+    "display_name": "Breakable rock-block (blocked)",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 5,
+    "phase": "optional",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Breakable rock-block, blocked state",
+    "gate": "breach",
+    "state": "blocked",
+    "blocks": 1
+  },
+  {
+    "id": "primary.gate.rockblock.cleared",
+    "display_name": "Breakable rock-block (cleared)",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 5,
+    "phase": "optional",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Breakable rock-block, cleared state",
+    "gate": "breach",
+    "state": "cleared",
+    "blocks": 1
+  },
+  {
+    "id": "primary.gate.debris.blocked",
+    "display_name": "Haulable debris (blocked)",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 3,
+    "phase": "optional",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Haulable debris, blocked state",
+    "gate": "haul",
+    "state": "blocked",
+    "blocks": 1
+  },
+  {
+    "id": "primary.gate.debris.cleared",
+    "display_name": "Haulable debris (cleared)",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 3,
+    "phase": "optional",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Haulable debris, cleared state",
+    "gate": "haul",
+    "state": "cleared",
+    "blocks": 1
+  },
+  {
+    "id": "primary.gate.dark.blocked",
+    "display_name": "Light-gated blocker (blocked)",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 5,
+    "phase": "optional",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Light-gated blocker, blocked state",
+    "gate": "lumen",
+    "state": "blocked",
+    "blocks": 1
+  },
+  {
+    "id": "primary.gate.dark.cleared",
+    "display_name": "Light-gated blocker (cleared)",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 5,
+    "phase": "optional",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Light-gated blocker, cleared state",
+    "gate": "lumen",
+    "state": "cleared",
+    "blocks": 1
+  },
+  {
+    "id": "primary.sign.route_sign",
+    "display_name": "Route sign",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Route sign",
+    "blocks": 1
+  },
+  {
+    "id": "primary.sign.warning",
+    "display_name": "Warning placard",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Warning placard",
+    "blocks": 1
+  },
+  {
+    "id": "primary.sign.boundary_post",
+    "display_name": "Colony boundary post",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 4,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Colony boundary post",
+    "blocks": 1
+  },
+  {
+    "id": "primary.fx.shimmer",
+    "display_name": "EM-shimmer zone",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; EM-shimmer zone, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "primary.fx.spark",
+    "display_name": "Sparking light",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Sparking light, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "primary.fx.machine_glow",
+    "display_name": "Machine glow",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Machine glow, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "primary.fx.screen_glow",
+    "display_name": "Screen glow",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Screen glow, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "primary.fx.steam",
+    "display_name": "Steam",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Steam, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "primary.fx.smoke",
+    "display_name": "Smoke",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Smoke, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "primary.fx.dust",
+    "display_name": "Dust",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Dust, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "primary.fx.fog",
+    "display_name": "Fog",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Fog, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "primary.fx.flame",
+    "display_name": "Oil-drum flame",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Oil-drum flame, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "primary.fx.drip",
+    "display_name": "Drip/leak",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Drip/leak, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "primary.fx.firefly",
+    "display_name": "Fireflies/spores",
+    "kit": "primary",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 2,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Fireflies/spores, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "building.shell.wall",
+    "display_name": "Interior wall set",
+    "kit": "building",
+    "biome": "interior",
+    "type": "autotile",
+    "template": "edge16",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Interior wall set",
+    "blocks": 3
+  },
+  {
+    "id": "building.floor.wood",
+    "display_name": "Wood floor",
+    "kit": "building",
+    "biome": "interior",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Wood floor",
+    "blocks": 4
+  },
+  {
+    "id": "building.floor.tile",
+    "display_name": "Tile floor",
+    "kit": "building",
+    "biome": "interior",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Tile floor",
+    "blocks": 4
+  },
+  {
+    "id": "building.floor.concrete",
+    "display_name": "Concrete floor",
+    "kit": "building",
+    "biome": "interior",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Concrete floor",
+    "blocks": 4
+  },
+  {
+    "id": "building.floor.grate",
+    "display_name": "Metal grating",
+    "kit": "building",
+    "biome": "interior",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Metal grating",
+    "blocks": 4
+  },
+  {
+    "id": "building.floor.carpet",
+    "display_name": "Carpet",
+    "kit": "building",
+    "biome": "interior",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Carpet",
+    "blocks": 4
+  },
+  {
+    "id": "building.facade.wood",
+    "display_name": "Wood wall panel",
+    "kit": "building",
+    "biome": "interior",
+    "type": "autotile",
+    "template": "edge16",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Wood wall panel",
+    "blocks": 3
+  },
+  {
+    "id": "building.facade.brick",
+    "display_name": "Brick facade",
+    "kit": "building",
+    "biome": "interior",
+    "type": "autotile",
+    "template": "edge16",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Brick facade",
+    "blocks": 3
+  },
+  {
+    "id": "building.facade.concrete",
+    "display_name": "Concrete facade",
+    "kit": "building",
+    "biome": "interior",
+    "type": "autotile",
+    "template": "edge16",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Concrete facade",
+    "blocks": 3
+  },
+  {
+    "id": "building.facade.scrap",
+    "display_name": "Scrap facade",
+    "kit": "building",
+    "biome": "interior",
+    "type": "autotile",
+    "template": "edge16",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Scrap facade",
+    "blocks": 3
+  },
+  {
+    "id": "building.roof.peaked",
+    "display_name": "Peaked roof",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Peaked roof",
+    "blocks": 1
+  },
+  {
+    "id": "building.roof.flat",
+    "display_name": "Flat roof",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Flat roof",
+    "blocks": 1
+  },
+  {
+    "id": "building.roof.corrugated",
+    "display_name": "Corrugated roof",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Corrugated roof",
+    "blocks": 1
+  },
+  {
+    "id": "building.roof.tile",
+    "display_name": "Tile roof",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Tile roof",
+    "blocks": 1
+  },
+  {
+    "id": "building.window.lit",
+    "display_name": "Window (lit)",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Window (lit)",
+    "blocks": 1
+  },
+  {
+    "id": "building.window.dark",
+    "display_name": "Window (dark)",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Window (dark)",
+    "blocks": 1
+  },
+  {
+    "id": "building.window.broken",
+    "display_name": "Window (broken)",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Window (broken)",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.bed",
+    "display_name": "Bed",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Bed",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.table",
+    "display_name": "Table",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Table",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.chair",
+    "display_name": "Chair",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Chair",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.shelf",
+    "display_name": "Shelf",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Shelf",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.rug",
+    "display_name": "Rug",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Rug",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.stove",
+    "display_name": "Stove",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Stove",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.sink",
+    "display_name": "Sink",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Sink",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.clutter",
+    "display_name": "Clutter",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Clutter",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.plant",
+    "display_name": "Potted plant",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Potted plant",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.counter",
+    "display_name": "Shop counter",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Shop counter",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.goods_shelf",
+    "display_name": "Goods shelving",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Goods shelving",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.barter_table",
+    "display_name": "Barter table",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Barter table",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.bunk",
+    "display_name": "Bunk",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Bunk",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.locker",
+    "display_name": "Locker",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Locker",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.footlocker",
+    "display_name": "Footlocker",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Footlocker",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.armory_rack",
+    "display_name": "Armory rack (stun-tech)",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Armory rack (stun-tech)",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.desk",
+    "display_name": "Desk",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Desk",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.map_table",
+    "display_name": "Map table",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Map table",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.archive",
+    "display_name": "Archive shelving",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Archive shelving",
+    "blocks": 1
+  },
+  {
+    "id": "building.furn.rug_flat",
+    "display_name": "Flat rug",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Flat rug",
+    "blocks": 1
+  },
+  {
+    "id": "building.bench.workbench",
+    "display_name": "Grandpa's Bench",
+    "kit": "building",
+    "biome": "interior",
+    "type": "prop",
+    "footprint": [
+      3,
+      2
+    ],
+    "anchor": [
+      0,
+      1
+    ],
+    "layer_split": {
+      "bottom": [
+        1
+      ],
+      "top": [
+        0
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Grandpa's workbench, pegboard tools, vises, scrap bins, a half-built Ohm, the Ohm's Law book, soldering rig",
+    "hero": true,
+    "blocks": 6
+  },
+  {
+    "id": "building.bench.pegboard",
+    "display_name": "Pegboard tool rack",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Pegboard tool rack",
+    "blocks": 1
+  },
+  {
+    "id": "building.bench.vise",
+    "display_name": "Vise",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Vise",
+    "blocks": 1
+  },
+  {
+    "id": "building.bench.scrap_bin",
+    "display_name": "Scrap bin",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Scrap bin",
+    "blocks": 1
+  },
+  {
+    "id": "building.bench.parts_crate",
+    "display_name": "Parts crate",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Parts crate",
+    "blocks": 1
+  },
+  {
+    "id": "building.bench.blueprint",
+    "display_name": "Blueprints",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Blueprints",
+    "blocks": 1
+  },
+  {
+    "id": "building.bench.ohms_law",
+    "display_name": "Ohm's Law book",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Ohm's Law book",
+    "blocks": 1
+  },
+  {
+    "id": "building.bench.soldering_rig",
+    "display_name": "Soldering rig",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Soldering rig",
+    "blocks": 1
+  },
+  {
+    "id": "building.bench.half_ohm",
+    "display_name": "Half-built Ohm",
+    "kit": "building",
+    "biome": "interior",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Half-built Ohm",
+    "blocks": 1
+  },
+  {
+    "id": "building.obj.healing_machine",
+    "display_name": "Garage healing machine",
+    "kit": "building",
+    "biome": "interior",
+    "type": "object",
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; the garage recharge station, glowing console, cradles",
+    "hero": true,
+    "blocks": 1
+  },
+  {
+    "id": "building.obj.recharge_station",
+    "display_name": "Recharge station",
+    "kit": "building",
+    "biome": "interior",
+    "type": "object",
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Recharge station",
+    "blocks": 1
+  },
+  {
+    "id": "building.obj.network_terminal",
+    "display_name": "Network-Garage storage terminal",
+    "kit": "building",
+    "biome": "interior",
+    "type": "object",
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Network-Garage storage terminal",
+    "blocks": 1
+  },
+  {
+    "id": "building.obj.computer",
+    "display_name": "Computer/terminal",
+    "kit": "building",
+    "biome": "interior",
+    "type": "object",
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Computer/terminal",
+    "blocks": 1
+  },
+  {
+    "id": "building.obj.console",
+    "display_name": "Civic console",
+    "kit": "building",
+    "biome": "interior",
+    "type": "object",
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Civic console",
+    "blocks": 1
+  },
+  {
+    "id": "building.obj.sign",
+    "display_name": "Sign",
+    "kit": "building",
+    "biome": "interior",
+    "type": "object",
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Sign",
+    "blocks": 1
+  },
+  {
+    "id": "building.obj.item_pickup",
+    "display_name": "Item/node pickup",
+    "kit": "building",
+    "biome": "interior",
+    "type": "object",
+    "layer": "object",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Item/node pickup",
+    "blocks": 1
+  },
+  {
+    "id": "building.obj.stair_up",
+    "display_name": "Stair-up warp",
+    "kit": "building",
+    "biome": "interior",
+    "type": "object",
+    "layer": "object",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Stair-up warp",
+    "blocks": 1
+  },
+  {
+    "id": "building.obj.stair_down",
+    "display_name": "Stair-down warp",
+    "kit": "building",
+    "biome": "interior",
+    "type": "object",
+    "layer": "object",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Stair-down warp",
+    "blocks": 1
+  },
+  {
+    "id": "building.obj.interior_door",
+    "display_name": "Interior door",
+    "kit": "building",
+    "biome": "interior",
+    "type": "anim",
+    "anim": {
+      "frames": 3,
+      "fps": 8
+    },
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; interior door, closed/mid/open",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.cave.wall",
+    "display_name": "Cave wall",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "autotile",
+    "template": "cliff",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cave wall",
+    "blocks": 6
+  },
+  {
+    "id": "dungeon.cave.floor",
+    "display_name": "Cave floor",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cave floor",
+    "blocks": 4
+  },
+  {
+    "id": "dungeon.cave.ceiling",
+    "display_name": "Cave-ceiling overhang",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cave-ceiling overhang",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.cave.stalactite",
+    "display_name": "Stalactite",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Stalactite",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.cave.stalagmite",
+    "display_name": "Stalagmite",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Stalagmite",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.cave.support",
+    "display_name": "Mine support beam",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Mine support beam",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.cave.boulder",
+    "display_name": "Boulder",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Boulder",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.cave.pool",
+    "display_name": "Underground pool",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "water",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Underground pool",
+    "blocks": 4
+  },
+  {
+    "id": "dungeon.cave.ladder",
+    "display_name": "Ladder",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Ladder",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.cave.lumen_dark",
+    "display_name": "LUMEN darkness overlay",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; LUMEN darkness overlay",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.cave.ore_node",
+    "display_name": "Glowing ore/crystal node",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 3
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Glowing ore/crystal node, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.cave.glow_flora",
+    "display_name": "Glow-flora",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 3
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Glow-flora, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.cave.drip",
+    "display_name": "Cave drip",
+    "kit": "dungeon.cave",
+    "biome": "underground",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 4
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cave drip, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.ground.cobble",
+    "display_name": "Cobblestone floor",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cobblestone floor",
+    "blocks": 4
+  },
+  {
+    "id": "sec.ohmstead.ground.grate",
+    "display_name": "Metal-grate floor",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "autotile",
+    "template": "edge16",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Metal-grate floor",
+    "blocks": 3
+  },
+  {
+    "id": "sec.ohmstead.wall.rock",
+    "display_name": "Cavern rock wall",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "autotile",
+    "template": "cliff",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cavern rock wall",
+    "blocks": 6
+  },
+  {
+    "id": "sec.ohmstead.wall.stone",
+    "display_name": "Stone block wall",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "autotile",
+    "template": "wall_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Stone block wall",
+    "blocks": 8
+  },
+  {
+    "id": "sec.ohmstead.wall.riveted",
+    "display_name": "Riveted bunker wall",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "autotile",
+    "template": "edge16",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Riveted bunker wall",
+    "blocks": 3
+  },
+  {
+    "id": "sec.ohmstead.water.cave",
+    "display_name": "Cave water pool",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "water",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cave water pool",
+    "blocks": 4
+  },
+  {
+    "id": "sec.ohmstead.crystal.blue",
+    "display_name": "Blue Resonance crystal",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; faceted blue crystal cluster, emissive, casts additive glow",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.crystal.violet",
+    "display_name": "Violet Resonance crystal",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; faceted violet crystal cluster, emissive, casts additive glow",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.crystal.teal",
+    "display_name": "Teal Resonance crystal",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; faceted teal crystal cluster, emissive, casts additive glow",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.fx.lamp",
+    "display_name": "Brazier lamp",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; standing brazier lamp, warm flame, additive glow",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.prop.moss",
+    "display_name": "Moss patch",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Moss patch",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.prop.console",
+    "display_name": "Wall console",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      1,
+      1
+    ],
+    "anchor": [
+      0,
+      0
+    ],
+    "layer_split": {
+      "bottom": [
+        0
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 9,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Wall console",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.prop.tank",
+    "display_name": "Coolant tank",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      1,
+      2
+    ],
+    "anchor": [
+      0,
+      1
+    ],
+    "layer_split": {
+      "bottom": [
+        1
+      ],
+      "top": [
+        0
+      ]
+    },
+    "collision_mask": [
+      [
+        0
+      ],
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 9,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Coolant tank",
+    "blocks": 2
+  },
+  {
+    "id": "sec.ohmstead.prop.shelf",
+    "display_name": "Storage shelf",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      1,
+      1
+    ],
+    "anchor": [
+      0,
+      0
+    ],
+    "layer_split": {
+      "bottom": [
+        0
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 9,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Storage shelf",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.prop.bed",
+    "display_name": "Colony cot",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      1,
+      1
+    ],
+    "anchor": [
+      0,
+      0
+    ],
+    "layer_split": {
+      "bottom": [
+        0
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 9,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Colony cot",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.prop.crate",
+    "display_name": "Crate",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      1,
+      1
+    ],
+    "anchor": [
+      0,
+      0
+    ],
+    "layer_split": {
+      "bottom": [
+        0
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 9,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Crate",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.prop.barrel",
+    "display_name": "Barrel",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      1,
+      1
+    ],
+    "anchor": [
+      0,
+      0
+    ],
+    "layer_split": {
+      "bottom": [
+        0
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 9,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Barrel",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.prop.minecart",
+    "display_name": "Ore cart",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      1,
+      1
+    ],
+    "anchor": [
+      0,
+      0
+    ],
+    "layer_split": {
+      "bottom": [
+        0
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 9,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Ore cart",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.prop.market_stall",
+    "display_name": "Market stall",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      2,
+      1
+    ],
+    "anchor": [
+      0,
+      0
+    ],
+    "layer_split": {
+      "bottom": [
+        0
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 9,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Market stall",
+    "blocks": 2
+  },
+  {
+    "id": "sec.ohmstead.prop.support_beam",
+    "display_name": "Support beam",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      1,
+      2
+    ],
+    "anchor": [
+      0,
+      1
+    ],
+    "layer_split": {
+      "bottom": [
+        1
+      ],
+      "top": [
+        0
+      ]
+    },
+    "collision_mask": [
+      [
+        0
+      ],
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 9,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Support beam",
+    "blocks": 2
+  },
+  {
+    "id": "sec.ohmstead.prop.electrical_panel",
+    "display_name": "Electrical panel",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      1,
+      1
+    ],
+    "anchor": [
+      0,
+      0
+    ],
+    "layer_split": {
+      "bottom": [
+        0
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 9,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Electrical panel",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.prop.pedestal",
+    "display_name": "Hub Resonance monument",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      1,
+      1
+    ],
+    "anchor": [
+      0,
+      0
+    ],
+    "layer_split": {
+      "bottom": [
+        0
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; stone column cradling a big Resonance crystal, focal landmark, glows",
+    "hero": true,
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.prop.lift",
+    "display_name": "Freight lift (up to the Field)",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      2,
+      2
+    ],
+    "anchor": [
+      0,
+      1
+    ],
+    "layer_split": {
+      "bottom": [
+        0,
+        1
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; freight lift cage in a stone frame, chains, up indicator",
+    "hero": true,
+    "blocks": 4
+  },
+  {
+    "id": "sec.ohmstead.deco.cable",
+    "display_name": "Hanging cable run",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Hanging cable run",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.deco.vent",
+    "display_name": "Vent",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Vent",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.deco.fluorescent",
+    "display_name": "Fluorescent fixture",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Fluorescent fixture",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.deco.stencil",
+    "display_name": "Warning stencil",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Warning stencil",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.deco.floor_hatch",
+    "display_name": "Floor hatch",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Floor hatch",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.obj.elevator",
+    "display_name": "The Elevator (car/shaft/doors/panel)",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "object",
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; The Elevator (car/shaft/doors/panel)",
+    "hero": true,
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.obj.healing_machine",
+    "display_name": "Garage healing machine",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "object",
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Garage healing machine",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.obj.network_terminal",
+    "display_name": "Network-Garage terminal",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "object",
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Network-Garage terminal",
+    "blocks": 1
+  },
+  {
+    "id": "sec.ohmstead.obj.blast_door",
+    "display_name": "Bulkhead blast door",
+    "kit": "sec.ohmstead",
+    "biome": "underground",
+    "type": "anim",
+    "anim": {
+      "frames": 3,
+      "fps": 8
+    },
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; riveted bulkhead blast door, closed/mid/open",
+    "blocks": 1
+  },
+  {
+    "id": "sec.field.ground.ruts",
+    "display_name": "Dirt ruts",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Dirt ruts",
+    "blocks": 4
+  },
+  {
+    "id": "sec.field.prop.silo_tall",
+    "display_name": "Grain silo (tall)",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "prop",
+    "footprint": [
+      2,
+      4
+    ],
+    "anchor": [
+      0,
+      3
+    ],
+    "layer_split": {
+      "bottom": [
+        3
+      ],
+      "top": [
+        0,
+        1,
+        2
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; rusted corrugated grain silo, sun-bleached prairie",
+    "hero": true,
+    "blocks": 8
+  },
+  {
+    "id": "sec.field.prop.water_tower",
+    "display_name": "Water tower",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "prop",
+    "footprint": [
+      3,
+      4
+    ],
+    "anchor": [
+      0,
+      3
+    ],
+    "layer_split": {
+      "bottom": [
+        3
+      ],
+      "top": [
+        0,
+        1,
+        2
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Water tower",
+    "hero": true,
+    "blocks": 12
+  },
+  {
+    "id": "sec.field.prop.barn",
+    "display_name": "Barn",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "prop",
+    "footprint": [
+      4,
+      3
+    ],
+    "anchor": [
+      0,
+      2
+    ],
+    "layer_split": {
+      "bottom": [
+        2
+      ],
+      "top": [
+        0,
+        1
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Barn",
+    "blocks": 12
+  },
+  {
+    "id": "sec.field.prop.farmhouse",
+    "display_name": "Ruined farmhouse",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "prop",
+    "footprint": [
+      4,
+      3
+    ],
+    "anchor": [
+      0,
+      2
+    ],
+    "layer_split": {
+      "bottom": [
+        2
+      ],
+      "top": [
+        0,
+        1
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Ruined farmhouse",
+    "variants": [
+      "intact",
+      "collapsed"
+    ],
+    "blocks": 24
+  },
+  {
+    "id": "sec.field.prop.windmill",
+    "display_name": "Windmill",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "prop",
+    "footprint": [
+      2,
+      5
+    ],
+    "anchor": [
+      0,
+      4
+    ],
+    "layer_split": {
+      "bottom": [
+        4
+      ],
+      "top": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Windmill",
+    "blocks": 10
+  },
+  {
+    "id": "sec.field.prop.coop_vault",
+    "display_name": "Co-op building & Vault (the prologue safe)",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "prop",
+    "footprint": [
+      4,
+      3
+    ],
+    "anchor": [
+      0,
+      2
+    ],
+    "layer_split": {
+      "bottom": [
+        2
+      ],
+      "top": [
+        0,
+        1
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; grain co-op building with the broken-open Co-op Vault safe — the Breaker site",
+    "hero": true,
+    "blocks": 12
+  },
+  {
+    "id": "sec.field.prop.church",
+    "display_name": "Church/schoolhouse facade",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "prop",
+    "footprint": [
+      3,
+      4
+    ],
+    "anchor": [
+      0,
+      3
+    ],
+    "layer_split": {
+      "bottom": [
+        3
+      ],
+      "top": [
+        0,
+        1,
+        2
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Church/schoolhouse facade",
+    "blocks": 12
+  },
+  {
+    "id": "sec.field.fence.cattle",
+    "display_name": "Cattle-pen rail fencing",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "autotile",
+    "template": "fence_run",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Cattle-pen rail fencing",
+    "blocks": 8
+  },
+  {
+    "id": "sec.field.prop.feed_trough",
+    "display_name": "Feed trough",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Feed trough",
+    "blocks": 1
+  },
+  {
+    "id": "sec.field.prop.hay_bale",
+    "display_name": "Hay bale",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Hay bale",
+    "blocks": 1
+  },
+  {
+    "id": "sec.field.prop.hitching_post",
+    "display_name": "Hitching post",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Hitching post",
+    "blocks": 1
+  },
+  {
+    "id": "sec.field.prop.porch",
+    "display_name": "Porch",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Porch",
+    "blocks": 1
+  },
+  {
+    "id": "sec.field.prop.tumbleweed",
+    "display_name": "Tumbleweed",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Tumbleweed",
+    "blocks": 1
+  },
+  {
+    "id": "sec.field.prop.mesquite_dead",
+    "display_name": "Dead mesquite",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Dead mesquite",
+    "blocks": 1
+  },
+  {
+    "id": "sec.field.obj.elevator_hatch",
+    "display_name": "Elevator surface hatch",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "object",
+    "layer": "object",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Elevator surface hatch",
+    "hero": true,
+    "blocks": 1
+  },
+  {
+    "id": "sec.field.fx.em_shimmer_house",
+    "display_name": "EM-shimmer house overlay",
+    "kit": "sec.field",
+    "biome": "prairie",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 2
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; EM-shimmer house overlay, 4-frame loop",
+    "blocks": 1
+  }
+]
