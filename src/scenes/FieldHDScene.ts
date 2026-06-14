@@ -15,10 +15,22 @@ interface FieldData {
   height: number;
   collision: number[];
   grass: number[];
+  grassAny?: number[];
+  water?: number[];
+  placements?: Array<{ type: string; col: number; row: number }>;
   npcs?: Array<{ char: string; col: number; row: number }>;
 }
 
 const NPC_CHARS = ['npc_rancher', 'npc_elder', 'npc_kid'] as const;
+const FX = ['grass_0', 'grass_1', 'grass_2', 'leaf_0', 'leaf_1', 'leaf_2', 'trunk'] as const;
+const WATER_FRAMES = 6;
+
+interface Sway {
+  obj: Phaser.GameObjects.Image;
+  phase: number;
+  amp: number;
+  speed: number;
+}
 
 type Dir = 'up' | 'down' | 'left' | 'right';
 const DELTA: Record<Dir, [number, number]> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
@@ -40,9 +52,74 @@ export class FieldHDScene extends Phaser.Scene {
   private facing: Dir = 'down';
   private moving = false;
   private toastObj?: Phaser.GameObjects.Container;
+  private sway: Sway[] = [];
+  private waterSprites: Phaser.GameObjects.Image[] = [];
+  private waterFrame = 0;
+  private waterTimer = 0;
+  private windT = 0;
 
   constructor() {
     super('fieldhd');
+  }
+
+  /** Build the moving overlay layers: animated water, swaying grass tufts,
+   * and trees (static trunk + swaying leaf clusters). */
+  private buildAnimatedLayers(): void {
+    this.sway = [];
+    this.waterSprites = [];
+    const t = this.field.tile;
+    const rng = new Rng((0x5eed ^ this.field.cols) >>> 0);
+    const water = this.field.water ?? [];
+    const grassAny = this.field.grassAny ?? [];
+    const enc = this.field.grass ?? [];
+    for (let r = 0; r < this.field.rows; r++) {
+      for (let c = 0; c < this.field.cols; c++) {
+        const i = r * this.field.cols + c;
+        if (water[i] === 1) {
+          this.waterSprites.push(this.add.image(c * t, r * t, 'water_0').setOrigin(0, 0).setDepth(1));
+          continue;
+        }
+        if (grassAny[i] === 1) {
+          const n = enc[i] === 1 ? 2 : rng.chance(55) ? 1 : 0;
+          for (let k = 0; k < n; k++) {
+            const ox = c * t + rng.int(3, t - 3);
+            const oy = r * t + rng.int(12, t - 1);
+            const img = this.add
+              .image(ox, oy, `grass_${rng.int(0, 2)}`)
+              .setOrigin(0.5, 1)
+              .setDepth(2 + r);
+            this.sway.push({ obj: img, phase: rng.next() * 6.28, amp: 0.16, speed: 1.5 + rng.next() * 0.7 });
+          }
+        }
+      }
+    }
+    for (const p of this.field.placements ?? []) {
+      if (p.type !== 'tree') continue;
+      const bx = p.col * t + t / 2;
+      const by = p.row * t + t;
+      this.add.image(bx, by, 'trunk').setOrigin(0.5, 1).setDepth(3 + p.row);
+      const spots: Array<[number, number, string]> = [
+        [bx - 7, by - 22, 'leaf_0'],
+        [bx + 7, by - 22, 'leaf_1'],
+        [bx, by - 30, 'leaf_2'],
+      ];
+      for (const [lx, ly, key] of spots) {
+        const img = this.add.image(lx, ly, key).setOrigin(0.5, 0.7).setDepth(4 + p.row);
+        this.sway.push({ obj: img, phase: rng.next() * 6.28, amp: 0.06, speed: 1.0 + rng.next() * 0.4 });
+      }
+    }
+  }
+
+  private animate(delta: number): void {
+    this.windT += delta / 1000;
+    for (const s of this.sway) s.obj.rotation = Math.sin(this.windT * s.speed + s.phase) * s.amp;
+    this.waterTimer += delta;
+    if (this.waterTimer > 150) {
+      this.waterTimer = 0;
+      this.waterFrame = (this.waterFrame + 1) % WATER_FRAMES;
+      const key = `water_${this.waterFrame}`;
+      for (const w of this.waterSprites) w.setTexture(key);
+    }
   }
 
   preload(): void {
@@ -53,11 +130,16 @@ export class FieldHDScene extends Phaser.Scene {
     if (!this.textures.exists('wren_96')) this.load.image('wren_96', 'world/char/wren_96.png');
     if (!this.textures.exists('player')) this.load.image('player', 'world/char/player.png');
     for (const n of NPC_CHARS) if (!this.textures.exists(n)) this.load.image(n, `world/char/${n}.png`);
+    // animated world-layer assets
+    for (const f of FX) if (!this.textures.exists(f)) this.load.image(f, `world/fx/${f}.png`);
+    for (let i = 0; i < WATER_FRAMES; i++)
+      if (!this.textures.exists(`water_${i}`)) this.load.image(`water_${i}`, `world/fx/water_${i}.png`);
   }
 
   create(): void {
     this.field = this.cache.json.get('field-hd-data') as FieldData;
-    this.add.image(0, 0, 'field-hd').setOrigin(0, 0);
+    this.add.image(0, 0, 'field-hd').setOrigin(0, 0).setDepth(0);
+    this.buildAnimatedLayers();
 
     // the garage / elevator exit (heal point) is the deterministic central
     // open tile — the elevator brings you up here
@@ -130,7 +212,8 @@ export class FieldHDScene extends Phaser.Scene {
     this.banner("Garage: you're all recharged — stay current.");
   }
 
-  override update(): void {
+  override update(_time: number, delta: number): void {
+    this.animate(delta); // wind sway + water flow run every frame
     if (this.moving) return;
     if (this.controls.consume('start') && hasGameState()) {
       this.scene.launch('menu', { from: 'fieldhd' });

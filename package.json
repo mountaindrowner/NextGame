@@ -15,7 +15,8 @@
     "gen:sprites:hd": "tsx tools/gen-sprites-hd.ts",
     "extract": "tsx tools/extract-atlas.ts",
     "gen:world": "tsx tools/gen-world.ts",
-    "pixelify": "tsx tools/pixelify.ts"
+    "pixelify": "tsx tools/pixelify.ts",
+    "gen:foliage": "tsx tools/gen-foliage.ts"
   },
   "dependencies": {
     "phaser": "^3.85.2"

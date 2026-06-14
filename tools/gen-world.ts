@@ -279,6 +279,7 @@ interface Placed {
   col: number;
   row: number;
 }
+// baked static objects (buildings, rocks, hay)
 const OBJECTS: Placed[] = [
   { s: barn(), col: 2, row: 3 },
   { s: storefront('9a5a30'), col: 6, row: 3 },
@@ -287,15 +288,19 @@ const OBJECTS: Placed[] = [
   { s: house(), col: 20, row: 3 },
   { s: windmill(), col: 25, row: 4 },
   { s: watertower(), col: 23, row: 14 },
-  { s: tree(), col: 1, row: 17 },
-  { s: tree(), col: 28, row: 1 },
-  { s: tree(), col: 27, row: 17 },
-  { s: cactus(), col: 5, row: 17 },
-  { s: cactus(), col: 22, row: 17 },
   { s: rock(), col: 9, row: 18 },
   { s: rock(), col: 19, row: 16 },
   { s: hay(), col: 17, row: 4 },
   { s: hay(), col: 18, row: 4 },
+  { s: cactus(), col: 5, row: 17 },
+  { s: cactus(), col: 22, row: 17 },
+];
+
+// placed as animated overlays in the scene (trunk + swaying leaf clusters)
+const PLACEMENTS = [
+  { type: 'tree', col: 1, row: 17 },
+  { type: 'tree', col: 28, row: 1 },
+  { type: 'tree', col: 27, row: 17 },
 ];
 
 const map = new Sprite(W, H);
@@ -341,18 +346,23 @@ const png = new PNG({ width: W, height: H });
 png.data.set(map.data);
 writeFileSync(join(OUT, 'the-field.png'), PNG.sync.write(png));
 
-// collision + grass + npc placements
+// collision + grass + water + npc/object placements
+const placeBlock = new Set(PLACEMENTS.map((p) => `${p.col},${p.row}`));
 const collision: number[] = [];
 const grass2: number[] = [];
+const waterGrid: number[] = [];
 for (let r = 0; r < ROWS; r++) {
   for (let c = 0; c < COLS; c++) {
     const code = GROUND[r]![c]!;
-    let solid = code === 'w';
+    let solid = code === 'w' || placeBlock.has(`${c},${r}`);
     for (const [x0, y0, x1, y1] of collisionExtra) if (c >= x0 && c <= x1 && r >= y0 && r <= y1) solid = true;
     collision.push(solid ? 1 : 0);
-    grass2.push(code === ',' ? 1 : 0);
+    grass2.push(code === '.' || code === 'g' || code === ',' ? 1 : 0); // any grass (for tuft scatter)
+    waterGrid.push(code === 'w' ? 1 : 0);
   }
 }
+// the tall-grass encounter cells (subset)
+const encounter: number[] = GROUND.flatMap((row) => [...row].map((ch) => (ch === ',' ? 1 : 0)));
 const npcs = [
   { char: 'npc_rancher', col: 7, row: 6 },
   { char: 'npc_elder', col: 21, row: 6 },
@@ -360,7 +370,19 @@ const npcs = [
 ];
 writeFileSync(
   join(OUT, 'the-field.json'),
-  JSON.stringify({ tile: T, cols: COLS, rows: ROWS, width: W, height: H, collision, grass: grass2, npcs }),
+  JSON.stringify({
+    tile: T,
+    cols: COLS,
+    rows: ROWS,
+    width: W,
+    height: H,
+    collision,
+    grass: encounter, // encounter cells (tall grass) — keeps FieldHD encounter logic
+    grassAny: grass2, // any-grass cells for tuft scatter
+    water: waterGrid,
+    placements: PLACEMENTS,
+    npcs,
+  }),
 );
 
 // characters

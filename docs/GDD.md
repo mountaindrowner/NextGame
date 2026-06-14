@@ -496,6 +496,14 @@ in v1.
 > (`tools/spritekit.ts`): the Ohm sprites (kept), the **tileset + maps**, the
 > **player character**, and **NPCs**. The cattle-town uploads remain only as a
 > *layout/theme reference* (`assets/reference/cattle-town/`), not shipped pixels.
+> **Style law (2026-06-14):** a deliberately **limited palette** (cohesive, few
+> colours, chosen partly to mask code-art jank) + **multilayer, animated world
+> art** — terrain is layers that move, not flat tiles. Grass = a varied-green
+> base UNDER an overlay of pixel blade-tufts that sway in wind. Trees =
+> trunk/branch base UNDER overlaid leaf clusters (grouped, not per-leaf) that
+> sway. Water = layered depth shading with animated ripple/flow. Characters:
+> hand-authored or reference-converted (`tools/pixelify.ts`); 4-dir/animation
+> pending an external generator (PixelLab).
 > **Locked HD spec:** native **480×320**, integer-scaled; **32×32** tiles; full
 > colour; soft top-down lighting + cast shadows. Ohm battle fronts **96×96**.
 
