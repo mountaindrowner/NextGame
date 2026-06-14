@@ -25,10 +25,27 @@ Done this session:
   documented. **Dead-name flag:** the bibles use "Ohmdex" + "Build-A-MAC" —
   reference only, never in game text/asset IDs (Manifest / the Bench are canon).
 
-**Next (locked order):** generate kit ART — Primary Kit grounds/grass/water/
-trees/props first (unblocks every map), then Hive Overlay, then per-area
-secondaries in critical-path order (Railhead onward; Ohmstead art already exists
-via `gen-underground.ts`, Field needs the depth/density upgrade).
+### Shared foundation ART — DONE (2026-06-14)
+
+All "reused everywhere" kit art is generated (grid method, depth/density laws),
+each with a `_contact*.png` review sheet + an `npm run assets:*` script:
+- **Primary Kit** — `kit-primary.ts` (dirt/earth/gravel/concrete/cobble,
+  short/tall/dead grass, still+flowing water) + `kit-primary-props.ts` (4 trees,
+  veg, ruin props, fences/walls, boulder, all 4 field-ability obstacles
+  blocked+cleared, flame). `assets/tiles/primary/`.
+- **Hive Overlay** — `kit-hive.ts` (growth/veins light·med·heavy, corrupt
+  grass/water, Static shimmer, relay-tower; translucent). `assets/tiles/overlay_hive/`.
+- **Building/Interior** — `kit-building.ts` (5 floors, walls, furniture, **hero
+  Bench + healing machine**). `assets/tiles/building/`.
+- **Cave/Mine** — `kit-cave.ts` (walls/floors/pools, stalactites, glowing ore
+  nodes, supports/ladder; mine rails/cart/beam). `assets/tiles/dungeon_cave|mine/`.
+- Manifest **248 records, 0 violations**; 57 tests green; typecheck/lint clean.
+
+**Next phase:** per-area SECONDARY kits in critical-path order — `sec.railhead`
+first (rails, roundhouse/turntable, boxcars, switch levers, market sprawl,
+broker offices), then Cistern → … → Dallas. Then compose each area's map
+pulling only matrix-allowed kits. The Field also gets its `sec.field` art +
+depth/density upgrade. Ohms still pending grid-method retool.
 
 ## Session 2026-06-14 (cont.) — Stages: Ohmstead underground + walkable maps
 
