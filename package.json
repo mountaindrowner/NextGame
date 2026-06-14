@@ -17,7 +17,8 @@
     "gen:world": "tsx tools/gen-world.ts",
     "pixelify": "tsx tools/pixelify.ts",
     "gen:foliage": "tsx tools/gen-foliage.ts",
-    "yoyo2png": "tsx tools/yoyo2png.ts"
+    "yoyo2png": "tsx tools/yoyo2png.ts",
+    "gen:protag": "tsx tools/gen-protag.ts"
   },
   "dependencies": {
     "phaser": "^3.85.2"
