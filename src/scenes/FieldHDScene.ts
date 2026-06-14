@@ -164,7 +164,7 @@ export class FieldHDScene extends Phaser.Scene {
     const t = this.field.tile;
     for (const npc of this.field.npcs ?? []) {
       if (!this.textures.exists(npc.char)) continue;
-      this.add.image(npc.col * t + t / 2, npc.row * t + t, npc.char).setOrigin(0.5, 0.85).setDepth(npc.row);
+      this.add.image(npc.col * t + t / 2, npc.row * t + t, npc.char).setOrigin(0.5, 0.92).setScale(1.3).setDepth(npc.row);
       this.npcCells.add(`${npc.col},${npc.row}`);
     }
 
@@ -172,8 +172,8 @@ export class FieldHDScene extends Phaser.Scene {
     const preset = hasGameState() ? getGameState().preset : 'SAL';
     const pkey = preset === 'WREN' ? 'wren_yoyo' : 'sal_yoyo';
     const key = this.textures.exists(pkey) ? pkey : 'player';
-    this.player = this.add.image(0, 0, key).setOrigin(0.5, 0.9).setDepth(50);
-    this.player.setScale(1.5); // 18×28 art → ~42px in-world
+    this.player = this.add.image(0, 0, key).setOrigin(0.5, 0.92).setDepth(50);
+    this.player.setScale(1.3); // 18×30 Pokémon-style art → ~39px in-world
     this.placePlayer();
 
     this.cameras.main.setBounds(0, 0, this.field.width, this.field.height);

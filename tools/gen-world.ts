@@ -10,7 +10,7 @@ import { join } from 'node:path';
 import { PNG } from 'pngjs';
 import { hexRGBA, ramp, Sprite, type RGBA } from './spritekit';
 import { Rng } from '../src/core/rng';
-import { barn, house, npcChar, storefront, watertower, windmill } from './world-builders';
+import { barn, house, human, storefront, watertower, windmill } from './world-builders';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const OUT = join(ROOT, 'public/world');
@@ -280,9 +280,13 @@ const writeChar = (name: string, s: Sprite): void => {
   p.data.set(s.data);
   writeFileSync(join(OUT, 'char', `${name}.png`), PNG.sync.write(p));
 };
-writeChar('player', npcChar({ shirt: ['u', 'm', 'U'], hat: 'k', hair: 'r', hairDk: 'R' }));
-writeChar('npc_rancher', npcChar({ shirt: ['j', 'h', 'J'], hat: 'K', hair: 'R', hairDk: 'R' }));
-writeChar('npc_elder', npcChar({ shirt: ['a', 'l', 'A'], hat: 'w', hair: 'w', hairDk: 'W', apron: true }));
-writeChar('npc_kid', npcChar({ shirt: ['e', 'q', 'E'], hat: 'k', hair: 'y', hairDk: 'Y' }));
+// protagonists (scavenger goggle-cap + bandana) and townsfolk — one human() builder
+const SCAV = { shirt: ['h', 'j', 'J'] as [string, string, string], pants: ['m', 'u', 'U'] as [string, string, string], scavenger: true };
+writeChar('sal_yoyo', human({ hair: 'r', hairDk: 'R', ...SCAV }));
+writeChar('wren_yoyo', human({ hair: 'y', hairDk: 'Y', ponytail: true, ...SCAV }));
+writeChar('player', human({ hair: 'r', hairDk: 'R', ...SCAV }));
+writeChar('npc_rancher', human({ hair: 'R', hairDk: 'R', shirt: ['q', 'e', 'E'], pants: ['n', 'k', 'K'], hat: 'K' }));
+writeChar('npc_elder', human({ hair: 'w', hairDk: 'W', shirt: ['l', 'a', 'A'], pants: ['A', 'A', 'A'], hat: 'w', apron: true }));
+writeChar('npc_kid', human({ hair: 'y', hairDk: 'Y', shirt: ['m', 'u', 'U'], pants: ['n', 'k', 'K'] }));
 
 console.log(`world: the-field.png ${W}x${H}, ${OBJECTS.length} objects, ${npcs.length} NPCs, 4 chars`);

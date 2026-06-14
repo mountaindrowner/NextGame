@@ -99,6 +99,108 @@ export function watertower(): Sprite {
   return g.render();
 }
 
+/**
+ * Human overworld sprite — Pokémon-style proportions: a large expressive head
+ * with big eyes over a slim body (~3 heads tall). One builder for protagonists
+ * (scavenger goggle-cap + bandana) and townsfolk (hat/hair). 18×30.
+ */
+export function human(o: {
+  hair: string;
+  hairDk: string;
+  shirt: [string, string, string]; // hi, base, shadow
+  pants: [string, string, string];
+  scavenger?: boolean;
+  hat?: string;
+  ponytail?: boolean;
+  apron?: boolean;
+}): Sprite {
+  const g = new Grid(18, 30);
+  g.shadow(9, 29, 6, 2);
+  const [jh, jb, js] = o.shirt;
+  const [ph, pb, ps] = o.pants;
+
+  // legs
+  g.rect(6, 23, 3, 5, pb);
+  g.rect(9, 23, 3, 5, pb);
+  g.vline(6, 23, 5, ph);
+  g.vline(11, 23, 5, ps);
+  if (o.scavenger) {
+    g.rect(6, 24, 3, 2, 'p'); // knee pads
+    g.rect(9, 24, 3, 2, 'p');
+  }
+  // shoes
+  g.rect(5, 27, 4, 2, 'o');
+  g.rect(9, 27, 4, 2, 'o');
+  g.hline(5, 28, 4, 'O');
+  g.hline(9, 28, 4, 'O');
+
+  // torso (slim)
+  g.box(5, 13, 8, 10, jh, jb, js);
+  if (o.apron) g.rect(6, 15, 6, 7, 'w');
+  else if (o.scavenger) {
+    g.vline(8, 14, 8, 't'); // zipper
+    g.vline(9, 14, 8, 't');
+    g.rect(6, 17, 2, 3, 'p'); // pouches
+    g.rect(10, 17, 2, 3, 'p');
+  } else g.vline(8, 14, 8, js);
+  // arms
+  g.rect(3, 14, 2, 7, jb);
+  g.rect(13, 14, 2, 7, jb);
+  g.vline(3, 14, 7, jh);
+  g.vline(14, 14, 7, js);
+  g.rect(3, 21, 2, 2, 'S'); // hands
+  g.rect(13, 21, 2, 2, 'S');
+  // bandana
+  if (o.scavenger) {
+    g.rect(5, 12, 8, 1, 'b');
+    g.rect(6, 13, 6, 1, 'B');
+    g.set(8, 12, 'b');
+  }
+
+  // head — large, expressive
+  g.rect(5, 4, 8, 8, 'S'); // face
+  g.set(5, 4, '.');
+  g.set(12, 4, '.'); // rounded top corners
+  g.set(5, 11, '.');
+  g.set(12, 11, '.');
+  g.vline(12, 5, 6, 's'); // shaded cheek
+  g.set(6, 11, 's'); // chin
+  g.set(11, 11, 's');
+  // big Pokémon eyes
+  g.rect(6, 7, 2, 3, 'X');
+  g.rect(10, 7, 2, 3, 'X');
+  g.set(6, 7, '*'); // catchlights
+  g.set(10, 7, '*');
+  g.set(8, 10, 'x'); // small mouth
+  g.set(9, 10, 'x');
+  // hair framing
+  g.rect(5, 3, 8, 1, o.hair);
+  g.hline(5, 3, 8, o.hairDk);
+  g.vline(4, 4, 5, o.hair);
+  g.vline(13, 4, 5, o.hair);
+  g.set(5, 4, o.hair);
+  g.set(12, 4, o.hair);
+  if (o.ponytail) {
+    g.rect(13, 4, 3, 2, o.hair);
+    g.rect(14, 6, 3, 5, o.hair);
+    g.vline(15, 7, 4, o.hairDk);
+  }
+  // cap / hat
+  if (o.scavenger) {
+    g.rect(5, 1, 8, 2, 'a'); // cap crown
+    g.hline(4, 3, 10, 'A'); // brim
+    g.set(4, 3, 'l');
+    g.rect(6, 1, 2, 1, 'i'); // goggles
+    g.rect(10, 1, 2, 1, 'i');
+    g.hline(5, 2, 8, 'k');
+  } else if (o.hat) {
+    g.rect(5, 1, 8, 2, o.hat);
+    g.hline(4, 3, 10, o.hat);
+  }
+  g.outline();
+  return g.render();
+}
+
 /** Townsfolk NPC — same grid character style as the protagonists, varied. */
 export function npcChar(opts: { shirt: [string, string, string]; hat: string; hair: string; hairDk: string; apron?: boolean }): Sprite {
   const g = new Grid(18, 28);

@@ -39,6 +39,7 @@ export const PALETTE: Record<string, string> = {
   // glass / glow
   i: '#9ad6dd', I: '#5f9aa1', // glass
   z: '#ffd27a', // ember / lamp glow
+  '*': '#f4f0e6', // white (eye catchlight, highlights)
 };
 
 const hex = (s: string): RGBA =>
