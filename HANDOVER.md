@@ -225,3 +225,20 @@ Everything below predates the pivot.
 - More sprite batches toward the full 156 (next: rest of Field 011–048, then
   overworld micros for roamers). Plus the remaining art-independent M9 content
   (elevator framing, real Field maps, quest-log shell). Then tag `slice-v0`.
+
+## YoYoPixel evaluation (2026-06-14)
+
+Evaluated YoYoPixel (github.com/SbName/yoyopixel, **MIT**) at Mark's request.
+Verdict: **adopt.** It's a prompt/skill *methodology* for an LLM to author pixel
+art, plus a procedural engine.
+- **Grid mode** (characters/items/props) stores art as `{palette, pixels[]}`
+  (same as our ASCII sprites) → rasterizes headlessly. Built `tools/yoyo2png.ts`
+  (npm run yoyo2png) to convert grid assets → game PNG; proven on their
+  swordsman (16×24, cleaner shading than our hand-built protags).
+- **Procedural mode** (buildings/tilesets, e.g. their village set) is clearly
+  better than our hand-coded buildings, but outputs canvas JS that needs a
+  renderer (node-canvas/browser) — not available in this headless env. Wiring
+  that is the next step (needs a native `canvas` install — pending Mark's OK).
+- License: MIT, clean. We ship nothing of theirs — we author originals with the
+  methodology; yoyo2png is ours. Adopt the grid methodology for characters/Ohms/
+  items now; wire the procedural engine for environments next.
