@@ -6,7 +6,9 @@ Read this first, every session. Then read HANDOVER.md. Source of record:
 `docs/design/` — story-bible, critical-path-locations (the A→Z spine: Ohmstead
 → Field → 8 colonies → Dallas/Spire → Ohmcoming), wider-world (optional
 content), level-building-assets + asset-bible (the governing asset system),
-clutter-detail-layer (the lived-in set-dressing layer).
+clutter-detail-layer (the lived-in set-dressing layer), principal-cast +
+colony-npc-casts + variable-npcs (the character casts — names are proposals
+pending lock) + npc-sprite-spec (reconciled to HD in `docs/npc-pipeline.md`).
 Asset system implemented + HD-reconciled in `docs/asset-pipeline.md` +
 `tools/assets/`. If later chat conflicts with these files, the chat wins —
 update the files immediately.
@@ -58,7 +60,15 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   no trade-style triggers.
 - **Starter:** built at the Bench from Grandpa's parts — Locomotion
   (treads/legs/hover) + Core (type) + Plating (stat lean).
-- **Protagonist:** 2 written presets (one boy, one girl).
+- **Protagonist:** 2 written presets (one boy, one girl) — **SAL / WREN**;
+  family name **Vane**, grandchild of **Eli Vane** ("Grandpa").
+- **Cast (proposals, `docs/design/principal-cast.md` etc., pending lock):**
+  Odessa (archivist/comms), Mabel Vane (Grandma), Warden Hollis Boone, Cass;
+  Wardens Marrow·Bloom·Stone·Pike·Hale·Sol·Frost·Amos; Rook (rival, home =
+  **Redbed** — *the doc's "Caliche" = Redbed*), Cmdr. Reyes, the Cantor,
+  Marshal Drake, the Monad (PERSISTENCE's avatar). **⚠ Conflict:** the Bastion
+  scout "Wren" collides with the WREN preset — needs a rename before it locks.
+  NPC sprites: HD-reconciled spec in `docs/npc-pipeline.md`.
 - **Battle:** Gen 3 damage formula cloned exactly. Party of 3. No
   natures/IVs/EVs, no held items, single types in v1, simple per-species
   passives, PP tuned light, 4 moves + purchasable 5th slot with a cost.
