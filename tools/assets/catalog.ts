@@ -253,4 +253,17 @@ for (const [id, name] of [['feed_trough', 'Feed trough'], ['hay_bale', 'Hay bale
 obj('sec.field.obj.elevator_hatch', 'Elevator surface hatch', SF, 'prairie', 6, { hero: true });
 anim('sec.field.fx.em_shimmer_house', 'EM-shimmer house overlay', SF, 'prairie', 8, 4, 2, { layer: 'top' });
 
+// ============================ OVERLAY.HIVE (pals 11–12) ===================
+// Cross-area Static/hive corruption — composites over saturated maps (R3),
+// from Bastion onward. Author once, tint per zone; light→heavy intensity.
+const OH: Kit = 'overlay.hive';
+for (const tier of ['light', 'med', 'heavy'] as const) {
+  anim(`overlay.hive.growth.${tier}`, `Hive growth (${tier})`, OH, 'multi', 12, 4, 3, { layer: 'top', prompt: `${HD}; flesh-and-metal hive growth creeping over ground/walls, ${tier} saturation, sickly translucent` });
+  anim(`overlay.hive.veins.${tier}`, `Glowing hive veins (${tier})`, OH, 'multi', 12, 4, 3, { layer: 'top', prompt: `${HD}; glowing hive veins, cyan/magenta pulse, ${tier}, semi-transparent overlay` });
+}
+anim('overlay.hive.corrupt_grass', 'Corrupted grass', OH, 'multi', 11, 4, 3, { layer: 'top' });
+anim('overlay.hive.corrupt_water', 'Corrupted water', OH, 'multi', 11, 4, 3, { layer: 'top' });
+anim('overlay.hive.static_shimmer', 'Static screen-shimmer', OH, 'multi', 12, 4, 6, { layer: 'top' });
+prop('overlay.hive.relay_tower', 'Hive relay-tower', OH, 'multi', 12, [2, 5], { hero: true, collision: 'solid', solidRows: 1, prompt: `${HD}; hive-grown relay tower, flesh fused with antenna steel, glowing crown, casts additive glow` });
+
 export const CATALOG: AssetRecord[] = C;

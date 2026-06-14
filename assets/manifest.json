@@ -4326,5 +4326,223 @@
     "phase": "slice",
     "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; EM-shimmer house overlay, 4-frame loop",
     "blocks": 1
+  },
+  {
+    "id": "overlay.hive.growth.light",
+    "display_name": "Hive growth (light)",
+    "kit": "overlay.hive",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 3
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 12,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; flesh-and-metal hive growth creeping over ground/walls, light saturation, sickly translucent",
+    "blocks": 1
+  },
+  {
+    "id": "overlay.hive.veins.light",
+    "display_name": "Glowing hive veins (light)",
+    "kit": "overlay.hive",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 3
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 12,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; glowing hive veins, cyan/magenta pulse, light, semi-transparent overlay",
+    "blocks": 1
+  },
+  {
+    "id": "overlay.hive.growth.med",
+    "display_name": "Hive growth (med)",
+    "kit": "overlay.hive",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 3
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 12,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; flesh-and-metal hive growth creeping over ground/walls, med saturation, sickly translucent",
+    "blocks": 1
+  },
+  {
+    "id": "overlay.hive.veins.med",
+    "display_name": "Glowing hive veins (med)",
+    "kit": "overlay.hive",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 3
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 12,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; glowing hive veins, cyan/magenta pulse, med, semi-transparent overlay",
+    "blocks": 1
+  },
+  {
+    "id": "overlay.hive.growth.heavy",
+    "display_name": "Hive growth (heavy)",
+    "kit": "overlay.hive",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 3
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 12,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; flesh-and-metal hive growth creeping over ground/walls, heavy saturation, sickly translucent",
+    "blocks": 1
+  },
+  {
+    "id": "overlay.hive.veins.heavy",
+    "display_name": "Glowing hive veins (heavy)",
+    "kit": "overlay.hive",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 3
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 12,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; glowing hive veins, cyan/magenta pulse, heavy, semi-transparent overlay",
+    "blocks": 1
+  },
+  {
+    "id": "overlay.hive.corrupt_grass",
+    "display_name": "Corrupted grass",
+    "kit": "overlay.hive",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 3
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 11,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Corrupted grass, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "overlay.hive.corrupt_water",
+    "display_name": "Corrupted water",
+    "kit": "overlay.hive",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 3
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 11,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Corrupted water, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "overlay.hive.static_shimmer",
+    "display_name": "Static screen-shimmer",
+    "kit": "overlay.hive",
+    "biome": "multi",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 6
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 12,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Static screen-shimmer, 4-frame loop",
+    "blocks": 1
+  },
+  {
+    "id": "overlay.hive.relay_tower",
+    "display_name": "Hive relay-tower",
+    "kit": "overlay.hive",
+    "biome": "multi",
+    "type": "prop",
+    "footprint": [
+      2,
+      5
+    ],
+    "anchor": [
+      0,
+      4
+    ],
+    "layer_split": {
+      "bottom": [
+        4
+      ],
+      "top": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "collision_mask": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 12,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; hive-grown relay tower, flesh fused with antenna steel, glowing crown, casts additive glow",
+    "hero": true,
+    "blocks": 10
   }
 ]

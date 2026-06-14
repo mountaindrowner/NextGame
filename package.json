@@ -21,6 +21,7 @@
     "assets:build": "tsx tools/assets/build.ts",
     "assets:primary": "tsx tools/assets/kit-primary.ts",
     "assets:primary:props": "tsx tools/assets/kit-primary-props.ts",
+    "assets:hive": "tsx tools/assets/kit-hive.ts",
     "yoyo2png": "tsx tools/yoyo2png.ts",
     "gen:protag": "tsx tools/gen-protag.ts"
   },
