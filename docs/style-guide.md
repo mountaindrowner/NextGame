@@ -24,6 +24,82 @@
 
 ---
 
+## Art direction — depth & density (LOCKED 2026-06-14, binding)
+
+The bar is **Pokémon-era / HD top-down**, never **NES-era flat tilemap**.
+A finished screen should read as a *lived-in place* — materials you can name,
+light that models form, and a dense, varied set of things in it. Two laws.
+Both apply to **every area we build, from now on, no exceptions**, and they
+apply retroactively to anything that still looks flat (the Field is on the
+upgrade list).
+
+### Law 1 — Every texture has depth and says what it is
+
+No flat fills. Every drawn thing — each tile, each prop — is modeled, not
+colored in.
+
+- **Three values minimum per material:** highlight / base / shadow (the
+  `gridart` `Grid.box(hi, base, shadow)` rule, or hand-placed equivalent).
+  Key materials get a 4th–5th step or an emissive accent.
+- **Material identity is mandatory.** The texture must *read as the thing*:
+  wood shows grain + plank seams; steel shows panels, rivets, a spec
+  highlight; rock shows crags + cracks + speckle; cobble shows individual
+  offset stones + mortar; crystal shows faceted shards with a lit and a
+  shaded face; water shows depth (dark base) + surface glints. If you can't
+  tell a tile's material with the labels off, it isn't done.
+- **Consistent light: top-left.** Highlights on top/left edges, shadow on
+  bottom/right, contact shadow under anything that sits on the ground.
+- **Glow is light, not a brighter pixel.** Emissive props (cores, lamps,
+  crystals, screens) cast an *additive radial light* onto their surroundings
+  (see `glow()` in `gen-underground.ts`); they illuminate the scene.
+- **Break the grid.** Never let two tiles meet on a hard 32px seam. Use
+  edge/transition treatment: the rock↔floor crumble pass, shorelines, rugs,
+  scattered rubble, worn paths.
+
+### Law 2 — Every area ships a large, diverse asset set
+
+Diversity is what separates "Pokémon town" from "one grass tile repeated."
+Before an area is called done it must include, at minimum:
+
+- **≥3 variants of every ground and wall tile** (seeded), so tiling never
+  visibly repeats across a screen.
+- **A themed prop library of ≥12 distinct objects** for the area — furniture,
+  machines, containers, debris, flora, light sources, signage, clutter —
+  placed densely enough that **no screen is empty**.
+- **≥3 decal/scatter layers** sprinkled over the base (cracks, stains, moss,
+  pebbles, cables, leaves, puddles) to kill uniformity.
+- **At least one hero focal asset** per area (the Ohmstead monument; a
+  landmark machine, statue, sign, or fixture elsewhere).
+- **Multi-layer where it earns it:** animated overlays (sway, water flow,
+  glow pulse) on top of the baked base, per the world-animation direction.
+
+### Per-area "done" checklist (paste into each area's builder header)
+
+```
+[ ] ground tile  ≥3 seeded variants, material-readable, 3+ values
+[ ] wall/border  ≥3 variants + organic edge treatment (no hard seams)
+[ ] prop library ≥12 distinct themed objects, each shaded (hi/base/shadow)
+[ ] decals       ≥3 scatter layers over the base
+[ ] lighting     emissive props cast additive glow; light from top-left
+[ ] hero asset   ≥1 focal landmark
+[ ] density      no empty screens; spot-check at native 480×320
+[ ] motion       animated layer(s) where the area calls for it
+```
+
+### Anti-patterns (an area with any of these is not done)
+
+- A single ground tile repeated edge to edge.
+- A flat color rectangle standing in for a wall, floor, or water.
+- A prop that's one solid fill with an outline (no internal shading).
+- Hard 32px seams visible where two materials meet.
+- A screen with three props in it and the rest bare floor.
+
+Reference: Ohmstead (`tools/gen-underground.ts`) is the current worked
+example of both laws — copy its tile-variant + glow + edge-crumble + dense-prop
+approach when building the next area.
+
+---
+
 ## SUPERSEDED — original Gen 3 GBA guide (history)
 
 *Submitted 2026-06-13 (superseded same day by the HD pivot).*

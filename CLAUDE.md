@@ -78,6 +78,14 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   `spritekit` primitives are legacy (foliage/tiles still use them). Procedural
   buildings via YoYoPixel's engine pending a `node-canvas` install. Reference→
   pixel pipeline: `tools/pixelify.ts`.
+- **Art direction — depth & density (LOCKED 2026-06-14):** the bar is
+  Pokémon-era HD, never NES-era flat. Two binding laws on **every area we
+  build**: (1) every texture has material depth — highlight/base/shadow, reads
+  as *what it is*, top-left light, emissive props cast additive glow, no hard
+  tile seams; (2) every area ships a large, diverse asset set — ≥3 variants per
+  ground/wall tile, ≥12 distinct themed props, ≥3 decal/scatter layers, ≥1 hero
+  focal asset, no empty screens. Full spec + per-area "done" checklist +
+  anti-patterns in `docs/style-guide.md`; Ohmstead is the worked example.
 - **Audio:** GBA chiptune, exactly. Suno + licensed packs from Mark; Claude
   layers as needed.
 

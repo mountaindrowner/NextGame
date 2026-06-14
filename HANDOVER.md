@@ -18,6 +18,15 @@ underground." Done:
   scene (the colony elevator pad → `ElevatorScene`).
 - **Opening flow rewired:** Bench → **Ohmstead** (walk the garage, talk to
   Grandpa) → elevator pad → `ElevatorScene` (rising beat) → the Field.
+- **Ohmstead reskinned to a cavern colony** (dungeon-town reference): organic
+  rock, cobble floors, stone chambers, glowing Resonance crystals + additive
+  lighting, water pools. `gridart` palette gained a cavern set; map 36×24;
+  flood-fill-verified reachable.
+- **Art direction laws LOCKED (2026-06-14)** in `docs/style-guide.md` +
+  CLAUDE.md: (1) every texture has material depth/shading and reads as what it
+  is; (2) every area ships a large diverse asset set (no flat NES-era screens).
+  Per-area "done" checklist + anti-patterns documented; **Ohmstead is the
+  worked example, the Field is on the upgrade list.**
 - 49 tests green; typecheck/build clean. dist rebuilt + force-added.
 
 Next stages to build (terrains/assets): the eight Downtowns colonies + the
