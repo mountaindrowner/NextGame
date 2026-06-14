@@ -15,7 +15,10 @@ interface FieldData {
   height: number;
   collision: number[];
   grass: number[];
+  npcs?: Array<{ char: string; col: number; row: number }>;
 }
+
+const NPC_CHARS = ['npc_rancher', 'npc_elder', 'npc_kid'] as const;
 
 type Dir = 'up' | 'down' | 'left' | 'right';
 const DELTA: Record<Dir, [number, number]> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
@@ -43,9 +46,10 @@ export class FieldHDScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.image('field-hd', 'field/the-field.png');
-    this.load.json('field-hd-data', 'field/the-field.json');
-    if (!this.textures.exists('player_over')) this.load.image('player_over', 'sprites/ohms/player_over.png');
+    this.load.image('field-hd', 'world/the-field.png');
+    this.load.json('field-hd-data', 'world/the-field.json');
+    if (!this.textures.exists('player')) this.load.image('player', 'world/char/player.png');
+    for (const n of NPC_CHARS) if (!this.textures.exists(n)) this.load.image(n, `world/char/${n}.png`);
   }
 
   create(): void {
@@ -70,7 +74,15 @@ export class FieldHDScene extends Phaser.Scene {
       [this.px, this.py] = this.garage;
     }
 
-    this.player = this.add.image(0, 0, 'player_over').setOrigin(0.5, 0.7).setScale(2).setDepth(10);
+    // NPCs (placed townsfolk; block their tile)
+    const t = this.field.tile;
+    for (const npc of this.field.npcs ?? []) {
+      if (!this.textures.exists(npc.char)) continue;
+      this.add.image(npc.col * t + t / 2, npc.row * t + t, npc.char).setOrigin(0.5, 0.85).setDepth(npc.row);
+      this.npcCells.add(`${npc.col},${npc.row}`);
+    }
+
+    this.player = this.add.image(0, 0, 'player').setOrigin(0.5, 0.85).setDepth(50);
     this.placePlayer();
 
     this.cameras.main.setBounds(0, 0, this.field.width, this.field.height);
@@ -129,8 +141,11 @@ export class FieldHDScene extends Phaser.Scene {
     }
   }
 
+  private npcCells = new Set<string>();
+
   private solid(cx: number, cy: number): boolean {
     if (cx < 0 || cy < 0 || cx >= this.field.cols || cy >= this.field.rows) return true;
+    if (this.npcCells.has(`${cx},${cy}`)) return true;
     return this.field.collision[cy * this.field.cols + cx] === 1;
   }
 

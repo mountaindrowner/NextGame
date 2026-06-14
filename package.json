@@ -14,7 +14,7 @@
     "gen:sprites": "tsx tools/gen-sprites.ts",
     "gen:sprites:hd": "tsx tools/gen-sprites-hd.ts",
     "extract": "tsx tools/extract-atlas.ts",
-    "gen:field": "tsx tools/build-field-hd.ts"
+    "gen:world": "tsx tools/gen-world.ts"
   },
   "dependencies": {
     "phaser": "^3.85.2"
