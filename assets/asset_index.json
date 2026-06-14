@@ -1,11 +1,12 @@
 {
   "generated": "2026-06-14",
-  "records": 240,
-  "blocks": 662,
+  "records": 248,
+  "blocks": 686,
   "areas": 19,
   "kits": [
     "building",
     "dungeon.cave",
+    "dungeon.mine",
     "overlay.hive",
     "primary",
     "sec.field",

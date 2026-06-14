@@ -210,6 +210,17 @@ anim('dungeon.cave.ore_node', 'Glowing ore/crystal node', DC, 'underground', 8, 
 anim('dungeon.cave.glow_flora', 'Glow-flora', DC, 'underground', 8, 4, 3);
 anim('dungeon.cave.drip', 'Cave drip', DC, 'underground', 8, 4, 4);
 
+// ============================ DUNGEON.MINE KIT (pals 6–8) =================
+const DM: Kit = 'dungeon.mine';
+auto('dungeon.mine.wall', 'Mine wall (timbered rock)', DM, 'underground', 6, 'cliff', { collision: 'solid' });
+auto('dungeon.mine.floor', 'Mine floor', DM, 'underground', 6, 'terrain_blob');
+auto('dungeon.mine.rail', 'Mine-cart rail', DM, 'underground', 7, 'fence_run');
+single('dungeon.mine.ballast', 'Gravel ballast', DM, 'underground', 6);
+prop('dungeon.mine.cart', 'Mine cart', DM, 'underground', 7, [1, 1], { collision: 'solid' });
+prop('dungeon.mine.beam', 'Timber support beam', DM, 'underground', 7, [1, 2], { collision: 'solid', solidRows: 1 });
+single('dungeon.mine.ladder', 'Ladder', DM, 'underground', 7, { layer: 'top' });
+anim('dungeon.mine.lift_glow', 'Shaft glow', DM, 'underground', 8, 4, 3);
+
 // ============================ SEC.OHMSTEAD (pals 6–9) =====================
 // the cavern-colony pieces already built (tools/gen-underground.ts) + catalog.
 const SO: Kit = 'sec.ohmstead';

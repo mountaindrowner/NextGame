@@ -3102,6 +3102,168 @@
     "blocks": 1
   },
   {
+    "id": "dungeon.mine.wall",
+    "display_name": "Mine wall (timbered rock)",
+    "kit": "dungeon.mine",
+    "biome": "underground",
+    "type": "autotile",
+    "template": "cliff",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Mine wall (timbered rock)",
+    "blocks": 6
+  },
+  {
+    "id": "dungeon.mine.floor",
+    "display_name": "Mine floor",
+    "kit": "dungeon.mine",
+    "biome": "underground",
+    "type": "autotile",
+    "template": "terrain_blob",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Mine floor",
+    "blocks": 4
+  },
+  {
+    "id": "dungeon.mine.rail",
+    "display_name": "Mine-cart rail",
+    "kit": "dungeon.mine",
+    "biome": "underground",
+    "type": "autotile",
+    "template": "fence_run",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Mine-cart rail",
+    "blocks": 8
+  },
+  {
+    "id": "dungeon.mine.ballast",
+    "display_name": "Gravel ballast",
+    "kit": "dungeon.mine",
+    "biome": "underground",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 6,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Gravel ballast",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.mine.cart",
+    "display_name": "Mine cart",
+    "kit": "dungeon.mine",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      1,
+      1
+    ],
+    "anchor": [
+      0,
+      0
+    ],
+    "layer_split": {
+      "bottom": [
+        0
+      ],
+      "top": []
+    },
+    "collision_mask": [
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Mine cart",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.mine.beam",
+    "display_name": "Timber support beam",
+    "kit": "dungeon.mine",
+    "biome": "underground",
+    "type": "prop",
+    "footprint": [
+      1,
+      2
+    ],
+    "anchor": [
+      0,
+      1
+    ],
+    "layer_split": {
+      "bottom": [
+        1
+      ],
+      "top": [
+        0
+      ]
+    },
+    "collision_mask": [
+      [
+        0
+      ],
+      [
+        1
+      ]
+    ],
+    "layer": "bottom",
+    "collision": "mask",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Timber support beam",
+    "blocks": 2
+  },
+  {
+    "id": "dungeon.mine.ladder",
+    "display_name": "Ladder",
+    "kit": "dungeon.mine",
+    "biome": "underground",
+    "type": "single",
+    "layer": "top",
+    "collision": "pass",
+    "elev": "0",
+    "pal": 7,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Ladder",
+    "blocks": 1
+  },
+  {
+    "id": "dungeon.mine.lift_glow",
+    "display_name": "Shaft glow",
+    "kit": "dungeon.mine",
+    "biome": "underground",
+    "type": "anim",
+    "anim": {
+      "frames": 4,
+      "fps": 3
+    },
+    "layer": "top",
+    "collision": "pass",
+    "elev": "na",
+    "pal": 8,
+    "phase": "slice",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light; Shaft glow, 4-frame loop",
+    "blocks": 1
+  },
+  {
     "id": "sec.ohmstead.ground.cobble",
     "display_name": "Cobblestone floor",
     "kit": "sec.ohmstead",
