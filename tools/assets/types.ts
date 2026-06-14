@@ -20,7 +20,18 @@ export type Kit =
   | 'dungeon.cave'
   | 'dungeon.mine'
   | 'overlay.hive'
-  | `sec.${string}`;
+  | 'clutter.universal'
+  | 'clutter.wall'
+  | 'clutter.fx'
+  | `sec.${string}`
+  | `dressing.${string}`;
+
+/** Clutter depth plane (Clutter doc §2) — derives `layer`. */
+export type Plane = 'floor' | 'object' | 'occluder' | 'fx';
+export const PLANE_LAYER: Record<Plane, Layer> = { floor: 'bottom', object: 'object', occluder: 'top', fx: 'top' };
+
+/** Density tiers a dressing asset appears at (Clutter doc §3). */
+export type Density = 'bare' | 'tidy' | 'lived_in' | 'cluttered' | 'squalid' | 'ruined';
 
 export type Biome =
   | 'prairie'
@@ -85,6 +96,9 @@ export interface AssetRecord {
   gate?: Gate;
   state?: GateState; // required when gate !== 'none'
   hero?: boolean; // a focal landmark asset (density law)
+  // clutter / set-dressing (Clutter doc)
+  plane?: Plane; // floor / object / occluder / fx
+  density?: Density[]; // tiers it scatters at
 }
 
 /** Saturation tiers for the hive overlay (R3). */

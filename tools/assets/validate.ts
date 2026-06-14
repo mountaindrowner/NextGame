@@ -8,7 +8,7 @@
  * collision/elevation) are enforced at COMPOSE time by `validateMap` when a
  * generator assembles an area from the manifest.
  */
-import { AREAS, BUDGET, type AreaDef, type AssetRecord, type Kit, TEMPLATES } from './types';
+import { AREAS, BUDGET, type AreaDef, type AssetRecord, type Kit, PLANE_LAYER, TEMPLATES } from './types';
 
 export interface Violation {
   rule: string;
@@ -19,7 +19,9 @@ export interface Violation {
 const PRIMARY_PALS = new Set([0, 1, 2, 3, 4, 5]);
 const SECONDARY_PALS = new Set([6, 7, 8, 9, 10, 11, 12]);
 const ID_RE = /^[a-z0-9]+(\.[a-z0-9_]+)+$/;
-const isPrimaryClass = (kit: Kit): boolean => kit === 'primary';
+// shared, reused-everywhere kits use the primary palette band (0–5); per-area
+// kits (sec.*, dressing.*) use the secondary band (6–12).
+const isPrimaryClass = (kit: Kit): boolean => kit === 'primary' || kit.startsWith('clutter.');
 
 /** Blocks (metatiles) a record contributes, accounting for template + variants. */
 export function blockCount(r: AssetRecord): number {
@@ -49,7 +51,9 @@ export function validate(records: AssetRecord[]): Violation[] {
     if (!pals.has(r.pal)) v.push({ rule: 'R7', id: r.id, msg: `pal ${r.pal} illegal for kit ${r.kit} (expect ${isPrimaryClass(r.kit) ? '0–5' : '6–12'})` });
     // R5 layer law — top tiles carry no collision
     if (r.layer === 'top' && r.collision !== 'pass') v.push({ rule: 'R5', id: r.id, msg: `top layer must be collision:pass (got ${r.collision})` });
-    if (r.layer === 'object' && !(r.type === 'object' || r.type === 'anim')) v.push({ rule: 'R5', id: r.id, msg: 'object layer requires type object/anim' });
+    if (r.layer === 'object' && r.type === 'autotile') v.push({ rule: 'R5', id: r.id, msg: 'autotile cannot be on the object layer' });
+    // D4 plane discipline — plane must derive the right layer
+    if (r.plane && r.layer !== PLANE_LAYER[r.plane]) v.push({ rule: 'D4', id: r.id, msg: `plane ${r.plane} requires layer ${PLANE_LAYER[r.plane]} (got ${r.layer})` });
     // R11 autotile completeness (must declare a known template)
     if (r.type === 'autotile' && (!r.template || !(r.template in TEMPLATES))) v.push({ rule: 'R11', id: r.id, msg: 'autotile missing/unknown template' });
     // prop integrity
@@ -97,9 +101,13 @@ export function validateMap(
   const ownSec = secondaryUsed.filter((k) => k.startsWith('sec.'));
   if (ownSec.length > 1) v.push({ rule: 'R2', id: area.area, msg: `>1 sec kit on map: ${ownSec.join(',')}` });
   for (const k of usedKits) {
-    if (k === 'primary') continue;
+    if (k === 'primary' || k.startsWith('clutter.')) continue; // shared everywhere
     if (k === 'overlay.hive') {
       if (area.saturation === 'none') v.push({ rule: 'R3', id: area.area, msg: 'hive overlay on a clean map' });
+      continue;
+    }
+    if (k.startsWith('dressing.')) {
+      if (k !== `dressing.${area.area}`) v.push({ rule: 'D1', id: area.area, msg: `dressing kit ${k} not allowed in area ${area.area}` });
       continue;
     }
     if (!allowedSecondary.has(k)) v.push({ rule: 'R1', id: area.area, msg: `kit ${k} not allowed in area ${area.area}` });

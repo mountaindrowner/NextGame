@@ -9,6 +9,8 @@
  * grid-method language, not the Bible's Gen-3 wording.
  */
 import type { AssetRecord, Biome, Collision, Gate, GateState, Kit, Layer, TemplateName } from './types';
+import { AREA_RECORDS } from './catalog-areas';
+import { CLUTTER_RECORDS } from './catalog-clutter';
 
 const HD = 'HD top-down, 32px, grid method, limited cohesive palette, material depth (highlight/base/shadow), top-left light';
 
@@ -277,4 +279,4 @@ anim('overlay.hive.corrupt_water', 'Corrupted water', OH, 'multi', 11, 4, 3, { l
 anim('overlay.hive.static_shimmer', 'Static screen-shimmer', OH, 'multi', 12, 4, 6, { layer: 'top' });
 prop('overlay.hive.relay_tower', 'Hive relay-tower', OH, 'multi', 12, [2, 5], { hero: true, collision: 'solid', solidRows: 1, prompt: `${HD}; hive-grown relay tower, flesh fused with antenna steel, glowing crown, casts additive glow` });
 
-export const CATALOG: AssetRecord[] = C;
+export const CATALOG: AssetRecord[] = [...C, ...AREA_RECORDS, ...CLUTTER_RECORDS];

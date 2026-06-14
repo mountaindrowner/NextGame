@@ -14,9 +14,10 @@ describe('asset system (Asset Bible Part A)', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it('keeps palette discipline (R7): primary 0–5, secondary-class 6–12', () => {
+  it('keeps palette discipline (R7): shared kits 0–5, per-area 6–12', () => {
     for (const r of CATALOG) {
-      if (r.kit === 'primary') expect(r.pal, r.id).toBeLessThanOrEqual(5);
+      const shared = r.kit === 'primary' || r.kit.startsWith('clutter.');
+      if (shared) expect(r.pal, r.id).toBeLessThanOrEqual(5);
       else expect(r.pal, r.id).toBeGreaterThanOrEqual(6);
     }
   });
@@ -53,10 +54,22 @@ describe('asset system (Asset Bible Part A)', () => {
     expect(validateMap(field, ['primary', 'sec.field', 'overlay.hive'], CATALOG).some((x) => x.rule === 'R3')).toBe(true);
   });
 
-  it('the slice secondaries are authored', () => {
+  it('every area in the matrix has its secondary kit enumerated', () => {
     const kits = new Set(CATALOG.map((r) => r.kit));
-    expect(kits.has('sec.ohmstead')).toBe(true);
-    expect(kits.has('sec.field')).toBe(true);
-    expect(kits.has('building')).toBe(true);
+    for (const a of AREAS) expect(kits.has(a.secondary), a.secondary).toBe(true);
+  });
+
+  it('clutter planes derive the right layer (D4)', () => {
+    for (const r of CATALOG)
+      if (r.plane) {
+        const want = { floor: 'bottom', object: 'object', occluder: 'top', fx: 'top' }[r.plane];
+        expect(r.layer, r.id).toBe(want);
+      }
+  });
+
+  it('dressing kits are area-locked (D1)', () => {
+    const field = AREAS.find((a) => a.area === 'field')!;
+    expect(validateMap(field, ['primary', 'sec.field', 'dressing.redbed'], CATALOG).some((x) => x.rule === 'D1')).toBe(true);
+    expect(validateMap(field, ['primary', 'sec.field', 'dressing.field', 'clutter.universal'], CATALOG).filter((x) => x.rule === 'D1' || x.rule === 'R1')).toEqual([]);
   });
 });
