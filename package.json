@@ -19,6 +19,7 @@
     "gen:foliage": "tsx tools/gen-foliage.ts",
     "gen:underground": "tsx tools/gen-underground.ts",
     "assets:build": "tsx tools/assets/build.ts",
+    "assets:primary": "tsx tools/assets/kit-primary.ts",
     "yoyo2png": "tsx tools/yoyo2png.ts",
     "gen:protag": "tsx tools/gen-protag.ts"
   },
