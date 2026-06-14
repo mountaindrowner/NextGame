@@ -1,5 +1,25 @@
 # HANDOVER
 
+## Session 2026-06-14 (cont.) — Clutter layer + EVERY asset enumerated
+
+Mark added the **Clutter & Detail Layer** doc (`docs/design/clutter-detail-layer.md`)
+and directed: make every discussed asset + organize for later map-building. Done:
+- **Clutter system integrated:** the four-plane model (floor/object/occluder/fx)
+  via a `plane` label, the `clutter.universal|wall|fx` + `dressing.<area>` kits,
+  and the D1 (dressing area-lock) + D4 (plane→layer) rules in the validator.
+- **Full enumeration:** `catalog-areas.ts` (ALL 19 per-area secondaries,
+  Railhead→Dallas + fortress + 6 optional) + `catalog-clutter.ts` (universal
+  libraries + 12 dressing sets). Manifest **643 records, 0 violations**;
+  **59 tests** (added D1/D4 + "every area kit enumerated"). Nothing pending in
+  the inventory — every asset we've discussed has a labeled, organized record.
+- **Universal clutter ART** generated (`kit-clutter.ts`, 36 pieces across the
+  four planes) → `assets/tiles/clutter/`.
+
+**Art status:** shared foundation ART done (Primary, Hive, Building, Cave/Mine,
+universal Clutter). **Records done for everything.** Next: per-area secondary
+ART + `dressing.<area>` ART in critical-path order (Railhead → … → Dallas),
+then compose each map pulling matrix-allowed kits.
+
 ## Session 2026-06-14 (cont.) — Full scope locked + asset SYSTEM stood up
 
 Mark delivered five design bibles (story, critical-path locations, wider world,

@@ -44,6 +44,19 @@ Everything else in Part A is honored literally.
   `assets/asset_index.json` + a budget/scope report.
 - `tests/assets.test.ts` — the validation gate in CI.
 
+## The lived-in layer (Clutter & Detail doc)
+
+`docs/design/clutter-detail-layer.md` adds the set-dressing layer over finished
+base maps. Integrated into the system:
+- **Kits:** `clutter.universal` · `clutter.wall` · `clutter.fx` (shared, primary
+  palette band) + `dressing.<area>` (area-locked, secondary band).
+- **`plane`** label (`floor`/`object`/`occluder`/`fx`) derives `layer` (D4).
+- **Rules:** D1 (dressing only in its own area) and D4 (plane→layer) in the
+  validator; D6 keep-clear / D7 scatter logic are compose-time placement rules.
+- Catalog: `catalog-clutter.ts` (universal libraries + 12 dressing sets),
+  `catalog-areas.ts` (all per-area secondaries). The full catalog now
+  enumerates **every** discussed asset — **643 records, 0 violations**.
+
 ## Build order (Asset Bible §8, locked)
 
 1. **Shared Primary Kit** (unblocks every map) — *records done; art generation next.*

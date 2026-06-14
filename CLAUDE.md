@@ -5,7 +5,8 @@ Read this first, every session. Then read HANDOVER.md. Source of record:
 2026-06-12). **World/story/asset bibles (2026-06-14, canon-of-record):**
 `docs/design/` — story-bible, critical-path-locations (the A→Z spine: Ohmstead
 → Field → 8 colonies → Dallas/Spire → Ohmcoming), wider-world (optional
-content), level-building-assets + asset-bible (the governing asset system).
+content), level-building-assets + asset-bible (the governing asset system),
+clutter-detail-layer (the lived-in set-dressing layer).
 Asset system implemented + HD-reconciled in `docs/asset-pipeline.md` +
 `tools/assets/`. If later chat conflicts with these files, the chat wins —
 update the files immediately.
@@ -142,6 +143,10 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   (`tools/assets/`, `docs/asset-pipeline.md`): label schema, the 19-area allow
   matrix, the R1–R12 validator + budget, `npm run assets:build` →
   `assets/manifest.json`. Catalog seeded with the Primary, Building, Cave, and
-  the two slice secondary kits (`sec.ohmstead`, `sec.field`) — 230 records, 0
-  violations, gated in CI. **Now building kit art in locked production order**
-  (Primary → Hive Overlay → Cave/Building → per-area critical-path → optional).
+  the two slice secondary kits. **Catalog now enumerates EVERY asset**: all 19
+  per-area secondaries + the universal clutter/wall/fx libraries + 12 area
+  dressing sets (the four-plane lived-in layer, D1/D4 rules) — **643 records, 0
+  violations**, gated in CI. **Shared foundation ART done** (Primary, Hive
+  Overlay, Building/Interior, Cave/Mine, universal Clutter; each `npm run
+  assets:*` + a `_contact*.png`). Next: per-area secondary ART + dressing in
+  critical-path order (Railhead → … → Dallas), then compose maps.
