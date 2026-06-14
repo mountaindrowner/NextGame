@@ -16,9 +16,14 @@ and directed: make every discussed asset + organize for later map-building. Done
   four planes) → `assets/tiles/clutter/`.
 
 **Art status:** shared foundation ART done (Primary, Hive, Building, Cave/Mine,
-universal Clutter). **Records done for everything.** Next: per-area secondary
-ART + `dressing.<area>` ART in critical-path order (Railhead → … → Dallas),
-then compose each map pulling matrix-allowed kits.
+universal Clutter). **Records done for everything.** Per-area ART + maps so far:
+**Ohmstead** (cavern), **the Field** (sec.field + recomposed map), **Railhead**
+(sec.railhead + composed yard) — all three playable and linked
+(Bench→Ohmstead→lift→Field→north road→Railhead→back). **Title screen** wired
+with the creator art + animated intro. Maps warp via `exits[].mapId`. Next:
+per-area secondary ART + maps continuing up the critical path — the Cistern
+(Colony 2, HOVER gate) → Bastion → … → Dallas; plus optional `dressing.<area>`
+ART and the Farm Road / 45 Scar routes between colonies.
 
 ## Session 2026-06-14 (cont.) — Full scope locked + asset SYSTEM stood up
 
