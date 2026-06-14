@@ -45,32 +45,60 @@ const BG_TOL = Number(arg('--bg-tol', '36'));
 const PREVIEW = Number(arg('--preview', '6'));
 const FIXED = arg('--palette');
 
-const src = PNG.sync.read(readFileSync(input));
+const REGION = arg('--region'); // x,y,w,h — process a sub-rectangle first
+const BG_GREY = has('--bg-grey'); // remove a desaturated/grey (gradient) background
+const CROP = has('--crop'); // trim to the opaque bounding box
+const BG_SAT = Number(arg('--bg-sat', '26'));
+const BG_LUMA = Number(arg('--bg-luma', '46'));
 
-// ---- 1. optional background removal (flood from the borders) -------------
-const alpha = new Uint8Array(src.width * src.height).fill(255);
-if (BG) {
-  const cornerIdx = [0, src.width - 1, (src.height - 1) * src.width, src.height * src.width - 1];
-  const bg: RGB = [0, 0, 0];
-  for (const ci of cornerIdx) {
-    bg[0] += src.data[ci * 4] ?? 0;
-    bg[1] += src.data[ci * 4 + 1] ?? 0;
-    bg[2] += src.data[ci * 4 + 2] ?? 0;
+function cropPNG(p: PNG, x: number, y: number, w: number, h: number): PNG {
+  const o = new PNG({ width: w, height: h });
+  for (let yy = 0; yy < h; yy++)
+    for (let xx = 0; xx < w; xx++) {
+      const si = ((y + yy) * p.width + (x + xx)) * 4;
+      const di = (yy * w + xx) * 4;
+      o.data[di] = p.data[si] ?? 0;
+      o.data[di + 1] = p.data[si + 1] ?? 0;
+      o.data[di + 2] = p.data[si + 2] ?? 0;
+      o.data[di + 3] = p.data[si + 3] ?? 255;
+    }
+  return o;
+}
+
+let src: PNG = PNG.sync.read(readFileSync(input));
+if (REGION) {
+  const [rx, ry, rw, rh] = REGION.split(',').map(Number) as [number, number, number, number];
+  src = cropPNG(src, rx, ry, rw, rh);
+}
+
+// ---- 1. background removal (flood from the borders) ----------------------
+let alpha = new Uint8Array(src.width * src.height).fill(255);
+if (BG || BG_GREY) {
+  const corner: RGB = [0, 0, 0];
+  for (const ci of [0, src.width - 1, (src.height - 1) * src.width, src.height * src.width - 1]) {
+    corner[0] += src.data[ci * 4] ?? 0;
+    corner[1] += src.data[ci * 4 + 1] ?? 0;
+    corner[2] += src.data[ci * 4 + 2] ?? 0;
   }
-  bg[0] = Math.round(bg[0] / 4);
-  bg[1] = Math.round(bg[1] / 4);
-  bg[2] = Math.round(bg[2] / 4);
-  const near = (i: number): boolean =>
-    Math.abs((src.data[i * 4] ?? 0) - bg[0]) +
-      Math.abs((src.data[i * 4 + 1] ?? 0) - bg[1]) +
-      Math.abs((src.data[i * 4 + 2] ?? 0) - bg[2]) <=
-    BG_TOL * 3;
+  corner[0] = Math.round(corner[0] / 4);
+  corner[1] = Math.round(corner[1] / 4);
+  corner[2] = Math.round(corner[2] / 4);
+  const isBg = (i: number): boolean => {
+    const r = src.data[i * 4] ?? 0;
+    const g = src.data[i * 4 + 1] ?? 0;
+    const b = src.data[i * 4 + 2] ?? 0;
+    if (BG_GREY) {
+      // greyish (low saturation) and not a dark outline (luma floor)
+      return Math.max(r, g, b) - Math.min(r, g, b) <= BG_SAT && 0.3 * r + 0.59 * g + 0.11 * b >= BG_LUMA;
+    }
+    return Math.abs(r - corner[0]) + Math.abs(g - corner[1]) + Math.abs(b - corner[2]) <= BG_TOL * 3;
+  };
   const stack: number[] = [];
   const push = (x: number, y: number): void => {
     if (x < 0 || y < 0 || x >= src.width || y >= src.height) return;
     const i = y * src.width + x;
     if (alpha[i] === 0) return;
-    if (near(i)) {
+    if (isBg(i)) {
       alpha[i] = 0;
       stack.push(i);
     }
@@ -91,6 +119,37 @@ if (BG) {
     push(x + 1, y);
     push(x, y - 1);
     push(x, y + 1);
+  }
+}
+
+// ---- 1b. optional crop to the opaque bounding box ------------------------
+if (CROP) {
+  let x0 = src.width;
+  let y0 = src.height;
+  let x1 = 0;
+  let y1 = 0;
+  let any = false;
+  for (let y = 0; y < src.height; y++)
+    for (let x = 0; x < src.width; x++)
+      if ((alpha[y * src.width + x] ?? 0) > 0) {
+        any = true;
+        if (x < x0) x0 = x;
+        if (x > x1) x1 = x;
+        if (y < y0) y0 = y;
+        if (y > y1) y1 = y;
+      }
+  if (any) {
+    const pad = 2;
+    x0 = Math.max(0, x0 - pad);
+    y0 = Math.max(0, y0 - pad);
+    x1 = Math.min(src.width - 1, x1 + pad);
+    y1 = Math.min(src.height - 1, y1 + pad);
+    const w = x1 - x0 + 1;
+    const h = y1 - y0 + 1;
+    const na = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) na[y * w + x] = alpha[(y0 + y) * src.width + (x0 + x)] ?? 0;
+    src = cropPNG(src, x0, y0, w, h);
+    alpha = na;
   }
 }
 

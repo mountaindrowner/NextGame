@@ -48,6 +48,9 @@ export class FieldHDScene extends Phaser.Scene {
   preload(): void {
     this.load.image('field-hd', 'world/the-field.png');
     this.load.json('field-hd-data', 'world/the-field.json');
+    // pixelified protagonist sprites (from real art via the pixelify pipeline)
+    if (!this.textures.exists('sal_96')) this.load.image('sal_96', 'world/char/sal_96.png');
+    if (!this.textures.exists('wren_96')) this.load.image('wren_96', 'world/char/wren_96.png');
     if (!this.textures.exists('player')) this.load.image('player', 'world/char/player.png');
     for (const n of NPC_CHARS) if (!this.textures.exists(n)) this.load.image(n, `world/char/${n}.png`);
   }
@@ -82,7 +85,12 @@ export class FieldHDScene extends Phaser.Scene {
       this.npcCells.add(`${npc.col},${npc.row}`);
     }
 
-    this.player = this.add.image(0, 0, 'player').setOrigin(0.5, 0.85).setDepth(50);
+    // player = the chosen preset's pixelified sprite, sized for the overworld
+    const preset = hasGameState() ? getGameState().preset : 'SAL';
+    const pkey = preset === 'WREN' ? 'wren_96' : 'sal_96';
+    const key = this.textures.exists(pkey) ? pkey : 'player';
+    this.player = this.add.image(0, 0, key).setOrigin(0.5, 0.92).setDepth(50);
+    if (key !== 'player') this.player.setScale(0.5); // 96px art → ~48px in-world (clean 2:1)
     this.placePlayer();
 
     this.cameras.main.setBounds(0, 0, this.field.width, this.field.height);
