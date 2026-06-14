@@ -69,6 +69,15 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   in `docs/style-guide.md` + HANDOVER; exact numbers pending Mark. Claude
   generates art for now (Chajipudi later); original designs only, never
   traced/ripped (§15.2). Claude owns spec, toolkit, review, integration.
+- **Art method (LOCKED 2026-06-14): the YoYoPixel grid method is the pipeline.**
+  All art authored as char-grids over ONE shared limited palette
+  (`tools/gridart.ts` — PALETTE + `Grid`, highlight/base/shadow per material),
+  rasterized to PNG; `tools/yoyo2png.ts` ingests YoYoPixel `{palette,pixels}`.
+  Retool underway: characters (SAL/WREN + NPCs) and world buildings done via
+  `tools/world-builders.ts`; **Ohms are the next batch**. Old geometric
+  `spritekit` primitives are legacy (foliage/tiles still use them). Procedural
+  buildings via YoYoPixel's engine pending a `node-canvas` install. Reference→
+  pixel pipeline: `tools/pixelify.ts`.
 - **Audio:** GBA chiptune, exactly. Suno + licensed packs from Mark; Claude
   layers as needed.
 

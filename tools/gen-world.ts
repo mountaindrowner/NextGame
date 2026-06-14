@@ -10,6 +10,7 @@ import { join } from 'node:path';
 import { PNG } from 'pngjs';
 import { hexRGBA, ramp, Sprite, type RGBA } from './spritekit';
 import { Rng } from '../src/core/rng';
+import { barn, house, npcChar, storefront, watertower, windmill } from './world-builders';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const OUT = join(ROOT, 'public/world');
@@ -80,88 +81,6 @@ const TILES: Record<string, Sprite> = {
 };
 
 // ---- objects (outline + contact shadow, anchored bottom-centre) ----------
-function barn(): Sprite {
-  const s = new Sprite(72, 60);
-  const body = ramp('a83228', { steps: 6, spread: 0.34 });
-  const roof = ramp('6a4030', { steps: 5, spread: 0.3 });
-  const trim = hexRGBA('e8e0d0');
-  s.contactShadow(36, 56, 32, 5, SHADOW);
-  s.roundedRect(8, 24, 56, 32, 3, body, { dither: true });
-  // gambrel roof
-  for (let i = 0; i < 14; i++) {
-    const y = 10 + i;
-    const inset = i < 7 ? 8 - i : 1 + (i - 7) * 1.6;
-    s.line(8 + inset, y, 64 - inset, y, roof[Math.min(4, 1 + Math.floor(i / 3))] ?? roof[2]!);
-  }
-  s.rect(28, 34, 16, 22, hexRGBA('3a2418')); // door
-  s.line(28, 34, 44, 56, trim);
-  s.line(44, 34, 28, 56, trim); // X
-  s.rect(14, 30, 8, 8, hexRGBA('cfe0e8')); // window
-  s.rect(50, 30, 8, 8, hexRGBA('cfe0e8'));
-  s.outline(OUTLINE, body[5]!);
-  return s;
-}
-function storefront(hex: string): Sprite {
-  const s = new Sprite(56, 56);
-  const wood = ramp(hex, { steps: 6, spread: 0.32 });
-  s.contactShadow(28, 52, 24, 5, SHADOW);
-  s.roundedRect(8, 18, 40, 36, 2, wood, { dither: true });
-  s.rect(6, 8, 44, 12, wood[2]!); // false front
-  s.rect(6, 8, 44, 3, wood[4]!);
-  s.rect(12, 36, 12, 18, hexRGBA('2a1c12')); // door
-  s.rect(30, 24, 14, 12, hexRGBA('bcd4dc')); // window
-  s.line(37, 24, 37, 36, OUTLINE);
-  s.rect(28, 20, 18, 3, hexRGBA('c8a038')); // awning
-  s.outline(OUTLINE, wood[5]!);
-  return s;
-}
-function house(): Sprite {
-  const s = new Sprite(52, 48);
-  const wall = ramp('c8b48c', { steps: 6, spread: 0.3 });
-  const roof = ramp('7a5238', { steps: 5, spread: 0.3 });
-  s.contactShadow(26, 46, 22, 4, SHADOW);
-  s.roundedRect(8, 22, 36, 24, 2, wall, { dither: true });
-  for (let i = 0; i < 14; i++) s.line(6 + i, 22 - i, 46 - i, 22 - i, roof[Math.min(4, 1 + Math.floor(i / 4))] ?? roof[2]!); // gable
-  s.rect(22, 32, 10, 14, hexRGBA('3a2418')); // door
-  s.rect(12, 28, 7, 7, hexRGBA('bcd4dc'));
-  s.rect(34, 28, 7, 7, hexRGBA('bcd4dc'));
-  s.outline(OUTLINE, wall[5]!);
-  return s;
-}
-function windmill(): Sprite {
-  const s = new Sprite(40, 72);
-  const wood = ramp('8a6e44', { steps: 5, spread: 0.3 });
-  s.contactShadow(20, 68, 14, 4, SHADOW);
-  // lattice tower
-  s.line(8, 68, 17, 26, wood[2]!);
-  s.line(32, 68, 23, 26, wood[2]!);
-  for (let y = 30; y < 66; y += 8) s.line(9 + (y - 26) * 0.18, y, 31 - (y - 26) * 0.18, y, wood[1]!);
-  // hub + blades
-  s.sphere(20, 22, 3, ramp('555', { steps: 4 }), { dither: false });
-  for (let i = 0; i < 6; i++) {
-    const a = (i / 6) * Math.PI * 2;
-    s.line(20, 22, 20 + Math.cos(a) * 14, 22 + Math.sin(a) * 14, wood[3]!);
-  }
-  s.line(20, 26, 26, 34, wood[2]!); // tail
-  s.outline(OUTLINE, wood[4]!);
-  return s;
-}
-function watertower(): Sprite {
-  const s = new Sprite(48, 64);
-  const metal = ramp('7c8088', { steps: 6, spread: 0.36 });
-  const tank = ramp('8a7050', { steps: 6, spread: 0.32 });
-  s.contactShadow(24, 60, 18, 4, SHADOW);
-  s.line(10, 58, 16, 30, metal[2]!);
-  s.line(38, 58, 32, 30, metal[2]!);
-  s.line(16, 58, 18, 30, metal[2]!);
-  s.line(32, 58, 30, 30, metal[2]!);
-  s.line(12, 46, 36, 46, metal[1]!); // brace
-  s.line(12, 52, 36, 52, metal[1]!);
-  s.roundedRect(12, 14, 24, 18, 4, tank, { dither: true }); // tank
-  for (let i = 0; i < 12; i++) s.line(12 + i, 14 - Math.floor(i * 0.5), 36 - i, 14 - Math.floor(i * 0.5), tank[3]!); // conical roof
-  s.outline(OUTLINE, tank[5]!);
-  return s;
-}
 function tree(): Sprite {
   const s = new Sprite(40, 52);
   const trunk = ramp('5a3c24', { steps: 4, spread: 0.3 });
@@ -214,36 +133,6 @@ function fence(): Sprite {
 }
 
 // ---- overworld characters (≈22×34, crisp, outlined) ----------------------
-function character(opts: { coat: string; hat: string; hair?: string; skin?: string }): Sprite {
-  const s = new Sprite(24, 36);
-  const coat = ramp(opts.coat, { steps: 5, spread: 0.3 });
-  const skin = ramp(opts.skin ?? 'd8a070', { steps: 4, spread: 0.24 });
-  const hat = ramp(opts.hat, { steps: 4, spread: 0.26 });
-  s.contactShadow(12, 34, 8, 2, SHADOW);
-  // legs
-  s.rect(8, 28, 3, 7, hexRGBA('3a2a1c'));
-  s.rect(13, 28, 3, 7, hexRGBA('3a2a1c'));
-  // coat / torso
-  s.roundedRect(6, 17, 12, 13, 3, coat, { dither: false });
-  s.rect(11, 18, 2, 11, coat[0]!); // button line
-  // arms
-  s.rect(4, 18, 3, 8, coat[1]!);
-  s.rect(17, 18, 3, 8, coat[1]!);
-  // head
-  s.sphere(12, 12, 5, skin, { dither: false });
-  if (opts.hair) {
-    const h = hexRGBA(opts.hair);
-    s.rect(8, 8, 8, 3, h);
-  }
-  // eyes
-  s.set(10, 12, OUTLINE);
-  s.set(14, 12, OUTLINE);
-  // hat: brim + crown
-  s.rect(5, 8, 14, 2, hat[1]!);
-  s.roundedRect(8, 3, 8, 6, 2, hat, { dither: false });
-  s.outline(OUTLINE, coat[4]!);
-  return s;
-}
 
 // ---- compose the Field ---------------------------------------------------
 // 30×20 cells. ground codes; objects placed below.
@@ -282,9 +171,9 @@ interface Placed {
 // baked static objects (buildings, rocks, hay)
 const OBJECTS: Placed[] = [
   { s: barn(), col: 2, row: 3 },
-  { s: storefront('9a5a30'), col: 6, row: 3 },
-  { s: storefront('40608a'), col: 9, row: 3 },
-  { s: storefront('8a4040'), col: 12, row: 3 },
+  { s: storefront('k', 'n', 'K'), col: 6, row: 3 },
+  { s: storefront('u', 'm', 'U'), col: 9, row: 3 },
+  { s: storefront('e', 'q', 'E'), col: 12, row: 3 },
   { s: house(), col: 20, row: 3 },
   { s: windmill(), col: 25, row: 4 },
   { s: watertower(), col: 23, row: 14 },
@@ -391,9 +280,9 @@ const writeChar = (name: string, s: Sprite): void => {
   p.data.set(s.data);
   writeFileSync(join(OUT, 'char', `${name}.png`), PNG.sync.write(p));
 };
-writeChar('player', character({ coat: '2f5aa0', hat: '5a3a22', hair: '3a2a18' }));
-writeChar('npc_rancher', character({ coat: '7a5230', hat: '4a3020', hair: '241a10' }));
-writeChar('npc_elder', character({ coat: '6a6a72', hat: '8a8a90', hair: 'd0d0d0' }));
-writeChar('npc_kid', character({ coat: '9a3a3a', hat: '7a4a2a', hair: '5a3a20', skin: 'e0b080' }));
+writeChar('player', npcChar({ shirt: ['u', 'm', 'U'], hat: 'k', hair: 'r', hairDk: 'R' }));
+writeChar('npc_rancher', npcChar({ shirt: ['j', 'h', 'J'], hat: 'K', hair: 'R', hairDk: 'R' }));
+writeChar('npc_elder', npcChar({ shirt: ['a', 'l', 'A'], hat: 'w', hair: 'w', hairDk: 'W', apron: true }));
+writeChar('npc_kid', npcChar({ shirt: ['e', 'q', 'E'], hat: 'k', hair: 'y', hairDk: 'Y' }));
 
 console.log(`world: the-field.png ${W}x${H}, ${OBJECTS.length} objects, ${npcs.length} NPCs, 4 chars`);
