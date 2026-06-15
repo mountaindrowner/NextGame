@@ -197,7 +197,10 @@ writeFileSync(
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: [], placements: [],
     spawn: { x: 22, y: 25 }, // entry from Farm Road (south)
-    exits: [{ x: 22, y: 26, scene: 'fieldhd', mapId: 'the-field' }], // south → back to the Field
+    exits: [
+      { x: 22, y: 26, scene: 'fieldhd', mapId: 'the-field' }, // south → back to the Field
+      { x: 22, y: 1, scene: 'fieldhd', mapId: 'cistern' }, // north → on toward the Cistern
+    ],
     npcs: [
       { char: 'npc_elder', col: 11, row: 14 }, // Warden Dell Marrow by the roundhouse
       { char: 'npc_rancher', col: 36, row: 24 }, // a Broker at the market
