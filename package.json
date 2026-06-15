@@ -29,9 +29,11 @@
     "assets:field": "tsx tools/assets/kit-field.ts",
     "assets:railhead": "tsx tools/assets/kit-railhead.ts",
     "assets:cistern": "tsx tools/assets/kit-cistern.ts",
+    "assets:bastion": "tsx tools/assets/kit-bastion.ts",
     "gen:field": "tsx tools/gen-field.ts",
     "gen:railhead": "tsx tools/gen-railhead.ts",
     "gen:cistern": "tsx tools/gen-cistern.ts",
+    "gen:bastion": "tsx tools/gen-bastion.ts",
     "yoyo2png": "tsx tools/yoyo2png.ts",
     "gen:protag": "tsx tools/gen-protag.ts"
   },

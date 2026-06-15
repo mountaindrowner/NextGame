@@ -146,7 +146,10 @@ writeFileSync(
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: waterArr, placements: [],
     spawn: { x: 20, y: 24 }, // the south entry dock
-    exits: [{ x: 20, y: 26, scene: 'fieldhd', mapId: 'railhead' }], // south → back toward Railhead
+    exits: [
+      { x: 20, y: 26, scene: 'fieldhd', mapId: 'railhead' }, // south → back toward Railhead
+      { x: 20, y: 1, scene: 'fieldhd', mapId: 'bastion' }, // north → on toward Bastion
+    ],
     npcs: [
       { char: 'npc_elder', col: 7, row: 7 }, // Warden Etta Bloom (Nursery)
       { char: 'npc_rancher', col: 32, row: 9 }, // the Grange
