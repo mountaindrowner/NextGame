@@ -6,6 +6,7 @@ import { Rng } from '../core/rng';
 import { GAME_DATA } from '../data/dataview';
 import { ZONES_BY_ID } from '../data/encounters';
 import { getGameState, hasGameState, nextSeed } from '../game/state';
+import { type Dir4, neighbor, OPPOSITE } from '../data/region';
 
 interface FieldData {
   tile: number;
@@ -33,6 +34,7 @@ interface MapDef {
 
 const MAPS: Record<string, MapDef> = {
   'the-field': { png: 'world/the-field.png', json: 'world/the-field.json', banner: 'THE FIELD — Ohmstead surface', garage: true },
+  farmroad: { png: 'world/farmroad.png', json: 'world/farmroad.json', banner: 'THE FARM ROAD — farm-to-market', garage: false },
   ohmstead: { png: 'world/ohmstead.png', json: 'world/ohmstead.json', banner: 'OHMSTEAD — the colony, sublevel garage', garage: false },
   railhead: { png: 'world/railhead.png', json: 'world/railhead.json', banner: 'RAILHEAD — Colony 1, the rail junction', garage: true },
   cistern: { png: 'world/cistern.png', json: 'world/cistern.json', banner: 'THE CISTERN — Colony 2, the flooded waterworks', garage: false },
@@ -85,9 +87,12 @@ export class FieldHDScene extends Phaser.Scene {
     super('fieldhd');
   }
 
-  init(data: { mapId?: string }): void {
+  private enter?: { from: Dir4; col: number; row: number };
+
+  init(data: { mapId?: string; enter?: { from: Dir4; col: number; row: number } }): void {
     this.mapId = data.mapId && MAPS[data.mapId] ? data.mapId : 'the-field';
     this.mapDef = MAPS[this.mapId]!;
+    this.enter = data.enter;
   }
 
   private mapKey(): string {
@@ -191,7 +196,18 @@ export class FieldHDScene extends Phaser.Scene {
 
     const state = hasGameState() ? getGameState() : undefined;
     const loc = state?.location;
-    if (this.mapDef.garage && state?.flags['respawn-garage']) {
+    if (this.enter) {
+      // arrived by edge-warp: land at the opening on the arrival edge nearest
+      // the column/row we left from, so the crossing reads as continuous
+      const e = this.enter;
+      if (e.from === 's' || e.from === 'n') {
+        this.py = e.from === 's' ? this.field.rows - 1 : 0;
+        this.px = this.openOnRow(this.py, e.col);
+      } else {
+        this.px = e.from === 'w' ? this.field.cols - 1 : 0;
+        this.py = this.openOnCol(this.px, e.row);
+      }
+    } else if (this.mapDef.garage && state?.flags['respawn-garage']) {
       [this.px, this.py] = this.garage;
       delete state.flags['respawn-garage'];
       this.time.delayedCall(200, () => this.banner("You're all recharged — stay current out there."));
@@ -348,6 +364,27 @@ export class FieldHDScene extends Phaser.Scene {
     return this.field.grass[cy * this.field.cols + cx] === 1;
   }
 
+  /** Seamless hand-off to the region neighbour on the opposite edge. */
+  private edgeWarp(nb: string, dir: Dir4): void {
+    if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
+    this.cameras.main.fade(300, 14, 16, 12);
+    const enter = { from: OPPOSITE[dir], col: this.px, row: this.py };
+    this.time.delayedCall(320, () => this.scene.start('fieldhd', { mapId: nb, enter }));
+  }
+
+  /** The walkable column on `row` nearest `col` (the edge opening). */
+  private openOnRow(row: number, col: number): number {
+    for (let d = 0; d < this.field.cols; d++)
+      for (const c of [col - d, col + d]) if (c >= 0 && c < this.field.cols && !this.solid(c, row)) return c;
+    return this.findOpenSpawn()[0];
+  }
+  /** The walkable row on `col` nearest `row` (the edge opening). */
+  private openOnCol(col: number, row: number): number {
+    for (let d = 0; d < this.field.rows; d++)
+      for (const r of [row - d, row + d]) if (r >= 0 && r < this.field.rows && !this.solid(col, r)) return r;
+    return this.findOpenSpawn()[1];
+  }
+
   private findOpenSpawn(): [number, number] {
     const cx = Math.floor(this.field.cols / 2);
     const cy = Math.floor(this.field.rows / 2);
@@ -367,6 +404,17 @@ export class FieldHDScene extends Phaser.Scene {
     const [dx, dy] = DELTA[dir];
     const nx = this.px + dx;
     const ny = this.py + dy;
+    // stepping off an open map edge → seamless edge-warp to the region neighbour
+    if (nx < 0 || ny < 0 || nx >= this.field.cols || ny >= this.field.rows) {
+      const d4: Dir4 = dir === 'up' ? 'n' : dir === 'down' ? 's' : dir === 'left' ? 'w' : 'e';
+      const nb = neighbor(this.mapId, d4);
+      if (nb && MAPS[nb]) {
+        this.edgeWarp(nb, d4);
+        return;
+      }
+      this.placePlayer(); // region boundary — bump
+      return;
+    }
     if (this.solid(nx, ny)) {
       this.placePlayer(); // bump
       return;

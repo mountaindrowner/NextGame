@@ -91,7 +91,7 @@ for (const ry of TRACK_ROWS) rectG(8, ry, 33, 1, 'r');
 rectG(2, 7, 16, 14, 'v');
 rectG(34, 20, 9, 6, 'v');
 // entry road from the south
-rectG(21, 19, 3, 8, 'd');
+rectG(21, 19, 3, ROWS - 19, 'd'); // entry road opens the SOUTH edge → Farm Road
 // dry-grass encounter edges
 rectG(2, 2, 8, 5, 'T');
 rectG(34, 2, 8, 5, 'T');
@@ -198,7 +198,6 @@ writeFileSync(
     collision, grass, grassAny, water: [], placements: [],
     spawn: { x: 22, y: 25 }, // entry from Farm Road (south)
     exits: [
-      { x: 22, y: 26, scene: 'fieldhd', mapId: 'the-field' }, // south → back to the Field
       { x: 22, y: 1, scene: 'fieldhd', mapId: 'cistern' }, // north → on toward the Cistern
     ],
     npcs: [

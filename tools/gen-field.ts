@@ -98,9 +98,9 @@ const rectG = (x0: number, y0: number, w: number, h: number, c: string): void =>
 // border ring
 for (let x = 0; x < COLS; x++) { setG(x, 0, '#'); setG(x, ROWS - 1, '#'); }
 for (let y = 0; y < ROWS; y++) { setG(0, y, '#'); setG(COLS - 1, y, '#'); }
-// roads: main street (H) + crossing (V)
+// roads: main street (H) + crossing (V); the V-road opens the NORTH edge → Farm Road
 rectG(1, 13, COLS - 2, 3, 'd');
-rectG(19, 1, 3, ROWS - 2, 'd');
+rectG(19, 0, 3, ROWS - 1, 'd');
 // creek (SW pond), bridged by the vertical road
 rectG(1, 24, 18, 3, 'w');
 rectG(19, 24, 3, 3, 'd'); // bridge keeps the road
@@ -217,7 +217,7 @@ writeFileSync(
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: waterArr, placements,
     spawn: { x: 20, y: 18 }, // just below the elevator hatch
-    exits: [{ x: 20, y: 1, scene: 'fieldhd', mapId: 'railhead' }], // north up the road → Railhead
+    // north edge is open → Farm Road (handled by the region edge-warp, not a portal)
     npcs: [
       { char: 'npc_rancher', col: 16, row: 13 },
       { char: 'npc_kid', col: 9, row: 13 },

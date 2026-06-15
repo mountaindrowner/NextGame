@@ -32,6 +32,7 @@
     "assets:bastion": "tsx tools/assets/kit-bastion.ts",
     "assets:redoubt": "tsx tools/assets/kit-redoubt.ts",
     "gen:field": "tsx tools/gen-field.ts",
+    "gen:farmroad": "tsx tools/gen-farmroad.ts",
     "gen:railhead": "tsx tools/gen-railhead.ts",
     "gen:cistern": "tsx tools/gen-cistern.ts",
     "gen:bastion": "tsx tools/gen-bastion.ts",
