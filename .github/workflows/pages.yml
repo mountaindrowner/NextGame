@@ -1,11 +1,14 @@
 name: pages
 # Builds the static game and publishes it to GitHub Pages so it's playable
-# from a URL. NOTE: on a free plan, enabling Pages on a PRIVATE repo makes the
-# published site public. Nothing deploys until Pages is enabled in repo
-# Settings → Pages → Source: "GitHub Actions".
+# from a URL.
+#
+# DISABLED on push (2026-06-15): this errored on every push because Pages isn't
+# enabled, spamming failure emails. To turn it back on:
+#   1. Repo Settings → Pages → Source: "GitHub Actions".
+#   2. Re-add the `push:` trigger below (and run it once via "Run workflow").
+# Until then it only runs manually (workflow_dispatch) so it can't fail in the
+# background.
 on:
-  push:
-    branches: [claude/make-this-happen-o0q20w, main]
   workflow_dispatch:
 
 permissions:
