@@ -54,6 +54,7 @@ const MAPS: Record<string, MapDef> = {
   cistern: { png: 'world/cistern.png', json: 'world/cistern.json', banner: 'THE CISTERN — Colony 2, the flooded waterworks', garage: false },
   bastion: { png: 'world/bastion.png', json: 'world/bastion.json', banner: 'BASTION — Colony 3, the quarry-fortress', garage: true },
   redoubt: { png: 'world/redoubt.png', json: 'world/redoubt.json', banner: 'REDOUBT — Colony 4, the Bunker', garage: true },
+  trinity: { png: 'world/trinity.png', json: 'world/trinity.json', banner: 'THE TRINITY BOTTOMS — the drowned forest', garage: false },
 };
 
 const NPC_CHARS = ['npc_rancher', 'npc_elder', 'npc_kid'] as const;

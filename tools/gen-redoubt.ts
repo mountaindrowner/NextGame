@@ -163,7 +163,10 @@ writeFileSync(
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: [], placements: [],
     spawn: { x: 21, y: 24 }, // the yard, entered from the Military Road (south)
-    exits: [{ x: 21, y: 26, scene: 'fieldhd', mapId: 'bastion' }], // south → back toward Bastion
+    exits: [
+      { x: 21, y: 26, scene: 'fieldhd', mapId: 'bastion' }, // south → back toward Bastion
+      { x: 40, y: 15, scene: 'fieldhd', mapId: 'trinity' }, // east yard → on into the Trinity Bottoms (Act II)
+    ],
     interacts: [{ x: 27, y: 8, kind: 'eli' }], // the Eli Vane photo + logbook
     trainers: [
       { char: 'npc_kid', col: 9, row: 16, facing: 'e', name: 'Conscript Pax', range: 4, team: [{ num: 24, level: 13 }], bark: 'Conscript Pax: We. Serve. The order. ...why did I stop?' },
