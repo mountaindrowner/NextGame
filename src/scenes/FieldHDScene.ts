@@ -37,6 +37,7 @@ const MAPS: Record<string, MapDef> = {
   railhead: { png: 'world/railhead.png', json: 'world/railhead.json', banner: 'RAILHEAD — Colony 1, the rail junction', garage: true },
   cistern: { png: 'world/cistern.png', json: 'world/cistern.json', banner: 'THE CISTERN — Colony 2, the flooded waterworks', garage: false },
   bastion: { png: 'world/bastion.png', json: 'world/bastion.json', banner: 'BASTION — Colony 3, the quarry-fortress', garage: true },
+  redoubt: { png: 'world/redoubt.png', json: 'world/redoubt.json', banner: 'REDOUBT — Colony 4, the Bunker', garage: true },
 };
 
 const NPC_CHARS = ['npc_rancher', 'npc_elder', 'npc_kid'] as const;
@@ -312,6 +313,8 @@ export class FieldHDScene extends Phaser.Scene {
       if ((it.x === fx && it.y === fy) || (it.x === this.px && it.y === this.py)) {
         if (it.kind === 'bench') {
           this.banner("Grandpa's Bench — your starter was built here. (Press ⤓ topside to recharge.)");
+        } else if (it.kind === 'eli') {
+          this.banner('A photograph and a worn logbook. The face is a stranger… but the initials are E.V. Why is that name a chill?');
         } else {
           this.banner('You poke at it. Nothing happens.');
         }

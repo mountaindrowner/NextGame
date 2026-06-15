@@ -140,7 +140,10 @@ writeFileSync(
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: [], placements: [],
     spawn: { x: 21, y: 24 }, // the gate approach (south)
-    exits: [{ x: 21, y: 26, scene: 'fieldhd', mapId: 'cistern' }], // south → back toward the Cistern
+    exits: [
+      { x: 21, y: 26, scene: 'fieldhd', mapId: 'cistern' }, // south → back toward the Cistern
+      { x: 2, y: 13, scene: 'fieldhd', mapId: 'redoubt' }, // west quarry edge → the Military Road to Redoubt
+    ],
     npcs: [
       { char: 'npc_elder', col: 17, row: 11 }, // Warden Calder Stone
       { char: 'npc_kid', col: 9, row: 9 }, // Flint, the scout (renamed from Wren)
