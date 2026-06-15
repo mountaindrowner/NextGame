@@ -14,9 +14,15 @@
   First trainers on the Farm Road. **Also fixed:** battles now return to the
   saved-location map (not always the Field); the elevator passes mapId.
 
-**Next:** more trainers across the routes/colonies (the variable-NPC classes +
-real teams), **ledges** (one-way hops) + **hidden/visible items** + signs, the
-**world-map/fast-travel** UI, then continue Act II (Trinity → Chancel → …).
+- **World populated:** overworld **items** (walk-onto pickups — visible bobbing
+  nodes + hidden caches, give credits, `got:<map>:<idx>` flag) and readable
+  **signs** added to `FieldHDScene`. Trainers + 2 items + a lore sign placed on
+  the Field, Railhead, Cistern, Bastion, Redoubt (colony-flavored classes/teams/
+  barks). All placements script-verified.
+
+**Next:** **ledges** (one-way hops), the **world-map/fast-travel** UI, real
+item-to-bag (currently credits), then continue Act II (Trinity → Chancel → …)
+and the remaining routes.
 
 ## Session 2026-06-15 — World structure: Hoenn study → region graph + routes
 
