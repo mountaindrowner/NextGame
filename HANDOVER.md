@@ -20,9 +20,11 @@ universal Clutter). **Records done for everything.** Per-area ART + maps so far:
 **Ohmstead** (cavern), **the Field** (sec.field), **Railhead** (sec.railhead),
 **the Cistern** (sec.cistern, flooded waterworks w/ catwalk-crossed basin = the
 HOVER-gate flavor), **Bastion** (sec.bastion, quarry-fortress + great Wall/gate
-+ cement plant + the Pit cave-mouth + the first LIGHT HIVE overlay creep) — all
-playable and linked (Bench→Ohmstead→lift→Field→Railhead→Cistern→Bastion, with
-back-exits). **Character
++ cement plant + the Pit cave-mouth + the first LIGHT HIVE overlay creep),
+**Redoubt** (sec.redoubt, the midpoint reveal — fortified yard + the dark LUMEN
+Bunker/command-center with the **Eli Vane photo/logbook** interact + MEDIUM hive)
+— all playable and linked
+(Bench→Ohmstead→lift→Field→Railhead→Cistern→Bastion→Redoubt, with back-exits). **Character
 sprites:** grid pipeline (`char.ts`) + slice cast, **player walks in 4
 directions** in-world. **Title screen** = creator art + animated intro. Maps
 warp via `exits[].mapId`. Next colonies up the critical path: **Bastion**
