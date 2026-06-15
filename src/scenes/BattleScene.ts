@@ -18,6 +18,8 @@ interface BattleInit {
   seed: number;
   /** scene to return to when the battle ends (default the old overworld) */
   returnScene?: string;
+  /** a flag set true in game state on a trainer victory (so it stays beaten) */
+  onVictoryFlag?: string;
 }
 
 type Mode = 'anim' | 'command' | 'moves' | 'party' | 'pack' | 'puzzle' | 'over';
@@ -203,6 +205,7 @@ export class BattleScene extends Phaser.Scene {
     if (this.outcome === 'victory' && this.init_.kind === 'trainer') {
       state.credits += 120;
       this.say('Won 120 credits!');
+      if (this.init_.onVictoryFlag) state.flags[this.init_.onVictoryFlag] = true; // mark this trainer beaten
     }
     if (this.outcome === 'defeat') {
       // party wipe loses nothing (GDD §6): recharge and wake at the garage

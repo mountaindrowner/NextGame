@@ -64,7 +64,7 @@ export class ElevatorScene extends Phaser.Scene {
       } else {
         this.done = true;
         this.cameras.main.fade(500, 216, 200, 144);
-        this.time.delayedCall(520, () => this.scene.start('fieldhd'));
+        this.time.delayedCall(520, () => this.scene.start('fieldhd', { mapId: 'the-field' }));
       }
     }
   }

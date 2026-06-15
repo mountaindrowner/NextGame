@@ -169,9 +169,11 @@ writeFileSync(
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: [], placements,
     spawn: { x: 13, y: ROWS - 2 }, // fallback (edge-warps set the real entry)
-    npcs: [
-      { char: 'npc_rancher', col: 19, row: 21 }, // a Wrangler on the road
-      { char: 'npc_kid', col: 9, row: 9 }, // a Runner
+    npcs: [{ char: 'npc_elder', col: 19, row: 26 }], // a traveler resting by the road
+    trainers: [
+      { char: 'npc_kid', col: 10, row: 24, facing: 'e', name: 'Runner Dusty', range: 5, team: [{ num: 10, level: 5 }], bark: "Runner Dusty: Found my Ohm in a dumpster — still tougher than yours!" },
+      { char: 'npc_rancher', col: 22, row: 11, facing: 'w', name: 'Wrangler Wade', range: 5, team: [{ num: 19, level: 5 }, { num: 21, level: 6 }], bark: 'Wrangler Wade: Yeehp. You spook the herd, you answer for it.' },
+      { char: 'npc_kid', col: 16, row: 16, facing: 'e', name: 'Picker Junie', range: 5, team: [{ num: 12, level: 6 }], bark: 'Picker Junie: Mine lights up! Wanna see?' },
     ],
   }),
 );
