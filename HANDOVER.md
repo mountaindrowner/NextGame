@@ -1,5 +1,28 @@
 # HANDOVER
 
+## Session 2026-06-15 — World structure: Hoenn study → region graph + routes
+
+Mark: "study the Hoenn overview map, make ours deeper & more expansive."
+- **Study + plan committed:** `docs/design/hoenn-map-study.md` (Hoenn's graph /
+  hub-loop / biome-band / HM-gating / parallel-layer / density structure) and
+  `docs/world-structure.md` (grow OHMFRONT from a 6-map chain → ~40-map connected,
+  branching, biome-banded region; the full map list + engine build order).
+- **Region graph + edge-warps:** `src/data/region.ts` (each map's open-edge
+  neighbours + biome + hive); `FieldHDScene` now **edge-warps** — walk off an
+  open edge → neighbour's opposite edge (lands at the nearest opening),
+  Pokémon-route style. Portal `exits` still used where borders aren't opened yet.
+- **First route:** `gen-farmroad.ts` (winding prairie route, cotton gin,
+  water-tower lookout, tall-grass encounters, tree-line framing) inserted
+  between the Field and Railhead via edge-warps (opened Field-north +
+  Railhead-south). 59 tests green.
+
+**Next on the world-structure plan:** build the remaining routes (45 Scar,
+Furrows, Military Road, Red Flats, Tollway, the Stack) with open edges; add
+line-of-sight trainers + ledges + hidden-item systems; a branch/loop + a hub at
+Railhead; vehicle-Ohm fast travel + world-map UI; multi-floor dungeon loader +
+the net layer; then Act II colonies (Trinity → Chancel → Redbed → Array → Verge
+→ Dallas) and the optional spurs.
+
 ## Session 2026-06-14 (cont.) — Clutter layer + EVERY asset enumerated
 
 Mark added the **Clutter & Detail Layer** doc (`docs/design/clutter-detail-layer.md`)
