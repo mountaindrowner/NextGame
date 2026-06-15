@@ -15,6 +15,7 @@ import {
   catwalk, channelWall, concreteFloor, footbridge, grangeTable, ladder, lantern,
   ohmCradle, pipeValve, planter, pumpMachine, reeds, seedVault, sluiceGate, water,
 } from './assets/kit-cistern';
+import { scatterClutter } from './scatter';
 
 const T = 32;
 const COLS = 40;
@@ -120,6 +121,8 @@ glow(4 * T + 16, 8 * T + 16, 24, [25, 60, 110]);
 glow(9 * T + 16, 8 * T + 16, 24, [25, 60, 110]);
 glow(35 * T + 16, 9 * T + 20, 26, [18, 80, 70]);
 for (const o of objs) if (o.s.h === 24 && o.s.w === 16) glow(o.col * T + 16, o.row * T + T - 14, 24, [110, 75, 25]);
+
+scatterClutter(big, { cols: COLS, rows: ROWS, tile: T, density: 'lived_in', biome: 'flooded', seed: 4204, solid: (c, r) => { const ch = MAP[r]?.[c]; return ch === '#' || ch === '~' || extraSolid.has(`${c},${r}`); } });
 
 const png = new PNG({ width: W, height: H });
 png.data.set(big.data);

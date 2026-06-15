@@ -14,6 +14,7 @@ import { PNG } from 'pngjs';
 import { Grid } from './gridart';
 import { Sprite } from './spritekit';
 import { Rng } from '../src/core/rng';
+import { scatterClutter } from './scatter';
 
 const OUT = join(new URL('..', import.meta.url).pathname, 'public/world');
 mkdirSync(OUT, { recursive: true });
@@ -545,6 +546,8 @@ for (const o of objs) {
       for (let rr = o.row - rowsUp; rr <= o.row; rr++) extraSolid.add(`${cc},${rr}`);
   }
 }
+
+scatterClutter(big, { cols: COLS, rows: ROWS, tile: T, density: 'lived_in', biome: 'underground', seed: 4207, solid: (c, r) => { const ch = MAP[r]?.[c]; return ch === '#' || ch === '=' || ch === '~' || extraSolid.has(`${c},${r}`); } });
 
 const png = new PNG({ width: W, height: H });
 png.data.set(big.data);

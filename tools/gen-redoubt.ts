@@ -16,6 +16,7 @@ import {
   armoryRack, audioLog, blastRamp, checkpointGate, commandConsole, concreteFloor, eliPhoto,
   emergencyLight, generator, grate, hazardFloor, mapTable, prefabWall, razorwire, sandbags, serverBank,
 } from './assets/kit-redoubt';
+import { scatterClutter } from './scatter';
 
 const T = 32;
 const COLS = 44;
@@ -137,6 +138,8 @@ glow(16 * T + 16, 5 * T + 4, 30, [18, 45, 80]);
 glow(30 * T + 16, 5 * T, 26, [18, 55, 30]);
 glow(27 * T + 16, 8 * T + 4, 24, [70, 50, 20]); // Eli photo
 for (const o of objs) if (o.s.h === 14 && o.s.w === 14) glow(o.col * T + 16, o.row * T + T - 8, 22, [120, 22, 22]); // emergency lights
+
+scatterClutter(big, { cols: COLS, rows: ROWS, tile: T, density: 'cluttered', biome: 'military', seed: 4206, solid: (c, r) => { const ch = MAP[r]?.[c]; return ch === '#' || extraSolid.has(`${c},${r}`); } });
 
 const png = new PNG({ width: W, height: H });
 png.data.set(big.data);

@@ -15,6 +15,7 @@ import {
   brazier, cementSilo, conveyor, crane, cutStone, gateWinch, gravelGround, kiln,
   pitMouth, quarryWall, rubbleHeap, sandbags, scaffold, scree, theWall, watchtower,
 } from './assets/kit-bastion';
+import { scatterClutter } from './scatter';
 
 const T = 32;
 const COLS = 44;
@@ -117,6 +118,8 @@ for (const o of objs) {
   }
 }
 for (const o of objs) if (o.s.h === 24 && o.s.w === 18) glow(o.col * T + 16, o.row * T + T - 14, 22, [120, 70, 22]); // braziers
+
+scatterClutter(big, { cols: COLS, rows: ROWS, tile: T, density: 'cluttered', biome: 'quarry', seed: 4205, solid: (c, r) => { const ch = MAP[r]?.[c]; return ch === '#' || ch === 'c' || extraSolid.has(`${c},${r}`); } });
 
 const png = new PNG({ width: W, height: H });
 png.data.set(big.data);

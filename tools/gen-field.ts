@@ -14,6 +14,7 @@ import { Sprite } from './spritekit';
 import { Rng } from '../src/core/rng';
 import { barn, house, watertower, windmill } from './world-builders';
 import { cattleFence, church, coopVault, elevatorHatch, hayBale, hitchingPost, silo, siloCluster, trough } from './assets/kit-field';
+import { scatterClutter } from './scatter';
 
 const T = 32;
 const COLS = 40;
@@ -185,6 +186,9 @@ for (const o of objs) {
     for (let cc = c0; cc <= c1; cc++) for (let rr = o.row - o.solid + 1; rr <= o.row; rr++) extraSolid.add(`${cc},${rr}`);
   }
 }
+
+// lived-in layer: floor litter, stains, weeds reclaiming the dead town
+scatterClutter(big, { cols: COLS, rows: ROWS, tile: T, density: 'squalid', biome: 'prairie', seed: 4201, solid: (c, r) => { const ch = MAP[r]?.[c]; return ch === '#' || ch === 'w' || extraSolid.has(`${c},${r}`); } });
 
 const png = new PNG({ width: W, height: H });
 png.data.set(big.data);

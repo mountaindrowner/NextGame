@@ -13,6 +13,7 @@ import { Grid } from './gridart';
 import { Sprite } from './spritekit';
 import { Rng } from '../src/core/rng';
 import { barn, watertower } from './world-builders';
+import { scatterClutter } from './scatter';
 
 const T = 32;
 const COLS = 28;
@@ -141,6 +142,8 @@ for (const o of objs) {
     for (let cc = c0; cc <= c1; cc++) for (let rr = o.row - o.solid + 1; rr <= o.row; rr++) extraSolid.add(`${cc},${rr}`);
   }
 }
+
+scatterClutter(big, { cols: COLS, rows: ROWS, tile: T, density: 'lived_in', biome: 'prairie', seed: 4202, solid: (c, r) => { const ch = MAP[r]?.[c]; return ch === '#' || extraSolid.has(`${c},${r}`); } });
 
 const png = new PNG({ width: W, height: H });
 png.data.set(big.data);

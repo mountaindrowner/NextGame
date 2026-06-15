@@ -17,6 +17,7 @@ import {
   ballast, boxcar, brokerDesk, bufferStop, coalPile, commodityCrate, lantern,
   marketStall, platform, railH, roundhouse, semaphore, signalGantry, switchLever, turntable,
 } from './assets/kit-railhead';
+import { scatterClutter } from './scatter';
 
 const T = 32;
 const COLS = 44;
@@ -174,6 +175,8 @@ for (const o of objs) {
 }
 // lantern glow pools
 for (const o of objs) if (o.s.h === 26 && o.s.w === 16) glow(o.col * T + T / 2, o.row * T + T - 16, 26, [120, 75, 22]);
+
+scatterClutter(big, { cols: COLS, rows: ROWS, tile: T, density: 'cluttered', biome: 'industrial', seed: 4203, solid: (c, r) => { const ch = MAP[r]?.[c]; return ch === '#' || extraSolid.has(`${c},${r}`); } });
 
 const png = new PNG({ width: W, height: H });
 png.data.set(big.data);
