@@ -576,8 +576,16 @@ writeFileSync(
     exits: [{ x: 19, y: 19, scene: 'elevator' }], // step onto the lift apron → up to the Field
     interacts: [{ x: 5, y: 7, kind: 'bench' }], // Grandpa's Bench
     npcs: [
-      { char: 'npc_elder', col: 8, row: 6 }, // Grandpa Harlan in the garage
-      { char: 'npc_rancher', col: 21, row: 12 }, // a neighbor by the hub monument
+      { char: 'npc_elder', col: 8, row: 6, name: 'Grandma Mabel', lines: [
+        "You built him at Eli's bench, from Eli's parts. That makes him family. Mind him well.",
+        'Your grandfather could coax a song out of a dead radio. I still hear it, some nights.',
+        "Boone's sending you topside. Come back to me, you hear? The both of you.",
+      ] },
+      { char: 'npc_rancher', col: 21, row: 12, name: 'Cass', lines: [
+        "They won't let me up the lift. 'Too young,' Boone says. You're barely older than me!",
+        'Bring me back something from the surface. A bottle cap — anything that saw the sky.',
+        "Everyone's spooked by the night signal. Pretend you're not, and I will too.",
+      ] },
     ],
   }),
 );

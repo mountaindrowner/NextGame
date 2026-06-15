@@ -19,7 +19,7 @@ interface FieldData {
   grassAny?: number[];
   water?: number[];
   placements?: Array<{ type: string; col: number; row: number }>;
-  npcs?: Array<{ char: string; col: number; row: number }>;
+  npcs?: Array<{ char: string; col: number; row: number; name?: string; lines?: string[] }>;
   trainers?: TrainerDef[];
   items?: Array<{ col: number; row: number; credits: number; label?: string; hidden?: boolean }>;
   signs?: Array<{ col: number; row: number; text: string }>;
@@ -249,6 +249,7 @@ export class FieldHDScene extends Phaser.Scene {
       else if (this.textures.exists(npc.char)) this.add.image(px, py, npc.char).setOrigin(0.5, 0.92).setScale(1.3).setDepth(npc.row);
       else continue;
       this.npcCells.add(`${npc.col},${npc.row}`);
+      if (npc.lines && npc.lines.length) this.npcTalk.set(`${npc.col},${npc.row}`, { name: npc.name ?? 'Someone', lines: npc.lines, idx: 0 });
     }
 
     // trainers — placed fighters who challenge you on sight (Pokémon routes)
@@ -366,6 +367,7 @@ export class FieldHDScene extends Phaser.Scene {
   }
 
   private npcCells = new Set<string>();
+  private npcTalk = new Map<string, { name: string; lines: string[]; idx: number }>();
   private trainers: Array<{ def: TrainerDef; idx: number; beaten: boolean; sprite?: Phaser.GameObjects.Sprite }> = [];
   private itemSprites = new Map<number, Phaser.GameObjects.Image>();
 
@@ -437,6 +439,12 @@ export class FieldHDScene extends Phaser.Scene {
     const [dx, dy] = DELTA[this.facing];
     const fx = this.px + dx;
     const fy = this.py + dy;
+    const talk = this.npcTalk.get(`${fx},${fy}`);
+    if (talk) {
+      this.banner(`${talk.name}: ${talk.lines[talk.idx]}`);
+      talk.idx = (talk.idx + 1) % talk.lines.length;
+      return true;
+    }
     for (const s of this.field.signs ?? []) {
       if ((s.col === fx && s.row === fy) || (s.col === this.px && s.row === this.py)) {
         this.banner(s.text);

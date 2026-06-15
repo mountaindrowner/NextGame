@@ -156,7 +156,11 @@ writeFileSync(
       { col: 14, row: 30, text: 'A leaning marker: THE TRINITY BOTTOMS. The road drowns here. Keep to the muck and the logs.' },
       { col: 14, row: 3, text: 'Half-sunk milepost: …THE CHANCEL, ahead. (The way north is not yet open.)' },
     ],
-    npcs: [{ char: 'npc_elder', col: 5, row: 10 }], // a Net-Medium by the chapel
+    npcs: [{ char: 'npc_elder', col: 5, row: 10, name: 'Net-Medium Sorrel', lines: [
+      "Hush, now. The chapel's half-drowned, but it still listens. They all do, if you let them.",
+      'These bottoms grow Ohms that are half-alive — flesh wound through with wire. The virus reaching for green things.',
+      "She's been trying to tell you something, your machine. You heard it too. Don't lie to me.",
+    ] }], // a Net-Medium by the chapel
   }),
 );
 console.log(`trinity: ${W}x${H} (${COLS}x${ROWS}), ${objs.length} props`);

@@ -159,9 +159,21 @@ writeFileSync(
       { col: 21, row: 22, text: 'BASTION — Colony 3. Trust no one. The gate weighs every stranger.' },
     ],
     npcs: [
-      { char: 'npc_elder', col: 17, row: 11 }, // Warden Calder Stone
-      { char: 'npc_kid', col: 9, row: 9 }, // Flint, the scout (renamed from Wren)
-      { char: 'npc_rancher', col: 23, row: 22 }, // a gate-keeper
+      { char: 'npc_elder', col: 17, row: 11, name: 'Warden Calder Stone', lines: [
+        'Bastion survived by trusting no one. You are no exception. Prove yourself at the Pit, or get gone.',
+        "Hear that on the walls? Feral Ohms. The ordinary hack won't reach them — they answer to something deeper.",
+        "Beat my Stoneguard and you'll have the colony's respect. It's all we've left worth giving.",
+      ] },
+      { char: 'npc_kid', col: 9, row: 9, name: 'Flint', lines: [
+        "Stone says wall up and wait. I say somebody's got to watch. So I watch. You should too.",
+        'The siege Ohms move like one animal — same step, same turn. Not natural. Coordinated.',
+        'Defy the Warden and help anyway. Only way this place lives to see past tomorrow.',
+      ] },
+      { char: 'npc_rancher', col: 23, row: 22, name: 'Gate-keeper Boon', lines: [
+        'No papers, no proof, no passage. The gate weighs everyone. Even you, key-bearer.',
+        'Dust never settles here — crushers run day and night, walling us in tighter.',
+        'Prove yourself inside and the gate opens. Fail, and the quarry is a long way down.',
+      ] },
     ],
   }),
 );

@@ -223,9 +223,21 @@ writeFileSync(
     spawn: { x: 20, y: 18 }, // just below the elevator hatch
     // north edge is open → Farm Road (handled by the region edge-warp, not a portal)
     npcs: [
-      { char: 'npc_rancher', col: 16, row: 13 },
-      { char: 'npc_kid', col: 9, row: 13 },
-      { char: 'npc_elder', col: 12, row: 23 },
+      { char: 'npc_rancher', col: 16, row: 13, name: 'Scrapper Rivet', lines: [
+        'First run topside? Keep off the dead houses. Some flicker — there, then gone. The Static does that.',
+        "Co-op Vault stood sealed since my grandfather's day. Funny — somebody cracked it open just last night.",
+        'Pick clean, walk soft, never linger. Standing still up here gets you noticed.',
+      ] },
+      { char: 'npc_kid', col: 9, row: 13, name: 'Picker Bex', lines: [
+        'The tall grass is crawling with little ones — toasters, fans, a vacuum that spins like a dust devil!',
+        'Weaken one first, then spend a storage node. Rush the catch and they rage and bolt.',
+        'Odessa buzzed my handheld about some Manifest to fill. You get the assignment too?',
+      ] },
+      { char: 'npc_elder', col: 12, row: 23, name: 'Old-timer Mesa', lines: [
+        'This was cattle country, kid, long before the bunkers. Squint and you can still read the brands.',
+        "That church bell hasn't rung in five hundred years. Some folks still wait on it.",
+        "Grass grows, water runs. The world's broken — and it's trying awful hard to heal.",
+      ] },
     ],
     trainers: [
       { char: 'npc_kid', col: 24, row: 18, facing: 'w', name: 'Runner Cricket', range: 4, team: [{ num: 10, level: 4 }], bark: 'Runner Cricket: First one topside wins! ...usually.' },

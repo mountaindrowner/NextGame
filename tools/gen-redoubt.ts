@@ -180,9 +180,21 @@ writeFileSync(
       { col: 21, row: 22, text: 'REDOUBT — Colony 4. The Bunker is sealed. Command has not answered in days.' },
     ],
     npcs: [
-      { char: 'npc_rancher', col: 21, row: 5 }, // Commander Reyes (command center)
-      { char: 'npc_elder', col: 18, row: 7 }, // Warden Augusta Pike
-      { char: 'npc_kid', col: 9, row: 16 }, // a freed Conscript
+      { char: 'npc_rancher', col: 21, row: 5, name: 'Commander Reyes', lines: [
+        "I gave the orders. I marched them out. And I'd swear on my life I never *chose* a single one.",
+        'There is a voice in the Static, soldier. It speaks through the towers, and your hands just obey.',
+        'A photo in the command center — a scrapper who warned us, years back. Vane, the log says. We did not listen.',
+      ] },
+      { char: 'npc_elder', col: 18, row: 7, name: 'Warden Augusta Pike', lines: [
+        'I trusted the Militarists to shield Redoubt. I tracked the truth to this bunker, and they locked me in it.',
+        'It was never the men. Something *uses* them — the same way it uses the wild Ohms swarming your road.',
+        'Free Reyes and you free a soldier. Free the rest, and maybe you free us all.',
+      ] },
+      { char: 'npc_kid', col: 9, row: 16, name: 'Freed Conscript', lines: [
+        'I think my name is Tobe? The Static took it. I pick a new one every morning, just to have one.',
+        'We served the order. We served the order. ...I cannot remember agreeing to anything.',
+        'The blast door is sealed. Command went silent days ago. Whatever is down there is not taking calls.',
+      ] },
     ],
   }),
 );

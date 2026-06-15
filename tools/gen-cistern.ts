@@ -165,9 +165,21 @@ writeFileSync(
       { col: 20, row: 23, text: "THE CISTERN — Colony 2. Mind the water; you'll need a way across it to reach the heart." },
     ],
     npcs: [
-      { char: 'npc_elder', col: 7, row: 7 }, // Warden Etta Bloom (Nursery)
-      { char: 'npc_rancher', col: 32, row: 9 }, // the Grange
-      { char: 'npc_kid', col: 9, row: 18 }, // a Cistern-keeper
+      { char: 'npc_elder', col: 7, row: 7, name: 'Warden Etta Bloom', lines: [
+        "We don't catch Ohms here, child. We raise them. Every one is kin, the same as you.",
+        "Trust the Militarists least of all. I've watched good water poisoned by men sure they meant well.",
+        "The trial's heart sits past the flood. You'll need a vehicle Ohm that hovers to cross — no other way.",
+      ] },
+      { char: 'npc_rancher', col: 32, row: 9, name: 'Mud Cole', lines: [
+        "Mud's the name, mud's the trade. I move the herd-Ohms between chambers. They're shy, like me.",
+        "Sela could show you the gentle side of these machines. They feel, you know. World just won't say it.",
+        "Weather-Watcher swears the EM shimmer rolls in tonight. He's wrong every time — till the time he isn't.",
+      ] },
+      { char: 'npc_kid', col: 9, row: 18, name: 'Cistern-keeper Reeva', lines: [
+        'I work the sluices. Open the wrong gate and the whole nursery floods. No pressure.',
+        'Word is the Militarists are fracturing — some turning on their own. Why would a man fight himself?',
+        "Mind the deep channels. The slippery Ohms down there'll drag you under and call it a hug.",
+      ] },
     ],
   }),
 );

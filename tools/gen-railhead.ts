@@ -215,9 +215,21 @@ writeFileSync(
       { col: 22, row: 23, text: 'RAILHEAD — Colony 1. Brokers trade salt, scrap, and water. No credit, no exceptions.' },
     ],
     npcs: [
-      { char: 'npc_elder', col: 11, row: 14 }, // Warden Dell Marrow by the roundhouse
-      { char: 'npc_rancher', col: 36, row: 24 }, // a Broker at the market
-      { char: 'npc_kid', col: 24, row: 20 },
+      { char: 'npc_elder', col: 11, row: 14, name: 'Warden Dell Marrow', lines: [
+        "A key that frees every machine on Earth. I've heard taller tales, kid — none that walked in on their own feet.",
+        "Clear our sabotaged relay and you'll have Railhead's ear. Coin talks here. Results talk louder.",
+        'One thing gnaws at me: the wild Ohms lately move *together*. Like something is conducting them.',
+      ] },
+      { char: 'npc_rancher', col: 36, row: 24, name: 'Scrap Broker', lines: [
+        "Salt, scrap, water — the three things that keep a colony breathing. I corner the scrap.",
+        "Credits are numbers backed by trust. I'm very trustworthy. Ask anyone I haven't cheated.",
+        'You want a relay fixed, see the switch-house. You want it fixed *cheap*, keep walking.',
+      ] },
+      { char: 'npc_kid', col: 24, row: 20, name: 'Rail-runner Pax', lines: [
+        'I sprint the tracks before the boxcars roll. Fastest feet in Railhead — wanna race?',
+        "Captain Holt's been barking orders by the relay. Something's off — his words land a half-second late.",
+        "Earn the Freight Master's trust and the rail carries you colony to colony. Beats walking.",
+      ] },
     ],
   }),
 );

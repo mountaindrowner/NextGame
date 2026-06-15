@@ -169,7 +169,11 @@ writeFileSync(
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: [], placements,
     spawn: { x: 13, y: ROWS - 2 }, // fallback (edge-warps set the real entry)
-    npcs: [{ char: 'npc_elder', col: 19, row: 26 }], // a traveler resting by the road
+    npcs: [{ char: 'npc_elder', col: 19, row: 26, name: 'Traveler Sully', lines: [
+      'Resting my feet. Farm-to-market road, this — runs clear to the Railhead if your legs hold out.',
+      'Watch the fence-lines. Runners and Scrappers lay up in the grass, looking for a wager or a fight.',
+      'The old rail line starts past the cotton gin. Whole world opens up from there. Or it used to.',
+    ] }], // a traveler resting by the road
     trainers: [
       { char: 'npc_kid', col: 10, row: 24, facing: 'e', name: 'Runner Dusty', range: 5, team: [{ num: 10, level: 5 }], bark: "Runner Dusty: Found my Ohm in a dumpster — still tougher than yours!" },
       { char: 'npc_rancher', col: 22, row: 11, facing: 'w', name: 'Wrangler Wade', range: 5, team: [{ num: 19, level: 5 }, { num: 21, level: 6 }], bark: 'Wrangler Wade: Yeehp. You spook the herd, you answer for it.' },
