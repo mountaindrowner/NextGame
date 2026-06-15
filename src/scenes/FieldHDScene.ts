@@ -21,6 +21,8 @@ interface FieldData {
   placements?: Array<{ type: string; col: number; row: number }>;
   npcs?: Array<{ char: string; col: number; row: number }>;
   trainers?: TrainerDef[];
+  items?: Array<{ col: number; row: number; credits: number; label?: string; hidden?: boolean }>;
+  signs?: Array<{ col: number; row: number; text: string }>;
   spawn?: { x: number; y: number };
   exits?: Array<{ x: number; y: number; scene: string; mapId?: string }>;
   interacts?: Array<{ x: number; y: number; kind: string }>;
@@ -263,6 +265,20 @@ export class FieldHDScene extends Phaser.Scene {
       this.trainers.push({ def: td, idx: i, beaten, sprite: spr });
     }
 
+    // overworld items — visible pickups show a node; hidden ones are surprises
+    this.makeItemTex();
+    this.itemSprites = new Map();
+    const items = this.field.items ?? [];
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i]!;
+      if (state?.flags[`got:${this.mapId}:${i}`]) continue;
+      if (!it.hidden) {
+        const spr = this.add.image(it.col * t + t / 2, it.row * t + t * 0.6, 'item_node').setDepth(it.row).setScale(1.1);
+        this.itemSprites.set(i, spr);
+        this.tweens.add({ targets: spr, y: spr.y - 3, yoyo: true, repeat: -1, duration: 700, ease: 'Sine.InOut' });
+      }
+    }
+
     // player = the chosen preset's 4-direction walk sprite
     const preset = hasGameState() ? getGameState().preset : 'SAL';
     this.walkKey = preset === 'WREN' ? 'wren_walk' : 'sal_walk';
@@ -350,6 +366,35 @@ export class FieldHDScene extends Phaser.Scene {
 
   private npcCells = new Set<string>();
   private trainers: Array<{ def: TrainerDef; idx: number; beaten: boolean; sprite?: Phaser.GameObjects.Sprite }> = [];
+  private itemSprites = new Map<number, Phaser.GameObjects.Image>();
+
+  /** A small amber item-node marker texture (parcel on the ground). */
+  private makeItemTex(): void {
+    if (this.textures.exists('item_node')) return;
+    const g = this.make.graphics({ x: 0, y: 0 }, false);
+    g.fillStyle(0x2a2018, 1).fillCircle(7, 8, 6); // shadow base
+    g.fillStyle(0xffd27a, 1).fillCircle(7, 6, 5); // amber ball
+    g.fillStyle(0xfff4d8, 1).fillCircle(5, 4, 2); // highlight
+    g.fillStyle(0x6a4d1c, 1).fillRect(2, 6, 10, 1); // seam
+    g.generateTexture('item_node', 14, 14);
+    g.destroy();
+  }
+
+  /** Walk-onto pickup: collect any item on the player's cell. */
+  private checkItems(): void {
+    if (!hasGameState()) return;
+    const state = getGameState();
+    const items = this.field.items ?? [];
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i]!;
+      if (it.col !== this.px || it.row !== this.py) continue;
+      if (state.flags[`got:${this.mapId}:${i}`]) continue;
+      state.flags[`got:${this.mapId}:${i}`] = true;
+      state.credits += it.credits;
+      this.itemSprites.get(i)?.destroy();
+      this.banner(`${it.label ?? (it.hidden ? 'Hidden cache' : 'A node pickup')} — found ${it.credits} credits!`);
+    }
+  }
 
   /** A waiting trainer whose sightline the player just stepped into challenges. */
   private checkTrainers(): boolean {
@@ -391,6 +436,12 @@ export class FieldHDScene extends Phaser.Scene {
     const [dx, dy] = DELTA[this.facing];
     const fx = this.px + dx;
     const fy = this.py + dy;
+    for (const s of this.field.signs ?? []) {
+      if ((s.col === fx && s.row === fy) || (s.col === this.px && s.row === this.py)) {
+        this.banner(s.text);
+        return true;
+      }
+    }
     for (const it of this.field.interacts ?? []) {
       if ((it.x === fx && it.y === fy) || (it.x === this.px && it.y === this.py)) {
         if (it.kind === 'bench') {
@@ -505,6 +556,7 @@ export class FieldHDScene extends Phaser.Scene {
         }
         if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
         if (this.checkExit()) return;
+        this.checkItems();
         if (this.checkTrainers()) return;
         if (this.isGrass(this.px, this.py)) this.tryEncounter();
       },

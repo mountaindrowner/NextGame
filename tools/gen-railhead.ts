@@ -203,6 +203,17 @@ writeFileSync(
     exits: [
       { x: 22, y: 1, scene: 'fieldhd', mapId: 'cistern' }, // north → on toward the Cistern
     ],
+    trainers: [
+      { char: 'npc_rancher', col: 24, row: 22, facing: 'w', name: 'Salt Broker', range: 5, team: [{ num: 32, level: 7 }], bark: 'Salt Broker: Coin first, story later. Beat me, then I listen.' },
+      { char: 'npc_kid', col: 38, row: 24, facing: 'w', name: 'Card Sharp', range: 4, team: [{ num: 19, level: 6 }, { num: 21, level: 7 }], bark: "Card Sharp: Double or nothing — let's see your hand." },
+    ],
+    items: [
+      { col: 25, row: 24, credits: 180, label: 'A node by the platform' },
+      { col: 33, row: 11, credits: 220, hidden: true, label: 'Tucked in the coal' },
+    ],
+    signs: [
+      { col: 22, row: 23, text: 'RAILHEAD — Colony 1. Brokers trade salt, scrap, and water. No credit, no exceptions.' },
+    ],
     npcs: [
       { char: 'npc_elder', col: 11, row: 14 }, // Warden Dell Marrow by the roundhouse
       { char: 'npc_rancher', col: 36, row: 24 }, // a Broker at the market

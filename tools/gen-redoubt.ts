@@ -165,6 +165,17 @@ writeFileSync(
     spawn: { x: 21, y: 24 }, // the yard, entered from the Military Road (south)
     exits: [{ x: 21, y: 26, scene: 'fieldhd', mapId: 'bastion' }], // south → back toward Bastion
     interacts: [{ x: 27, y: 8, kind: 'eli' }], // the Eli Vane photo + logbook
+    trainers: [
+      { char: 'npc_kid', col: 9, row: 16, facing: 'e', name: 'Conscript Pax', range: 4, team: [{ num: 24, level: 13 }], bark: 'Conscript Pax: We. Serve. The order. ...why did I stop?' },
+      { char: 'npc_rancher', col: 34, row: 16, facing: 'w', name: 'Deserter Sully', range: 4, team: [{ num: 32, level: 13 }, { num: 45, level: 14 }], bark: 'Deserter Sully: Broke free of the Static early. You should run while you can.' },
+    ],
+    items: [
+      { col: 6, row: 13, credits: 300, label: 'A node in the yard' },
+      { col: 39, row: 23, credits: 340, hidden: true, label: 'Stashed by the armory' },
+    ],
+    signs: [
+      { col: 21, row: 22, text: 'REDOUBT — Colony 4. The Bunker is sealed. Command has not answered in days.' },
+    ],
     npcs: [
       { char: 'npc_rancher', col: 21, row: 5 }, // Commander Reyes (command center)
       { char: 'npc_elder', col: 18, row: 7 }, // Warden Augusta Pike

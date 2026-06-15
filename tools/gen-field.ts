@@ -227,6 +227,16 @@ writeFileSync(
       { char: 'npc_kid', col: 9, row: 13 },
       { char: 'npc_elder', col: 12, row: 23 },
     ],
+    trainers: [
+      { char: 'npc_kid', col: 24, row: 18, facing: 'w', name: 'Runner Cricket', range: 4, team: [{ num: 10, level: 4 }], bark: 'Runner Cricket: First one topside wins! ...usually.' },
+    ],
+    items: [
+      { col: 28, row: 14, credits: 150, label: 'A dropped node' },
+      { col: 5, row: 5, credits: 300, hidden: true, label: 'Buried in the dead grass' },
+    ],
+    signs: [
+      { col: 22, row: 16, text: 'Faded sign: THE FIELD — Ohmstead surface. Tall grass ahead; keep your Ohm close.' },
+    ],
   }),
 );
 console.log(`the-field: ${W}x${H} (${COLS}x${ROWS}), ${objs.length} props, ${placements.length} trees`);

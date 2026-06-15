@@ -147,6 +147,17 @@ writeFileSync(
       { x: 21, y: 26, scene: 'fieldhd', mapId: 'cistern' }, // south → back toward the Cistern
       { x: 2, y: 13, scene: 'fieldhd', mapId: 'redoubt' }, // west quarry edge → the Military Road to Redoubt
     ],
+    trainers: [
+      { char: 'npc_rancher', col: 16, row: 14, facing: 'e', name: 'Quarryman Cobb', range: 4, team: [{ num: 32, level: 11 }], bark: "Quarryman Cobb: You don't pass the stone 'til you earn it." },
+      { char: 'npc_kid', col: 28, row: 13, facing: 'w', name: 'Wall-watch Rue', range: 4, team: [{ num: 30, level: 11 }, { num: 41, level: 12 }], bark: 'Wall-watch Rue: Eyes up. The wild ones move like they share one mind.' },
+    ],
+    items: [
+      { col: 8, row: 6, credits: 280, hidden: true, label: 'Under the rubble' },
+      { col: 33, row: 16, credits: 300, label: 'A node by the cement plant' },
+    ],
+    signs: [
+      { col: 21, row: 22, text: 'BASTION — Colony 3. Trust no one. The gate weighs every stranger.' },
+    ],
     npcs: [
       { char: 'npc_elder', col: 17, row: 11 }, // Warden Calder Stone
       { char: 'npc_kid', col: 9, row: 9 }, // Flint, the scout (renamed from Wren)

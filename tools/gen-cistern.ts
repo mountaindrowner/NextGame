@@ -153,6 +153,17 @@ writeFileSync(
       { x: 20, y: 26, scene: 'fieldhd', mapId: 'railhead' }, // south → back toward Railhead
       { x: 20, y: 1, scene: 'fieldhd', mapId: 'bastion' }, // north → on toward Bastion
     ],
+    trainers: [
+      { char: 'npc_kid', col: 10, row: 19, facing: 'n', name: 'Mud Cole', range: 4, team: [{ num: 12, level: 9 }], bark: 'Mud Cole: Careful — my Ohms are slippery as a wet rope.' },
+      { char: 'npc_rancher', col: 31, row: 9, facing: 'w', name: 'Sower Tansy', range: 4, team: [{ num: 15, level: 9 }, { num: 18, level: 10 }], bark: 'Sower Tansy: Raised mine from a flicker. Go gentle now.' },
+    ],
+    items: [
+      { col: 6, row: 7, credits: 220, hidden: true, label: 'Behind the nursery shelf' },
+      { col: 32, row: 23, credits: 250, label: 'A node in the pump room' },
+    ],
+    signs: [
+      { col: 20, row: 23, text: "THE CISTERN — Colony 2. Mind the water; you'll need a way across it to reach the heart." },
+    ],
     npcs: [
       { char: 'npc_elder', col: 7, row: 7 }, // Warden Etta Bloom (Nursery)
       { char: 'npc_rancher', col: 32, row: 9 }, // the Grange
