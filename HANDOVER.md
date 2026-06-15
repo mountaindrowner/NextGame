@@ -19,8 +19,10 @@ and directed: make every discussed asset + organize for later map-building. Done
 universal Clutter). **Records done for everything.** Per-area ART + maps so far:
 **Ohmstead** (cavern), **the Field** (sec.field), **Railhead** (sec.railhead),
 **the Cistern** (sec.cistern, flooded waterworks w/ catwalk-crossed basin = the
-HOVER-gate flavor) — all playable and linked
-(Bench→Ohmstead→lift→Field→Railhead→Cistern, with back-exits). **Character
+HOVER-gate flavor), **Bastion** (sec.bastion, quarry-fortress + great Wall/gate
++ cement plant + the Pit cave-mouth + the first LIGHT HIVE overlay creep) — all
+playable and linked (Bench→Ohmstead→lift→Field→Railhead→Cistern→Bastion, with
+back-exits). **Character
 sprites:** grid pipeline (`char.ts`) + slice cast, **player walks in 4
 directions** in-world. **Title screen** = creator art + animated intro. Maps
 warp via `exits[].mapId`. Next colonies up the critical path: **Bastion**
