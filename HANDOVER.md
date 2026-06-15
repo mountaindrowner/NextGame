@@ -1,5 +1,23 @@
 # HANDOVER
 
+## Session 2026-06-15 (cont.) — Lived-in scatter + overworld trainers
+
+- **Lived-in layer on every map:** `tools/scatter.ts` — a shared, biome-filtered,
+  density-tiered scatter pass (floor litter, stains/cracks/puddles, weeds/moss
+  reclaiming the edges; pooled at walls, worn on paths). Decals only (collision
+  unchanged). Wired into all 7 composers; every map now reads inhabited.
+- **Line-of-sight trainers** (the route-filling feature): `FieldHDScene` loads a
+  map's `trainers`, renders them facing a dir, and after each step checks LoS —
+  a trainer facing the player down a clear row/col within range pops a `!`,
+  barks, and starts a **trainer battle** (BattleScene `kind:'trainer'`). Victory
+  sets `beat:<map>:<idx>` (BattleScene `onVictoryFlag`) so they stay beaten.
+  First trainers on the Farm Road. **Also fixed:** battles now return to the
+  saved-location map (not always the Field); the elevator passes mapId.
+
+**Next:** more trainers across the routes/colonies (the variable-NPC classes +
+real teams), **ledges** (one-way hops) + **hidden/visible items** + signs, the
+**world-map/fast-travel** UI, then continue Act II (Trinity → Chancel → …).
+
 ## Session 2026-06-15 — World structure: Hoenn study → region graph + routes
 
 Mark: "study the Hoenn overview map, make ours deeper & more expansive."
