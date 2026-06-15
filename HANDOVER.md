@@ -20,9 +20,16 @@
   the Field, Railhead, Cistern, Bastion, Redoubt (colony-flavored classes/teams/
   barks). All placements script-verified.
 
-**Next:** **ledges** (one-way hops), the **world-map/fast-travel** UI, real
-item-to-bag (currently credits), then continue Act II (Trinity → Chancel → …)
-and the remaining routes.
+- **Act II begins — the Trinity Bottoms** (`sec.trinity` + `gen-trinity.ts`):
+  the drowned-forest route-dungeon (winding muck path over HOVER deep water, the
+  half-submerged chapel hero, drowned cypress, reed-bed organic-hybrid
+  encounters, glowing hybrid flora, fog + light hive). Linked from Redoubt's
+  east yard; 211/211 reachable. Built world is now **8 maps**
+  (Ohmstead→Field→FarmRoad→Railhead→Cistern→Bastion→Redoubt→Trinity).
+
+**Next:** **the Chancel** (Colony 5, megachurch + catacombs) to open Trinity's
+north; **ledges** + world-map/fast-travel UI; real item-to-bag; the remaining
+routes (45 Scar, Furrows, Military Road…).
 
 ## Session 2026-06-15 — World structure: Hoenn study → region graph + routes
 
