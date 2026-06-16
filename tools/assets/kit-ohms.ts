@@ -205,6 +205,194 @@ function snoozebox(): Sprite { // 033 alarm clock — SONIC
   return g.render();
 }
 
+// ---- starter evolutions (the player's own Ohm, grown) -------------------
+function smolderig(): Sprite { // 002 — furnace stage 2
+  const g = base();
+  foot(g, 24, 82, 13); foot(g, 59, 82, 13);
+  g.box(20, 28, 56, 54, 'l', 'a', 'A'); // bigger firebox
+  for (let y = 34; y < 80; y += 7) g.hline(20, y, 56, 'A');
+  g.box(30, 52, 36, 26, 'E', 'x', 'x'); // firebox mouth
+  g.rect(34, 56, 28, 18, 'Z'); g.rect(38, 60, 20, 12, 'z'); g.rect(44, 64, 8, 6, '*');
+  g.box(28, 12, 14, 18, 'a', 'A', 'x'); g.box(54, 12, 14, 18, 'a', 'A', 'x'); // twin stovepipes
+  g.set(34, 10, 'z'); g.set(60, 10, 'Z'); // embers
+  eyes(g, 28, 60, 38);
+  for (const [x, y] of [[22, 30], [72, 30], [22, 76], [72, 76]] as Array<[number, number]>) g.set(x, y, 'l');
+  g.outline('X');
+  const s = g.render(); glow(s, 48, 62, 26, [140, 70, 20]); return s;
+}
+function pyrofurnax(): Sprite { // 003 — furnace final
+  const g = base();
+  foot(g, 22, 84, 14); foot(g, 60, 84, 14);
+  g.box(16, 22, 64, 62, 'l', 'a', 'A'); // massive industrial furnace
+  for (let y = 28; y < 82; y += 6) g.hline(16, y, 64, 'A');
+  g.box(26, 46, 44, 32, 'E', 'x', 'x'); // roaring firebox
+  g.rect(30, 50, 36, 24, 'Z'); g.rect(34, 54, 28, 16, 'z'); g.rect(42, 58, 12, 8, '*');
+  for (let x = 30; x < 66; x += 6) g.vline(x, 50, 24, 'A'); // grate teeth
+  g.box(24, 8, 12, 16, 'a', 'A', 'x'); g.box(42, 4, 12, 18, 'a', 'A', 'x'); g.box(60, 8, 12, 16, 'a', 'A', 'x'); // 3 stovepipes
+  g.set(30, 6, 'z'); g.set(48, 2, '*'); g.set(66, 6, 'Z'); // ember plumes
+  eyes(g, 24, 64, 32, 'Z');
+  for (const [x, y] of [[18, 24], [76, 24], [18, 78], [76, 78]] as Array<[number, number]>) g.set(x, y, 'l');
+  g.outline('X');
+  const s = g.render(); glow(s, 48, 60, 30, [170, 80, 18]); return s;
+}
+function amperig(): Sprite { // 005 — generator stage 2
+  const g = base();
+  foot(g, 24, 82, 13); foot(g, 59, 82, 13);
+  g.box(20, 34, 56, 48, 'l', 'a', 'A');
+  g.box(24, 22, 48, 14, 'n', 'k', 'K'); // wider copper coil bank
+  for (let x = 26; x < 70; x += 3) g.vline(x, 22, 14, 'q');
+  eyes(g, 28, 60, 44);
+  g.box(34, 60, 28, 10, 'A', 'x', 'x'); for (let x = 36; x < 62; x += 4) g.vline(x, 62, 6, '1'); // vent
+  g.line(16, 30, 6, 16, '1'); g.line(80, 30, 90, 16, '1'); g.set(6, 16, '*'); g.set(90, 16, '*');
+  g.line(48, 20, 48, 8, '1'); g.set(48, 8, '*');
+  g.outline('X');
+  const s = g.render(); glow(s, 48, 28, 24, [40, 90, 150]); return s;
+}
+function generatlas(): Sprite { // 006 — generator final (HAUL)
+  const g = base();
+  foot(g, 22, 84, 14); foot(g, 60, 84, 14);
+  g.box(16, 30, 64, 54, 'l', 'a', 'A'); // big frame
+  for (let y = 36; y < 82; y += 7) g.hline(16, y, 64, 'A');
+  g.box(20, 16, 56, 16, 'n', 'k', 'K'); // massive coil bank crown
+  for (let x = 22; x < 74; x += 3) g.vline(x, 16, 16, 'q');
+  g.box(8, 40, 12, 24, 'n', 'k', 'K'); g.box(76, 40, 12, 24, 'n', 'k', 'K'); // shoulder coils (HAUL)
+  eyes(g, 26, 62, 42, '1');
+  g.box(34, 62, 28, 12, 'A', 'x', 'x'); for (let x = 36; x < 62; x += 4) g.vline(x, 64, 8, '1');
+  g.line(20, 14, 30, 4, '1'); g.line(76, 14, 66, 4, '1'); g.line(48, 14, 48, 2, '*'); // arcs
+  g.set(30, 4, '*'); g.set(66, 4, '*');
+  g.outline('X');
+  const s = g.render(); glow(s, 48, 24, 30, [40, 100, 160]); return s;
+}
+function flowrig(): Sprite { // 008 — pump stage 2
+  const g = base();
+  foot(g, 24, 82, 13); foot(g, 59, 82, 13);
+  g.box(22, 36, 52, 46, 'i', 'I', 'C');
+  g.box(58, 20, 12, 22, 'a', 'A', 'x'); g.rect(56, 18, 18, 6, 'a'); // taller spout
+  for (let i = 0; i < 4; i++) g.set(74, 26 + i * 4, 'v'); // drips
+  eyes(g, 30, 58, 46);
+  g.box(36, 60, 22, 10, 'C', 'c', 'C'); g.hline(38, 64, 18, 'v');
+  g.ellipse(28, 56, 5, 5, 'a'); g.ellipse(28, 56, 2, 2, 'l'); // gauges
+  g.ellipse(66, 56, 5, 5, 'a'); g.ellipse(66, 56, 2, 2, 'l');
+  g.outline('X');
+  const s = g.render(); glow(s, 48, 56, 24, [20, 70, 120]); return s;
+}
+function aquaducton(): Sprite { // 009 — pump final
+  const g = base();
+  foot(g, 22, 84, 14); foot(g, 60, 84, 14);
+  g.box(18, 30, 60, 54, 'i', 'I', 'C'); // big pump tower
+  for (let y = 36; y < 82; y += 7) g.hline(18, y, 60, 'C');
+  for (let ax = 24; ax < 72; ax += 16) { g.ellipse(ax + 6, 50, 7, 10, 'C'); g.ellipse(ax + 6, 50, 5, 8, 'c'); } // aqueduct arches
+  g.box(40, 12, 16, 20, 'a', 'A', 'x'); g.rect(36, 10, 24, 6, 'a'); // central spout crown
+  for (let i = 0; i < 3; i++) { g.set(44 + i * 4, 6 - i, 'v'); g.set(44 + i * 4, 4, '*'); } // jet
+  eyes(g, 28, 62, 38, '1');
+  g.box(38, 66, 24, 10, 'C', 'c', 'C'); g.hline(40, 70, 20, 'v');
+  g.outline('X');
+  const s = g.render(); glow(s, 48, 50, 30, [20, 80, 140]); return s;
+}
+
+// ---- legendaries (story-critical individuals) ---------------------------
+function cottongin(): Sprite { // 144 COTTONGIN — FRAME, ancient cotton gin
+  const g = base();
+  g.box(14, 26, 68, 56, 'n', 'k', 'K'); // heavy timber frame
+  for (let y = 32; y < 80; y += 8) g.hline(14, y, 68, 'K');
+  g.box(22, 50, 52, 22, 'a', 'A', 'x'); // the toothed gin roller = mouth
+  for (let x = 24; x < 74; x += 5) { g.vline(x, 50, 22, 'l'); g.set(x, 49, '*'); } // saw teeth
+  g.ellipse(28, 61, 4, 6, 'X'); g.ellipse(68, 61, 4, 6, 'X'); // roller ends
+  g.ellipse(78, 44, 9, 9, 'k'); g.ellipse(78, 44, 6, 6, 'K'); g.set(78, 44, 'n'); // crank wheel
+  for (const [x, y] of [[30, 48], [44, 47], [58, 48], [38, 74], [54, 74]] as Array<[number, number]>) g.ellipse(x, y, 3, 2, 'w'); // cotton tufts
+  eyes(g, 26, 60, 32, 'z'); // amber machine-eyes
+  g.box(20, 80, 8, 6, 'k', 'K', 'x'); g.box(68, 80, 8, 6, 'k', 'K', 'x'); // legs
+  g.outline('X');
+  const s = g.render(); glow(s, 48, 32, 16, [120, 90, 30]); return s;
+}
+function telegrapheme(): Sprite { // 145 TELEGRAPHEME — SIGNAL, telegraph exchange
+  const g = base();
+  foot(g, 26, 82, 12); foot(g, 58, 82, 12);
+  g.box(22, 34, 52, 48, 'n', 'k', 'K'); // wooden cabinet
+  for (let y = 40; y < 80; y += 8) g.hline(22, y, 52, 'K');
+  g.box(30, 62, 36, 12, 'Y', 'y', 'A'); // brass key board (mouth)
+  for (let x = 33; x < 64; x += 5) { g.ellipse(x, 68, 2, 2, 'A'); g.set(x, 67, '*'); } // keys
+  eyes(g, 30, 58, 42, '7'); // patch-panel jacks
+  for (let i = 0; i < 5; i++) { const x = 30 + i * 8; g.rect(x, 24 - (i % 3) * 3, i % 2 ? 4 : 2, 2, '7'); } // dot-dash sparks
+  g.line(20, 38, 8, 26, 'K'); g.line(76, 38, 88, 26, 'K'); g.set(8, 26, '7'); g.set(88, 26, '7'); // wires out
+  g.outline('X');
+  const s = g.render(); glow(s, 48, 26, 18, [40, 140, 110]); return s;
+}
+function locomotiva(): Sprite { // 146 LOCOMOTIVA — MOTOR, steam locomotive
+  const g = base();
+  g.ellipse(30, 80, 12, 11, 'x'); g.ellipse(64, 80, 12, 11, 'x'); // driving wheels
+  g.ellipse(30, 80, 6, 5, 'A'); g.ellipse(64, 80, 6, 5, 'A');
+  g.set(30, 80, 'l'); g.set(64, 80, 'l');
+  g.box(18, 40, 60, 32, 'l', 'a', 'A'); // boiler body
+  for (let x = 24; x < 76; x += 8) g.vline(x, 40, 32, 'x'); // boiler bands
+  g.box(26, 18, 14, 22, 'a', 'A', 'x'); g.rect(24, 16, 18, 5, 'a'); // smokestack
+  g.ellipse(33, 12, 7, 4, 'w'); g.ellipse(40, 8, 5, 3, 'w'); // steam plume
+  g.ellipse(62, 50, 8, 8, 'a'); g.ellipse(62, 50, 5, 5, 'z'); g.set(62, 50, '*'); // headlamp cyclops eye
+  g.box(70, 58, 12, 16, 'A', 'x', 'x'); for (let i = 0; i < 4; i++) g.line(70, 58 + i * 4, 82, 64 + i * 3, 'l'); // cowcatcher
+  g.ellipse(44, 48, 4, 4, 'X'); g.set(45, 47, '*'); // second eye
+  g.outline('X');
+  const s = g.render(); glow(s, 62, 50, 14, [120, 80, 20]); return s;
+}
+function starbottle(): Sprite { // 147 STARBOTTLE — THERM, fusion reactor (star in a jar)
+  const g = base();
+  foot(g, 30, 84, 12); foot(g, 54, 84, 12);
+  g.ellipse(48, 48, 30, 30, 'I'); g.ellipse(46, 44, 24, 24, 'i'); // containment sphere (glass)
+  for (let i = 0; i < 28; i++) { const a = (i / 28) * 6.283; g.set(48 + Math.cos(a) * 30, 48 + Math.sin(a) * 28, 'a'); } // steel ring
+  for (let i = 0; i < 8; i++) { const a = (i / 8) * 6.283; g.line(48, 48, 48 + Math.cos(a) * 18, 48 + Math.sin(a) * 18, 'z'); } // rays
+  g.ellipse(48, 48, 12, 12, 'Z'); g.ellipse(48, 48, 8, 8, 'z'); g.ellipse(48, 48, 4, 4, '*'); // star core
+  g.box(34, 74, 28, 10, 'a', 'A', 'x'); // base collar
+  eyes(g, 36, 54, 40, 'Z');
+  g.outline('X');
+  const s = g.render(); glow(s, 48, 48, 40, [200, 150, 60]); return s;
+}
+function pecantheon(): Sprite { // 148 PECANTHEON — VERDANT, ancient pecan tree
+  const g = base();
+  g.box(40, 50, 16, 36, 'n', 'k', 'K'); // trunk
+  for (let y = 54; y < 84; y += 6) g.hline(40, y, 16, 'K'); // bark
+  g.line(48, 84, 44, 60, '7'); g.line(48, 84, 52, 64, '8'); g.set(44, 60, '*'); // cables in heartwood
+  g.ellipse(48, 36, 34, 26, 'f'); // canopy
+  let st = (148 * 2654435761) & 0x7fffffff;
+  const rnd = (): number => { st = (st * 1103515245 + 12345) & 0x7fffffff; return st / 0x7fffffff; };
+  for (let k = 0; k < 40; k++) { const a = rnd() * 6.283; const d = rnd() * 30; g.ellipse(48 + Math.cos(a) * d, 36 + Math.sin(a) * (d * 0.8), 3, 3, rnd() < 0.5 ? 'F' : 'g'); }
+  for (const [x, y] of [[34, 30], [60, 28], [46, 46], [58, 44], [38, 46]] as Array<[number, number]>) { g.ellipse(x, y, 3, 4, 'l'); g.set(x, y - 1, '*'); } // chrome pecans
+  eyes(g, 40, 50, 60, 'z'); // trunk face
+  g.set(45, 72, 'x'); g.set(51, 72, 'x');
+  g.outline('X');
+  const s = g.render(); glow(s, 48, 36, 26, [40, 100, 40]); return s;
+}
+function rosarithm(): Sprite { // 149 ROSARITHM — VERDANT, fractal rose garden
+  const g = base();
+  const cx = 48; const cy = 50;
+  let st = (149 * 2654435761) & 0x7fffffff;
+  const rnd = (): number => { st = (st * 1103515245 + 12345) & 0x7fffffff; return st / 0x7fffffff; };
+  g.ellipse(cx, cy + 4, 30, 26, 'g'); // foliage base
+  for (let k = 0; k < 30; k++) { const a = rnd() * 6.283; const d = rnd() * 26; g.ellipse(cx + Math.cos(a) * d, cy + 4 + Math.sin(a) * d * 0.8, 2, 2, 'F'); }
+  for (let i = 0; i < 26; i++) { // fractal spiral of blooms
+    const a = i * 0.62; const r = 3 + i;
+    const x = cx + Math.cos(a) * r; const y = cy + Math.sin(a) * r * 0.85;
+    const sz = 4 - Math.min(3, Math.floor(i / 9));
+    g.ellipse(x, y, sz, sz, 'b'); g.ellipse(x, y, Math.max(1, sz - 1), Math.max(1, sz - 1), 'B'); g.set(x, y, '*');
+  }
+  eyes(g, cx - 10, cx + 5, cy - 8); // a face above the spiral
+  g.outline('X');
+  const s = g.render(); glow(s, cx, cy, 28, [90, 30, 50]); return s;
+}
+function exemplar(): Sprite { // 150 EXEMPLAR — SIGNAL, PERSISTENCE's avatar (final boss)
+  const g = base();
+  g.box(34, 70, 10, 16, 'a', 'A', 'x'); g.box(52, 70, 10, 16, 'a', 'A', 'x'); // legs
+  g.box(28, 30, 40, 44, 'l', 'a', 'A'); // body slab
+  for (let y = 36; y < 72; y += 6) g.hline(28, y, 40, 'A');
+  g.box(34, 40, 28, 26, 'l', '7', 'A'); // glowing scripture screen-chest
+  g.rect(38, 44, 20, 4, '*'); g.rect(38, 52, 14, 3, '*'); g.rect(38, 58, 18, 3, '8'); // scripture lines
+  for (let i = 0; i < 16; i++) { const a = (i / 16) * 6.283; g.set(48 + Math.cos(a) * 16, 18 + Math.sin(a) * 8, '7'); } // halo
+  g.ellipse(48, 18, 11, 6, '8'); g.ellipse(48, 18, 8, 4, 'A'); // hollow halo center
+  g.box(40, 8, 16, 16, 'l', 'a', 'A'); // head
+  eyes(g, 41, 50, 12, '*'); // blank radiant eyes
+  g.box(20, 32, 10, 18, 'l', 'a', 'A'); g.box(66, 32, 10, 18, 'l', 'a', 'A'); // shoulder mantles
+  g.outline('X');
+  const s = g.render(); glow(s, 48, 52, 26, [40, 160, 130]); glow(s, 48, 18, 14, [60, 200, 160]); return s;
+}
+
 // ---- type palettes & archetype renderers (the other 136) -----------------
 type Pal = { body: [string, string, string]; accent: string; glow?: [number, number, number] };
 type TypeName = 'THERM' | 'VOLT' | 'COOLANT' | 'OPTIC' | 'SONIC' | 'UTILITY' | 'FRAME' | 'SIGNAL' | 'MOTOR' | 'VERDANT' | 'BREAKER';
@@ -459,11 +647,17 @@ const LINES: Line[] = [
   { from: 149, to: 149, arch: 'plant', type: 'VERDANT' }, { from: 150, to: 150, arch: 'legend', type: 'SIGNAL' },
 ];
 
-/** the 14 bespoke drawers above take priority over the archetype renderer. */
+/** bespoke drawers take priority over the archetype renderer: the slice set,
+ * the full starter lines (the player's own Ohm), and the seven legendaries. */
 const OVERRIDES: Record<number, () => Sprite> = {
-  1: charkit, 4: sparkit, 7: dripkit, 10: toastlet, 12: wavelet, 15: filaglow,
+  1: charkit, 2: smolderig, 3: pyrofurnax,
+  4: sparkit, 5: amperig, 6: generatlas,
+  7: dripkit, 8: flowrig, 9: aquaducton,
+  10: toastlet, 12: wavelet, 15: filaglow,
   18: beeplet, 19: vacuette, 21: fanlet, 24: mailstrom, 25: frostbox, 30: vendlet,
   32: staplejaw, 33: snoozebox,
+  144: cottongin, 145: telegrapheme, 146: locomotiva, 147: starbottle,
+  148: pecantheon, 149: rosarithm, 150: exemplar,
 };
 
 function lineOf(n: number): Line {
