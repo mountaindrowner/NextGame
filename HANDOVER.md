@@ -9,8 +9,19 @@
   `npm run assets:ohms`): each Ohm = its object + a face from the object's own
   features + legs/treads, emissive glow where hot/lit. 14 fronts (3 starters +
   the slice's Field commons) + 3 starter backs, overwriting the *_front_hd.png
-  the battle already loads — battles now match the world. **~136 Ohms still on
-  the legacy spritekit set; retool continues in batches.**
+  the battle already loads — battles now match the world.
+- **Roster finished — all 150 fronts + 150 backs (grid method).** `kit-ohms.ts`
+  is now data-driven: the 14 bespoke drawers stay as overrides; the other 136
+  render through nine type-palette **archetypes** (box / round / tall / vehicle /
+  tool / bulb / plant / speaker / orb / legend), sized by evolution tier, each
+  reading as its household object with a face, top-left material depth, and
+  per-type glow. `LINES` maps every Manifest species → {archetype, type}.
+  `sprite-manifest-hd.ts` now registers 1..150 (fronts **and** backs), so the
+  battle loads HD art for the whole roster — species 49..150 had no art before.
+  Full contact sheet at `assets/sprites/ohms/_contact.png`. 59 tests green,
+  typecheck + build clean, dist rebuilt for githack. **Next refinement (optional):
+  bespoke drawers for marquee evolutions/legendaries where the archetype reads
+  generic (e.g. COTTONGIN, LOCOMOTIVA, the speaker/server finals).**
 
 
 ## Session 2026-06-15 (cont.) — Lived-in scatter + overworld trainers
