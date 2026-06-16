@@ -448,6 +448,22 @@ export class Battle {
         { type: 'heal', side: 'player', amount: target.integrity, integrity: target.integrity, max: target.stats.integrity },
       ];
     }
+    // status cures (hardcoded by id, like heals — the engine can't import data)
+    const cures: Partial<Record<string, StatusName>> = {
+      'coolant-flush': 'OVERHEAT',
+      'surge-tape': 'SHORT',
+      antivirus: 'CORRUPTED',
+      'wake-signal': 'STANDBY',
+      'thaw-coil': 'LOCKED',
+    };
+    const cure = cures[itemId];
+    if (cure) {
+      if (target.status !== cure) return [{ type: 'message', text: `It had no effect on ${target.name}.` }];
+      target.status = undefined;
+      target.statusTurns = 0;
+      target.glitchedTurns = 0;
+      return [{ type: 'message', text: `${target.name}'s ${cure} cleared.` }];
+    }
     return [{ type: 'message', text: 'It had no effect.' }];
   }
 

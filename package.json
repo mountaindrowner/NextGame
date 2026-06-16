@@ -33,6 +33,7 @@
     "assets:bastion": "tsx tools/assets/kit-bastion.ts",
     "assets:redoubt": "tsx tools/assets/kit-redoubt.ts",
     "assets:trinity": "tsx tools/assets/kit-trinity.ts",
+    "assets:chancel": "tsx tools/assets/kit-chancel.ts",
     "gen:field": "tsx tools/gen-field.ts",
     "gen:farmroad": "tsx tools/gen-farmroad.ts",
     "gen:railhead": "tsx tools/gen-railhead.ts",
@@ -40,6 +41,7 @@
     "gen:bastion": "tsx tools/gen-bastion.ts",
     "gen:redoubt": "tsx tools/gen-redoubt.ts",
     "gen:trinity": "tsx tools/gen-trinity.ts",
+    "gen:chancel": "tsx tools/gen-chancel.ts",
     "yoyo2png": "tsx tools/yoyo2png.ts",
     "gen:protag": "tsx tools/gen-protag.ts"
   },

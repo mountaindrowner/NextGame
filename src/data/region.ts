@@ -27,6 +27,8 @@ export const REGION: Record<string, RegionNode> = {
   cistern: { biome: 'flooded', hive: 'none' },
   bastion: { biome: 'quarry', hive: 'light' },
   redoubt: { biome: 'military', hive: 'med' },
+  trinity: { biome: 'flooded', hive: 'med' },
+  chancel: { biome: 'sacred', hive: 'med' },
 };
 
 export type Dir4 = 'n' | 's' | 'e' | 'w';
@@ -54,10 +56,11 @@ export const WORLD_MAP: Record<string, MapMeta> = {
   'the-field': { label: 'The Field', col: 0, row: 3, biome: 'prairie', garage: true },
   farmroad: { label: 'Farm Road', col: 0, row: 2, biome: 'prairie', garage: false },
   railhead: { label: 'Railhead', col: 0, row: 1, biome: 'industrial', garage: true },
-  cistern: { label: 'The Cistern', col: 1, row: 1, biome: 'flooded', garage: false },
+  cistern: { label: 'Cistern', col: 1, row: 1, biome: 'flooded', garage: false },
   bastion: { label: 'Bastion', col: 2, row: 1, biome: 'quarry', garage: true },
   redoubt: { label: 'Redoubt', col: 3, row: 1, biome: 'military', garage: true },
-  trinity: { label: 'Trinity Bottoms', col: 3, row: 2, biome: 'flooded', garage: false },
+  trinity: { label: 'Trinity', col: 3, row: 2, biome: 'flooded', garage: false },
+  chancel: { label: 'Chancel', col: 4, row: 2, biome: 'sacred', garage: true },
 };
 
 /** Drawn connections between world-map nodes (both open-edge and portal). */
@@ -69,6 +72,7 @@ export const WORLD_LINKS: Array<[string, string]> = [
   ['cistern', 'bastion'],
   ['bastion', 'redoubt'],
   ['redoubt', 'trinity'],
+  ['trinity', 'chancel'],
 ];
 
 export const BIOME_COLORS: Record<string, number> = {
@@ -78,6 +82,7 @@ export const BIOME_COLORS: Record<string, number> = {
   flooded: 0x3a7894,
   quarry: 0xa89058,
   military: 0x6e7660,
+  sacred: 0x9a7ab0,
 };
 
 /** Species numbers that grant ground fast-travel (Manifest distribution note:

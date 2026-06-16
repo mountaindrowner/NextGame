@@ -24,9 +24,10 @@ interface FieldData {
   items?: Array<{ col: number; row: number; credits: number; label?: string; hidden?: boolean }>;
   signs?: Array<{ col: number; row: number; text: string }>;
   spawn?: { x: number; y: number };
-  exits?: Array<{ x: number; y: number; scene: string; mapId?: string }>;
+  exits?: Array<{ x: number; y: number; scene: string; mapId?: string; to?: { x: number; y: number } }>;
   interacts?: Array<{ x: number; y: number; kind: string }>;
   ledges?: Array<{ col: number; row: number; dir: 'n' | 's' | 'e' | 'w' }>;
+  zone?: string; // encounter-zone id for this map's grass (default field-grass)
 }
 
 interface TrainerDef {
@@ -56,6 +57,7 @@ const MAPS: Record<string, MapDef> = {
   bastion: { png: 'world/bastion.png', json: 'world/bastion.json', banner: 'BASTION — Colony 3, the quarry-fortress', garage: true },
   redoubt: { png: 'world/redoubt.png', json: 'world/redoubt.json', banner: 'REDOUBT — Colony 4, the Bunker', garage: true },
   trinity: { png: 'world/trinity.png', json: 'world/trinity.json', banner: 'THE TRINITY BOTTOMS — the drowned forest', garage: false },
+  chancel: { png: 'world/chancel.png', json: 'world/chancel.json', banner: 'THE CHANCEL — Colony 5, the ruined megachurch', garage: true },
 };
 
 const NPC_CHARS = ['npc_rancher', 'npc_elder', 'npc_kid'] as const;
@@ -104,14 +106,16 @@ export class FieldHDScene extends Phaser.Scene {
   }
 
   private enter?: { from: Dir4; col: number; row: number };
+  private enterAt?: { x: number; y: number };
 
-  init(data: { mapId?: string; enter?: { from: Dir4; col: number; row: number } }): void {
+  init(data: { mapId?: string; enter?: { from: Dir4; col: number; row: number }; to?: { x: number; y: number } }): void {
     const saved = hasGameState() ? getGameState().location?.map : undefined;
     // explicit mapId wins; else resume the saved map (returning from a battle);
     // else the Field. Callers that mean the Field (the elevator) pass it.
     this.mapId = data.mapId && MAPS[data.mapId] ? data.mapId : saved && MAPS[saved] ? saved : 'the-field';
     this.mapDef = MAPS[this.mapId]!;
     this.enter = data.enter;
+    this.enterAt = data.to;
   }
 
   private mapKey(): string {
@@ -228,6 +232,10 @@ export class FieldHDScene extends Phaser.Scene {
         this.px = e.from === 'w' ? this.field.cols - 1 : 0;
         this.py = this.openOnCol(this.px, e.row);
       }
+    } else if (this.enterAt && !this.solid(this.enterAt.x, this.enterAt.y)) {
+      // arrived by a portal exit that named an explicit landing cell
+      this.px = this.enterAt.x;
+      this.py = this.enterAt.y;
     } else if (this.mapDef.garage && state?.flags['respawn-garage']) {
       [this.px, this.py] = this.garage;
       delete state.flags['respawn-garage'];
@@ -475,8 +483,8 @@ export class FieldHDScene extends Phaser.Scene {
       if (ex.x === this.px && ex.y === this.py) {
         if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
         this.cameras.main.fade(360, 12, 10, 8);
-        const { scene, mapId } = ex;
-        this.time.delayedCall(380, () => (mapId ? this.scene.start(scene, { mapId }) : this.scene.start(scene)));
+        const { scene, mapId, to } = ex;
+        this.time.delayedCall(380, () => this.scene.start(scene, { mapId, to }));
         return true;
       }
     }
@@ -643,7 +651,7 @@ export class FieldHDScene extends Phaser.Scene {
       if (Phaser.Math.Between(0, 100) < 22) this.banner('The grass rustles — a wild Ohm is near!');
       return;
     }
-    const zone = ZONES_BY_ID.get('field-grass');
+    const zone = ZONES_BY_ID.get(this.field.zone ?? 'field-grass') ?? ZONES_BY_ID.get('field-grass');
     if (!zone) return;
     const state = getGameState();
     const dampened = state.flags['dampener'] === true;

@@ -151,10 +151,13 @@ writeFileSync(
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: [], placements: [],
     spawn: { x: 14, y: 31 }, // the south end of the path (in from Redoubt)
-    exits: [{ x: 14, y: 33, scene: 'fieldhd', mapId: 'redoubt' }], // south → back to Redoubt
+    exits: [
+      { x: 14, y: 33, scene: 'fieldhd', mapId: 'redoubt' }, // south → back to Redoubt
+      { x: 15, y: 2, scene: 'fieldhd', mapId: 'chancel', to: { x: 12, y: 31 } }, // north → the Chancel
+    ],
     signs: [
       { col: 14, row: 30, text: 'A leaning marker: THE TRINITY BOTTOMS. The road drowns here. Keep to the muck and the logs.' },
-      { col: 14, row: 3, text: 'Half-sunk milepost: …THE CHANCEL, ahead. (The way north is not yet open.)' },
+      { col: 14, row: 3, text: 'Half-sunk milepost: …THE CHANCEL, ahead. Bells carry over the water — someone still rings them.' },
     ],
     npcs: [{ char: 'npc_elder', col: 5, row: 10, name: 'Net-Medium Sorrel', lines: [
       "Hush, now. The chapel's half-drowned, but it still listens. They all do, if you let them.",

@@ -22,7 +22,7 @@ export class WorldMapScene extends Phaser.Scene {
   }
 
   private nx(col: number): number {
-    return 34 + col * 58;
+    return 28 + col * 47;
   }
   private ny(row: number): number {
     return 28 + (row - 1) * 26;

@@ -1,5 +1,35 @@
 # HANDOVER
 
+## Session 2026-06-16 (cont.) — The Chancel (Colony 5) + finishing items
+
+- **The Chancel is built** — the 9th map and Act II's Colony 5 (Critical Path
+  §11): a ruined megachurch. `tools/assets/kit-chancel.ts` (13 grid-method
+  pieces: nave/crypt floors, catacomb wall with bone niche, altar, pews, the
+  reliquary "saint" Ohm, candelabra, organ pipes, rose window, banner, torch
+  sconce, the Cantor's Static-tinged shrine). `tools/gen-chancel.ts` composes
+  the nave → altar/reliquary with rose-light, flanking catacombs (crypt-dust
+  encounters), and the Cantor's hive-creep schism chamber. **100% reachable**
+  (520 cells, 48 encounters, exit, all 5 NPCs). Full cast w/ 3+ lines each:
+  Warden Verity Hale (ally), the Cantor (the willing human face), the Apostate,
+  Brother Hum, Confessor Imel; 2 Choir-of-the-Update trainers; 2 items; 2 signs.
+- **Per-map encounter zones:** `FieldData.zone` (default `field-grass`);
+  the Chancel uses a new **`chancel-crypt`** SIGNAL/OPTIC/SONIC zone (Staticub,
+  Cartrudge, Pinglet, Glowtube, Peeplens, Spoolturn, Lampyre; Lv26–33). Other
+  maps can now specify their own tables.
+- **Portal landings:** exits gained an optional `to:{x,y}` so portals (not just
+  open-edge warps) drop you at a chosen cell. Trinity's north now opens to the
+  Chancel and back, each landing the player correctly. World-map + region graph
+  + fast-travel updated (Chancel = a garage hub, biome `sacred`); node spacing
+  tightened so 5 columns fit the 240px screen.
+- **In-battle cures fixed:** the battle engine now clears the matching status
+  for cure items (hardcoded by id, like heals — respects the core/data
+  boundary). The earlier out-of-battle item work's known gap is closed.
+- **75 tests green** (traversal +4 Chancel, items suite), typecheck + lint
+  (core boundary clean) + build all pass. Dist rebuilt.
+- **Next:** the Red Flats route → Redbed (Colony 6); a Town-Map gate item;
+  per-map zones for the existing colonies (they still all roll field-grass).
+
+
 ## Session 2026-06-16 (cont.) — Bag & real item use (out of battle)
 
 - **The field-menu bag is now interactive** (`MenuScene`). A on a bag item:
