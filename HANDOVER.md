@@ -1,5 +1,31 @@
 # HANDOVER
 
+## Session 2026-06-16 (cont.) — Traversal: world-map, fast-travel, ledges
+
+- **World-map screen** (`src/scenes/WorldMapScene.ts`, scene `worldmap`): a
+  schematic of the Blackland — every built map as a biome-coloured node on a
+  small grid, drawn links, your current spot ringed, unexplored maps shown as
+  `???`. Reached from the field menu's new **MAP** hub option. Layout +
+  `WORLD_LINKS` + `BIOME_COLORS` live in `src/data/region.ts`.
+- **Visited tracking:** `FieldHDScene.create()` sets `flags['visited:<map>']`;
+  the world-map reads it to light nodes/links and gate travel.
+- **Rideable fast-travel:** from the world-map, A on a *visited garage hub*
+  (the recharge colonies) warps you there — landing on the garage pad +
+  recharged — **if** you own a rideable Ohm (`RIDEABLES` = Mowrauder, Rustler/
+  Longhauler, Zoomoped, Kartwheel). Clear refusal messages otherwise.
+- **Ledges (one-way drops):** new `FieldData.ledges` (`{col,row,dir}`).
+  `FieldHDScene` treats ledge cells as solid except a hop in the matching dir,
+  which vaults two tiles with a parabolic arc; you can't climb back up. First
+  ledge drawn across the lower **Farm Road** (gen-farmroad emits the data +
+  draws the lip). Engine is data-driven so any map can add ledges.
+- **Tests:** `tests/traversal.test.ts` (6) — world-map node/link/hub/rideable
+  integrity + farm-road ledges land somewhere walkable. **65 tests green**,
+  typecheck + build clean, dist rebuilt.
+- **Next here:** make ledges *gate* (constrained maps — quarry/cistern have the
+  geometry); a Town-Map bag item to gate the screen; rideable mount animation
+  on the overworld; more garage hubs as the world grows.
+
+
 ## Session 2026-06-16 — NPC dialogue + Ohm sprite retool begins
 
 - **Every world NPC talks:** FieldHDScene NPC dialogue system (face + A cycles

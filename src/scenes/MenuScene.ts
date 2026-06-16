@@ -12,7 +12,7 @@ import { TYPE_COLORS, UI } from '../ui/colors';
 
 type Mode = 'hub' | 'party' | 'detail' | 'manifest' | 'bag' | 'save';
 
-const HUB = ['PARTY', 'MANIFEST', 'BAG', 'SAVE', 'CLOSE'] as const;
+const HUB = ['PARTY', 'MANIFEST', 'BAG', 'MAP', 'SAVE', 'CLOSE'] as const;
 const STAT_LABEL: Record<string, string> = {
   integrity: 'INTEG',
   output: 'OUTPUT',
@@ -118,6 +118,11 @@ export class MenuScene extends Phaser.Scene {
       const pick = HUB[this.cursor];
       if (!pick || pick === 'CLOSE') {
         this.back();
+        return;
+      }
+      if (pick === 'MAP') {
+        this.scene.launch('worldmap');
+        this.scene.pause(); // worldmap resumes us on B (or replaces us on travel)
         return;
       }
       this.mode = pick.toLowerCase() as Mode;

@@ -35,3 +35,51 @@ export const OPPOSITE: Record<Dir4, Dir4> = { n: 's', s: 'n', e: 'w', w: 'e' };
 export function neighbor(mapId: string, dir: Dir4): string | undefined {
   return REGION[mapId]?.[dir];
 }
+
+// ---- world-map layout (the Town-Map screen + fast-travel) ----------------
+// A schematic placement of each built map on a small grid, plus the visible
+// links (open-edge + portal) between them, so the world-map can draw the
+// region as a node diagram. `garage` maps are the recharge hubs you can
+// fast-travel to (once visited, on a rideable Ohm).
+export interface MapMeta {
+  label: string;
+  col: number;
+  row: number;
+  biome: string;
+  garage: boolean;
+}
+
+export const WORLD_MAP: Record<string, MapMeta> = {
+  ohmstead: { label: 'Ohmstead', col: 0, row: 4, biome: 'underground', garage: false },
+  'the-field': { label: 'The Field', col: 0, row: 3, biome: 'prairie', garage: true },
+  farmroad: { label: 'Farm Road', col: 0, row: 2, biome: 'prairie', garage: false },
+  railhead: { label: 'Railhead', col: 0, row: 1, biome: 'industrial', garage: true },
+  cistern: { label: 'The Cistern', col: 1, row: 1, biome: 'flooded', garage: false },
+  bastion: { label: 'Bastion', col: 2, row: 1, biome: 'quarry', garage: true },
+  redoubt: { label: 'Redoubt', col: 3, row: 1, biome: 'military', garage: true },
+  trinity: { label: 'Trinity Bottoms', col: 3, row: 2, biome: 'flooded', garage: false },
+};
+
+/** Drawn connections between world-map nodes (both open-edge and portal). */
+export const WORLD_LINKS: Array<[string, string]> = [
+  ['ohmstead', 'the-field'],
+  ['the-field', 'farmroad'],
+  ['farmroad', 'railhead'],
+  ['railhead', 'cistern'],
+  ['cistern', 'bastion'],
+  ['bastion', 'redoubt'],
+  ['redoubt', 'trinity'],
+];
+
+export const BIOME_COLORS: Record<string, number> = {
+  underground: 0x6a5638,
+  prairie: 0x6e8a3a,
+  industrial: 0x868e98,
+  flooded: 0x3a7894,
+  quarry: 0xa89058,
+  military: 0x6e7660,
+};
+
+/** Species numbers that grant ground fast-travel (Manifest distribution note:
+ * Zoomoped, Rustler/Longhauler, Kartwheel, Mowrauder). */
+export const RIDEABLES: ReadonlySet<number> = new Set([48, 71, 72, 74, 75]);

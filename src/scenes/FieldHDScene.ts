@@ -26,6 +26,7 @@ interface FieldData {
   spawn?: { x: number; y: number };
   exits?: Array<{ x: number; y: number; scene: string; mapId?: string }>;
   interacts?: Array<{ x: number; y: number; kind: string }>;
+  ledges?: Array<{ col: number; row: number; dir: 'n' | 's' | 'e' | 'w' }>;
 }
 
 interface TrainerDef {
@@ -198,6 +199,8 @@ export class FieldHDScene extends Phaser.Scene {
 
   create(): void {
     this.field = this.cache.json.get(this.dataKey()) as FieldData;
+    if (hasGameState()) getGameState().flags[`visited:${this.mapId}`] = true; // world-map
+    this.buildLedges();
     this.add.image(0, 0, this.mapKey()).setOrigin(0, 0).setDepth(0);
     this.buildAnimatedLayers();
 
@@ -483,7 +486,63 @@ export class FieldHDScene extends Phaser.Scene {
   private solid(cx: number, cy: number): boolean {
     if (cx < 0 || cy < 0 || cx >= this.field.cols || cy >= this.field.rows) return true;
     if (this.npcCells.has(`${cx},${cy}`)) return true;
+    if (this.ledgeCells.has(`${cx},${cy}`)) return true; // ledges blocked except the one-way hop
     return this.field.collision[cy * this.field.cols + cx] === 1;
+  }
+
+  private ledgeCells = new Map<string, Dir>();
+  private buildLedges(): void {
+    this.ledgeCells.clear();
+    const map: Record<string, Dir> = { n: 'up', s: 'down', w: 'left', e: 'right' };
+    for (const l of this.field.ledges ?? []) this.ledgeCells.set(`${l.col},${l.row}`, map[l.dir] ?? 'down');
+  }
+  private ledgeAt(cx: number, cy: number): Dir | undefined {
+    return this.ledgeCells.get(`${cx},${cy}`);
+  }
+
+  /** Hop a one-way ledge: vault two tiles in `dir`, landing past the lip. */
+  private hopLedge(dir: Dir): void {
+    const [dx, dy] = DELTA[dir];
+    const lx = this.px + 2 * dx;
+    const ly = this.py + 2 * dy;
+    if (lx < 0 || ly < 0 || lx >= this.field.cols || ly >= this.field.rows || this.solid(lx, ly)) {
+      this.placePlayer(); // nowhere to land — bump
+      return;
+    }
+    this.moving = true;
+    this.px = lx;
+    this.py = ly;
+    const d = dir === 'up' ? 'n' : dir === 'down' ? 's' : 'w';
+    this.player.setFlipX(dir === 'right');
+    if (this.useSheet) this.player.play(`${this.walkKey}-${d}`, true);
+    const t = this.field.tile;
+    const sx = this.player.x;
+    const sy = this.player.y;
+    const tx = lx * t + t / 2;
+    const ty = ly * t + t / 2;
+    const arc = { p: 0 };
+    this.tweens.add({
+      targets: arc,
+      p: 1,
+      duration: 260,
+      ease: 'Linear',
+      onUpdate: () => {
+        this.player.x = sx + (tx - sx) * arc.p;
+        this.player.y = sy + (ty - sy) * arc.p - Math.sin(arc.p * Math.PI) * 14;
+      },
+      onComplete: () => {
+        this.moving = false;
+        if (this.useSheet) {
+          this.player.anims.stop();
+          this.player.setFrame(this.idleFrame(d));
+        }
+        if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
+        if (this.checkExit()) return;
+        this.checkItems();
+        if (this.checkTrainers()) return;
+        if (this.isGrass(this.px, this.py)) this.tryEncounter();
+      },
+    });
   }
 
   private isGrass(cx: number, cy: number): boolean {
@@ -539,6 +598,11 @@ export class FieldHDScene extends Phaser.Scene {
         return;
       }
       this.placePlayer(); // region boundary — bump
+      return;
+    }
+    // a one-way ledge faced the right way → vault it (skips the solid check)
+    if (this.ledgeAt(nx, ny) === dir) {
+      this.hopLedge(dir);
       return;
     }
     if (this.solid(nx, ny)) {

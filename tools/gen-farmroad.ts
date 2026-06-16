@@ -87,6 +87,13 @@ rectG(20, 14, 5, 6, 'T');
 rectG(12, 4, 6, 4, 'T');
 rectG(4, 24, 5, 3, 'T');
 
+// a one-way ledge across the lower road: hop down going south, walk around to climb
+const LEDGES: Array<{ col: number; row: number; dir: 's' }> = [
+  { col: 12, row: 24, dir: 's' },
+  { col: 13, row: 24, dir: 's' },
+  { col: 14, row: 24, dir: 's' },
+];
+
 // props (baked) — the cotton gin (barn), the water-tower lookout, dressing
 interface P { s: Sprite; col: number; row: number; solid?: number; }
 const objs: P[] = [
@@ -145,6 +152,16 @@ for (const o of objs) {
 
 scatterClutter(big, { cols: COLS, rows: ROWS, tile: T, density: 'lived_in', biome: 'prairie', seed: 4202, solid: (c, r) => { const ch = MAP[r]?.[c]; return ch === '#' || extraSolid.has(`${c},${r}`); } });
 
+// draw the ledge lip last so it reads crisply over the road + scatter
+function drawLedge(c: number, r: number): void {
+  const x0 = c * T;
+  const y0 = r * T;
+  for (let x = 0; x < T; x++) { big.set(x0 + x, y0 + 1, [156, 168, 96, 255]); big.set(x0 + x, y0 + 2, [112, 128, 62, 255]); } // top lip highlight
+  for (let y = Math.floor(T * 0.55); y < T; y++) for (let x = 0; x < T; x++) { const p = big.get(x0 + x, y0 + y); big.set(x0 + x, y0 + y, [Math.round(p[0] * 0.5), Math.round(p[1] * 0.5), Math.round(p[2] * 0.46), 255]); } // the drop face (shadowed)
+  for (let x = 2; x < T; x += 6) big.set(x0 + x, y0 + T - 3, [70, 60, 40, 255]); // stone nubs along the base
+}
+for (const l of LEDGES) drawLedge(l.col, l.row);
+
 const png = new PNG({ width: W, height: H });
 png.data.set(big.data);
 writeFileSync(join(OUT, 'farmroad.png'), PNG.sync.write(png));
@@ -167,7 +184,7 @@ writeFileSync(
   join(OUT, 'farmroad.json'),
   JSON.stringify({
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
-    collision, grass, grassAny, water: [], placements,
+    collision, grass, grassAny, water: [], placements, ledges: LEDGES,
     spawn: { x: 13, y: ROWS - 2 }, // fallback (edge-warps set the real entry)
     npcs: [{ char: 'npc_elder', col: 19, row: 26, name: 'Traveler Sully', lines: [
       'Resting my feet. Farm-to-market road, this — runs clear to the Railhead if your legs hold out.',
