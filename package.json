@@ -43,7 +43,9 @@
     "gen:trinity": "tsx tools/gen-trinity.ts",
     "gen:chancel": "tsx tools/gen-chancel.ts",
     "yoyo2png": "tsx tools/yoyo2png.ts",
-    "gen:protag": "tsx tools/gen-protag.ts"
+    "gen:protag": "tsx tools/gen-protag.ts",
+    "playtest": "tsx tools/playtest.ts",
+    "screenshots": "tsx tools/screenshot.ts"
   },
   "dependencies": {
     "phaser": "^3.85.2"
@@ -51,6 +53,7 @@
   "devDependencies": {
     "@types/node": "^25.9.3",
     "@types/pngjs": "^6.0.5",
+    "playwright": "^1.61.0",
     "pngjs": "^7.0.0",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
