@@ -1,5 +1,26 @@
 # HANDOVER
 
+## Session 2026-06-16 (cont.) — Bag & real item use (out of battle)
+
+- **The field-menu bag is now interactive** (`MenuScene`). A on a bag item:
+  - **heal / cure / revive** → a target-picker sub-mode (`usetarget`) listing the
+    party with INTEGRITY bars + DOWN/status flags; pick an Ohm → effect applied,
+    count decremented. Repair Kits restore INTEGRITY (Full Repair tops off),
+    D-FIB revives a downed Ohm to half, cure items clear their matching status.
+  - **Resonance/Prime Core** → if a party Ohm is at its threshold, hands off to
+    `EvolutionScene` (it consumes the core, returns to the field); else a refusal.
+  - **Signal Dampener** → toggles `flags['dampener']` (encounter rate cut).
+  - **Storage Node** → message (spent in battle, not here).
+- **Shared effect logic:** new pure, boundary-safe `src/core/items.ts`
+  `applyItemToBattler(item, target)` — mirrors the engine's heal/revive and
+  **adds cures**. The field menu uses it; covered by `tests/items.test.ts` (6).
+  **71 tests green**, typecheck + lint (core boundary clean) + build all pass.
+- **Known gap:** in-*battle* cure items still no-op — the battle engine can't
+  import item data (core/data boundary) so it hardcodes only heal/D-FIB. Fixing
+  that means passing the ItemDef (or cure target) through the battle contract;
+  deferred. Out-of-battle cures work now.
+
+
 ## Session 2026-06-16 (cont.) — Traversal: world-map, fast-travel, ledges
 
 - **World-map screen** (`src/scenes/WorldMapScene.ts`, scene `worldmap`): a

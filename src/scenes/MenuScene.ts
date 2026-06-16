@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { fitLegacy } from './legacy';
 import { STAT_KEYS } from '../core/defs';
+import { applyItemToBattler } from '../core/items';
+import { pendingEvolutions } from '../core/evolution';
 import { xpProgress } from '../core/stats';
 import { GAME_DATA } from '../data/dataview';
 import { ITEMS_BY_ID } from '../data/items';
@@ -10,7 +12,7 @@ import { browserStorage, SaveSlots, SLOT_COUNT } from '../save/save';
 import { Controls } from '../input/controls';
 import { TYPE_COLORS, UI } from '../ui/colors';
 
-type Mode = 'hub' | 'party' | 'detail' | 'manifest' | 'bag' | 'save';
+type Mode = 'hub' | 'party' | 'detail' | 'manifest' | 'bag' | 'usetarget' | 'save';
 
 const HUB = ['PARTY', 'MANIFEST', 'BAG', 'MAP', 'SAVE', 'CLOSE'] as const;
 const STAT_LABEL: Record<string, string> = {
@@ -82,6 +84,8 @@ export class MenuScene extends Phaser.Scene {
         return SPECIES.length;
       case 'bag':
         return Math.max(1, this.bagEntries().length);
+      case 'usetarget':
+        return Math.max(1, state.party.length);
       case 'save':
         return SLOT_COUNT;
       case 'detail':
@@ -93,6 +97,12 @@ export class MenuScene extends Phaser.Scene {
     if (this.mode === 'hub') {
       this.scene.stop();
       this.scene.resume(this.launcher);
+      return;
+    }
+    if (this.mode === 'usetarget') {
+      this.mode = 'bag';
+      this.cursor = 0;
+      this.redraw();
       return;
     }
     if (this.mode === 'detail') {
@@ -130,11 +140,77 @@ export class MenuScene extends Phaser.Scene {
     } else if (this.mode === 'party') {
       this.detailIndex = this.cursor;
       this.mode = 'detail';
+    } else if (this.mode === 'bag') {
+      this.useBagItem();
+      return;
+    } else if (this.mode === 'usetarget') {
+      this.applyToTarget();
+      return;
     } else if (this.mode === 'save') {
       this.slots.save(this.cursor, getGameState());
       this.flash('Progress saved. Stay current.');
     }
     this.redraw();
+  }
+
+  private useItemId = '';
+
+  /** A on a bag item: heal/cure/revive → pick a target; core → evolve; etc. */
+  private useBagItem(): void {
+    const sel = this.bagEntries()[this.cursor]?.[0];
+    const def = sel ? ITEMS_BY_ID.get(sel) : undefined;
+    if (!sel || !def) return;
+    if (def.kind === 'heal' || def.kind === 'revive' || def.kind === 'cure') {
+      this.useItemId = sel;
+      this.mode = 'usetarget';
+      this.cursor = 0;
+      this.redraw();
+      return;
+    }
+    if (def.kind === 'evolution') {
+      this.evolveFromMenu(sel);
+      return;
+    }
+    if (def.kind === 'field') {
+      const state = getGameState();
+      state.flags['dampener'] = !state.flags['dampener'];
+      this.flash(state.flags['dampener'] ? 'Signal Dampener on — wild Ohms steer clear.' : 'Signal Dampener off.');
+      return;
+    }
+    this.flash('Storage Nodes are spent in battle, to recalibrate a weakened Ohm.');
+  }
+
+  /** Apply the held heal/cure/revive to the chosen party member. */
+  private applyToTarget(): void {
+    const state = getGameState();
+    const target = state.party[this.cursor];
+    const def = ITEMS_BY_ID.get(this.useItemId);
+    if (!target || !def || (state.bag[this.useItemId] ?? 0) <= 0) {
+      this.mode = 'bag';
+      this.cursor = 0;
+      this.redraw();
+      return;
+    }
+    const res = applyItemToBattler(def, target);
+    if (res.ok) state.bag[this.useItemId] = (state.bag[this.useItemId] ?? 1) - 1;
+    this.flash(res.message);
+    if ((state.bag[this.useItemId] ?? 0) <= 0) {
+      this.mode = 'bag';
+      this.cursor = 0;
+    }
+    this.redraw();
+  }
+
+  /** A on a Core: if any party Ohm is at its threshold, run the evolution. */
+  private evolveFromMenu(itemId: string): void {
+    const state = getGameState();
+    const offers = pendingEvolutions(state.party, state.bag, GAME_DATA).filter((o) => o.item === itemId);
+    if (offers.length === 0) {
+      this.flash('No Ohm is ready to reconfigure with that core.');
+      return;
+    }
+    this.scene.stop(this.launcher); // the EvolutionScene restarts it on finish
+    this.scene.start('evolution', { offers, returnScene: this.launcher });
   }
 
   // ---- rendering -----------------------------------------------------------
@@ -173,7 +249,25 @@ export class MenuScene extends Phaser.Scene {
     else if (this.mode === 'detail') this.drawDetail();
     else if (this.mode === 'manifest') this.drawManifest();
     else if (this.mode === 'bag') this.drawBag();
+    else if (this.mode === 'usetarget') this.drawUseTarget();
     else if (this.mode === 'save') this.drawSave();
+  }
+
+  private drawUseTarget(): void {
+    const def = ITEMS_BY_ID.get(this.useItemId);
+    this.label(16, 12, `USE ${def?.name ?? ''}`, { hl: true });
+    this.label(120, 12, 'on which Ohm?', { color: '#586068' });
+    const state = getGameState();
+    state.party.forEach((b, i) => {
+      const y = 36 + i * 20;
+      const here = i === this.cursor;
+      const sp = GAME_DATA.species(b.speciesNum);
+      this.label(20, y, `${here ? '>' : ' '}${b.name} Lv${b.level}`, { hl: here });
+      this.chip(150, y + 4, TYPE_COLORS[sp.type]);
+      const flags = `${b.integrity <= 0 ? ' DOWN' : ''}${b.status ? ` ${b.status}` : ''}`;
+      this.label(20, y + 9, `  ${this.bar(b.integrity, b.stats.integrity)} ${b.integrity}/${b.stats.integrity}${flags}`);
+    });
+    this.label(16, 150, 'A: use   B: back');
   }
 
   private drawHub(): void {
@@ -274,7 +368,7 @@ export class MenuScene extends Phaser.Scene {
     const sel = entries[this.cursor]?.[0];
     const item = sel ? ITEMS_BY_ID.get(sel) : undefined;
     if (item) this.label(16, 140, this.bagBlurb(item.kind), { color: '#586068' });
-    this.label(16, 150, 'B: back');
+    this.label(16, 150, 'A: use   B: back');
   }
 
   private bagBlurb(kind: string): string {
