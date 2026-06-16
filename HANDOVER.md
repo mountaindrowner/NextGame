@@ -1,5 +1,18 @@
 # HANDOVER
 
+## Session 2026-06-16 — NPC dialogue + Ohm sprite retool begins
+
+- **Every world NPC talks:** FieldHDScene NPC dialogue system (face + A cycles
+  lines); name + 3 contextual lines written for all 19 placed NPCs across the 8
+  maps (seed the reveal). Signs + items engines also live.
+- **Ohm sprites retooled to the grid method** (`tools/assets/kit-ohms.ts`,
+  `npm run assets:ohms`): each Ohm = its object + a face from the object's own
+  features + legs/treads, emissive glow where hot/lit. 14 fronts (3 starters +
+  the slice's Field commons) + 3 starter backs, overwriting the *_front_hd.png
+  the battle already loads — battles now match the world. **~136 Ohms still on
+  the legacy spritekit set; retool continues in batches.**
+
+
 ## Session 2026-06-15 (cont.) — Lived-in scatter + overworld trainers
 
 - **Lived-in layer on every map:** `tools/scatter.ts` — a shared, biome-filtered,
