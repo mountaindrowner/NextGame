@@ -612,6 +612,80 @@ function backArch(p: Pal): Sprite {
   return s;
 }
 
+// ---- bespoke starter backs (the player's own Ohm, seen from behind) ------
+// No face (we see the back of the head); the silhouette features carry it.
+function thermBack(tier: number): Sprite { // 001/002/003 furnace rear — 1/2/3 stovepipes
+  const g = base();
+  const w = 48 + tier * 8;
+  const h = 48 + tier * 8;
+  const x = Math.round((S - w) / 2);
+  const yb = 82 + tier;
+  const y = yb - h;
+  foot(g, x + 4, yb, 13); foot(g, x + w - 17, yb, 13);
+  g.box(x, y, w, h, 'l', 'a', 'A'); // welded firebox from behind
+  for (let yy = y + 7; yy < yb - 2; yy += 7) g.hline(x + 1, yy, w - 2, 'A'); // panel seams
+  const vx0 = x + Math.round(w / 2) - 12;
+  const vy0 = y + Math.round(h * 0.42);
+  g.box(vx0, vy0, 24, 16, 'A', 'x', 'x'); // back vent grille (glows hot)
+  for (let vx = vx0 + 2; vx < vx0 + 22; vx += 4) g.vline(vx, vy0 + 2, 12, 'Z');
+  const pw = 12;
+  const gap = (w - tier * pw) / (tier + 1);
+  for (let i = 0; i < tier; i++) { const px = Math.round(x + gap * (i + 1) + pw * i); g.box(px, y - 16, pw, 18, 'a', 'A', 'x'); g.set(px + 6, y - 18, 'z'); } // stovepipes + embers
+  for (const [rx, ry] of [[x + 2, y + 2], [x + w - 3, y + 2], [x + 2, yb - 3], [x + w - 3, yb - 3]] as Array<[number, number]>) g.set(rx, ry, 'l');
+  g.outline('X');
+  const s = g.render(); glow(s, S / 2, vy0 + 8, 18 + tier * 3, [130, 65, 18]); return s;
+}
+function voltBack(tier: number): Sprite { // 004/005/006 generator rear — coil bank + arcs
+  const g = base();
+  const w = 48 + tier * 8;
+  const h = 46 + tier * 8;
+  const x = Math.round((S - w) / 2);
+  const yb = 82 + tier;
+  const y = yb - h;
+  foot(g, x + 4, yb, 13); foot(g, x + w - 17, yb, 13);
+  g.box(x, y, w, h, 'l', 'a', 'A');
+  for (let yy = y + 7; yy < yb - 2; yy += 7) g.hline(x + 1, yy, w - 2, 'A');
+  const cbw = w - 16;
+  g.box(x + 8, y - 16, cbw, 16, 'n', 'k', 'K'); // copper coil bank from behind
+  for (let cx = x + 10; cx < x + 8 + cbw; cx += 3) g.vline(cx, y - 16, 16, 'q');
+  if (tier >= 3) { g.box(x - 6, y + 8, 12, 22, 'n', 'k', 'K'); g.box(x + w - 6, y + 8, 12, 22, 'n', 'k', 'K'); } // HAUL shoulder coils
+  const vx0 = x + Math.round(w / 2) - 12;
+  const vy0 = y + Math.round(h * 0.45);
+  g.box(vx0, vy0, 24, 12, 'A', 'x', 'x');
+  for (let vx = vx0 + 2; vx < vx0 + 22; vx += 4) g.vline(vx, vy0 + 2, 8, '1');
+  g.line(x + 8, y - 14, x - 2, y - 26, '1'); g.line(x + 8 + cbw, y - 14, x + 8 + cbw + 10, y - 26, '1'); // arcs
+  g.set(x - 2, y - 26, '*'); g.set(x + 8 + cbw + 10, y - 26, '*');
+  if (tier >= 2) { g.line(Math.round(S / 2), y - 16, Math.round(S / 2), y - 28, '1'); g.set(Math.round(S / 2), y - 28, '*'); }
+  for (const [rx, ry] of [[x + 2, y + 2], [x + w - 3, y + 2], [x + 2, yb - 3], [x + w - 3, yb - 3]] as Array<[number, number]>) g.set(rx, ry, 'l');
+  g.outline('X');
+  const s = g.render(); glow(s, S / 2, y - 6, 16 + tier * 3, [40, 95, 155]); return s;
+}
+function coolantBack(tier: number): Sprite { // 007/008/009 pump rear — spout + drips
+  const g = base();
+  const w = 46 + tier * 8;
+  const h = 46 + tier * 8;
+  const x = Math.round((S - w) / 2);
+  const yb = 82 + tier;
+  const y = yb - h;
+  foot(g, x + 4, yb, 13); foot(g, x + w - 17, yb, 13);
+  g.box(x, y, w, h, 'i', 'I', 'C'); // cool pump body from behind
+  for (let yy = y + 7; yy < yb - 2; yy += 7) g.hline(x + 1, yy, w - 2, 'C');
+  g.box(x + w - 22, y - 18, 12, 22, 'a', 'A', 'x'); g.rect(x + w - 26, y - 20, 18, 6, 'a'); // spout over the top
+  for (let i = 0; i < 3 + tier; i++) g.set(x + w - 8, y - 14 + i * 4, 'v'); // drips down the back
+  const vy0 = y + Math.round(h * 0.4);
+  if (tier >= 3) for (let ax = x + 8; ax < x + w - 10; ax += 16) { g.ellipse(ax + 6, vy0, 6, 9, 'C'); g.ellipse(ax + 6, vy0, 4, 7, 'c'); } // aqueduct arches
+  else { g.box(x + Math.round(w / 2) - 11, vy0, 22, 12, 'C', 'c', 'C'); g.hline(x + Math.round(w / 2) - 9, vy0 + 6, 18, 'v'); }
+  g.ellipse(x + 12, vy0 + 2, 5, 5, 'a'); g.ellipse(x + 12, vy0 + 2, 2, 2, 'l'); // pressure gauge
+  for (const [rx, ry] of [[x + 2, y + 2], [x + w - 3, y + 2], [x + 2, yb - 3], [x + w - 3, yb - 3]] as Array<[number, number]>) g.set(rx, ry, 'l');
+  g.outline('X');
+  const s = g.render(); glow(s, S / 2, vy0 + 2, 16 + tier * 3, [20, 75, 130]); return s;
+}
+const BACK_OVERRIDES: Record<number, () => Sprite> = {
+  1: () => thermBack(1), 2: () => thermBack(2), 3: () => thermBack(3),
+  4: () => voltBack(1), 5: () => voltBack(2), 6: () => voltBack(3),
+  7: () => coolantBack(1), 8: () => coolantBack(2), 9: () => coolantBack(3),
+};
+
 // ---- the full 150 spec (archetype + type per Manifest line) --------------
 type Arch = 'box' | 'round' | 'tall' | 'vehicle' | 'tool' | 'bulb' | 'plant' | 'speaker' | 'orb' | 'legend';
 interface Line { from: number; to: number; arch: Arch; type: TypeName }
@@ -689,7 +763,7 @@ function drawFront(n: number): Sprite {
 // ---- emit (all 150 fronts + backs) ---------------------------------------
 const fronts: Sprite[] = [];
 for (let n = 1; n <= 150; n++) { const s = drawFront(n); writePng(s, join(OUT, `${n}_front_hd.png`)); fronts.push(s); }
-for (let n = 1; n <= 150; n++) writePng(backArch(TYPEPAL[lineOf(n).type]), join(OUT, `${n}_back_hd.png`));
+for (let n = 1; n <= 150; n++) { const ov = BACK_OVERRIDES[n]; writePng(ov ? ov() : backArch(TYPEPAL[lineOf(n).type]), join(OUT, `${n}_back_hd.png`)); }
 
 // ---- contact sheet -------------------------------------------------------
 const cell = 104;
