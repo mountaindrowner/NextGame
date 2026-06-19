@@ -1,5 +1,26 @@
 # HANDOVER
 
+## Session 2026-06-16 (cont.) — Cinematic depth + new protagonist portraits
+
+- **New high-quality portraits** (SAL / WREN / Mabel), authored on-method
+  (grid method, `tools/gen-cutscene-art.ts` `protagBust()` + `mabel()`) to
+  replace the pixelified-from-reference SAL/WREN. Canon scavenger kit: brown/
+  blonde hair, goggles pushed up on the cap brim, red bandana, olive jacket,
+  freckles (SAL, smirk) / ponytail + grease smudge (WREN, deadpan); Mabel
+  refined (glasses glint, apron). Same paths (`public/world/char/*_96.png`),
+  so `src/cutscene/script.ts` is unchanged.
+- **Richer cold-open cards** — the five cards rebuilt with layered composition,
+  `spritekit.ramp()`-shaded light sources (`Sprite.sphere()`: the Waking core,
+  dawn sun, Static node, garage lamp), atmospheric haze, depth-faded
+  silhouettes, foreground detail (rocks, posts, dust), and a baked `vignette()`.
+- **CutsceneScene presentation** upgraded: cinematic **letterbox** bars, bg
+  **crossfades**, a slow **Ken-Burns** zoom/pan per card, per-bg ambient
+  **drifting motes** (`BgStep.motes`), optional `tint`, and a **bigger portrait
+  with a Back.Out slide-in** (only re-animates when the speaker changes).
+- `tests/cutscene.test.ts` +1 (portraits present + non-trivially sized).
+  **81 tests green**, typecheck + lint + build pass. Dist rebuilt.
+
+
 ## Session 2026-06-16 (cont.) — Opening cinematics & charm pass
 
 - **Reusable cutscene toolkit** (no shared dialogue/fade util existed):

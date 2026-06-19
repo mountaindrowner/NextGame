@@ -43,6 +43,14 @@ describe('opening cutscene scripts', () => {
     expect(g.steps.some((s) => s.kind === 'line' && /Ohm.s Law/.test(s.text))).toBe(true);
   });
 
+  it('the protagonist + Mabel portraits exist and are non-trivially sized', () => {
+    for (const p of ['sal_96', 'wren_96', 'mabel_96']) {
+      const buf = readFileSync(join(ROOT, 'public/world/char', `${p}.png`));
+      expect(buf.readUInt32BE(16), `${p} width`).toBeGreaterThanOrEqual(48); // PNG IHDR width
+      expect(buf.readUInt32BE(20), `${p} height`).toBeGreaterThanOrEqual(64); // PNG IHDR height
+    }
+  });
+
   it('no stale "Harlan" name and no dead names in the cutscene scripts', () => {
     const dead = /arkimon|ohmdex|ohmward|ohm on the range|ohm sweet ohm|\bharlan\b/i;
     const dir = join(ROOT, 'src/cutscene');

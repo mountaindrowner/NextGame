@@ -11,6 +11,9 @@ export interface BgStep {
   kind: 'bg';
   image: string; // path under public/
   dark?: number; // optional dim overlay 0..1
+  tint?: [number, number, number]; // ambient colour grade
+  motes?: [number, number, number]; // drifting particle colour while shown
+  ken?: boolean; // slow Ken-Burns zoom/pan (default on)
 }
 export interface LineStep {
   kind: 'line';

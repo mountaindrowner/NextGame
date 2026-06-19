@@ -20,6 +20,9 @@ export class CutsceneScene extends Phaser.Scene {
   private cut!: Cutscene;
   private index = -1;
   private bg?: Phaser.GameObjects.Image;
+  private kenTween?: Phaser.Tweens.Tween;
+  private moteCol?: [number, number, number];
+  private moteTimer?: Phaser.Time.TimerEvent;
   private dim?: Phaser.GameObjects.Rectangle;
   private box!: Phaser.GameObjects.Rectangle;
   private speaker!: Phaser.GameObjects.Text;
@@ -55,11 +58,27 @@ export class CutsceneScene extends Phaser.Scene {
     this.speaker = this.add.text(10, 110, '', { fontFamily: 'monospace', fontSize: '8px', color: '#7a5a2a', fontStyle: 'bold' }).setDepth(7);
     this.body = this.add.text(10, 120, '', { fontFamily: 'monospace', fontSize: '9px', color: '#2a2018', wordWrap: { width: 220 } }).setDepth(7);
     this.prompt = this.add.text(226, 150, '▼', { fontFamily: 'monospace', fontSize: '8px', color: '#7a5a2a' }).setOrigin(1, 1).setDepth(7).setVisible(false);
-    this.add.text(6, 2, 'B: skip', { fontFamily: 'monospace', fontSize: '7px', color: '#5a6068' }).setDepth(7).setAlpha(0.7);
+    // cinematic letterbox bars (framing)
+    this.add.rectangle(LEGACY_W / 2, 7, LEGACY_W, 14, 0x000000, 0.92).setDepth(9);
+    this.add.rectangle(LEGACY_W / 2, LEGACY_H - 7, LEGACY_W, 14, 0x000000, 0.92).setDepth(9);
+    this.add.text(6, 1, 'B: skip', { fontFamily: 'monospace', fontSize: '7px', color: '#6a7078' }).setDepth(10).setAlpha(0.8);
+
+    // drifting ambient motes (colour set per bg)
+    this.moteTimer = this.time.addEvent({ delay: 520, loop: true, callback: () => this.spawnMote() });
 
     this.controls = new Controls(this);
     this.cameras.main.fadeIn(420, FADE_COLD[0], FADE_COLD[1], FADE_COLD[2]);
     this.advance();
+  }
+
+  /** One slow-rising mote in the current bg's ambient colour. */
+  private spawnMote(): void {
+    if (!this.moteCol) return;
+    const c = this.moteCol;
+    const x = Phaser.Math.Between(20, LEGACY_W - 20);
+    const y = Phaser.Math.Between(60, 130);
+    const m = this.add.circle(x, y, Phaser.Math.Between(1, 2) / 2 + 0.5, (c[0] << 16) | (c[1] << 8) | c[2], 0.7).setDepth(4).setBlendMode(Phaser.BlendModes.ADD);
+    this.tweens.add({ targets: m, y: y - Phaser.Math.Between(24, 50), x: x + Phaser.Math.Between(-12, 12), alpha: 0, duration: Phaser.Math.Between(2600, 4200), ease: 'Sine.Out', onComplete: () => m.destroy() });
   }
 
   /** Run the next step; auto-chains non-line steps, parks on lines for input. */
@@ -73,8 +92,19 @@ export class CutsceneScene extends Phaser.Scene {
     switch (step.kind) {
       case 'bg': {
         const key = this.textures.exists(step.image) ? step.image : undefined;
-        this.bg?.destroy();
-        if (key) this.bg = this.add.image(LEGACY_W / 2, LEGACY_H / 2, key).setDisplaySize(LEGACY_W, LEGACY_H).setDepth(1);
+        const old = this.bg;
+        this.kenTween?.stop();
+        if (old) this.tweens.add({ targets: old, alpha: 0, duration: 420, ease: 'Sine.In', onComplete: () => old.destroy() }); // crossfade out
+        if (key) {
+          const img = this.add.image(LEGACY_W / 2, LEGACY_H / 2, key).setDisplaySize(LEGACY_W, LEGACY_H).setDepth(1).setAlpha(0);
+          if (step.tint) img.setTint((step.tint[0] << 16) | (step.tint[1] << 8) | step.tint[2]);
+          this.tweens.add({ targets: img, alpha: 1, duration: 460, ease: 'Sine.Out' });
+          if (step.ken !== false) this.kenTween = this.tweens.add({ targets: img, scaleX: img.scaleX * 1.09, scaleY: img.scaleY * 1.09, x: LEGACY_W / 2 + Phaser.Math.Between(-8, 8), y: LEGACY_H / 2 + Phaser.Math.Between(-5, 5), duration: 11000, ease: 'Sine.InOut' }); // Ken-Burns
+          this.bg = img;
+        } else {
+          this.bg = undefined;
+        }
+        this.moteCol = step.motes;
         this.dim?.setFillStyle(0x000000, step.dark ?? 0);
         this.advance();
         break;
@@ -102,16 +132,30 @@ export class CutsceneScene extends Phaser.Scene {
     }
   }
 
+  private portraitKey?: string;
+  private portraitShade?: Phaser.GameObjects.Ellipse;
+
   private showLine(step: LineStep): void {
     this.box.setVisible(true);
     this.speaker.setText(step.speaker ?? '');
-    this.portrait?.destroy();
-    this.portrait = undefined;
     if (step.portrait && this.textures.exists(step.portrait)) {
-      this.portrait = this.add.image(34, 78, step.portrait).setDepth(6);
-      const src = this.textures.get(step.portrait).getSourceImage();
-      this.portrait.setDisplaySize(52, (52 * src.height) / src.width).setOrigin(0.5, 1);
-      this.portrait.y = 106;
+      if (step.portrait !== this.portraitKey) {
+        this.portrait?.destroy();
+        this.portraitShade?.destroy();
+        const src = this.textures.get(step.portrait).getSourceImage();
+        const dh = 104;
+        const dw = (dh * src.width) / src.height;
+        this.portraitShade = this.add.ellipse(46, 106, dw * 0.9, 16, 0x000000, 0.4).setDepth(5);
+        const img = this.add.image(18, 108, step.portrait).setDepth(6).setOrigin(0.5, 1).setDisplaySize(dw, dh).setAlpha(0);
+        this.tweens.add({ targets: img, x: 46, alpha: 1, duration: 300, ease: 'Back.Out' });
+        this.portrait = img;
+        this.portraitKey = step.portrait;
+      }
+    } else {
+      this.portrait?.destroy();
+      this.portraitShade?.destroy();
+      this.portrait = undefined;
+      this.portraitKey = undefined;
     }
     this.full = step.text;
     this.shown = 0;
@@ -138,6 +182,8 @@ export class CutsceneScene extends Phaser.Scene {
   private finish(): void {
     if (this.done) return;
     this.done = true;
+    this.moteTimer?.remove();
+    this.kenTween?.stop();
     fadeTo(this, this.cut.next, this.cut.nextData, FADE_COLD, 420);
   }
 
