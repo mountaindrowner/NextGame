@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { fitLegacy } from './legacy';
-import type { BattleEvent, Battler } from '../core/battle/contract';
+import type { BattleEvent, Battler, Side } from '../core/battle/contract';
+import type { StatusName } from '../core/defs';
 import { Battle } from '../core/battle/engine';
 import { pendingEvolutions } from '../core/evolution';
 import { GAME_DATA } from '../data/dataview';
@@ -25,6 +26,20 @@ interface BattleInit {
 type Mode = 'anim' | 'command' | 'moves' | 'party' | 'pack' | 'puzzle' | 'over';
 
 const COMMANDS = ['FIGHT', 'SWAP', 'PACK', 'RUN'] as const;
+
+/** Status set-messages that read like English, not like a flag name. */
+const STATUS_VERB: Record<StatusName, string> = {
+  OVERHEAT: 'overheats!',
+  SHORT: 'shorts out!',
+  CORRUPTED: 'is corrupted!',
+  STANDBY: 'drops to standby!',
+  LOCKED: 'freezes up!',
+  GLITCHED: 'glitches out!',
+};
+const STAT_LABEL: Record<string, string> = {
+  integrity: 'INTEGRITY', output: 'OUTPUT', armor: 'ARMOR', surge: 'SURGE',
+  shielding: 'SHIELDING', clock: 'CLOCK', accuracy: 'accuracy', evasion: 'evasion',
+};
 const FOE_X = 176;
 const FOE_Y = 44;
 const PLAYER_X = 58;
@@ -41,10 +56,15 @@ export class BattleScene extends Phaser.Scene {
   private menuTexts: Phaser.GameObjects.Text[] = [];
   private playerSprite!: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
   private foeSprite!: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
-  private playerHud!: Phaser.GameObjects.Text;
-  private foeHud!: Phaser.GameObjects.Text;
+  private foeName!: Phaser.GameObjects.Text;
+  private playerName!: Phaser.GameObjects.Text;
+  private playerHpText!: Phaser.GameObjects.Text;
+  private foeBar!: { bg: Phaser.GameObjects.Rectangle; fill: Phaser.GameObjects.Rectangle };
+  private playerBar!: { bg: Phaser.GameObjects.Rectangle; fill: Phaser.GameObjects.Rectangle };
   private outcome: string | undefined;
   private init_!: BattleInit;
+
+  private static readonly BAR_W = 78; // inner HP-bar width in the 240-layout
 
   constructor() {
     super('battle');
@@ -84,8 +104,16 @@ export class BattleScene extends Phaser.Scene {
     this.foeSprite = this.makeOhmSprite(this.battle.foe.speciesNum, 'front', 300, FOE_Y); // slides in
     this.tweens.add({ targets: this.foeSprite, x: FOE_X, duration: 350, ease: 'Cubic.Out' });
     this.playerSprite = this.makeOhmSprite(this.battle.active.speciesNum, 'back', -60, PLAYER_Y);
-    this.foeHud = this.add.text(6, 6, '', { fontFamily: 'monospace', fontSize: '9px', color: '#303030' });
-    this.playerHud = this.add.text(132, 88, '', { fontFamily: 'monospace', fontSize: '9px', color: '#303030' });
+
+    // framed name + graphical HP boxes (foe top-left, player above the text box)
+    this.foeName = this.hudBox(5, 5, 100);
+    this.foeBar = this.makeBar(45, 22, BattleScene.BAR_W + 2);
+    this.playerName = this.hudBox(133, 80, 100);
+    this.playerBar = this.makeBar(173, 97, BattleScene.BAR_W + 2);
+    this.playerHpText = this.add.text(214, 92, '', { fontFamily: 'monospace', fontSize: '8px', color: '#303030' }).setOrigin(1, 0);
+    this.setBar('foe', this.battle.foe.integrity, this.battle.foe.stats.integrity, false);
+    this.setBar('player', this.battle.active.integrity, this.battle.active.stats.integrity, false);
+
     this.text = this.add.text(8, 116, '', { fontFamily: 'monospace', fontSize: '9px', color: '#303030', wordWrap: { width: 224 } });
 
     this.queue.push(...this.battle.intro());
@@ -98,12 +126,12 @@ export class BattleScene extends Phaser.Scene {
   private pump(): void {
     const ev = this.queue.shift();
     if (!ev) {
-      this.refreshHuds();
+      this.refreshNames();
       if (this.outcome) this.finish();
       else this.showCommands();
       return;
     }
-    this.refreshHuds();
+    this.refreshNames();
     const next = (delay = 450): void => {
       this.time.delayedCall(delay, () => this.pump());
     };
@@ -114,6 +142,7 @@ export class BattleScene extends Phaser.Scene {
         break;
       case 'moveUsed':
         this.say(`${ev.name} used ${ev.moveName}!`);
+        this.lunge(ev.side);
         next(550);
         break;
       case 'switchIn': {
@@ -126,16 +155,19 @@ export class BattleScene extends Phaser.Scene {
           this.foeSprite = this.makeOhmSprite(ev.speciesNum, 'front', 300, FOE_Y);
           this.tweens.add({ targets: this.foeSprite, x: FOE_X, duration: 350, ease: 'Cubic.Out' });
         }
+        this.setBar(ev.side, ev.integrity, ev.max, false);
         next(380);
         break;
       }
       case 'damage': {
-        const target = ev.side === 'player' ? this.playerSprite : this.foeSprite;
-        this.tweens.add({ targets: target, alpha: 0.2, yoyo: true, duration: 70, repeat: 2 });
+        const strong = ev.crit || ev.effectiveness > 1;
+        this.setBar(ev.side, ev.integrity, ev.max, true);
+        this.hitFlash(ev.side, strong);
+        this.popDamage(ev.side, ev.amount, ev.crit);
         if (ev.crit) this.say('A critical hit!');
         else if (ev.effectiveness > 1) this.say("It's super effective!");
         else if (ev.effectiveness < 1) this.say("It's not very effective…");
-        next(500);
+        next(strong ? 560 : 460);
         break;
       }
       case 'heal':
@@ -143,9 +175,11 @@ export class BattleScene extends Phaser.Scene {
       case 'statusSet':
       case 'statusCleared':
       case 'xp':
-        if (ev.type === 'statusSet') this.say(`${ev.side === 'foe' ? 'Wild Ohm' : 'Your Ohm'} is ${ev.status}!`);
+        if (ev.type === 'heal') this.setBar(ev.side, ev.integrity, ev.max, true);
+        if (ev.type === 'statusSet') this.say(`${this.nameOf(ev.side)} ${STATUS_VERB[ev.status]}`);
+        if (ev.type === 'statusCleared') this.say(`${this.nameOf(ev.side)} shook it off.`);
         if (ev.type === 'xp') this.say(`${ev.name} gained ${ev.amount} XP.`);
-        if (ev.type === 'stageChange') this.say(`${ev.stat.toUpperCase()} ${ev.delta > 0 ? 'rose' : 'fell'}!`);
+        if (ev.type === 'stageChange') this.say(`${this.statLabel(ev.stat)} ${ev.delta > 0 ? 'rose' : 'fell'}${Math.abs(ev.delta) > 1 ? ' sharply' : ''}!`);
         next(420);
         break;
       case 'levelUp':
@@ -363,20 +397,76 @@ export class BattleScene extends Phaser.Scene {
     this.text.setText(text);
   }
 
-  private bar(current: number, max: number): string {
-    const cells = 10;
-    const filled = Math.round((current / Math.max(1, max)) * cells);
-    return `[${'#'.repeat(filled)}${'-'.repeat(cells - filled)}]`;
+  private nameOf(side: Side): string {
+    return side === 'foe' ? this.battle.foe.name : this.battle.active.name;
   }
 
-  private refreshHuds(): void {
+  private statLabel(stat: string): string {
+    return STAT_LABEL[stat] ?? stat.toUpperCase();
+  }
+
+  // ---- HUD construction & juice --------------------------------------------
+
+  /** A framed name plate that reads "<name>  Lv<n>" with a status tag. */
+  private hudBox(x: number, y: number, w: number): Phaser.GameObjects.Text {
+    this.add.rectangle(x - 2, y - 2, w, 12, UI.paper).setOrigin(0, 0).setStrokeStyle(1, UI.frame).setDepth(3);
+    return this.add.text(x + 1, y + 1, '', { fontFamily: 'monospace', fontSize: '8px', color: '#303030' }).setDepth(4);
+  }
+
+  private makeBar(cx: number, y: number, w: number): { bg: Phaser.GameObjects.Rectangle; fill: Phaser.GameObjects.Rectangle } {
+    const bg = this.add.rectangle(cx, y, w, 6, 0x202830).setOrigin(0.5).setStrokeStyle(1, UI.frame).setDepth(3);
+    const fill = this.add.rectangle(cx - BattleScene.BAR_W / 2, y, BattleScene.BAR_W, 4, UI.good).setOrigin(0, 0.5).setDepth(4);
+    return { bg, fill };
+  }
+
+  /** Animate a side's HP bar to a ratio, recoloured green→amber→red. */
+  private setBar(side: Side, integrity: number, max: number, animate: boolean): void {
+    const b = side === 'foe' ? this.foeBar : this.playerBar;
+    const ratio = Math.max(0, Math.min(1, integrity / Math.max(1, max)));
+    b.fill.setFillStyle(ratio > 0.5 ? UI.good : ratio > 0.2 ? UI.warn : UI.bad);
+    if (animate) this.tweens.add({ targets: b.fill, scaleX: ratio, duration: 360, ease: 'Cubic.Out' });
+    else b.fill.scaleX = ratio;
+    if (side === 'player') this.playerHpText.setText(`${Math.max(0, integrity)}/${max}`);
+    this.refreshNames();
+  }
+
+  /** The attacker leans into its strike and settles back. */
+  private lunge(side: Side): void {
+    const spr = side === 'player' ? this.playerSprite : this.foeSprite;
+    const dx = side === 'player' ? 12 : -12;
+    const dy = side === 'player' ? -7 : 7;
+    this.tweens.add({ targets: spr, x: spr.x + dx, y: spr.y + dy, duration: 95, yoyo: true, ease: 'Quad.Out' });
+  }
+
+  /** White flash over the struck sprite plus a camera shake — harder on crits/SE. */
+  private hitFlash(side: Side, strong: boolean): void {
+    const spr = side === 'player' ? this.playerSprite : this.foeSprite;
+    const flash = this.add.rectangle(spr.x, spr.y, BATTLE_SPRITE_PX, BATTLE_SPRITE_PX, 0xffffff).setAlpha(0.85).setDepth(40);
+    this.tweens.add({ targets: flash, alpha: 0, duration: 190, onComplete: () => flash.destroy() });
+    this.tweens.add({ targets: spr, alpha: 0.25, yoyo: true, duration: 60, repeat: 2 });
+    this.cameras.main.shake(strong ? 280 : 130, strong ? 0.012 : 0.005);
+  }
+
+  /** A floating damage number that rises off the struck sprite and fades. */
+  private popDamage(side: Side, amount: number, crit: boolean): void {
+    const spr = side === 'player' ? this.playerSprite : this.foeSprite;
+    const t = this.add
+      .text(spr.x, spr.y - 12, `-${amount}`, {
+        fontFamily: 'monospace',
+        fontSize: crit ? '13px' : '10px',
+        color: crit ? '#ffd84a' : '#ffffff',
+        stroke: '#202020',
+        strokeThickness: 2,
+      })
+      .setOrigin(0.5)
+      .setDepth(50);
+    this.tweens.add({ targets: t, y: t.y - 18, alpha: 0, duration: 680, ease: 'Quad.Out', onComplete: () => t.destroy() });
+  }
+
+  private refreshNames(): void {
     const foe = this.battle.foe;
     const me = this.battle.active;
-    this.foeHud.setText(
-      `${foe.name} Lv${foe.level} ${foe.status ?? ''}\n${this.bar(foe.integrity, foe.stats.integrity)}`,
-    );
-    this.playerHud.setText(
-      `${me.name} Lv${me.level} ${me.status ?? ''}\n${this.bar(me.integrity, me.stats.integrity)} ${me.integrity}/${me.stats.integrity}`,
-    );
+    this.foeName.setText(`${foe.name}  Lv${foe.level}${foe.status ? `  ${foe.status}` : ''}`);
+    this.playerName.setText(`${me.name}  Lv${me.level}${me.status ? `  ${me.status}` : ''}`);
   }
 }
