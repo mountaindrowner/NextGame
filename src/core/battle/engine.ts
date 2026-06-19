@@ -490,9 +490,13 @@ export class Battle {
       (species.base.integrity + species.base.output + species.base.armor + species.base.surge + species.base.shielding + species.base.clock) / 3,
     );
     const gain = Math.max(1, Math.floor((yieldBase * downed.level) / 7));
-    const alive = this.setup.party.filter((p) => p.integrity > 0);
-    const share = Math.max(1, Math.floor(gain / Math.max(1, alive.length))); // party-wide XP share (GDD §10.7)
-    for (const member of alive) {
+    // party-wide XP share (GDD §10.7): the on-field earner takes a full share and
+    // EVERY other party member — benched or downed — takes a half share, so the
+    // lead keeps its pace while no teammate falls irrecoverably behind.
+    const earner = this.active;
+    const halfShare = Math.max(1, Math.floor(gain / 2));
+    for (const member of this.setup.party) {
+      const share = member === earner && member.integrity > 0 ? gain : halfShare;
       member.xp += share;
       ev.push({ type: 'xp', name: member.name, amount: share });
       const ms = this.data.species(member.speciesNum);
@@ -504,7 +508,8 @@ export class Battle {
         const grown = computeStats(ms, member.level, build);
         const gainedIntegrity = grown.integrity - member.stats.integrity;
         member.stats = grown;
-        member.integrity = Math.min(grown.integrity, member.integrity + Math.max(0, gainedIntegrity));
+        // a downed member levels but stays down — leveling never revives it
+        member.integrity = member.integrity > 0 ? Math.min(grown.integrity, member.integrity + Math.max(0, gainedIntegrity)) : 0;
         ev.push({ type: 'levelUp', name: member.name, level: member.level });
         for (const entry of ms.learnset.filter((l) => l.level === member.level)) {
           if (member.moves.length < 4 && !member.moves.some((m) => m.id === entry.move)) {
