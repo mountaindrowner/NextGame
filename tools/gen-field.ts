@@ -220,6 +220,7 @@ writeFileSync(
   JSON.stringify({
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: waterArr, placements,
+    zone: 'field-grass',
     spawn: { x: 20, y: 18 }, // just below the elevator hatch
     // north edge is open → Farm Road (handled by the region edge-warp, not a portal)
     npcs: [

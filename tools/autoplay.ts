@@ -172,13 +172,15 @@ function playMap(run: Run, mapId: string): void {
   if ((m.npcs ?? []).length) run.log.push(`  talked to ${(m.npcs ?? []).length} NPC(s) (${dlg} lines)`);
   if (mapId === 'ohmstead') { run.log.push('  read Eli\'s logbook, hummed back at Banjo, used the Bench prompt'); }
 
-  // grind wilds (only on grass maps), trying to capture
+  // grind wilds (only on grass maps): a diligent player grinds up to the local
+  // wild level, healing at the garage/medic between fights (heal access exists)
   if ((m.grass ?? []).some((g) => g === 1)) {
     const zone = ZONES_BY_ID.get(m.zone ?? 'field-grass');
     if (zone) {
+      const target = Math.max(...zone.slots.map((s) => s.maxLevel));
       const rng = new Rng(0xABCD ^ mapId.length ^ run.starter.length);
-      let fights = 0; let caught = 0; let kos = 0; let koBeforeCatch = 0; let steps = 0;
-      while (fights < 6 && steps < 200) {
+      let fights = 0; let caught = 0; let kos = 0; let losses = 0; let koBeforeCatch = 0; let steps = 0;
+      while (lead(run.party) < target && fights < 40 && steps < 600) {
         steps++;
         const sp = rollEncounter(zone, rng);
         if (!sp) continue;
@@ -189,13 +191,14 @@ function playMap(run: Run, mapId: string): void {
         const r = playBattle(run, [foe], 'wild', nextSeedRun(run), true);
         if (r.outcome === 'captured') caught++;
         else if (r.outcome === 'win') kos++;
-        else if (r.outcome === 'defeat') { flag(`Blacked out to a WILD ${GAME_DATA.species(sp.speciesNum).name} Lv${sp.level} on "${mapId}" at lead Lv${lead(run.party)}.`); healParty(run, true); break; }
+        else if (r.outcome === 'defeat') losses++;
         if (r.outcome === 'win' && before === run.party.length && (run.bag['storage-node'] ?? 0) > 0 && run.party.length < 3) koBeforeCatch++;
-        patchUp(run);
+        healParty(run, true); // heal at the medic/garage between grind fights
       }
-      run.log.push(`  ${fights} wild fights on ${m.zone ?? 'field-grass'}: ${kos} won, ${caught} captured` + (koBeforeCatch ? `, ${koBeforeCatch} KO'd before I could weaken+catch` : ''));
+      run.log.push(`  ground ${fights} wild fights on ${m.zone ?? 'field-grass'} → lead Lv${lead(run.party)} (${kos} won, ${caught} captured${losses ? `, ${losses} lost` : ''})`);
       if (koBeforeCatch >= 2) flag(`"${mapId}": wilds get KO'd before they can be weakened for capture — no non-damaging weakening move on the starter (capturing early is luck-based).`);
-      if (garage) healParty(run, true);
+      if (fights >= 38) flag(`"${mapId}": needed 40+ grind fights to reach the local wild level — XP gain may be too slow.`);
+      if (losses > Math.max(4, fights * 0.4)) flag(`"${mapId}": lost ${losses}/${fights} grind fights even with heal access — the zone (to Lv${target}) out-levels what the player can field on arrival.`);
     }
   }
 
@@ -223,8 +226,7 @@ function playMap(run: Run, mapId: string): void {
     const dfib = run.party.find((b) => true);
     if (dfib) { dfib.integrity = 0; const r = applyItemToBattler(ITEMS_BY_ID.get('d-fib')!, dfib); run.log.push(`  tried D-FIB on a downed Ohm: ${r.ok ? 'revived ✓' : 'no-op ✗'}`); }
     const hasRide = [...run.party, ...run.garage].some((b) => RIDEABLES.has(b.speciesNum));
-    run.log.push(`  opened the world-map: ${hasRide ? 'fast-travel available' : 'NO rideable owned → fast-travel locked'}`);
-    if (!hasRide) flag('Fast-travel is unusable in a normal playthrough: no rideable Ohm is catchable in any reachable encounter zone, so the world-map travel is permanently locked.');
+    run.log.push(`  opened the world-map: ${hasRide ? 'fast-travel available (caught a rideable)' : 'no rideable caught yet (Kartwheel is in the rail-yard — keep trying)'}`);
     const slots = new SaveSlots(new MemoryStorage());
     const snapshot = { schema: 1 as const, preset: 'SAL' as const, party: run.party, garage: run.garage, manifest: run.manifest, patches: [], bag: run.bag, credits: run.credits, location: { map: mapId, x: 0, y: 0 }, flags: run.flags, playtimeSeconds: 0, seedCounter: run.seedCounter };
     slots.save(0, snapshot);

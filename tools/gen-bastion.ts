@@ -142,14 +142,15 @@ writeFileSync(
   JSON.stringify({
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: [], placements: [],
+    zone: 'bastion-scree',
     spawn: { x: 21, y: 24 }, // the gate approach (south)
     exits: [
       { x: 21, y: 26, scene: 'fieldhd', mapId: 'cistern' }, // south → back toward the Cistern
       { x: 2, y: 13, scene: 'fieldhd', mapId: 'redoubt' }, // west quarry edge → the Military Road to Redoubt
     ],
     trainers: [
-      { char: 'npc_rancher', col: 16, row: 14, facing: 'e', name: 'Quarryman Cobb', range: 4, team: [{ num: 32, level: 11 }], bark: "Quarryman Cobb: You don't pass the stone 'til you earn it." },
-      { char: 'npc_kid', col: 28, row: 13, facing: 'w', name: 'Wall-watch Rue', range: 4, team: [{ num: 30, level: 11 }, { num: 41, level: 12 }], bark: 'Wall-watch Rue: Eyes up. The wild ones move like they share one mind.' },
+      { char: 'npc_rancher', col: 16, row: 14, facing: 'e', name: 'Quarryman Cobb', range: 4, team: [{ num: 52, level: 13 }], bark: "Quarryman Cobb: You don't pass the stone 'til you earn it." },
+      { char: 'npc_kid', col: 28, row: 13, facing: 'w', name: 'Wall-watch Rue', range: 4, team: [{ num: 138, level: 13 }, { num: 135, level: 14 }], bark: 'Wall-watch Rue: Eyes up. The wild ones move like they share one mind.' },
     ],
     items: [
       { col: 8, row: 6, credits: 280, hidden: true, label: 'Under the rubble' },

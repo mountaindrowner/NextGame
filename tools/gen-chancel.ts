@@ -189,8 +189,8 @@ writeFileSync(
       ] },
     ],
     trainers: [
-      { char: 'npc_kid', col: 20, row: 17, facing: 'w', name: 'Convert Ardiss', range: 5, team: [{ num: 109, level: 27 }, { num: 115, level: 28 }], bark: 'Convert Ardiss: You agreed without reading. Let me show you the peace in it.' },
-      { char: 'npc_kid', col: 5, row: 21, facing: 'e', name: 'Chorister Vane', range: 4, team: [{ num: 98, level: 27 }, { num: 96, level: 28 }], bark: 'Chorister Vane: Hush now. Let me sing your machines to sleep.' },
+      { char: 'npc_kid', col: 20, row: 17, facing: 'w', name: 'Convert Ardiss', range: 5, team: [{ num: 109, level: 24 }, { num: 115, level: 24 }], bark: 'Convert Ardiss: You agreed without reading. Let me show you the peace in it.' },
+      { char: 'npc_kid', col: 5, row: 21, facing: 'e', name: 'Chorister Vane', range: 4, team: [{ num: 98, level: 24 }, { num: 96, level: 25 }], bark: 'Chorister Vane: Hush now. Let me sing your machines to sleep.' },
     ],
     items: [
       { col: 4, row: 27, credits: 900, label: 'A dropped censer (still warm)' },

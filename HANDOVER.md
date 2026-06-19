@@ -1,5 +1,31 @@
 # HANDOVER
 
+## Session 2026-06-16 (cont.) — Progression & balance pass (auto-player fixes)
+
+Fixed the auto-player's top findings (the progression spine). Re-running
+`npm run autoplay` went from **47 findings → 7**, and all three starters now
+reach the Chancel at **lead Lv28** (was Lv12-14), with ~25 species seen (was 10)
+and fast-travel unlocking.
+- **Per-area encounter zones, climbing curve** (`src/data/encounters.ts`): six
+  new biome zones (farmroad-fence L4-7, railhead-yard L6-9, cistern-reeds L8-11,
+  bastion-scree L10-13, redoubt-scrap L13-16, trinity-reeds L16-20) + rebalanced
+  field-grass; chancel-crypt levels eased to L23-29; dropped the unused
+  field-debris. Each gen sets its `zone`; species obtainability ~43 → ~120.
+- **Trainer curve smoothed** (all gens): farmroad→L6-8, railhead→L8-10,
+  cistern→L11-12, bastion→L13-14, redoubt→L16-17, **Trinity gained 2 Act-II
+  trainers L18-20**, Chancel cult eased to L24-25.
+- **Fast-travel unlocked**: rideables seeded into zones — **Kartwheel (75)** in
+  railhead-yard (instant rideable), Rustbed (70) farmroad, Mowlet (47) field.
+- **Healing on routes/colonies** (#6): new `kind:'heal'` interact in
+  `FieldHDScene.tryInteract()` (recharge + medic banner); heal cots placed on
+  farmroad, cistern, and trinity (a Net-Medium's cot).
+- All 8 maps regenerated (JSON only; art unchanged). 81 tests green, typecheck +
+  lint + build pass; dist rebuilt.
+- **Still open (deferred):** a few at-level trainer fights are swingy (battle
+  damage tuning); early capture is luck-based (no weakening move); high-level XP
+  is slow; a shop/economy for the credit pile; the visual layer (browser-only).
+
+
 ## Session 2026-06-16 (cont.) — New starter trio: Scooter / Drone / Dog
 
 - **Canon override (creator-locked):** the Bench parts-build (furnace/generator/

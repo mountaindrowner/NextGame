@@ -148,14 +148,16 @@ writeFileSync(
   JSON.stringify({
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: waterArr, placements: [],
+    zone: 'cistern-reeds',
     spawn: { x: 20, y: 24 }, // the south entry dock
     exits: [
       { x: 20, y: 26, scene: 'fieldhd', mapId: 'railhead' }, // south → back toward Railhead
       { x: 20, y: 1, scene: 'fieldhd', mapId: 'bastion' }, // north → on toward Bastion
     ],
+    interacts: [{ x: 20, y: 22, kind: 'heal' }], // the waterworks recharge station by the dock
     trainers: [
-      { char: 'npc_kid', col: 10, row: 19, facing: 'n', name: 'Mud Cole', range: 4, team: [{ num: 12, level: 9 }], bark: 'Mud Cole: Careful — my Ohms are slippery as a wet rope.' },
-      { char: 'npc_rancher', col: 31, row: 9, facing: 'w', name: 'Sower Tansy', range: 4, team: [{ num: 15, level: 9 }, { num: 18, level: 10 }], bark: 'Sower Tansy: Raised mine from a flicker. Go gentle now.' },
+      { char: 'npc_kid', col: 10, row: 19, facing: 'n', name: 'Mud Cole', range: 4, team: [{ num: 12, level: 11 }], bark: 'Mud Cole: Careful — my Ohms are slippery as a wet rope.' },
+      { char: 'npc_rancher', col: 31, row: 9, facing: 'w', name: 'Sower Tansy', range: 4, team: [{ num: 38, level: 11 }, { num: 25, level: 12 }], bark: 'Sower Tansy: Raised mine from a flicker. Go gentle now.' },
     ],
     items: [
       { col: 6, row: 7, credits: 220, hidden: true, label: 'Behind the nursery shelf' },

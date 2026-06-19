@@ -150,20 +150,26 @@ writeFileSync(
   JSON.stringify({
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
     collision, grass, grassAny, water: [], placements: [],
+    zone: 'trinity-reeds',
     spawn: { x: 14, y: 31 }, // the south end of the path (in from Redoubt)
     exits: [
       { x: 14, y: 33, scene: 'fieldhd', mapId: 'redoubt' }, // south → back to Redoubt
       { x: 15, y: 2, scene: 'fieldhd', mapId: 'chancel', to: { x: 12, y: 31 } }, // north → the Chancel
     ],
+    interacts: [{ x: 6, y: 11, kind: 'heal' }], // Sorrel's cot by the chapel — she tends weary Ohms
     signs: [
       { col: 14, row: 30, text: 'A leaning marker: THE TRINITY BOTTOMS. The road drowns here. Keep to the muck and the logs.' },
       { col: 14, row: 3, text: 'Half-sunk milepost: …THE CHANCEL, ahead. Bells carry over the water — someone still rings them.' },
     ],
     npcs: [{ char: 'npc_elder', col: 5, row: 10, name: 'Net-Medium Sorrel', lines: [
       "Hush, now. The chapel's half-drowned, but it still listens. They all do, if you let them.",
-      'These bottoms grow Ohms that are half-alive — flesh wound through with wire. The virus reaching for green things.',
+      "Lay your Ohms on the cot there — I'll mend them. The water gives back, if you ask it kindly.",
       "She's been trying to tell you something, your machine. You heard it too. Don't lie to me.",
     ] }], // a Net-Medium by the chapel
+    trainers: [
+      { char: 'npc_rancher', col: 16, row: 27, facing: 'w', name: 'Bog-Strider Wend', range: 4, team: [{ num: 43, level: 18 }, { num: 88, level: 19 }], bark: 'Bog-Strider Wend: Step easy. The green ones here bite back — wired through, every thorn.' },
+      { char: 'npc_kid', col: 9, row: 9, facing: 's', name: 'Net-Medium Tace', range: 5, team: [{ num: 41, level: 19 }, { num: 62, level: 20 }], bark: 'Net-Medium Tace: They sing under the water. Beat me and maybe you\'ll hear it too.' },
+    ],
   }),
 );
 console.log(`trinity: ${W}x${H} (${COLS}x${ROWS}), ${objs.length} props`);

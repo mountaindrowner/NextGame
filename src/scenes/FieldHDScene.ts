@@ -349,7 +349,7 @@ export class FieldHDScene extends Phaser.Scene {
     return Math.abs(this.px - this.garage[0]) + Math.abs(this.py - this.garage[1]) <= 1;
   }
 
-  private recharge(): void {
+  private recharge(msg = "Garage: you're all recharged — stay current."): void {
     if (!hasGameState()) return;
     const state = getGameState();
     for (const b of state.party) {
@@ -359,7 +359,7 @@ export class FieldHDScene extends Phaser.Scene {
       b.glitchedTurns = 0;
       for (const m of b.moves) m.pp = m.maxPp;
     }
-    this.banner("Garage: you're all recharged — stay current.");
+    this.banner(msg);
   }
 
   override update(_time: number, delta: number): void {
@@ -478,6 +478,8 @@ export class FieldHDScene extends Phaser.Scene {
           this.banner('A photograph and a worn logbook. The face is a stranger… but the initials are E.V. Why is that name a chill?');
         } else if (it.kind === 'banjo') {
           this.banjoHello(it.x, it.y);
+        } else if (it.kind === 'heal') {
+          this.recharge('A field medic tops off your Ohms — recharged. Stay current.');
         } else {
           this.banner('You poke at it. Nothing happens.');
         }
