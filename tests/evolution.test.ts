@@ -9,18 +9,18 @@ const mk = (num: number, level: number, plating?: 'heavy' | 'light' | 'factory')
 
 describe('evolution eligibility (GDD §10.7)', () => {
   it('needs both the level threshold and the right core in the bag', () => {
-    const charkit = mk(1, 16); // Charkit evolves at 16 with a resonance-core
-    expect(pendingEvolutions([charkit], {}, GAME_DATA)).toHaveLength(0); // no core
+    const scootlet = mk(1, 16); // Scootlet evolves at 16 with a resonance-core
+    expect(pendingEvolutions([scootlet], {}, GAME_DATA)).toHaveLength(0); // no core
     expect(pendingEvolutions([mk(1, 15)], { 'resonance-core': 1 }, GAME_DATA)).toHaveLength(0); // under level
-    const offers = pendingEvolutions([charkit], { 'resonance-core': 1 }, GAME_DATA);
+    const offers = pendingEvolutions([scootlet], { 'resonance-core': 1 }, GAME_DATA);
     expect(offers).toHaveLength(1);
-    expect(offers[0]).toMatchObject({ fromNum: 1, toNum: 2, item: 'resonance-core', toName: 'Smolderig' });
+    expect(offers[0]).toMatchObject({ fromNum: 1, toNum: 2, item: 'resonance-core', toName: 'Boltbike' });
   });
 
   it('a stage-3 hop demands a Prime Core, not a Resonance Core', () => {
-    const smolderig = mk(2, 36); // Smolderig → Pyrofurnax needs prime-core
-    expect(pendingEvolutions([smolderig], { 'resonance-core': 5 }, GAME_DATA)).toHaveLength(0);
-    expect(pendingEvolutions([smolderig], { 'prime-core': 1 }, GAME_DATA)).toHaveLength(1);
+    const boltbike = mk(2, 36); // Boltbike → Velocrash needs prime-core
+    expect(pendingEvolutions([boltbike], { 'resonance-core': 5 }, GAME_DATA)).toHaveLength(0);
+    expect(pendingEvolutions([boltbike], { 'prime-core': 1 }, GAME_DATA)).toHaveLength(1);
   });
 
   it('reserves cores so one core cannot evolve two Ohms at once', () => {
@@ -31,21 +31,21 @@ describe('evolution eligibility (GDD §10.7)', () => {
 
   it('singles and final stages never offer', () => {
     expect(pendingEvolutions([mk(18, 50)], { 'resonance-core': 9, 'prime-core': 9 }, GAME_DATA)).toHaveLength(0); // Beeplet (single)
-    expect(pendingEvolutions([mk(3, 100)], { 'prime-core': 9 }, GAME_DATA)).toHaveLength(0); // Pyrofurnax (final)
+    expect(pendingEvolutions([mk(3, 100)], { 'prime-core': 9 }, GAME_DATA)).toHaveLength(0); // Velocrash (final)
   });
 });
 
 describe('applyEvolution transform', () => {
   it('becomes the next species and recomputes stats at the same level', () => {
-    const charkit = mk(1, 16);
-    const before = { ...charkit.stats };
-    const { from, to } = applyEvolution(charkit, GAME_DATA);
-    expect(from).toBe('Charkit');
-    expect(to).toBe('Smolderig');
-    expect(charkit.speciesNum).toBe(2);
-    expect(charkit.name).toBe('Smolderig');
-    expect(charkit.stats.integrity).toBeGreaterThan(before.integrity); // Smolderig has a bigger frame
-    expect(charkit.stats).toEqual(computeStats(GAME_DATA.species(2), 16));
+    const scootlet = mk(1, 16);
+    const before = { ...scootlet.stats };
+    const { from, to } = applyEvolution(scootlet, GAME_DATA);
+    expect(from).toBe('Scootlet');
+    expect(to).toBe('Boltbike');
+    expect(scootlet.speciesNum).toBe(2);
+    expect(scootlet.name).toBe('Boltbike');
+    expect(scootlet.stats.integrity).toBeGreaterThan(before.integrity); // the e-bike has a bigger frame
+    expect(scootlet.stats).toEqual(computeStats(GAME_DATA.species(2), 16));
   });
 
   it('keeps the Bench plating lean across evolution', () => {
@@ -55,18 +55,18 @@ describe('applyEvolution transform', () => {
   });
 
   it('preserves the integrity ratio and keeps a nickname', () => {
-    const charkit = makeBattler(GAME_DATA.species(1), 16, GAME_DATA, { name: 'Sparky' });
-    charkit.integrity = Math.floor(charkit.stats.integrity / 2);
-    applyEvolution(charkit, GAME_DATA);
-    expect(charkit.name).toBe('Sparky'); // nickname survives
-    expect(charkit.integrity).toBeGreaterThan(0);
-    expect(charkit.integrity / charkit.stats.integrity).toBeCloseTo(0.5, 1);
+    const scootlet = makeBattler(GAME_DATA.species(1), 16, GAME_DATA, { name: 'Zippy' });
+    scootlet.integrity = Math.floor(scootlet.stats.integrity / 2);
+    applyEvolution(scootlet, GAME_DATA);
+    expect(scootlet.name).toBe('Zippy'); // nickname survives
+    expect(scootlet.integrity).toBeGreaterThan(0);
+    expect(scootlet.integrity / scootlet.stats.integrity).toBeCloseTo(0.5, 1);
   });
 });
 
 describe('level-up keeps the plating lean (regression)', () => {
   it('a heavy-plating Ohm still leans heavy after gaining a level', () => {
-    const heavy = mk(4, 5, 'heavy'); // Sparkit, heavy
+    const heavy = mk(4, 5, 'heavy'); // Dronelet, heavy
     const foe = mk(10, 30, undefined); // a strong wild Toastlet for plenty of XP
     const battle = new Battle({ kind: 'wild', seed: 3, party: [heavy], foes: [foe] }, GAME_DATA);
     battle.intro();

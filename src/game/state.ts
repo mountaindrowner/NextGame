@@ -1,16 +1,12 @@
 import type { Battler } from '../core/battle/contract';
 import { makeBattler } from '../core/battle/engine';
-import type { Plating } from '../core/stats';
 import { GAME_DATA } from '../data/dataview';
 
-/** Locked Bench parts (GDD §8.2). */
-export type Locomotion = 'treads' | 'legs' | 'hover';
-export type CoreChoice = 'furnace' | 'dynamo' | 'reservoir';
+/** The starter pick at the Bench (GDD §8.2 — a straight three-way choice). */
+export type StarterChoice = 'scooter' | 'drone' | 'dog';
 
 export interface BenchPicks {
-  locomotion: Locomotion;
-  core: CoreChoice;
-  plating: Plating;
+  starter: StarterChoice;
 }
 
 export interface GameState {
@@ -28,30 +24,24 @@ export interface GameState {
   seedCounter: number;
 }
 
-const CORE_SPECIES: Record<CoreChoice, number> = { furnace: 1, dynamo: 4, reservoir: 7 };
-const LOCO_MOVE: Record<Locomotion, string> = {
-  treads: 'rumble-over',
-  legs: 'close-the-gap',
-  hover: 'static-drift',
-};
+/** scooter / drone / dog → each line's stage-1 species (roster 1 / 4 / 7). */
+export const STARTER_SPECIES: Record<StarterChoice, number> = { scooter: 1, drone: 4, dog: 7 };
 
 export function buildStarter(picks: BenchPicks, preset: 'SAL' | 'WREN'): Battler {
-  const species = GAME_DATA.species(CORE_SPECIES[picks.core]);
-  const starter = makeBattler(species, 5, GAME_DATA, {
-    plating: picks.plating,
-    extraMove: LOCO_MOVE[picks.locomotion],
-  });
+  const species = GAME_DATA.species(STARTER_SPECIES[picks.starter]);
+  const starter = makeBattler(species, 5, GAME_DATA, { plating: 'factory' });
   void preset;
   return starter;
 }
 
 export function newGame(preset: 'SAL' | 'WREN', picks: BenchPicks): GameState {
+  const num = STARTER_SPECIES[picks.starter];
   return {
     schema: 1,
     preset,
     party: [buildStarter(picks, preset)],
     garage: [],
-    manifest: { seen: [CORE_SPECIES[picks.core]], freed: [CORE_SPECIES[picks.core]] },
+    manifest: { seen: [num], freed: [num] },
     patches: [],
     // Grandpa slips you one rare core off the Bench — the slice's evolution seed
     bag: { 'storage-node': 5, 'repair-kit': 3, 'resonance-core': 1 },

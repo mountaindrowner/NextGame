@@ -14,17 +14,17 @@ variant; other regions see a different form of the same line).
 
 -----
 
-## The Bench trio (built, never wild)
+## The starter trio (REVISED 2026-06-16 — pick one, never wild)
 
-The Core chosen at Grandpa's Bench builds one of three lines. Locomotion sets
-the signature move; Plating sets the stat lean. Mid-stages arrive at Lv16 +
-Resonance Core, finals at Lv36 + Prime Core.
+At Grandpa's Bench you wake one of his three prototype companions (a straight
+choice — the old furnace/generator/pump parts-build is retired). Mid-stages at
+Lv16 + Resonance Core, finals at Lv36 + Prime Core. Names [PROPOSAL].
 
 | # | Ohm | Object | Type | Notes |
 |---|---|---|---|---|
-| 001–003 | **Charkit → Smolderig → Pyrofurnax** | scrap-built furnace rig | THERM | Move theme: vents, flares, slag. Lore: a firebox heart in a hand-welded frame; it idles warm so nobody sleeps cold. |
-| 004–006 | **Sparkit → Amperig → Generatlas** | scrap-built generator rig | VOLT | Move theme: arcs, surges, magnet throws. `[HAUL]` at final stage. Lore: Grandpa wound its coil by hand; it hums his workbench tune. |
-| 007–009 | **Dripkit → Flowrig → Aquaducton** | scrap-built pump rig | COOLANT | Move theme: jets, pressure, mist veils. Lore: built around a pump that never once quit; it stores a gallon for friends first. |
+| 001–003 | **Scootlet → Boltbike → Velocrash** | kick e-scooter → e-bike → faired e-superbike | MOTOR | Speed glass-cannon: strikes first, evades, ends fights fast. Sig BURNOUT (priority dash). Lore: restless as a puppy on wheels; remembers roads that no longer exist. |
+| 004–006 | **Dronelet → Buzzhawk → Sentinad** | pocket quadcopter → FPV racer → ringed sentry UAV | SIGNAL | Precision ranged glass-cannon: scans, marks, strikes from the air; folds if cornered. Sig MARK STRIKE. `[HOVER]`. Lore: watches the surface the way the old satellites did. |
+| 007–009 | **Scraplet → Scouthound → Warhound** | scrap-pup → scout-hound → armored war-hound | FRAME | Hunter bruiser, the forgiving sturdy starter: well-rounded, all-terrain, runs fragile things down. Sig POUNCE (hit + pin). Lore: doesn't know it's a machine; just knows it's yours. |
 
 ## The Field — ruined cattle-town commons (010–048)
 
@@ -71,12 +71,12 @@ Resonance Core, finals at Lv36 + Prime Core.
 | 065–067 | **Pumplet → Jacklift → Cruderrick** (Lv19/Lv36) | oil pumpjack → derrick | THERM | Nodding-beam slams, gusher bursts. Lore: keeps nodding at its dry well, patient as ever. |
 | 068–069 | **Nozzlet → Octanyx** (Lv24) | gas pump | THERM | Fume clouds, ignition sprays. Lore: asks pump or charge, then attacks either way. |
 | 070–072 | **Rustbed → Rustler → Longhauler** (Lv20/Lv38) | pickup truck → semi | MOTOR | RIDE at Rustler. Bed-load throws, grille rushes, convoy calls. **OG:** horn-rack grille in Region 1. Lore: a ranch truck that never learned to quit hauling. |
-| 073–074 | **Spokelet → Zoomoped** (Lv18) | e-bike | MOTOR | Canon line. RIDE. Wheelie strikes, bell dings. Lore: first taste of topside speed for most young Raiders. |
+| 073–074 | **Quadlet → Trailbronc** (Lv18) | four-wheeler ATV | MOTOR | RIDE. Mud-slings, bumper rushes. (Replaced the old e-bike line, now the scooter starter.) Lore: the ranch hand's runabout; never met a fence it respected. |
 | 075 | **Kartwheel** | go-kart | MOTOR | RIDE. Drift slams. Lore: laps the Loop's empty grandstands at dawn. |
 | 076 | **Remotorist** | RC car | MOTOR | Underfoot feints, priority darts. Lore: someone somewhere lost its controller; it drives on regardless. |
 | 077–078 | **Cartlet → Stampecart** (Lv21) | shopping cart | MOTOR | Rattling charges, basket tosses. **OG:** longhorn handle-bars. Lore: herds with its kind in parking-lot pastures. |
 | 079 | **Treadmillipede** | treadmill | MOTOR | Belt grinds, endless-run stamina. Lore: it goes nowhere with tremendous conviction. |
-| 080–081 | **Hoverlet → Dronegade** (Lv26) | quad drone | MOTOR | Strafe dives, eye-in-sky marks. `[HOVER]`. Lore: deserted its delivery route and never looked down again. |
+| 080–081 | **Balelet → Baleron** (Lv26) | hay baler → round baler | MOTOR | Bale-throws, rolling charges. (Replaced the old quad-drone line, now the drone starter.) Lore: works a field that was harvested fifty years ago, and will not be told otherwise. |
 | 082–084 | **Tillbit → Furrower → Combinator** (Lv20/Lv37) | tractor → combine | MOTOR | Furrow quakes, thresher sweeps. `[HAUL]` at final. Lore: cuts one straight line through everything. The Field's grain-elevator Ohmega is an overgrown Combinator. |
 | 085–087 | **Smokelet → Brisketeer → Pitmastodon** (Lv19/Lv36) | smoker grill → BBQ pit rig | THERM | Smoke screens, low-and-slow burns, mesquite musk. **OG:** Region 1 signature line. Lore: judged by its bark, feared for its bite. |
 
@@ -143,7 +143,7 @@ Resonance Core, finals at Lv36 + Prime Core.
   late-game. Full per-type counts tabulated in Phase 3 balancing.
 - **Field-ability coverage:** SHEAR ×4 lines, BREACH ×2, HAUL ×4, LUMEN ×3,
   HOVER ×2 — Region 1's SHEAR gate is reachable by Lv22 with three options.
-- **Rideables (fast travel, ground):** Zoomoped, Rustler/Longhauler,
+- **Rideables (fast travel, ground):** Trailbronc, Rustler/Longhauler,
   Kartwheel, Mowrauder (slow, fun).
 - **Ohmega-class boss individuals** are oversized story spawns of roster
   species (e.g., the grain-elevator Combinator), never separate species.

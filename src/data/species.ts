@@ -45,6 +45,9 @@ const TYPE_ARCHETYPE: Record<TypeName, Archetype> = {
 
 /** Flavor overrides where the compendium reads differently from the type default. */
 const ARCHETYPE_OVERRIDES: Record<number, Archetype> = {
+  7: 'balanced', // Scraplet — the forgiving, well-rounded dog starter
+  8: 'bruiser', // Scouthound — grows into the hunter
+  9: 'bruiser', // Warhound
   18: 'fast', // Beeplet
   29: 'tank', // Registill
   31: 'tank', // Vendetta (the line)
@@ -183,8 +186,36 @@ function templateLearnset(type: TypeName): LearnsetEntry[] {
   ];
 }
 
-/** Starters: signature move slots in at the Bench by Locomotion (M6). */
+/** Starters carry their line's signature move from level 1 (the Bench is now a
+ * straight pick of scooter/drone/dog — no Locomotion move injection). */
 const LEARNSET_OVERRIDES: Record<number, LearnsetEntry[]> = {
+  1: [
+    { level: 1, move: 'bump-start' },
+    { level: 1, move: 'burnout' }, // scooter signature — charge-burst dash
+    { level: 8, move: 'dust-cloud' },
+    { level: 16, move: 'rev-up' },
+    { level: 22, move: 'run-down' },
+    { level: 30, move: 'brace' },
+    { level: 38, move: 'redline' },
+  ],
+  4: [
+    { level: 1, move: 'ping' },
+    { level: 1, move: 'mark-strike' }, // drone signature — marks + ranged hit
+    { level: 8, move: 'dust-cloud' },
+    { level: 16, move: 'bad-sector' },
+    { level: 22, move: 'packet-storm' },
+    { level: 30, move: 'brace' },
+    { level: 38, move: 'broadcast' },
+  ],
+  7: [
+    { level: 1, move: 'chassis-bash' },
+    { level: 1, move: 'pounce' }, // dog signature — pounce + pin
+    { level: 8, move: 'rattle' },
+    { level: 16, move: 'bulkhead' },
+    { level: 22, move: 'girder-swing' },
+    { level: 30, move: 'brace' },
+    { level: 38, move: 'anchor-drop' },
+  ],
   10: [
     { level: 1, move: 'bump' },
     { level: 1, move: 'heat-tick' },
@@ -228,10 +259,11 @@ function distribute(bst: number, archetype: Archetype): StatBlock {
 }
 
 const STAT_OVERRIDES: Record<number, Partial<StatBlock>> = {
-  // Bench trio leans (pre-Plating): THERM hits, VOLT speeds, COOLANT lasts
-  1: { integrity: 50, output: 48, armor: 50, surge: 62, shielding: 50, clock: 45 },
-  4: { integrity: 46, output: 45, armor: 44, surge: 60, shielding: 46, clock: 64 },
-  7: { integrity: 60, output: 46, armor: 56, surge: 52, shielding: 58, clock: 33 },
+  // starter stage-1 leans: scooter = speed glass-cannon, drone = ranged glass-
+  // cannon, dog = sturdy well-rounded (the forgiving pick)
+  1: { integrity: 42, output: 50, armor: 38, surge: 40, shielding: 38, clock: 97 },
+  4: { integrity: 40, output: 36, armor: 38, surge: 64, shielding: 42, clock: 85 },
+  7: { integrity: 62, output: 56, armor: 52, surge: 32, shielding: 50, clock: 53 },
 };
 
 const TAGS: Record<number, string[]> = {
@@ -249,14 +281,14 @@ const TAGS: Record<number, string[]> = {
   53: ['BREACH'],
   142: ['BREACH'],
   143: ['BREACH'],
-  6: ['HAUL'],
   84: ['HAUL'],
   136: ['HAUL'],
   137: ['HAUL'],
   140: ['HAUL'],
   141: ['HAUL'],
-  80: ['HOVER'],
-  81: ['HOVER'],
+  4: ['HOVER'], // the drone starter flies (replaces the old quad-drone's role)
+  5: ['HOVER'],
+  6: ['HOVER'],
   124: ['HOVER', 'net-only'],
   125: ['HOVER', 'net-only'],
   71: ['ride'],

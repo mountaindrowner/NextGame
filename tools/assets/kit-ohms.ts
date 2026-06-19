@@ -28,44 +28,38 @@ function eyes(g: Grid, lx: number, rx: number, y: number, col = 'X'): void {
 }
 function foot(g: Grid, x: number, y: number, w: number, base_ = 'A'): void { g.box(x, y, w, 7, 'a', base_, 'x'); }
 
-// ---- the Bench trio (stage 1) -------------------------------------------
-function charkit(): Sprite { // 001 furnace rig — THERM
+// ---- the starter trio (stage 1): scooter / drone / dog ------------------
+function scootlet(): Sprite { // 001 kick e-scooter — MOTOR
   const g = base();
-  foot(g, 28, 80, 12); foot(g, 56, 80, 12);
-  g.box(24, 30, 48, 52, 'l', 'a', 'A'); // welded firebox body
-  for (let y = 34; y < 80; y += 8) g.hline(24, y, 48, 'A'); // panel seams
-  g.box(34, 56, 28, 20, 'E', 'x', 'x'); // the firebox door (mouth) — opens to flame
-  g.rect(38, 60, 20, 12, 'Z'); g.rect(40, 62, 16, 8, 'z');
-  g.box(40, 14, 14, 18, 'a', 'A', 'x'); // stovepipe (head crest)
-  g.set(47, 12, 'z'); // ember puff
-  eyes(g, 32, 56, 40);
-  for (const [x, y] of [[26, 32], [68, 32], [26, 76], [68, 76]] as Array<[number, number]>) g.set(x, y, 'l'); // rivets
+  for (const wx of [36, 60]) { g.ellipse(wx, 82, 8, 8, 'x'); g.ellipse(wx, 82, 4, 4, 'a'); g.set(wx, 82, 'l'); } // wheels
+  g.box(32, 74, 32, 6, 'm', 'u', 'U'); // deck
+  g.rect(40, 78, 16, 3, 'b'); // a cheeky red stripe
+  g.box(44, 30, 9, 46, 'm', 'u', 'U'); // stem
+  g.box(34, 32, 30, 5, 'a', 'A', 'x'); g.ellipse(34, 34, 3, 3, 'x'); g.ellipse(64, 34, 3, 3, 'x'); // handlebars + grips
+  g.ellipse(48, 26, 9, 9, 'l'); g.ellipse(48, 26, 6, 6, 'I'); g.ellipse(47, 25, 3, 3, '1'); g.set(46, 24, '*'); // single headlight eye
   g.outline('X');
-  const s = g.render(); glow(s, 48, 66, 22, [120, 60, 18]); return s;
+  const s = g.render(); glow(s, 48, 26, 14, [40, 90, 130]); return s;
 }
-function sparkit(): Sprite { // 004 generator rig — VOLT
+function dronelet(): Sprite { // 004 pocket quadcopter — SIGNAL
   const g = base();
-  foot(g, 28, 80, 12); foot(g, 56, 80, 12);
-  g.box(24, 36, 48, 46, 'l', 'a', 'A'); // generator box
-  g.box(30, 26, 36, 12, 'n', 'k', 'K'); // hand-wound copper coil (head)
-  for (let x = 32; x < 64; x += 3) g.vline(x, 26, 12, 'q');
-  eyes(g, 32, 56, 46);
-  g.box(38, 60, 20, 8, 'A', 'x', 'x'); g.hline(40, 64, 16, '7'); // vent grille mouth
-  g.line(20, 30, 12, 18, '1'); g.line(76, 30, 84, 18, '1'); g.set(12, 18, '*'); g.set(84, 18, '*'); // arcs
+  for (const [ax, ay] of [[26, 40], [70, 40], [26, 64], [70, 64]] as Array<[number, number]>) { g.line(48, 52, ax, ay, 'A'); g.ellipse(ax, ay, 9, 3, 'x'); g.ellipse(ax, ay, 9, 1, 'l'); } // rotor arms + spin
+  g.box(36, 42, 24, 22, 'l', 'a', 'A'); // central body
+  g.set(40, 45, '7'); g.set(56, 45, '7'); // status lights
+  g.ellipse(48, 54, 9, 9, 'a'); g.ellipse(48, 54, 7, 7, 'I'); g.ellipse(47, 53, 4, 4, '7'); g.ellipse(47, 53, 2, 2, '1'); g.set(46, 52, '*'); // big camera eye
   g.outline('X');
-  const s = g.render(); glow(s, 48, 32, 20, [30, 80, 130]); return s;
+  const s = g.render(); glow(s, 48, 54, 13, [30, 120, 110]); return s;
 }
-function dripkit(): Sprite { // 007 pump rig — COOLANT
+function scraplet(): Sprite { // 007 scrap-pup — FRAME
   const g = base();
-  foot(g, 28, 80, 12); foot(g, 56, 80, 12);
-  g.box(26, 38, 44, 44, 'i', 'I', 'C'); // pump body (cool metal)
-  g.box(60, 24, 10, 20, 'a', 'A', 'x'); g.rect(60, 24, 16, 6, 'a'); // spout (head)
-  for (let i = 0; i < 3; i++) g.set(74, 30 + i * 4, 'v'); // drips
-  eyes(g, 34, 56, 48);
-  g.box(38, 62, 18, 8, 'C', 'c', 'C'); // mouth (water window)
-  g.ellipse(30, 60, 4, 4, 'a'); g.ellipse(30, 60, 2, 2, 'l'); // pressure gauge
+  for (const lx of [34, 44, 54, 62]) g.box(lx, 76, 6, 10, 'a', 'A', 'x'); // four stubby legs
+  g.box(30, 58, 34, 20, 'l', 'a', 'A'); g.set(34, 61, 'k'); g.set(56, 63, 'k'); // scrappy body + welds
+  g.line(30, 60, 20, 48, 'A'); g.ellipse(19, 46, 3, 3, '7'); g.set(19, 46, '1'); // antenna tail (wagging)
+  g.box(56, 48, 20, 20, 'l', 'a', 'A'); // head
+  g.box(57, 44, 5, 5, 'a', 'A', 'x'); g.box(69, 44, 5, 5, 'a', 'A', 'x'); // ears
+  g.box(74, 58, 6, 7, 'a', 'A', 'x'); g.set(79, 60, 'x'); // snout
+  g.ellipse(66, 57, 7, 7, 'a'); g.ellipse(66, 57, 5, 5, 'I'); g.ellipse(65, 56, 3, 3, '1'); g.set(64, 55, '*'); // big sensor eye
   g.outline('X');
-  const s = g.render(); glow(s, 48, 56, 20, [20, 60, 110]); return s;
+  const s = g.render(); glow(s, 66, 57, 11, [40, 90, 120]); return s;
 }
 
 // ---- the Field commons --------------------------------------------------
@@ -206,88 +200,74 @@ function snoozebox(): Sprite { // 033 alarm clock — SONIC
 }
 
 // ---- starter evolutions (the player's own Ohm, grown) -------------------
-function smolderig(): Sprite { // 002 — furnace stage 2
+function boltbike(): Sprite { // 002 e-bike — MOTOR
   const g = base();
-  foot(g, 24, 82, 13); foot(g, 59, 82, 13);
-  g.box(20, 28, 56, 54, 'l', 'a', 'A'); // bigger firebox
-  for (let y = 34; y < 80; y += 7) g.hline(20, y, 56, 'A');
-  g.box(30, 52, 36, 26, 'E', 'x', 'x'); // firebox mouth
-  g.rect(34, 56, 28, 18, 'Z'); g.rect(38, 60, 20, 12, 'z'); g.rect(44, 64, 8, 6, '*');
-  g.box(28, 12, 14, 18, 'a', 'A', 'x'); g.box(54, 12, 14, 18, 'a', 'A', 'x'); // twin stovepipes
-  g.set(34, 10, 'z'); g.set(60, 10, 'Z'); // embers
-  eyes(g, 28, 60, 38);
-  for (const [x, y] of [[22, 30], [72, 30], [22, 76], [72, 76]] as Array<[number, number]>) g.set(x, y, 'l');
+  for (const wx of [28, 68]) { g.ellipse(wx, 78, 12, 12, 'x'); g.ellipse(wx, 78, 8, 8, 'a'); for (let i = 0; i < 8; i++) { const a = (i / 8) * 6.28; g.set(wx + Math.cos(a) * 10, 78 + Math.sin(a) * 10, 'l'); } g.set(wx, 78, 'l'); } // spoked wheels
+  g.line(28, 78, 50, 52, 'u'); g.line(50, 52, 68, 78, 'u'); g.line(50, 52, 40, 64, 'u'); // frame tubes
+  g.box(44, 56, 22, 12, 'm', 'u', 'U'); // battery/motor body
+  g.box(46, 58, 16, 6, 'q', 'b', 'B'); // charge-glow accent
+  g.box(30, 48, 14, 5, 'x', 'X', 'X'); // seat
+  g.box(60, 40, 4, 14, 'a', 'A', 'x'); g.box(58, 38, 14, 4, 'a', 'A', 'x'); // handlebars
+  g.ellipse(66, 46, 7, 7, 'l'); g.ellipse(66, 46, 5, 5, 'I'); g.ellipse(65, 45, 3, 2, '1'); g.set(64, 44, '*'); // headlight eye
   g.outline('X');
-  const s = g.render(); glow(s, 48, 62, 26, [140, 70, 20]); return s;
+  const s = g.render(); glow(s, 66, 46, 12, [40, 90, 130]); glow(s, 54, 60, 12, [70, 40, 24]); return s;
 }
-function pyrofurnax(): Sprite { // 003 — furnace final
+function velocrash(): Sprite { // 003 e-superbike — MOTOR
   const g = base();
-  foot(g, 22, 84, 14); foot(g, 60, 84, 14);
-  g.box(16, 22, 64, 62, 'l', 'a', 'A'); // massive industrial furnace
-  for (let y = 28; y < 82; y += 6) g.hline(16, y, 64, 'A');
-  g.box(26, 46, 44, 32, 'E', 'x', 'x'); // roaring firebox
-  g.rect(30, 50, 36, 24, 'Z'); g.rect(34, 54, 28, 16, 'z'); g.rect(42, 58, 12, 8, '*');
-  for (let x = 30; x < 66; x += 6) g.vline(x, 50, 24, 'A'); // grate teeth
-  g.box(24, 8, 12, 16, 'a', 'A', 'x'); g.box(42, 4, 12, 18, 'a', 'A', 'x'); g.box(60, 8, 12, 16, 'a', 'A', 'x'); // 3 stovepipes
-  g.set(30, 6, 'z'); g.set(48, 2, '*'); g.set(66, 6, 'Z'); // ember plumes
-  eyes(g, 24, 64, 32, 'Z');
-  for (const [x, y] of [[18, 24], [76, 24], [18, 78], [76, 78]] as Array<[number, number]>) g.set(x, y, 'l');
+  for (const wx of [24, 72]) { g.ellipse(wx, 82, 13, 12, 'x'); g.ellipse(wx, 82, 7, 6, 'a'); g.set(wx, 82, 'l'); }
+  g.box(18, 58, 60, 16, 'm', 'u', 'U'); // main fairing
+  for (let i = 0; i < 24; i++) g.set(18 + i * 2.5, 58 - Math.floor(i * 0.18), 'm'); // top sheen
+  g.box(56, 48, 26, 18, 'm', 'u', 'U'); // front fairing rises
+  g.box(60, 42, 12, 8, 'i', 'I', 'C'); // windscreen
+  g.ellipse(70, 56, 4, 5, 'l'); g.ellipse(78, 58, 4, 5, 'l'); g.set(70, 56, '1'); g.set(78, 58, '1'); g.set(69, 55, '*'); g.set(77, 57, '*'); // twin headlamp eyes
+  g.box(14, 64, 8, 8, 'a', 'A', 'x'); g.set(12, 66, 'z'); // exhaust
   g.outline('X');
-  const s = g.render(); glow(s, 48, 60, 30, [170, 80, 18]); return s;
+  const s = g.render();
+  glow(s, 24, 82, 14, [30, 70, 110]); glow(s, 72, 82, 14, [30, 70, 110]); // rim-lit wheels
+  glow(s, 74, 57, 12, [40, 90, 140]); return s; // headlamp trail
 }
-function amperig(): Sprite { // 005 — generator stage 2
+function buzzhawk(): Sprite { // 005 FPV racing drone — SIGNAL
   const g = base();
-  foot(g, 24, 82, 13); foot(g, 59, 82, 13);
-  g.box(20, 34, 56, 48, 'l', 'a', 'A');
-  g.box(24, 22, 48, 14, 'n', 'k', 'K'); // wider copper coil bank
-  for (let x = 26; x < 70; x += 3) g.vline(x, 22, 14, 'q');
-  eyes(g, 28, 60, 44);
-  g.box(34, 60, 28, 10, 'A', 'x', 'x'); for (let x = 36; x < 62; x += 4) g.vline(x, 62, 6, '1'); // vent
-  g.line(16, 30, 6, 16, '1'); g.line(80, 30, 90, 16, '1'); g.set(6, 16, '*'); g.set(90, 16, '*');
-  g.line(48, 20, 48, 8, '1'); g.set(48, 8, '*');
+  for (const [ax, ay] of [[22, 34], [74, 34], [28, 66], [68, 66]] as Array<[number, number]>) { g.line(48, 50, ax, ay, 'A'); g.ellipse(ax, ay, 9, 3, 'x'); g.ellipse(ax, ay, 9, 1, 'l'); } // swept rotors
+  g.box(34, 40, 30, 22, 'l', 'a', 'A'); for (let i = 0; i < 22; i++) g.set(Math.round(64 - i * 0.4), 40 + i, 'A'); // leaning wedge nose
+  g.box(38, 46, 24, 6, 'A', 'x', 'x'); g.rect(40, 47, 20, 3, '7'); g.set(44, 48, '1'); g.set(56, 48, '1'); // visor band (eyes)
+  g.box(40, 54, 18, 4, 'b', 'B', 'x'); // racing stripe
   g.outline('X');
-  const s = g.render(); glow(s, 48, 28, 24, [40, 90, 150]); return s;
+  const s = g.render(); glow(s, 50, 49, 14, [30, 130, 120]); return s;
 }
-function generatlas(): Sprite { // 006 — generator final (HAUL)
+function sentinad(): Sprite { // 006 sentry UAV — SIGNAL
   const g = base();
-  foot(g, 22, 84, 14); foot(g, 60, 84, 14);
-  g.box(16, 30, 64, 54, 'l', 'a', 'A'); // big frame
-  for (let y = 36; y < 82; y += 7) g.hline(16, y, 64, 'A');
-  g.box(20, 16, 56, 16, 'n', 'k', 'K'); // massive coil bank crown
-  for (let x = 22; x < 74; x += 3) g.vline(x, 16, 16, 'q');
-  g.box(8, 40, 12, 24, 'n', 'k', 'K'); g.box(76, 40, 12, 24, 'n', 'k', 'K'); // shoulder coils (HAUL)
-  eyes(g, 26, 62, 42, '1');
-  g.box(34, 62, 28, 12, 'A', 'x', 'x'); for (let x = 36; x < 62; x += 4) g.vline(x, 64, 8, '1');
-  g.line(20, 14, 30, 4, '1'); g.line(76, 14, 66, 4, '1'); g.line(48, 14, 48, 2, '*'); // arcs
-  g.set(30, 4, '*'); g.set(66, 4, '*');
+  for (const [cxx, cyy, rr] of [[24, 52, 13], [72, 52, 13], [48, 26, 12]] as Array<[number, number, number]>) { g.ellipse(cxx, cyy, rr, rr, 'a'); g.ellipse(cxx, cyy, rr - 2, rr - 2, 'x'); g.ellipse(cxx, cyy, rr - 5, rr - 5, 'A'); g.set(cxx, cyy, 'l'); } // wide ducted fans
+  g.box(36, 44, 24, 26, 'l', 'a', 'A'); for (let y = 48; y < 68; y += 5) g.hline(36, y, 24, 'A');
+  g.box(38, 46, 20, 4, 'l', 'a', 'A'); // armored brow
+  g.ellipse(48, 56, 8, 8, 'A'); g.ellipse(48, 56, 6, 6, '8'); g.ellipse(48, 56, 3, 3, '7'); g.set(48, 56, '1'); g.set(47, 55, '*'); // one intense scanning eye
   g.outline('X');
-  const s = g.render(); glow(s, 48, 24, 30, [40, 100, 160]); return s;
+  const s = g.render(); glow(s, 48, 56, 18, [40, 150, 130]); return s;
 }
-function flowrig(): Sprite { // 008 — pump stage 2
+function scouthound(): Sprite { // 008 scout-hound — FRAME
   const g = base();
-  foot(g, 24, 82, 13); foot(g, 59, 82, 13);
-  g.box(22, 36, 52, 46, 'i', 'I', 'C');
-  g.box(58, 20, 12, 22, 'a', 'A', 'x'); g.rect(56, 18, 18, 6, 'a'); // taller spout
-  for (let i = 0; i < 4; i++) g.set(74, 26 + i * 4, 'v'); // drips
-  eyes(g, 30, 58, 46);
-  g.box(36, 60, 22, 10, 'C', 'c', 'C'); g.hline(38, 64, 18, 'v');
-  g.ellipse(28, 56, 5, 5, 'a'); g.ellipse(28, 56, 2, 2, 'l'); // gauges
-  g.ellipse(66, 56, 5, 5, 'a'); g.ellipse(66, 56, 2, 2, 'l');
+  for (const lx of [30, 42, 56, 68]) g.box(lx, 74, 6, 14, 'a', 'A', 'x'); // longer legs
+  g.box(26, 52, 44, 22, 'l', 'a', 'A'); for (let y = 56; y < 72; y += 5) g.hline(26, y, 44, 'A'); // leaner body
+  g.line(26, 54, 16, 44, 'a'); g.ellipse(15, 43, 3, 3, '7'); g.set(15, 43, '1'); // alert tail
+  g.box(62, 42, 20, 18, 'l', 'a', 'A'); // head
+  g.box(62, 38, 5, 5, 'a', 'A', 'x'); g.box(74, 38, 5, 5, 'a', 'A', 'x'); // ears
+  g.box(78, 50, 6, 7, 'a', 'A', 'x'); // muzzle
+  g.box(64, 48, 16, 6, 'A', 'x', 'x'); g.rect(66, 49, 12, 3, '7'); g.set(70, 50, '1'); g.set(76, 50, '1'); // sensor visor (eyes)
   g.outline('X');
-  const s = g.render(); glow(s, 48, 56, 24, [20, 70, 120]); return s;
+  const s = g.render(); glow(s, 72, 51, 12, [40, 110, 110]); return s;
 }
-function aquaducton(): Sprite { // 009 — pump final
+function warhound(): Sprite { // 009 war-hound — FRAME
   const g = base();
-  foot(g, 22, 84, 14); foot(g, 60, 84, 14);
-  g.box(18, 30, 60, 54, 'i', 'I', 'C'); // big pump tower
-  for (let y = 36; y < 82; y += 7) g.hline(18, y, 60, 'C');
-  for (let ax = 24; ax < 72; ax += 16) { g.ellipse(ax + 6, 50, 7, 10, 'C'); g.ellipse(ax + 6, 50, 5, 8, 'c'); } // aqueduct arches
-  g.box(40, 12, 16, 20, 'a', 'A', 'x'); g.rect(36, 10, 24, 6, 'a'); // central spout crown
-  for (let i = 0; i < 3; i++) { g.set(44 + i * 4, 6 - i, 'v'); g.set(44 + i * 4, 4, '*'); } // jet
-  eyes(g, 28, 62, 38, '1');
-  g.box(38, 66, 24, 10, 'C', 'c', 'C'); g.hline(40, 70, 20, 'v');
+  for (const lx of [26, 40, 56, 70]) { g.box(lx, 72, 9, 16, 'l', 'a', 'A'); g.box(lx, 84, 11, 5, 'a', 'A', 'x'); } // heavy legs + paws
+  g.box(20, 46, 56, 28, 'l', 'a', 'A'); for (let y = 52; y < 72; y += 5) g.hline(20, y, 56, 'A'); // armored body
+  g.box(16, 42, 22, 16, 'l', 'a', 'A'); g.box(58, 42, 22, 16, 'l', 'a', 'A'); // plated shoulders
+  g.box(20, 56, 8, 10, 'A', 'x', 'x'); g.set(22, 60, 'Z'); g.set(24, 62, 'z'); // thruster vent
+  g.box(64, 52, 22, 18, 'l', 'a', 'A'); // fierce head
+  g.box(64, 48, 5, 5, 'a', 'A', 'x'); g.box(76, 48, 5, 5, 'a', 'A', 'x'); // ears
+  g.box(82, 60, 6, 7, 'a', 'A', 'x'); // jaw
+  g.box(66, 58, 18, 6, 'A', 'x', 'x'); g.rect(68, 59, 14, 4, 'b'); g.set(72, 60, 'Z'); g.set(80, 60, 'Z'); // menacing visor (eyes)
   g.outline('X');
-  const s = g.render(); glow(s, 48, 50, 30, [20, 80, 140]); return s;
+  const s = g.render(); glow(s, 75, 61, 14, [120, 50, 30]); glow(s, 24, 60, 12, [120, 70, 30]); return s;
 }
 
 // ---- legendaries (story-critical individuals) ---------------------------
@@ -613,84 +593,51 @@ function backArch(p: Pal): Sprite {
 }
 
 // ---- bespoke starter backs (the player's own Ohm, seen from behind) ------
-// No face (we see the back of the head); the silhouette features carry it.
-function thermBack(tier: number): Sprite { // 001/002/003 furnace rear — 1/2/3 stovepipes
+// No face (we see the rear); the silhouette features carry it. tier = stage.
+function scooterBack(tier: number): Sprite { // 001/002/003 scooter/bike rear
   const g = base();
-  const w = 48 + tier * 8;
-  const h = 48 + tier * 8;
-  const x = Math.round((S - w) / 2);
-  const yb = 82 + tier;
-  const y = yb - h;
-  foot(g, x + 4, yb, 13); foot(g, x + w - 17, yb, 13);
-  g.box(x, y, w, h, 'l', 'a', 'A'); // welded firebox from behind
-  for (let yy = y + 7; yy < yb - 2; yy += 7) g.hline(x + 1, yy, w - 2, 'A'); // panel seams
-  const vx0 = x + Math.round(w / 2) - 12;
-  const vy0 = y + Math.round(h * 0.42);
-  g.box(vx0, vy0, 24, 16, 'A', 'x', 'x'); // back vent grille (glows hot)
-  for (let vx = vx0 + 2; vx < vx0 + 22; vx += 4) g.vline(vx, vy0 + 2, 12, 'Z');
-  const pw = 12;
-  const gap = (w - tier * pw) / (tier + 1);
-  for (let i = 0; i < tier; i++) { const px = Math.round(x + gap * (i + 1) + pw * i); g.box(px, y - 16, pw, 18, 'a', 'A', 'x'); g.set(px + 6, y - 18, 'z'); } // stovepipes + embers
-  for (const [rx, ry] of [[x + 2, y + 2], [x + w - 3, y + 2], [x + 2, yb - 3], [x + w - 3, yb - 3]] as Array<[number, number]>) g.set(rx, ry, 'l');
+  const r = 9 + tier * 2;
+  g.ellipse(48, 82, r, r, 'x'); g.ellipse(48, 82, r - 4, r - 4, 'a'); g.set(48, 82, 'l'); // back wheel
+  g.box(36, 70 - tier * 3, 24 + tier * 4, 8 + tier * 2, 'm', 'u', 'U'); // body/deck from behind
+  g.box(44, 36, 9, 36, 'm', 'u', 'U'); // stem/seat post
+  g.box(34, 36, 30, 4, 'a', 'A', 'x'); g.ellipse(34, 38, 3, 3, 'x'); g.ellipse(64, 38, 3, 3, 'x'); // handlebar tips
+  g.box(42, 62, 12, 5, 'b', 'B', 'x'); // red taillight
+  if (tier >= 3) { g.box(18, 68, 12, 10, 'm', 'u', 'U'); g.box(66, 68, 12, 10, 'm', 'u', 'U'); } // superbike flanks
   g.outline('X');
-  const s = g.render(); glow(s, S / 2, vy0 + 8, 18 + tier * 3, [130, 65, 18]); return s;
+  const s = g.render(); glow(s, 48, 64, 14 + tier * 2, [120, 30, 20]); return s;
 }
-function voltBack(tier: number): Sprite { // 004/005/006 generator rear — coil bank + arcs
+function droneBack(tier: number): Sprite { // 004/005/006 drone rear
   const g = base();
-  const w = 48 + tier * 8;
-  const h = 46 + tier * 8;
-  const x = Math.round((S - w) / 2);
-  const yb = 82 + tier;
-  const y = yb - h;
-  foot(g, x + 4, yb, 13); foot(g, x + w - 17, yb, 13);
-  g.box(x, y, w, h, 'l', 'a', 'A');
-  for (let yy = y + 7; yy < yb - 2; yy += 7) g.hline(x + 1, yy, w - 2, 'A');
-  const cbw = w - 16;
-  g.box(x + 8, y - 16, cbw, 16, 'n', 'k', 'K'); // copper coil bank from behind
-  for (let cx = x + 10; cx < x + 8 + cbw; cx += 3) g.vline(cx, y - 16, 16, 'q');
-  if (tier >= 3) { g.box(x - 6, y + 8, 12, 22, 'n', 'k', 'K'); g.box(x + w - 6, y + 8, 12, 22, 'n', 'k', 'K'); } // HAUL shoulder coils
-  const vx0 = x + Math.round(w / 2) - 12;
-  const vy0 = y + Math.round(h * 0.45);
-  g.box(vx0, vy0, 24, 12, 'A', 'x', 'x');
-  for (let vx = vx0 + 2; vx < vx0 + 22; vx += 4) g.vline(vx, vy0 + 2, 8, '1');
-  g.line(x + 8, y - 14, x - 2, y - 26, '1'); g.line(x + 8 + cbw, y - 14, x + 8 + cbw + 10, y - 26, '1'); // arcs
-  g.set(x - 2, y - 26, '*'); g.set(x + 8 + cbw + 10, y - 26, '*');
-  if (tier >= 2) { g.line(Math.round(S / 2), y - 16, Math.round(S / 2), y - 28, '1'); g.set(Math.round(S / 2), y - 28, '*'); }
-  for (const [rx, ry] of [[x + 2, y + 2], [x + w - 3, y + 2], [x + 2, yb - 3], [x + w - 3, yb - 3]] as Array<[number, number]>) g.set(rx, ry, 'l');
+  const spread = 22 + tier * 4;
+  for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]] as Array<[number, number]>) { const ax = 48 + sx * spread; const ay = 52 + sy * (16 + tier * 3); g.line(48, 52, ax, ay, 'A'); g.ellipse(ax, ay, 8 + tier, 3, 'x'); g.ellipse(ax, ay, 8 + tier, 1, 'l'); }
+  g.box(36, 42, 24 + tier * 2, 22 + tier * 2, 'l', 'a', 'A'); for (let y = 46; y < 60; y += 5) g.hline(36, y, 24, 'A');
+  g.box(42, 50, 12, 6, 'A', 'x', 'x'); g.rect(44, 51, 8, 3, '7'); g.set(48, 52, '1'); // rear status light
+  if (tier >= 3) for (const cxx of [22, 74]) { g.ellipse(cxx, 52, 12, 12, 'a'); g.ellipse(cxx, 52, 9, 9, 'x'); } // ducted rings
   g.outline('X');
-  const s = g.render(); glow(s, S / 2, y - 6, 16 + tier * 3, [40, 95, 155]); return s;
+  const s = g.render(); glow(s, 48, 52, 14, [30, 120, 110]); return s;
 }
-function coolantBack(tier: number): Sprite { // 007/008/009 pump rear — spout + drips
+function dogBack(tier: number): Sprite { // 007/008/009 dog rear
   const g = base();
-  const w = 46 + tier * 8;
-  const h = 46 + tier * 8;
+  const w = 40 + tier * 8;
   const x = Math.round((S - w) / 2);
-  const yb = 82 + tier;
-  const y = yb - h;
-  foot(g, x + 4, yb, 13); foot(g, x + w - 17, yb, 13);
-  g.box(x, y, w, h, 'i', 'I', 'C'); // cool pump body from behind
-  for (let yy = y + 7; yy < yb - 2; yy += 7) g.hline(x + 1, yy, w - 2, 'C');
-  g.box(x + w - 22, y - 18, 12, 22, 'a', 'A', 'x'); g.rect(x + w - 26, y - 20, 18, 6, 'a'); // spout over the top
-  for (let i = 0; i < 3 + tier; i++) g.set(x + w - 8, y - 14 + i * 4, 'v'); // drips down the back
-  const vy0 = y + Math.round(h * 0.4);
-  if (tier >= 3) for (let ax = x + 8; ax < x + w - 10; ax += 16) { g.ellipse(ax + 6, vy0, 6, 9, 'C'); g.ellipse(ax + 6, vy0, 4, 7, 'c'); } // aqueduct arches
-  else { g.box(x + Math.round(w / 2) - 11, vy0, 22, 12, 'C', 'c', 'C'); g.hline(x + Math.round(w / 2) - 9, vy0 + 6, 18, 'v'); }
-  g.ellipse(x + 12, vy0 + 2, 5, 5, 'a'); g.ellipse(x + 12, vy0 + 2, 2, 2, 'l'); // pressure gauge
-  for (const [rx, ry] of [[x + 2, y + 2], [x + w - 3, y + 2], [x + 2, yb - 3], [x + w - 3, yb - 3]] as Array<[number, number]>) g.set(rx, ry, 'l');
+  for (const lx of [x + 6, x + w - 14]) g.box(lx, 72, 7 + tier, 14 + tier * 2, 'l', 'a', 'A'); // back legs
+  g.box(x, 50, w, 26 + tier * 2, 'l', 'a', 'A'); for (let y = 56; y < 74; y += 5) g.hline(x, y, w, 'A'); // haunches
+  g.line(Math.round(S / 2), 50, Math.round(S / 2), 32, 'a'); g.ellipse(Math.round(S / 2), 30, 3, 3, '7'); g.set(Math.round(S / 2), 30, '1'); // raised tail/antenna
+  if (tier >= 3) { g.box(x - 2, 46, 16, 14, 'l', 'a', 'A'); g.box(x + w - 14, 46, 16, 14, 'l', 'a', 'A'); g.box(x + 4, 58, 8, 8, 'A', 'x', 'x'); g.set(x + 6, 62, 'Z'); } // plated shoulders + thruster
   g.outline('X');
-  const s = g.render(); glow(s, S / 2, vy0 + 2, 16 + tier * 3, [20, 75, 130]); return s;
+  const s = g.render(); if (tier >= 3) glow(s, x + 8, 62, 12, [120, 60, 30]); return s;
 }
 const BACK_OVERRIDES: Record<number, () => Sprite> = {
-  1: () => thermBack(1), 2: () => thermBack(2), 3: () => thermBack(3),
-  4: () => voltBack(1), 5: () => voltBack(2), 6: () => voltBack(3),
-  7: () => coolantBack(1), 8: () => coolantBack(2), 9: () => coolantBack(3),
+  1: () => scooterBack(1), 2: () => scooterBack(2), 3: () => scooterBack(3),
+  4: () => droneBack(1), 5: () => droneBack(2), 6: () => droneBack(3),
+  7: () => dogBack(1), 8: () => dogBack(2), 9: () => dogBack(3),
 };
 
 // ---- the full 150 spec (archetype + type per Manifest line) --------------
 type Arch = 'box' | 'round' | 'tall' | 'vehicle' | 'tool' | 'bulb' | 'plant' | 'speaker' | 'orb' | 'legend';
 interface Line { from: number; to: number; arch: Arch; type: TypeName }
 const LINES: Line[] = [
-  { from: 1, to: 3, arch: 'box', type: 'THERM' }, { from: 4, to: 6, arch: 'box', type: 'VOLT' }, { from: 7, to: 9, arch: 'box', type: 'COOLANT' },
+  { from: 1, to: 3, arch: 'vehicle', type: 'MOTOR' }, { from: 4, to: 6, arch: 'orb', type: 'SIGNAL' }, { from: 7, to: 9, arch: 'vehicle', type: 'FRAME' },
   { from: 10, to: 11, arch: 'box', type: 'THERM' }, { from: 12, to: 14, arch: 'box', type: 'THERM' }, { from: 15, to: 17, arch: 'bulb', type: 'OPTIC' },
   { from: 18, to: 18, arch: 'round', type: 'SONIC' }, { from: 19, to: 20, arch: 'box', type: 'UTILITY' }, { from: 21, to: 22, arch: 'round', type: 'UTILITY' },
   { from: 23, to: 23, arch: 'box', type: 'THERM' }, { from: 24, to: 24, arch: 'box', type: 'UTILITY' }, { from: 25, to: 26, arch: 'box', type: 'COOLANT' },
@@ -724,9 +671,9 @@ const LINES: Line[] = [
 /** bespoke drawers take priority over the archetype renderer: the slice set,
  * the full starter lines (the player's own Ohm), and the seven legendaries. */
 const OVERRIDES: Record<number, () => Sprite> = {
-  1: charkit, 2: smolderig, 3: pyrofurnax,
-  4: sparkit, 5: amperig, 6: generatlas,
-  7: dripkit, 8: flowrig, 9: aquaducton,
+  1: scootlet, 2: boltbike, 3: velocrash,
+  4: dronelet, 5: buzzhawk, 6: sentinad,
+  7: scraplet, 8: scouthound, 9: warhound,
   10: toastlet, 12: wavelet, 15: filaglow,
   18: beeplet, 19: vacuette, 21: fanlet, 24: mailstrom, 25: frostbox, 30: vendlet,
   32: staplejaw, 33: snoozebox,

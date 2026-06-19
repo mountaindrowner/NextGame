@@ -12,20 +12,20 @@ import { deserialize, MemoryStorage, SaveSlots, serialize } from '../src/save/sa
  */
 describe('SMOKE: bench → battle → capture → save → load', () => {
   it('runs the whole loop', () => {
-    // new game at the Bench
-    const picks: BenchPicks = { locomotion: 'treads', core: 'furnace', plating: 'heavy' };
+    // new game at the Bench — the dog (the sturdy starter) for a stable smoke
+    const picks: BenchPicks = { starter: 'dog' };
     const state = newGame('WREN', picks);
     expect(state.party).toHaveLength(1);
     const starter = state.party[0]!;
-    expect(starter.speciesNum).toBe(1); // Charkit by Furnace Core
-    expect(starter.moves.some((m) => m.id === 'rumble-over')).toBe(true); // treads signature
+    expect(starter.speciesNum).toBe(7); // Scraplet (the dog line)
+    expect(starter.moves.some((m) => m.id === 'pounce')).toBe(true); // dog signature
 
-    // wild battle in the Field
-    const foe = makeBattler(GAME_DATA.species(10), 3, GAME_DATA); // wild Toastlet
+    // wild battle in the Field — a tanky, low-level foe so it weakens, never downs
+    const foe = makeBattler(GAME_DATA.species(25), 5, GAME_DATA); // wild Frostbox (bulky)
     const battle = new Battle({ kind: 'wild', seed: 2024, party: state.party, foes: [foe] }, GAME_DATA);
     battle.intro();
     let guard = 0;
-    while (battle.phase === 'choosing' && foe.integrity > foe.stats.integrity / 3 && guard++ < 50) {
+    while (battle.phase === 'choosing' && foe.integrity > foe.stats.integrity / 2 && guard++ < 6) {
       battle.submit({ type: 'move', index: 0 });
     }
     expect(battle.phase).not.toBe('done'); // weakened, never downed — capture window open
@@ -51,12 +51,12 @@ describe('SMOKE: bench → battle → capture → save → load', () => {
     const loaded = slots.load(0);
     expect(loaded).toBeDefined();
     expect(JSON.parse(serialize(loaded!)).state).toEqual(JSON.parse(serialize(state)).state);
-    expect(loaded!.party[1]!.speciesNum).toBe(10);
-    expect(loaded!.manifest.freed).toContain(10);
+    expect(loaded!.party[1]!.speciesNum).toBe(25);
+    expect(loaded!.manifest.freed).toContain(25);
   });
 
   it('migrates a v0 save through the chain', () => {
-    const picks: BenchPicks = { locomotion: 'hover', core: 'dynamo', plating: 'light' };
+    const picks: BenchPicks = { starter: 'drone' };
     const state = newGame('SAL', picks);
     const v0 = JSON.parse(serialize(state)) as Record<string, unknown>;
     delete (v0['state'] as Record<string, unknown>)['garage'];
@@ -67,31 +67,19 @@ describe('SMOKE: bench → battle → capture → save → load', () => {
     expect(migrated.manifest).toEqual({ seen: [], freed: [] });
   });
 
-  it('all 27 Bench builds produce the right species, lean, and signature', () => {
-    const cores = [
-      ['furnace', 1],
-      ['dynamo', 4],
-      ['reservoir', 7],
+  it('each starter pick builds the right line, signature, and Manifest seed', () => {
+    const picks = [
+      ['scooter', 1, 'burnout'],
+      ['drone', 4, 'mark-strike'],
+      ['dog', 7, 'pounce'],
     ] as const;
-    const locos = [
-      ['treads', 'rumble-over'],
-      ['legs', 'close-the-gap'],
-      ['hover', 'static-drift'],
-    ] as const;
-    const platings = ['heavy', 'light', 'factory'] as const;
-    let builds = 0;
-    for (const [core, num] of cores) {
-      for (const [loco, sig] of locos) {
-        for (const plating of platings) {
-          const s = newGame('SAL', { locomotion: loco, core, plating });
-          const b = s.party[0]!;
-          expect(b.speciesNum).toBe(num);
-          expect(b.moves.some((m) => m.id === sig)).toBe(true);
-          builds += 1;
-        }
-      }
+    for (const [starter, num, sig] of picks) {
+      const s = newGame('SAL', { starter });
+      const b = s.party[0]!;
+      expect(b.speciesNum).toBe(num);
+      expect(b.moves.some((m) => m.id === sig)).toBe(true);
+      expect(s.manifest.seen).toContain(num);
     }
-    expect(builds).toBe(27);
   });
 });
 

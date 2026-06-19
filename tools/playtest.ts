@@ -195,7 +195,7 @@ p('');
 
 p('## Systems checks');
 const sys: string[] = [];
-const ng = newGame('SAL', { locomotion: 'treads', core: 'furnace', plating: 'heavy' });
+const ng = newGame('SAL', { starter: 'scooter' });
 sys.push(`new game → party ${ng.party.length}, starter #${ng.party[0]!.speciesNum} ${ng.party[0]!.name}`);
 const evoMon = grownStarter(1, 1); evoMon.level = 16;
 const offers = pendingEvolutions([evoMon], { 'resonance-core': 1 }, GAME_DATA);

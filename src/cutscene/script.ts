@@ -46,8 +46,8 @@ export function grounded(preset: 'SAL' | 'WREN'): Cutscene {
       { kind: 'line', speaker: preset, portrait: me, text: quip },
       { kind: 'line', speaker: 'GRANDMA MABEL', portrait: MABEL, text: 'You’re grounded. Which means you bunk in your grandfather’s garage tonight. Lucky you.' },
       { kind: 'line', speaker: 'GRANDMA MABEL', portrait: MABEL, text: '“Before you fix a thing, ask it what it was for.” Eli wrote that. First page of Ohm’s Law.' },
-      { kind: 'line', speaker: 'GRANDMA MABEL', portrait: MABEL, text: 'Forty years of his rare parts, still on that Bench. He’d want you to have a partner out there.' },
-      { kind: 'line', speaker: 'GRANDMA MABEL', portrait: MABEL, text: 'So build one. Locomotion, Core, Plating — same as he taught me. Go on.' },
+      { kind: 'line', speaker: 'GRANDMA MABEL', portrait: MABEL, text: 'Three of his prototypes still idle on that Bench — the scooter, the drone, the pup. He never could pick a favourite.' },
+      { kind: 'line', speaker: 'GRANDMA MABEL', portrait: MABEL, text: 'So you pick. Wake the one that wakes back, and it’s yours. Go on.' },
     ],
   };
 }

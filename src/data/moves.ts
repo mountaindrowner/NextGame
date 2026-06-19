@@ -75,10 +75,10 @@ export const MOVES: readonly MoveDef[] = [
   M('root-crack', 'Root Crack', 'VERDANT', 65, 100, 25),
   M('overgrowth', 'Overgrowth', 'VERDANT', 90, 90, 15),
   M('spore-static', 'Spore Static', 'VERDANT', 0, 75, 15, 0, { kind: 'status', status: 'STANDBY', chance: 100 }),
-  // --- Bench signature moves (GDD §8.2) ---
-  M('rumble-over', 'RUMBLE OVER', 'FRAME', 60, 100, 25),
-  M('close-the-gap', 'CLOSE THE GAP', 'UTILITY', 40, 100, 30, 1),
-  M('static-drift', 'STATIC DRIFT', 'VOLT', 0, 0, 20, 0, { kind: 'statStage', target: 'self', stat: 'evasion', delta: 1, chance: 100 }),
+  // --- starter signature moves (scooter / drone / dog) ---
+  M('burnout', 'BURNOUT', 'MOTOR', 55, 100, 20, 1), // scooter charge-burst dash (priority)
+  M('mark-strike', 'MARK STRIKE', 'SIGNAL', 55, 100, 20, 0, { kind: 'statStage', target: 'foe', stat: 'evasion', delta: -1, chance: 100 }), // drone marks from range
+  M('pounce', 'POUNCE', 'FRAME', 60, 95, 20, 0, { kind: 'statStage', target: 'foe', stat: 'clock', delta: -1, chance: 30 }), // dog pounce + pin
   // --- wild flavor ---
   M('crumb-smog', 'Crumb Smog', 'THERM', 50, 100, 25, 0, { kind: 'statStage', target: 'foe', stat: 'accuracy', delta: -1, chance: 30 }),
   M('exact-change', 'Exact Change', 'FRAME', 50, 100, 25, 0, { kind: 'statStage', target: 'foe', stat: 'output', delta: -1, chance: 30 }),

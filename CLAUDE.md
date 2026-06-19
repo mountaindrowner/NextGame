@@ -58,8 +58,14 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
 - **Release term:** "Set Free." Healing: Repair Kit tiers + D-FIB revive.
 - **Evolution:** hard level + required item (**Resonance Cores**), cancelable,
   no trade-style triggers.
-- **Starter:** built at the Bench from Grandpa's parts — Locomotion
-  (treads/legs/hover) + Core (type) + Plating (stat lean).
+- **Starter (REVISED 2026-06-16, supersedes the parts-build):** at Grandpa's
+  Bench you pick one of his **three prototype companions** — **the Scooter**
+  (Scootlet→Boltbike→Velocrash, MOTOR, speed glass-cannon), **the Drone**
+  (Dronelet→Buzzhawk→Sentinad, SIGNAL, precision/ranged, learns HOVER), or
+  **the Dog** (Scraplet→Scouthound→Warhound, FRAME, the sturdy/forgiving
+  hunter). A straight 3-way choice — the old Locomotion+Core+Plating
+  customization is retired. Three stages each, Lv16 Resonance / Lv36 Prime.
+  Names [PROPOSAL] pending lock.
 - **Protagonist:** 2 written presets (one boy, one girl) — **SAL / WREN**;
   family name **Vane**, grandchild of **Eli Vane** ("Grandpa").
 - **Cast (proposals, `docs/design/principal-cast.md` etc., pending lock):**

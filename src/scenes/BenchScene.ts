@@ -1,50 +1,31 @@
 import Phaser from 'phaser';
 import { fitLegacy } from './legacy';
-import { newGame, setGameState, type BenchPicks, type CoreChoice, type Locomotion } from '../game/state';
-import type { Plating } from '../core/stats';
+import { newGame, setGameState, STARTER_SPECIES, type BenchPicks, type StarterChoice } from '../game/state';
+import { GAME_DATA } from '../data/dataview';
 import { Controls } from '../input/controls';
-import { UI } from '../ui/colors';
+import { TYPE_COLORS, UI } from '../ui/colors';
 import { fadeTo, FADE_WARM } from './transition';
 
-interface Slot<T extends string> {
+interface Choice {
+  id: StarterChoice;
   title: string;
-  options: Array<{ id: T; label: string; blurb: string }>;
+  role: string;
+  blurb: string;
 }
 
-const LOCOMOTION: Slot<Locomotion> = {
-  title: 'LOCOMOTION',
-  options: [
-    { id: 'treads', label: 'Treads', blurb: 'sturdy — sig. move RUMBLE OVER' },
-    { id: 'legs', label: 'Legs', blurb: 'agile — sig. move CLOSE THE GAP' },
-    { id: 'hover', label: 'Hover', blurb: 'floating — sig. move STATIC DRIFT' },
-  ],
-};
-const CORE: Slot<CoreChoice> = {
-  title: 'CORE',
-  options: [
-    { id: 'furnace', label: 'Furnace Core', blurb: 'THERM — runs hot, hits hot' },
-    { id: 'dynamo', label: 'Dynamo Core', blurb: 'VOLT — fast current, fast feet' },
-    { id: 'reservoir', label: 'Reservoir Core', blurb: 'COOLANT — outlasts trouble' },
-  ],
-};
-const PLATING: Slot<Plating> = {
-  title: 'PLATING',
-  options: [
-    { id: 'heavy', label: 'Heavy Plating', blurb: '+ARMOR +SHIELDING, -CLOCK' },
-    { id: 'light', label: 'Light Plating', blurb: '+CLOCK, -ARMOR' },
-    { id: 'factory', label: 'Factory Plating', blurb: 'balanced, no lean' },
-  ],
-};
+const CHOICES: Choice[] = [
+  { id: 'scooter', title: 'THE SCOOTER', role: 'Speed', blurb: 'Fast and fragile. Strikes first, evades, ends fights quick. Can’t sit still.' },
+  { id: 'drone', title: 'THE DRONE', role: 'Precision', blurb: 'Eye in the sky. Scans, marks, and strikes from range — folds if cornered. Learns to HOVER.' },
+  { id: 'dog', title: 'THE PUP', role: 'Hunter', blurb: 'Sturdy and all-terrain. Well-rounded, runs down fragile things. The forgiving one. It thinks it’s yours.' },
+];
 
 export class BenchScene extends Phaser.Scene {
   private controls!: Controls;
   private cursor = 0;
-  private slotIndex = 0;
-  private picks: Partial<BenchPicks> = {};
   private preset: 'SAL' | 'WREN' = 'SAL';
-  private lines: Phaser.GameObjects.Text[] = [];
-  private header!: Phaser.GameObjects.Text;
+  private rows: Phaser.GameObjects.Text[] = [];
   private blurb!: Phaser.GameObjects.Text;
+  private picked = false;
 
   constructor() {
     super('bench');
@@ -54,75 +35,59 @@ export class BenchScene extends Phaser.Scene {
     this.preset = data.preset ?? 'SAL';
   }
 
+  preload(): void {
+    for (const c of CHOICES) {
+      const n = STARTER_SPECIES[c.id];
+      if (!this.textures.exists(`ohm_${n}_front_hd`)) this.load.image(`ohm_${n}_front_hd`, `sprites/ohms/${n}_front_hd.png`);
+    }
+  }
+
   create(): void {
     fitLegacy(this);
-    this.slotIndex = 0;
     this.cursor = 0;
-    this.picks = {};
+    this.picked = false;
     this.controls = new Controls(this);
-    this.add.rectangle(120, 80, 240, 160, 0x383028);
+    this.add.rectangle(120, 80, 240, 160, 0x2a2118);
     this.add.text(120, 10, 'THE BENCH', { fontFamily: 'monospace', fontSize: '12px', color: '#e8c830' }).setOrigin(0.5);
-    this.add.text(120, 22, "Eli's parts. Your partner. Build it.", { fontFamily: 'monospace', fontSize: '7px', color: '#a89878' }).setOrigin(0.5);
-    this.header = this.add.text(120, 34, '', { fontFamily: 'monospace', fontSize: '10px', color: '#f8f8e8' }).setOrigin(0.5);
-    this.cameras.main.fadeIn(360, 18, 12, 8);
-    this.add.rectangle(120, 134, 240, 52, UI.paper).setStrokeStyle(2, UI.frame);
-    this.blurb = this.add.text(8, 118, '', { fontFamily: 'monospace', fontSize: '9px', color: '#303030', wordWrap: { width: 224 } });
-    this.showSlot();
-  }
+    this.add.text(120, 23, "Eli's three prototypes. Wake the one that wakes back.", { fontFamily: 'monospace', fontSize: '7px', color: '#a89878' }).setOrigin(0.5);
 
-  private currentSlot(): Slot<string> {
-    return ([LOCOMOTION, CORE, PLATING] as Slot<string>[])[this.slotIndex] ?? LOCOMOTION;
-  }
-
-  private showSlot(): void {
-    for (const l of this.lines) l.destroy();
-    this.lines = [];
-    const slot = this.currentSlot();
-    this.header.setText(`pick ${this.slotIndex + 1}/3 — ${slot.title}`);
-    slot.options.forEach((o, i) => {
-      this.lines.push(
-        this.add.text(70, 52 + i * 16, o.label, { fontFamily: 'monospace', fontSize: '10px', color: '#f8f8e8' }),
-      );
-      void i;
+    this.rows = [];
+    CHOICES.forEach((c, i) => {
+      const n = STARTER_SPECIES[c.id];
+      const sp = GAME_DATA.species(n);
+      const y = 44 + i * 26;
+      if (this.textures.exists(`ohm_${n}_front_hd`)) this.add.image(34, y + 8, `ohm_${n}_front_hd`).setDisplaySize(28, 28).setOrigin(0.5);
+      this.add.rectangle(70, y + 6, 6, 6, TYPE_COLORS[sp.type]).setStrokeStyle(1, 0x303030);
+      this.add.text(78, y + 2, `${sp.type}`, { fontFamily: 'monospace', fontSize: '7px', color: '#9aa0a8' });
+      const row = this.add.text(60, y - 6, `${c.title}  · ${c.role}`, { fontFamily: 'monospace', fontSize: '9px', color: '#f8f8e8' });
+      this.rows.push(row);
     });
-    this.cursor = 0;
+
+    this.add.rectangle(120, 138, 240, 40, UI.paper).setStrokeStyle(2, UI.frame);
+    this.blurb = this.add.text(8, 124, '', { fontFamily: 'monospace', fontSize: '9px', color: '#2a2018', wordWrap: { width: 224 } });
+    this.add.text(120, 154, '↑/↓ choose    A: wake it', { fontFamily: 'monospace', fontSize: '7px', color: '#8a8478' }).setOrigin(0.5);
+    this.cameras.main.fadeIn(360, 18, 12, 8);
     this.refresh();
   }
 
   private refresh(): void {
-    const slot = this.currentSlot();
-    this.lines.forEach((l, i) => l.setColor(i === this.cursor ? '#e8c830' : '#f8f8e8'));
-    this.blurb.setText(slot.options[this.cursor]?.blurb ?? '');
+    this.rows.forEach((r, i) => {
+      r.setColor(i === this.cursor ? '#e8c830' : '#f8f8e8');
+      r.setText(`${i === this.cursor ? '▸ ' : '  '}${CHOICES[i]!.title}  · ${CHOICES[i]!.role}`);
+    });
+    this.blurb.setText(CHOICES[this.cursor]!.blurb);
   }
 
   override update(): void {
-    if (this.controls.consume('up')) {
-      this.cursor = (this.cursor + 2) % 3;
-      this.refresh();
+    if (this.picked) return;
+    if (this.controls.consume('up')) { this.cursor = (this.cursor + CHOICES.length - 1) % CHOICES.length; this.refresh(); }
+    if (this.controls.consume('down')) { this.cursor = (this.cursor + 1) % CHOICES.length; this.refresh(); }
+    if (this.controls.consume('a')) {
+      this.picked = true;
+      const picks: BenchPicks = { starter: CHOICES[this.cursor]!.id };
+      setGameState(newGame(this.preset, picks));
+      this.blurb.setText('The chassis settles. A sensor blinks open, finds you, and holds.');
+      this.time.delayedCall(1500, () => fadeTo(this, 'nameentry', undefined, FADE_WARM, 520));
     }
-    if (this.controls.consume('down')) {
-      this.cursor = (this.cursor + 1) % 3;
-      this.refresh();
-    }
-    if (this.controls.consume('b') && this.slotIndex > 0) {
-      this.slotIndex -= 1;
-      this.showSlot();
-    }
-    if (!this.controls.consume('a')) return;
-    const picked = this.currentSlot().options[this.cursor]?.id;
-    if (!picked) return;
-    if (this.slotIndex === 0) this.picks.locomotion = picked as Locomotion;
-    if (this.slotIndex === 1) this.picks.core = picked as CoreChoice;
-    if (this.slotIndex === 2) {
-      this.picks.plating = picked as Plating;
-      const state = newGame(this.preset, this.picks as BenchPicks);
-      setGameState(state);
-      this.blurb.setText('The parts settle. A core catches. Something on the Bench takes its first breath…');
-      this.time.delayedCall(1600, () => fadeTo(this, 'nameentry', undefined, FADE_WARM, 520));
-      this.slotIndex = 3; // stop input
-      return;
-    }
-    this.slotIndex += 1;
-    this.showSlot();
   }
 }

@@ -1,5 +1,33 @@
 # HANDOVER
 
+## Session 2026-06-16 (cont.) — New starter trio: Scooter / Drone / Dog
+
+- **Canon override (creator-locked):** the Bench parts-build (furnace/generator/
+  pump → Charkit/Sparkit/Dripkit, Locomotion+Core+Plating, 27 builds) is
+  RETIRED. Starters are now three prototype companions, a straight 3-way pick:
+  **Scooter** (1–3 Scootlet→Boltbike→Velocrash, MOTOR, speed glass-cannon),
+  **Drone** (4–6 Dronelet→Buzzhawk→Sentinad, SIGNAL, ranged, HOVER),
+  **Dog** (7–9 Scraplet→Scouthound→Warhound, FRAME, sturdy/forgiving hunter).
+  Names [PROPOSAL] pending lock.
+- **Data:** `roster.ts` 1–9 rewritten; the wild e-bike (73–74) → ATV
+  (Quadlet/Trailbronc) and quad-drone (80–81) → hay baler (Balelet/Baleron) so
+  the new starters don't double mid-roster forms (roster stays 150 contiguous).
+  `species.ts` new stat-leans (1/4/7) + archetypes (dog 7 balanced, 8/9 bruiser)
+  + per-line learnsets with the signature baked in at Lv1; HOVER moved 80/81 →
+  4/5/6. `moves.ts` adds BURNOUT / MARK STRIKE / POUNCE (old Bench sig moves
+  removed). `state.ts` BenchPicks → `{ starter }`, `STARTER_SPECIES`.
+- **Bench scene** rewritten to a 3-way picker (name + role + sprite preview);
+  Mabel's cutscene line updated to "pick one of his three prototypes."
+- **Sprites:** `kit-ohms.ts` — 9 new bespoke fronts + 3 tier-scaled back
+  families (scooterBack/droneBack/dogBack); OVERRIDES/BACK_OVERRIDES/LINES
+  updated. Regenerated; eyeballed (read clearly as scooter/drone/dog, escalate
+  per stage, backs battle-ready).
+- **Docs:** CLAUDE.md, GDD §8.2, compendium/ohms.md updated to the override.
+- **Tests:** smoke (27-build matrix → 3 starters; sturdy-dog smoke), evolution
+  (species 1–4 = new names). **81 green**, typecheck + lint + build + playtest
+  pass. Dist rebuilt.
+
+
 ## Session 2026-06-16 (cont.) — Cinematic depth + new protagonist portraits
 
 - **New high-quality portraits** (SAL / WREN / Mabel), authored on-method

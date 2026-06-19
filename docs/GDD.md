@@ -265,35 +265,24 @@ cheesier gets cut. When unsure, ask.
 - Full line-by-line compendium (object, type, stages, evolution items, move
   themes, 1-line lore, Ohmgrown notes) is the Phase 2 deliverable.
 
-### 8.2 The Starter — the Bench
+### 8.2 The Starter — the Bench (REVISED 2026-06-16)
 
-Built in Grandpa's garage from his rare-parts collection. Three picks, nine
-parts, 27 possible starters. The Bench is a one-time v1 system; no other
-crafting benches exist (§10.8).
+At Grandpa's Bench you wake one of his **three prototype companions** — a
+straight three-way choice, not a parts-build. The earlier Locomotion + Core +
+Plating customization (27 builds) is **retired**. The Bench is a one-time v1
+system; no other crafting benches exist (§10.8).
 
-- **Slot 1 — Locomotion (locked):** Treads · Legs · Hover. Determines
-  silhouette base and one signature move.
-- **Slot 2 — Core:** sets the starter's type.
-- **Slot 3 — Plating:** sets the stat lean.
+| Pick | Line (s1→s2→s3) | Object | Type | Role | Signature | Field |
+|---|---|---|---|---|---|---|
+| Scooter | Scootlet → Boltbike → Velocrash | kick e-scooter → e-bike → e-superbike | **MOTOR** | speed glass-cannon (fast, fragile, hit-and-run) | BURNOUT (priority dash) | — |
+| Drone | Dronelet → Buzzhawk → Sentinad | quadcopter → FPV racer → sentry UAV | **SIGNAL** | precision ranged glass-cannon | MARK STRIKE (marks + ranged hit) | HOVER |
+| Dog | Scraplet → Scouthound → Warhound | scrap-pup → scout-hound → war-hound | **FRAME** | hunter bruiser; sturdy, well-rounded — the forgiving pick | POUNCE (hit + pin) | — |
 
-The Core builds one of three distinct starter species lines — a classic trio,
-each 3 stages (lines named in the Phase 2 compendium). Locomotion and Plating
-shape stats and the signature move. The nine parts (locked):
-
-| Slot | Part | Effect |
-|---|---|---|
-| Locomotion | Treads | sturdy silhouette; signature move RUMBLE OVER (FRAME) |
-| Locomotion | Legs | agile silhouette; signature move CLOSE THE GAP (priority) |
-| Locomotion | Hover | floating silhouette; signature move STATIC DRIFT (evasion) |
-| Core | Furnace Core | **THERM** type |
-| Core | Reservoir Core | **COOLANT** type |
-| Core | Dynamo Core | **VOLT** type |
-| Plating | Heavy Plating | +ARMOR/+SHIELDING, −CLOCK |
-| Plating | Light Plating | +CLOCK, −ARMOR |
-| Plating | Factory Plating | balanced, no lean |
-
-The Core triad maps onto the starter triangle THERM → VOLT → COOLANT → THERM
-(§10.3).
+Three stages each: Lv16 + Resonance Core → stage 2, Lv36 + Prime Core →
+stage 3 (Ohmlet→Ohm→Ohmega naming applies). Names [PROPOSAL] pending lock.
+(The old THERM/VOLT/COOLANT Bench triangle is superseded; the wild e-bike and
+quad-drone lines are retired to an ATV and a hay-baler so they don't double the
+new starter forms — see the Compendium.)
 
 ### 8.3 Legendary classes
 
