@@ -6,6 +6,8 @@ import { Rng } from '../core/rng';
 import { GAME_DATA } from '../data/dataview';
 import { ZONES_BY_ID } from '../data/encounters';
 import { getGameState, hasGameState, nextSeed } from '../game/state';
+import { getAudio } from '../game/audio';
+import { bgmForMap } from '../data/audio';
 import { type Dir4, neighbor, OPPOSITE } from '../data/region';
 
 interface FieldData {
@@ -317,6 +319,8 @@ export class FieldHDScene extends Phaser.Scene {
       this.time.delayedCall(2400, () => this.banner('Move with the arrow keys. Press A to talk, read, and rummage.'));
       this.time.delayedCall(5200, () => this.banner('Say goodbye to Grandma, look in on Banjo — then find the lift topside.'));
     }
+    getAudio().playBgm(bgmForMap(this.mapId)); // overworld theme; guard keeps it seamless across edge-warps
+    this.input.keyboard?.on('keydown-M', () => getAudio().toggleMute());
   }
 
   /** Build per-direction walk anims for a 3×3 walk sheet (S=0-2,N=3-5,W=6-8). */

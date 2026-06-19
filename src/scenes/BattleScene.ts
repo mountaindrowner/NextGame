@@ -9,6 +9,7 @@ import { hasBack, hasFront } from '../data/sprite-manifest';
 import { hasHdBack, hasHdFront } from '../data/sprite-manifest-hd';
 import { ITEMS_BY_ID } from '../data/items';
 import { getGameState } from '../game/state';
+import { getAudio } from '../game/audio';
 import { Controls } from '../input/controls';
 import { TYPE_COLORS, UI } from '../ui/colors';
 
@@ -119,6 +120,9 @@ export class BattleScene extends Phaser.Scene {
     this.queue.push(...this.battle.intro());
     this.mode = 'anim';
     this.pump();
+
+    getAudio().playBgm('bgm.battle.wild'); // pass #1: one battle theme for wild & trainer
+    this.input.keyboard?.on('keydown-M', () => getAudio().toggleMute());
   }
 
   // ---- event pump --------------------------------------------------------
@@ -243,6 +247,10 @@ export class BattleScene extends Phaser.Scene {
     this.mode = 'over';
     const state = getGameState();
     const back = this.init_.returnScene ?? 'overworld';
+    if (this.outcome === 'victory' || this.outcome === 'captured') {
+      getAudio().stopBgm(); // cut the battle theme and ring the fanfare
+      getAudio().playOneShot('jingle.victory_wild');
+    }
     if (this.outcome === 'victory' && this.init_.kind === 'trainer') {
       state.credits += 120;
       this.say('Won 120 credits!');

@@ -5,6 +5,7 @@ import { browserStorage, SaveSlots, SLOT_COUNT } from '../save/save';
 import { Controls } from '../input/controls';
 import { fadeTo, FADE_COLD } from './transition';
 import { COLD_OPEN } from '../cutscene/script';
+import { getAudio } from '../game/audio';
 
 export class TitleScene extends Phaser.Scene {
   private controls!: Controls;
@@ -99,6 +100,8 @@ export class TitleScene extends Phaser.Scene {
       this.tweens.add({ targets: this.menuObjs, alpha: 1, duration: 400, delay: 1000, onComplete: () => (this.intro = false) });
     }
     this.refresh();
+    getAudio().playBgm('bgm.sys.title');
+    this.input.keyboard?.on('keydown-M', () => getAudio().toggleMute()); // throwaway mute (full UI in pass #2)
   }
 
   /** A small radial cyan texture for the pulsing Static node. */
