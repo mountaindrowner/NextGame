@@ -181,6 +181,7 @@ writeFileSync(
       { col: 21, row: 22, text: 'REDOUBT — Colony 4. The Bunker is sealed. Command has not answered in days.' },
     ],
     npcs: [
+      { char: 'npc_rancher', col: 23, row: 16, name: 'Depot-warden Vesk', shop: 'depot', lines: ['Militarist depot. Top-grade kits, a Resonance Core if you can pay. Salvage taken at the window.'] },
       { char: 'npc_rancher', col: 21, row: 5, name: 'Commander Reyes', lines: [
         "I gave the orders. I marched them out. And I'd swear on my life I never *chose* a single one.",
         'There is a voice in the Static, soldier. It speaks through the towers, and your hands just obey.',

@@ -13,7 +13,7 @@ interface MapJson {
   zone?: string;
   spawn: { x: number; y: number };
   exits?: Array<{ x: number; y: number; mapId?: string; to?: { x: number; y: number } }>;
-  npcs?: Array<{ name?: string; lines?: string[] }>;
+  npcs?: Array<{ name?: string; lines?: string[]; shop?: string }>;
 }
 const loadMap = (id: string): MapJson => JSON.parse(readFileSync(join(ROOT, `public/world/${id}.json`), 'utf8')) as MapJson;
 const flood = (m: MapJson): boolean[] => {
@@ -124,7 +124,8 @@ describe('the Chancel (Colony 5)', () => {
     expect(reach).toBe(walk);
     expect(encReach).toBe(enc);
     expect(enc).toBeGreaterThan(0);
-    for (const n of chancel.npcs ?? []) expect(n.lines?.length ?? 0, n.name).toBeGreaterThanOrEqual(3);
+    // story NPCs are fleshed out; a counter-clerk's interaction is the shop, not dialogue
+    for (const n of chancel.npcs ?? []) if (!n.shop) expect(n.lines?.length ?? 0, n.name).toBeGreaterThanOrEqual(3);
   });
 
   it('round-trips with Trinity through portal exits with landings', () => {

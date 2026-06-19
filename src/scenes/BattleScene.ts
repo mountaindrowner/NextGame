@@ -156,6 +156,13 @@ export class BattleScene extends Phaser.Scene {
         this.say(`${ev.name} learned ${ev.moveName}!`);
         next(600);
         break;
+      case 'salvage': {
+        const state = getGameState();
+        state.bag[ev.itemId] = (state.bag[ev.itemId] ?? 0) + 1;
+        this.say(`Salvage recovered: ${ITEMS_BY_ID.get(ev.itemId)?.name ?? ev.itemId}.`);
+        next(600);
+        break;
+      }
       case 'faint': {
         const target = ev.side === 'player' ? this.playerSprite : this.foeSprite;
         this.tweens.add({ targets: target, y: target.y + 20, alpha: 0, duration: 300 });

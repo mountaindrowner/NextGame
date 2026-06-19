@@ -19,13 +19,13 @@ interface FieldData {
   grassAny?: number[];
   water?: number[];
   placements?: Array<{ type: string; col: number; row: number }>;
-  npcs?: Array<{ char: string; col: number; row: number; name?: string; lines?: string[] }>;
+  npcs?: Array<{ char: string; col: number; row: number; name?: string; lines?: string[]; shop?: string }>;
   trainers?: TrainerDef[];
   items?: Array<{ col: number; row: number; credits: number; label?: string; hidden?: boolean }>;
   signs?: Array<{ col: number; row: number; text: string }>;
   spawn?: { x: number; y: number };
   exits?: Array<{ x: number; y: number; scene: string; mapId?: string; to?: { x: number; y: number } }>;
-  interacts?: Array<{ x: number; y: number; kind: string }>;
+  interacts?: Array<{ x: number; y: number; kind: string; tier?: string }>;
   ledges?: Array<{ col: number; row: number; dir: 'n' | 's' | 'e' | 'w' }>;
   zone?: string; // encounter-zone id for this map's grass (default field-grass)
 }
@@ -262,7 +262,8 @@ export class FieldHDScene extends Phaser.Scene {
       else if (this.textures.exists(npc.char)) this.add.image(px, py, npc.char).setOrigin(0.5, 0.92).setScale(1.3).setDepth(npc.row);
       else continue;
       this.npcCells.add(`${npc.col},${npc.row}`);
-      if (npc.lines && npc.lines.length) this.npcTalk.set(`${npc.col},${npc.row}`, { name: npc.name ?? 'Someone', lines: npc.lines, idx: 0 });
+      if ((npc.lines && npc.lines.length) || npc.shop)
+        this.npcTalk.set(`${npc.col},${npc.row}`, { name: npc.name ?? 'Someone', lines: npc.lines ?? [], idx: 0, shop: npc.shop });
     }
 
     // trainers — placed fighters who challenge you on sight (Pokémon routes)
@@ -386,7 +387,7 @@ export class FieldHDScene extends Phaser.Scene {
   }
 
   private npcCells = new Set<string>();
-  private npcTalk = new Map<string, { name: string; lines: string[]; idx: number }>();
+  private npcTalk = new Map<string, { name: string; lines: string[]; idx: number; shop?: string }>();
   private trainers: Array<{ def: TrainerDef; idx: number; beaten: boolean; sprite?: Phaser.GameObjects.Sprite }> = [];
   private itemSprites = new Map<number, Phaser.GameObjects.Image>();
 
@@ -460,6 +461,11 @@ export class FieldHDScene extends Phaser.Scene {
     const fy = this.py + dy;
     const talk = this.npcTalk.get(`${fx},${fy}`);
     if (talk) {
+      if (talk.shop) {
+        this.scene.launch('shop', { tier: talk.shop, from: 'fieldhd' });
+        this.scene.pause();
+        return true;
+      }
       this.banner(`${talk.name}: ${talk.lines[talk.idx]}`);
       talk.idx = (talk.idx + 1) % talk.lines.length;
       return true;
@@ -480,6 +486,9 @@ export class FieldHDScene extends Phaser.Scene {
           this.banjoHello(it.x, it.y);
         } else if (it.kind === 'heal') {
           this.recharge('A field medic tops off your Ohms — recharged. Stay current.');
+        } else if (it.kind === 'shop') {
+          this.scene.launch('shop', { tier: it.tier ?? 'colony', from: 'fieldhd' });
+          this.scene.pause();
         } else {
           this.banner('You poke at it. Nothing happens.');
         }

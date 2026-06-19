@@ -108,7 +108,7 @@ export interface SpeciesDef {
 export interface ItemDef {
   id: string;
   name: string;
-  kind: 'node' | 'heal' | 'revive' | 'cure' | 'evolution' | 'field';
+  kind: 'node' | 'heal' | 'revive' | 'cure' | 'evolution' | 'field' | 'salvage';
   price: number;
   /** heal amount in INTEGRITY points; -1 = full */
   heal?: number;

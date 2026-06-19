@@ -224,6 +224,7 @@ writeFileSync(
     spawn: { x: 20, y: 18 }, // just below the elevator hatch
     // north edge is open → Farm Road (handled by the region edge-warp, not a portal)
     npcs: [
+      { char: 'npc_elder', col: 13, row: 13, name: 'Quartermaster Odell', shop: 'field', lines: ['Topside supply. Nodes, kits, and I buy salvage by the pound.'] },
       { char: 'npc_rancher', col: 16, row: 13, name: 'Scrapper Rivet', lines: [
         'First run topside? Keep off the dead houses. Some flicker — there, then gone. The Static does that.',
         "Co-op Vault stood sealed since my grandfather's day. Funny — somebody cracked it open just last night.",

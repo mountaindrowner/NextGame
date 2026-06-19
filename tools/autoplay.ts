@@ -13,12 +13,14 @@ import type { Battler, BattleEvent } from '../src/core/battle/contract';
 import type { TypeName } from '../src/core/defs';
 import { applyEvolution, pendingEvolutions } from '../src/core/evolution';
 import { applyItemToBattler } from '../src/core/items';
+import { buyItem, sellItem, sellValue } from '../src/core/shop';
 import { rollEncounter } from '../src/core/encounter';
 import { generatePuzzle, isSolved, solve } from '../src/core/puzzle';
 import { Rng } from '../src/core/rng';
 import { GAME_DATA } from '../src/data/dataview';
 import { ZONES_BY_ID } from '../src/data/encounters';
 import { ITEMS_BY_ID } from '../src/data/items';
+import { SHOP_STOCK } from '../src/data/shops';
 import { SPECIES_BY_NUM } from '../src/data/species';
 import { RIDEABLES, WORLD_MAP } from '../src/data/region';
 import { newGame, type StarterChoice } from '../src/game/state';
@@ -32,12 +34,12 @@ interface MapJson {
   zone?: string;
   spawn: { x: number; y: number };
   exits?: Array<{ x: number; y: number; scene: string; mapId?: string }>;
-  npcs?: Array<{ name?: string; lines?: string[] }>;
+  npcs?: Array<{ name?: string; lines?: string[]; shop?: string }>;
   trainers?: Array<{ name: string; team: Array<{ num: number; level: number }>; bark?: string }>;
   items?: Array<{ credits: number; label?: string; hidden?: boolean }>;
   signs?: Array<{ text: string }>;
   ledges?: unknown[];
-  interacts?: Array<{ kind: string }>;
+  interacts?: Array<{ kind: string; tier?: string }>;
 }
 const maps = new Map<string, MapJson>();
 for (const f of readdirSync(WORLD).filter((x) => x.endsWith('.json'))) maps.set(f.replace('.json', ''), JSON.parse(readFileSync(join(WORLD, f), 'utf8')) as MapJson);
@@ -110,7 +112,7 @@ function playBattle(run: Run, foes: Battler[], kind: 'wild' | 'trainer', seed: n
   const ev: BattleEvent[] = battle.intro();
   const notes: string[] = [];
   let captured: number | undefined;
-  const pump = (out: BattleEvent[]): void => { for (const e of out) { if (e.type === 'levelUp') notes.push(`${e.name}→Lv${e.level}`); if (e.type === 'captureSuccess') captured = e.speciesNum; } };
+  const pump = (out: BattleEvent[]): void => { for (const e of out) { if (e.type === 'levelUp') notes.push(`${e.name}→Lv${e.level}`); if (e.type === 'captureSuccess') captured = e.speciesNum; if (e.type === 'salvage') run.bag[e.itemId] = (run.bag[e.itemId] ?? 0) + 1; } };
   pump(ev);
   let guard = 0;
   while (battle.phase === 'choosing' && guard++ < 300) {
@@ -185,6 +187,41 @@ function patchUp(run: Run): void {
   const res = applyItemToBattler(ITEMS_BY_ID.get(kit)!, hurt);
   if (res.ok) run.bag[kit] = (run.bag[kit] ?? 1) - 1;
 }
+/**
+ * Stop at a colony counter (GDD §10.8): sell every scrap of salvage, then
+ * restock the staples a player keeps topped up — storage nodes, the best repair
+ * kit the counter stocks, and a D-FIB or two — within a credit budget.
+ */
+function visitShop(run: Run, tier: string): string {
+  const before = run.credits;
+  const stock = SHOP_STOCK[tier] ?? [];
+  // sell all salvage first (the credit faucet)
+  let soldValue = 0;
+  for (const [id, n] of Object.entries(run.bag)) {
+    const def = ITEMS_BY_ID.get(id);
+    if (def && sellValue(def) > 0 && n > 0) {
+      soldValue += sellValue(def) * n;
+      sellItem(run, def, n);
+    }
+  }
+  // restock to target counts, cheapest-useful first, keeping a small reserve
+  const wants: Array<[string, number]> = [
+    ['storage-node', 8],
+    [stock.includes('repair-kit-max') ? 'repair-kit-max' : stock.includes('repair-kit-plus') ? 'repair-kit-plus' : 'repair-kit', 6],
+    ['d-fib', 2],
+  ];
+  let bought = 0;
+  for (const [id, target] of wants) {
+    const def = ITEMS_BY_ID.get(id);
+    if (!def || !stock.includes(id)) continue;
+    while ((run.bag[id] ?? 0) < target && run.credits >= def.price + 300) {
+      if (!buyItem(run, def).ok) break;
+      bought++;
+    }
+  }
+  return `  shopped (${tier}): sold salvage +${soldValue} cr, bought ${bought} staple(s); credits ${before}→${run.credits}`;
+}
+
 function tryEvolve(run: Run): string[] {
   const done: string[] = [];
   let offers = pendingEvolutions(run.party, run.bag, GAME_DATA);
@@ -216,6 +253,10 @@ function playMap(run: Run, mapId: string): void {
   const dlg = (m.npcs ?? []).reduce((s, n) => s + (n.lines?.length ?? 0), 0);
   if ((m.npcs ?? []).length) run.log.push(`  talked to ${(m.npcs ?? []).length} NPC(s) (${dlg} lines)`);
   if (mapId === 'ohmstead') { run.log.push('  read Eli\'s logbook, hummed back at Banjo, used the Bench prompt'); }
+
+  // stop at the colony counter on arrival: sell salvage, restock staples
+  const shopTier = (m.npcs ?? []).find((n) => n.shop)?.shop;
+  if (shopTier) run.log.push(visitShop(run, shopTier));
 
   // grind wilds (only on grass maps): a diligent player grinds up to the local
   // wild level, healing at the garage/medic between fights (heal access exists)

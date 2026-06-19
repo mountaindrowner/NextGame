@@ -2,6 +2,7 @@ import { MAJOR_STATUSES, SPECIAL_TYPES, type BattleStatKey, type MoveDef, type P
 import { Rng } from '../rng';
 import { accuracyMultiplier, computeStats, levelForXp, stageMultiplier, xpForLevel, type Plating } from '../stats';
 import { puzzleBudget } from '../capture';
+import { rollSalvage } from '../shop';
 import { gen3Damage } from './damage';
 import type { BattleAction, BattleEvent, BattlePhase, BattleSetup, Battler, DataView, Side } from './contract';
 
@@ -474,6 +475,10 @@ export class Battle {
     const ev: BattleEvent[] = [{ type: 'faint', side, name: b.name }];
     if (side === 'foe') {
       ev.push(...this.awardXp(b));
+      if (this.setup.kind === 'wild') {
+        const drop = rollSalvage(b.level, this.rng); // a downed wild may leave salvage
+        if (drop) ev.push({ type: 'salvage', itemId: drop });
+      }
       const next = this.setup.foes.findIndex((f) => f.integrity > 0);
       if (next >= 0 && this.setup.kind === 'trainer') {
         this.foeIndex = next;

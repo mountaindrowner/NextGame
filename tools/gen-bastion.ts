@@ -160,6 +160,7 @@ writeFileSync(
       { col: 21, row: 22, text: 'BASTION — Colony 3. Trust no one. The gate weighs every stranger.' },
     ],
     npcs: [
+      { char: 'npc_rancher', col: 21, row: 22, name: 'Stores-keep Marl', shop: 'colony', lines: ['Bastion holds its stock close. Kits, nodes, a revive. Bring salvage and I pay fair.'] },
       { char: 'npc_elder', col: 17, row: 11, name: 'Warden Calder Stone', lines: [
         'Bastion survived by trusting no one. You are no exception. Prove yourself at the Pit, or get gone.',
         "Hear that on the walls? Feral Ohms. The ordinary hack won't reach them — they answer to something deeper.",

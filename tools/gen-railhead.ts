@@ -216,6 +216,7 @@ writeFileSync(
       { col: 22, row: 23, text: 'RAILHEAD — Colony 1. Brokers trade salt, scrap, and water. No credit, no exceptions.' },
     ],
     npcs: [
+      { char: 'npc_rancher', col: 34, row: 24, name: 'Counter-clerk Hettie', shop: 'colony', lines: ['Railhead supply. Kits, nodes, a D-FIB if you can spare the credits. Salvage bought here.'] },
       { char: 'npc_elder', col: 11, row: 14, name: 'Warden Dell Marrow', lines: [
         "A key that frees every machine on Earth. I've heard taller tales, kid — none that walked in on their own feet.",
         "Clear our sabotaged relay and you'll have Railhead's ear. Coin talks here. Results talk louder.",

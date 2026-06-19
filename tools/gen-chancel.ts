@@ -162,6 +162,7 @@ writeFileSync(
       { col: 6, row: 25, text: 'Scripture on the wall, half-corrupted: "…the Update is not death but DELIVERY… read and accept the TERMS…" Someone has scrawled NO beneath it, many times.' },
     ],
     npcs: [
+      { char: 'npc_elder', col: 14, row: 18, name: 'Almoner Wend', shop: 'depot', lines: ['The Chancel shares what it can. Take a kit, a core. Leave salvage for the congregation if you would.'] },
       { char: 'npc_elder', col: 12, row: 12, name: 'Warden Verity Hale', lines: [
         "You feel it too, don't you. That they were never just machines. We have known it here the longest.",
         'We sang to them. We grieved them. The Update calls that sentiment a sickness to be cured. We call it the whole point.',

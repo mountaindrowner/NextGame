@@ -74,6 +74,7 @@ export type BattleEvent =
   | { type: 'xp'; name: string; amount: number }
   | { type: 'levelUp'; name: string; level: number }
   | { type: 'moveLearned'; name: string; moveName: string }
+  | { type: 'salvage'; itemId: string }
   | { type: 'captureBudget'; timerSeconds: number; gridSize: number; decoys: number }
   | { type: 'captureSuccess'; speciesNum: number; name: string }
   | { type: 'captureFail'; rage: number }

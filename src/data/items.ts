@@ -16,6 +16,11 @@ export const ITEMS: readonly ItemDef[] = [
   { id: 'resonance-core', name: 'Resonance Core', kind: 'evolution', price: 2100 },
   { id: 'prime-core', name: 'Prime Core', kind: 'evolution', price: 4600 },
   { id: 'signal-dampener', name: 'Signal Dampener', kind: 'field', price: 350 },
+  // Salvage — the sellable credit faucet (GDD §10.7). Dropped by wild Ohms and
+  // found on Ohm Runs; never consumed by evolution. `price` is the sell value.
+  { id: 'scrap', name: 'Scrap', kind: 'salvage', price: 60 },
+  { id: 'alloy', name: 'Alloy', kind: 'salvage', price: 180 },
+  { id: 'relic', name: 'Relic', kind: 'salvage', price: 650 },
 ];
 
 export const ITEMS_BY_ID: ReadonlyMap<string, ItemDef> = new Map(ITEMS.map((i) => [i.id, i]));
