@@ -192,6 +192,7 @@ const LEARNSET_OVERRIDES: Record<number, LearnsetEntry[]> = {
   1: [
     { level: 1, move: 'bump-start' },
     { level: 1, move: 'burnout' }, // scooter signature — charge-burst dash
+    { level: 1, move: 'hobble' }, // never-KO weakener for clean captures
     { level: 8, move: 'dust-cloud' },
     { level: 16, move: 'rev-up' },
     { level: 22, move: 'run-down' },
@@ -201,6 +202,7 @@ const LEARNSET_OVERRIDES: Record<number, LearnsetEntry[]> = {
   4: [
     { level: 1, move: 'ping' },
     { level: 1, move: 'mark-strike' }, // drone signature — marks + ranged hit
+    { level: 1, move: 'hobble' }, // never-KO weakener for clean captures
     { level: 8, move: 'dust-cloud' },
     { level: 16, move: 'bad-sector' },
     { level: 22, move: 'packet-storm' },
@@ -210,6 +212,7 @@ const LEARNSET_OVERRIDES: Record<number, LearnsetEntry[]> = {
   7: [
     { level: 1, move: 'chassis-bash' },
     { level: 1, move: 'pounce' }, // dog signature — pounce + pin
+    { level: 1, move: 'hobble' }, // never-KO weakener for clean captures
     { level: 8, move: 'rattle' },
     { level: 16, move: 'bulkhead' },
     { level: 22, move: 'girder-swing' },
@@ -261,8 +264,8 @@ function distribute(bst: number, archetype: Archetype): StatBlock {
 const STAT_OVERRIDES: Record<number, Partial<StatBlock>> = {
   // starter stage-1 leans: scooter = speed glass-cannon, drone = ranged glass-
   // cannon, dog = sturdy well-rounded (the forgiving pick)
-  1: { integrity: 42, output: 50, armor: 38, surge: 40, shielding: 38, clock: 97 },
-  4: { integrity: 40, output: 36, armor: 38, surge: 64, shielding: 42, clock: 85 },
+  1: { integrity: 48, output: 50, armor: 38, surge: 40, shielding: 38, clock: 97 },
+  4: { integrity: 46, output: 36, armor: 38, surge: 64, shielding: 42, clock: 85 },
   7: { integrity: 62, output: 56, armor: 52, surge: 32, shielding: 50, clock: 53 },
 };
 

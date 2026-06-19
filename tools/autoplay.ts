@@ -80,6 +80,30 @@ function pickMove(active: Battler, foe: Battler, weak = false): number {
   return best;
 }
 
+/** Index of a never-KO weakening move (HOBBLE) with PP left, or -1. */
+function noKOIndex(active: Battler): number {
+  return active.moves.findIndex((m) => m.pp > 0 && GAME_DATA.move(m.id).effect?.kind === 'noKO');
+}
+
+/** Pick a healthy (>50%) bench member that RESISTS the foe's type, or -1 (only swap when it helps). */
+function bestSwitch(party: Battler[], active: Battler, foe: Battler): number {
+  let best = -1;
+  let bestHp = 0.5;
+  party.forEach((b, i) => {
+    if (b === active || b.integrity <= 0) return;
+    const eff = GAME_DATA.chart[typeOf(foe.speciesNum)]?.[typeOf(b.speciesNum)] ?? 1;
+    if (eff >= 1) return; // only switch into something that resists the foe
+    const hp = b.integrity / b.stats.integrity;
+    if (hp > bestHp) { bestHp = hp; best = i; }
+  });
+  return best;
+}
+
+/** Bag key of the best repair kit on hand, or undefined. */
+function bestKit(run: Run): string | undefined {
+  return ['repair-kit-max', 'repair-kit-plus', 'repair-kit'].find((k) => (run.bag[k] ?? 0) > 0);
+}
+
 /** Run a battle on the REAL party (mutates it). For wilds, try to weaken+capture. */
 function playBattle(run: Run, foes: Battler[], kind: 'wild' | 'trainer', seed: number, wantCapture: boolean): { outcome: string; captured?: number; events: string[] } {
   const battle = new Battle({ kind, seed, party: run.party, foes, foeName: kind === 'trainer' ? 'Trainer' : undefined }, GAME_DATA);
@@ -99,8 +123,11 @@ function playBattle(run: Run, foes: Battler[], kind: 'wild' | 'trainer', seed: n
     }
     const foe = battle.foe;
     const foePct = foe.integrity / foe.stats.integrity;
+    const myPct = active.integrity / active.stats.integrity;
+    // are we trying to bring THIS wild home?
+    const wk = wantCapture && kind === 'wild' && (run.bag['storage-node'] ?? 0) > 0 && (run.party.length < 3 || !run.manifest.freed.includes(foe.speciesNum));
     // capture attempt: weakened wild, a node on hand, and worth catching
-    if (wantCapture && kind === 'wild' && (run.bag['storage-node'] ?? 0) > 0 && foePct <= 0.35 && foe.integrity > 0 && (run.party.length < 3 || !run.manifest.freed.includes(foe.speciesNum))) {
+    if (wk && foePct <= 0.35 && foe.integrity > 0) {
       run.bag['storage-node'] = (run.bag['storage-node'] ?? 1) - 1;
       const out = battle.submit({ type: 'capture' });
       const budget = out.find((e) => e.type === 'captureBudget');
@@ -111,9 +138,27 @@ function playBattle(run: Run, foes: Battler[], kind: 'wild' | 'trainer', seed: n
       }
       continue;
     }
-    // weaken if we mean to capture and the foe is still healthy; else hit hardest
-    const wk = wantCapture && kind === 'wild' && (run.bag['storage-node'] ?? 0) > 0 && (run.party.length < 3 || !run.manifest.freed.includes(foe.speciesNum));
-    pump(battle.submit({ type: 'move', index: pickMove(active, foe, wk && foePct > 0.5) }));
+    // a player tops off a hurt active mid-fight (not when a catch is one hit away)
+    if (myPct < 0.4 && !(wk && foePct <= 0.45)) {
+      const kit = bestKit(run);
+      if (kit) {
+        run.bag[kit] = (run.bag[kit] ?? 1) - 1;
+        pump(battle.submit({ type: 'item', itemId: kit, targetIndex: run.party.indexOf(active) }));
+        continue;
+      }
+      // no kit — pivot to a bench member that resists the foe, if one's fresh
+      const swap = bestSwitch(run.party, active, foe);
+      if (swap >= 0) { pump(battle.submit({ type: 'switch', index: swap })); continue; }
+    }
+    // catching: chip the foe down with the never-KO HOBBLE from the start — we
+    // only ever try to catch a wild we out-level, so a hard hit would overshoot
+    // the capture band and down it (a high-OUTPUT starter one-shots a low wild)
+    if (wk) {
+      const nk = noKOIndex(active);
+      pump(battle.submit({ type: 'move', index: nk >= 0 ? nk : pickMove(active, foe, true) }));
+      continue;
+    }
+    pump(battle.submit({ type: 'move', index: pickMove(active, foe) }));
   }
   const outcome = battle.phase === 'done'
     ? (captured !== undefined ? 'captured' : !alive(run.party) ? 'defeat' : foes.every((f) => f.integrity <= 0) ? 'win' : 'fled')
@@ -177,10 +222,16 @@ function playMap(run: Run, mapId: string): void {
   if ((m.grass ?? []).some((g) => g === 1)) {
     const zone = ZONES_BY_ID.get(m.zone ?? 'field-grass');
     if (zone) {
-      const target = Math.max(...zone.slots.map((s) => s.maxLevel));
+      // grind to be ON-LEVEL for the fights ahead: the toughest local trainer
+      // (falling back to the zone ceiling on trainer-less maps). Grinding to the
+      // local trainer level is what keeps a player in step — so the losses that
+      // remain reflect real fight difficulty, not under-levelling.
+      const zoneMax = Math.max(...zone.slots.map((s) => s.maxLevel));
+      const trMax = Math.max(0, ...(m.trainers ?? []).flatMap((t) => t.team.map((mem) => mem.level)));
+      const target = Math.max(zoneMax, trMax);
       const rng = new Rng(0xABCD ^ mapId.length ^ run.starter.length);
       let fights = 0; let caught = 0; let kos = 0; let losses = 0; let koBeforeCatch = 0; let steps = 0;
-      while (lead(run.party) < target && fights < 40 && steps < 600) {
+      while (lead(run.party) < target && fights < 50 && steps < 900) {
         steps++;
         const sp = rollEncounter(zone, rng);
         if (!sp) continue;
@@ -188,7 +239,13 @@ function playMap(run: Run, mapId: string): void {
         if (!run.manifest.seen.includes(sp.speciesNum)) run.manifest.seen.push(sp.speciesNum);
         const before = run.party.length;
         const foe = makeBattler(GAME_DATA.species(sp.speciesNum), sp.level, GAME_DATA);
-        const r = playBattle(run, [foe], 'wild', nextSeedRun(run), true);
+        // only try to CATCH (and HOBBLE-weaken) a NEAR-LEVEL wild with bench room:
+        // not above our level (unsafe to weaken with a fragile lead) and not far
+        // below it (a too-low catch never keeps pace under shared XP) — exactly
+        // the partner a player would actually keep
+        const ld = lead(run.party);
+        const wantCap = run.party.length < 3 && sp.level <= ld && sp.level >= ld - 4;
+        const r = playBattle(run, [foe], 'wild', nextSeedRun(run), wantCap);
         if (r.outcome === 'captured') caught++;
         else if (r.outcome === 'win') kos++;
         else if (r.outcome === 'defeat') losses++;
@@ -197,7 +254,7 @@ function playMap(run: Run, mapId: string): void {
       }
       run.log.push(`  ground ${fights} wild fights on ${m.zone ?? 'field-grass'} → lead Lv${lead(run.party)} (${kos} won, ${caught} captured${losses ? `, ${losses} lost` : ''})`);
       if (koBeforeCatch >= 2) flag(`"${mapId}": wilds get KO'd before they can be weakened for capture — no non-damaging weakening move on the starter (capturing early is luck-based).`);
-      if (fights >= 38) flag(`"${mapId}": needed 40+ grind fights to reach the local wild level — XP gain may be too slow.`);
+      if (fights >= 48) flag(`"${mapId}": needed 50+ grind fights to reach the local level — XP gain may be too slow.`);
       if (losses > Math.max(4, fights * 0.4)) flag(`"${mapId}": lost ${losses}/${fights} grind fights even with heal access — the zone (to Lv${target}) out-levels what the player can field on arrival.`);
     }
   }

@@ -263,7 +263,8 @@ export class Battle {
     }
 
     const fx = move.effect;
-    if (fx && (fx.kind === 'heal' || this.rng.chance(fx.chance))) {
+    // noKO carries no secondary effect — its only job is the damage clamp above
+    if (fx && fx.kind !== 'noKO' && (fx.kind === 'heal' || this.rng.chance(fx.chance))) {
       if (fx.kind === 'status') {
         ev.push(...this.applyStatus(side === 'player' ? 'foe' : 'player', target, fx.status));
       } else if (fx.kind === 'statStage') {
@@ -286,7 +287,7 @@ export class Battle {
     const special = SPECIAL_TYPES.has(move.type);
     const atkKey = special ? 'surge' : 'output';
     const defKey = special ? 'shielding' : 'armor';
-    const crit = this.rng.chance(100 / 16);
+    const crit = this.rng.chance(100 / 20); // 5% (eased from Gen 3's 1/16 to reduce swinginess)
     const atk = this.effectiveStat(user, atkKey, crit ? 'ignore-negative' : undefined);
     const def = this.effectiveStat(target, defKey, crit ? 'ignore-positive' : undefined);
 
@@ -306,7 +307,9 @@ export class Battle {
       rand: this.rng.int(85, 100),
     });
 
-    target.integrity = Math.max(0, target.integrity - d);
+    // a noKO move (HOBBLE) chips a wild down but never downs it — for capture setup
+    const floor = move.effect?.kind === 'noKO' && target.integrity > 0 ? 1 : 0;
+    target.integrity = Math.max(floor, target.integrity - d);
     return [
       {
         type: 'damage',

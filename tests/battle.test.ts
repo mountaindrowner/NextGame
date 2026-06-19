@@ -37,7 +37,7 @@ describe('stat math', () => {
   it('matches Gen 3 flattened formulas', () => {
     const toastlet = GAME_DATA.species(10);
     const s = computeStats(toastlet, 10);
-    expect(s.integrity).toBe(Math.floor((2 * toastlet.base.integrity * 10) / 100) + 10 + 10);
+    expect(s.integrity).toBe(Math.floor((2 * toastlet.base.integrity * 10) / 100) + 10 + 15);
     expect(s.surge).toBe(Math.floor((2 * toastlet.base.surge * 10) / 100) + 5);
   });
 

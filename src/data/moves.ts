@@ -75,6 +75,8 @@ export const MOVES: readonly MoveDef[] = [
   M('root-crack', 'Root Crack', 'VERDANT', 65, 100, 25),
   M('overgrowth', 'Overgrowth', 'VERDANT', 90, 90, 15),
   M('spore-static', 'Spore Static', 'VERDANT', 0, 75, 15, 0, { kind: 'status', status: 'STANDBY', chance: 100 }),
+  // --- capture setup: a gentle chip that never downs the target ---
+  M('hobble', 'HOBBLE', 'UTILITY', 30, 100, 25, 0, { kind: 'noKO' }),
   // --- starter signature moves (scooter / drone / dog) ---
   M('burnout', 'BURNOUT', 'MOTOR', 55, 100, 20, 1), // scooter charge-burst dash (priority)
   M('mark-strike', 'MARK STRIKE', 'SIGNAL', 55, 100, 20, 0, { kind: 'statStage', target: 'foe', stat: 'evasion', delta: -1, chance: 100 }), // drone marks from range

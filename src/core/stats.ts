@@ -5,10 +5,11 @@ export type Plating = 'heavy' | 'light' | 'factory';
 
 /**
  * Gen 3 stat math with the flattened model (no IVs/EVs/natures, GDD §10.1):
- *   INTEGRITY = ⌊2·base·L/100⌋ + L + 10
+ *   INTEGRITY = ⌊2·base·L/100⌋ + L + 15
  *   other     = ⌊2·base·L/100⌋ + 5
  * Plating: heavy +10% ARMOR/SHIELDING −10% CLOCK · light +10% CLOCK −10% ARMOR.
  * Expansion Board: −10% OUTPUT and SURGE (GDD §10.5).
+ * (INTEGRITY base bumped +5 over Gen 3 to soften 2-3-hit-KO swinginess.)
  */
 export function computeStats(
   species: SpeciesDef,
@@ -19,7 +20,7 @@ export function computeStats(
   for (const key of Object.keys(species.base) as StatKey[]) {
     const base = species.base[key];
     const core = Math.floor((2 * base * level) / 100);
-    out[key] = key === 'integrity' ? core + level + 10 : core + 5;
+    out[key] = key === 'integrity' ? core + level + 15 : core + 5;
   }
   const lean = (key: StatKey, mult: number): void => {
     out[key] = Math.max(1, Math.floor(out[key] * mult));

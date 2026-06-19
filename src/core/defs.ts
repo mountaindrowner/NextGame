@@ -51,7 +51,8 @@ export type BattleStatKey = StatKey | 'accuracy' | 'evasion';
 export type MoveEffect =
   | { kind: 'status'; status: StatusName; chance: number }
   | { kind: 'statStage'; target: 'self' | 'foe'; stat: BattleStatKey; delta: number; chance: number }
-  | { kind: 'heal'; fraction: number };
+  | { kind: 'heal'; fraction: number }
+  | { kind: 'noKO' }; // a False-Swipe analog: deals damage but never downs the target
 
 export interface MoveDef {
   id: string;
