@@ -46,6 +46,7 @@
     "gen:protag": "tsx tools/gen-protag.ts",
     "gen:cutscene-art": "tsx tools/gen-cutscene-art.ts",
     "playtest": "tsx tools/playtest.ts",
+    "autoplay": "tsx tools/autoplay.ts",
     "screenshots": "tsx tools/screenshot.ts"
   },
   "dependencies": {
