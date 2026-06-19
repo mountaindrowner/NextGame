@@ -3,6 +3,8 @@ import { fitLegacy, LEGACY_H, LEGACY_W } from './legacy';
 import { setGameState } from '../game/state';
 import { browserStorage, SaveSlots, SLOT_COUNT } from '../save/save';
 import { Controls } from '../input/controls';
+import { fadeTo, FADE_COLD } from './transition';
+import { COLD_OPEN } from '../cutscene/script';
 
 export class TitleScene extends Phaser.Scene {
   private controls!: Controls;
@@ -58,7 +60,7 @@ export class TitleScene extends Phaser.Scene {
     }
 
     this.controls = new Controls(this);
-    this.items = [{ label: 'NEW GAME', run: () => this.scene.start('newgame') }];
+    this.items = [{ label: 'NEW GAME', run: () => fadeTo(this, 'cutscene', { cutscene: COLD_OPEN }, FADE_COLD, 420) }];
     const slots = new SaveSlots(browserStorage());
     for (let s = 0; s < SLOT_COUNT; s++) {
       const summary = slots.summary(s);

@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { fitLegacy } from './legacy';
 import { Controls } from '../input/controls';
 import { UI } from '../ui/colors';
+import { fadeTo } from './transition';
 
 /**
  * The colony elevator (slice beat, master prompt §14 / beats.md §1→2): the
@@ -11,10 +12,11 @@ import { UI } from '../ui/colors';
 export class ElevatorScene extends Phaser.Scene {
   private controls!: Controls;
   private lines = [
-    'You slip past the freight curfew into the colony elevator.',
+    'You slip past the freight curfew into the colony lift.',
+    'Below, in the dark garage, Banjo hums two notes after you. Hello, goodbye — the same little song.',
     'The car shudders, then climbs. Sublevels tick past…',
     'Daylight bleeds in around the doors. First sky in weeks.',
-    'The elevator opens onto THE FIELD — the ruined cattle town.',
+    'The lift opens onto THE FIELD — a ruined cattle town under open sky.',
   ];
   private index = 0;
   private text!: Phaser.GameObjects.Text;
@@ -54,6 +56,13 @@ export class ElevatorScene extends Phaser.Scene {
       .setOrigin(1, 1);
   }
 
+  private notes(): void {
+    for (let i = 0; i < 2; i++) {
+      const n = this.add.text(150 + i * 16, 96, '♪', { fontFamily: 'monospace', fontSize: '12px', color: '#ffd27a' }).setDepth(5);
+      this.tweens.add({ targets: n, y: n.y - 20, alpha: 0, duration: 1200, delay: i * 240, ease: 'Sine.Out', onComplete: () => n.destroy() });
+    }
+  }
+
   override update(): void {
     if (this.done) return;
     if (this.controls.consume('a') || this.controls.consume('start')) {
@@ -61,10 +70,10 @@ export class ElevatorScene extends Phaser.Scene {
       const line = this.lines[this.index];
       if (line) {
         this.text.setText(line);
+        if (this.index === 1) this.notes(); // Banjo's two-note hello
       } else {
         this.done = true;
-        this.cameras.main.fade(500, 216, 200, 144);
-        this.time.delayedCall(520, () => this.scene.start('fieldhd', { mapId: 'the-field' }));
+        fadeTo(this, 'fieldhd', { mapId: 'the-field' }, [216, 200, 144], 500);
       }
     }
   }

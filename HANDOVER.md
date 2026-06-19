@@ -1,5 +1,37 @@
 # HANDOVER
 
+## Session 2026-06-16 (cont.) — Opening cinematics & charm pass
+
+- **Reusable cutscene toolkit** (no shared dialogue/fade util existed):
+  `src/cutscene/types.ts` (pure data Step/Cutscene model), `src/scenes/
+  CutsceneScene.ts` (data-driven player: typewriter paper box, speaker +
+  96px portrait, A/START advance, **B skips**, bg/fade/wait/fx steps, fades to
+  `next`), and `src/scenes/transition.ts` `fadeTo()` (warm=home / cold=lore).
+- **New opening flow:** Title → **cold-open cutscene** (the Waking → the
+  Downtowns → broken-but-healing surface → the Static whisper) → preset select
+  → **grounded cutscene** (Grandma Mabel, the garage, the *Ohm's Law* quote,
+  "build a partner") → Bench → **name your Ohm** (`NameEntryScene`, on-screen
+  keyboard, the "chooses a chirp" beat) → Ohmstead (guided intro banners,
+  goodbye, **Banjo** the Jukeboxer + its two-note hello) → Elevator (Banjo
+  send-off, first daylight) → the Field. Every hop now fades.
+- **Canon fix:** removed the stale "GRANDPA HARLAN"; the opening now uses
+  **Grandma Mabel Vane** (living guardian) + **Eli Vane**'s legacy Bench, per
+  the bibles — seeds the late "Grandpa's alive" reveal.
+- **Art:** `tools/gen-cutscene-art.ts` (grid method) → 5 cold-open cards
+  (`public/ui/cutscene/`) + a Mabel 96px portrait; a Banjo jukebox prop +
+  interact added to Ohmstead (`gen-underground.ts`, regenerated).
+- **Tests:** `tests/cutscene.test.ts` (5) — script integrity, valid next-scene
+  handoffs, every referenced image exists, has the Mabel/Ohm's-Law beat, and
+  **no "Harlan"/dead names** in `src/cutscene/`. **80 tests green**, typecheck +
+  lint (core boundary clean) + build + playtest all pass. Dist rebuilt.
+- **Could not screenshot the live scenes here** — Playwright installed but the
+  Chromium binary download is blocked by the sandbox network policy; verified
+  via the logic harness + static art review. `npm run screenshots` works on a
+  networked machine.
+- **Next:** audio/chiptune (the opening is built to slot it in); per-map
+  encounter zones for the existing colonies (still all roll field-grass).
+
+
 ## Session 2026-06-16 (cont.) — The Chancel (Colony 5) + finishing items
 
 - **The Chancel is built** — the 9th map and Act II's Colony 5 (Critical Path

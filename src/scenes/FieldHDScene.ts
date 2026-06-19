@@ -107,8 +107,9 @@ export class FieldHDScene extends Phaser.Scene {
 
   private enter?: { from: Dir4; col: number; row: number };
   private enterAt?: { x: number; y: number };
+  private introTutorial = false;
 
-  init(data: { mapId?: string; enter?: { from: Dir4; col: number; row: number }; to?: { x: number; y: number } }): void {
+  init(data: { mapId?: string; enter?: { from: Dir4; col: number; row: number }; to?: { x: number; y: number }; intro?: boolean }): void {
     const saved = hasGameState() ? getGameState().location?.map : undefined;
     // explicit mapId wins; else resume the saved map (returning from a battle);
     // else the Field. Callers that mean the Field (the elevator) pass it.
@@ -116,6 +117,7 @@ export class FieldHDScene extends Phaser.Scene {
     this.mapDef = MAPS[this.mapId]!;
     this.enter = data.enter;
     this.enterAt = data.to;
+    this.introTutorial = data.intro === true;
   }
 
   private mapKey(): string {
@@ -307,7 +309,13 @@ export class FieldHDScene extends Phaser.Scene {
 
     this.controls = new Controls(this);
     this.events.on('resume', () => this.controls.clearQueue());
+    this.cameras.main.fadeIn(360, 18, 12, 8);
     this.banner(this.mapDef.banner);
+    if (this.introTutorial) {
+      // the first walk: a gentle objective + a wave-off, then a hint to the lift
+      this.time.delayedCall(2400, () => this.banner('Move with the arrow keys. Press A to talk, read, and rummage.'));
+      this.time.delayedCall(5200, () => this.banner('Say goodbye to Grandma, look in on Banjo — then find the lift topside.'));
+    }
   }
 
   /** Build per-direction walk anims for a 3×3 walk sheet (S=0-2,N=3-5,W=6-8). */
@@ -465,9 +473,11 @@ export class FieldHDScene extends Phaser.Scene {
     for (const it of this.field.interacts ?? []) {
       if ((it.x === fx && it.y === fy) || (it.x === this.px && it.y === this.py)) {
         if (it.kind === 'bench') {
-          this.banner("Grandpa's Bench — your starter was built here. (Press ⤓ topside to recharge.)");
+          this.banner("Grandpa's Bench — your partner was built here. (Press ⤓ topside to recharge.)");
         } else if (it.kind === 'eli') {
           this.banner('A photograph and a worn logbook. The face is a stranger… but the initials are E.V. Why is that name a chill?');
+        } else if (it.kind === 'banjo') {
+          this.banjoHello(it.x, it.y);
         } else {
           this.banner('You poke at it. Nothing happens.');
         }
@@ -664,6 +674,18 @@ export class FieldHDScene extends Phaser.Scene {
 
   private placePlayer(): void {
     this.player.setPosition(this.px * this.field.tile + this.field.tile / 2, this.py * this.field.tile + this.field.tile / 2);
+  }
+
+  /** Banjo — Grandpa's old Jukeboxer — hums its two-note hello (charm beat). */
+  private banjoHello(col: number, row: number): void {
+    const t = this.field.tile;
+    const bx = col * t + t / 2;
+    const by = row * t - 2;
+    for (let i = 0; i < 2; i++) {
+      const note = this.add.text(bx + (i === 0 ? -6 : 8), by, '♪', { fontFamily: 'monospace', fontSize: '14px', color: '#ffd27a', fontStyle: 'bold' }).setOrigin(0.5, 1).setDepth(300);
+      this.tweens.add({ targets: note, y: note.y - 18, alpha: 0, duration: 1100, delay: i * 260, ease: 'Sine.Out', onComplete: () => note.destroy() });
+    }
+    this.banner('Banjo — Grandpa\'s old Jukeboxer — hums two notes: its hello. You hum them back.');
   }
 
   private banner(text: string): void {

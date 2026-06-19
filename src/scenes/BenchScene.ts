@@ -4,6 +4,7 @@ import { newGame, setGameState, type BenchPicks, type CoreChoice, type Locomotio
 import type { Plating } from '../core/stats';
 import { Controls } from '../input/controls';
 import { UI } from '../ui/colors';
+import { fadeTo, FADE_WARM } from './transition';
 
 interface Slot<T extends string> {
   title: string;
@@ -60,8 +61,10 @@ export class BenchScene extends Phaser.Scene {
     this.picks = {};
     this.controls = new Controls(this);
     this.add.rectangle(120, 80, 240, 160, 0x383028);
-    this.add.text(120, 12, 'THE BENCH', { fontFamily: 'monospace', fontSize: '12px', color: '#e8c830' }).setOrigin(0.5);
-    this.header = this.add.text(120, 32, '', { fontFamily: 'monospace', fontSize: '10px', color: '#f8f8e8' }).setOrigin(0.5);
+    this.add.text(120, 10, 'THE BENCH', { fontFamily: 'monospace', fontSize: '12px', color: '#e8c830' }).setOrigin(0.5);
+    this.add.text(120, 22, "Eli's parts. Your partner. Build it.", { fontFamily: 'monospace', fontSize: '7px', color: '#a89878' }).setOrigin(0.5);
+    this.header = this.add.text(120, 34, '', { fontFamily: 'monospace', fontSize: '10px', color: '#f8f8e8' }).setOrigin(0.5);
+    this.cameras.main.fadeIn(360, 18, 12, 8);
     this.add.rectangle(120, 134, 240, 52, UI.paper).setStrokeStyle(2, UI.frame);
     this.blurb = this.add.text(8, 118, '', { fontFamily: 'monospace', fontSize: '9px', color: '#303030', wordWrap: { width: 224 } });
     this.showSlot();
@@ -114,9 +117,8 @@ export class BenchScene extends Phaser.Scene {
       this.picks.plating = picked as Plating;
       const state = newGame(this.preset, this.picks as BenchPicks);
       setGameState(state);
-      const starter = state.party[0];
-      this.blurb.setText(`${starter?.name ?? 'It'} whirs awake on the Bench. It chooses a chirp just for you.`);
-      this.time.delayedCall(2200, () => this.scene.start('fieldhd', { mapId: 'ohmstead' }));
+      this.blurb.setText('The parts settle. A core catches. Something on the Bench takes its first breath…');
+      this.time.delayedCall(1600, () => fadeTo(this, 'nameentry', undefined, FADE_WARM, 520));
       this.slotIndex = 3; // stop input
       return;
     }

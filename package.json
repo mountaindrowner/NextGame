@@ -44,6 +44,7 @@
     "gen:chancel": "tsx tools/gen-chancel.ts",
     "yoyo2png": "tsx tools/yoyo2png.ts",
     "gen:protag": "tsx tools/gen-protag.ts",
+    "gen:cutscene-art": "tsx tools/gen-cutscene-art.ts",
     "playtest": "tsx tools/playtest.ts",
     "screenshots": "tsx tools/screenshot.ts"
   },

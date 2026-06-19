@@ -155,6 +155,21 @@ function bench(): Sprite {
   return g.render();
 }
 
+/** Banjo — Grandpa's old Jukeboxer, asleep in the garage corner. */
+function banjo(): Sprite {
+  const g = new Grid(26, 36);
+  g.shadow(13, 35, 11, 3);
+  g.box(3, 4, 20, 31, 'k', 'K', 'x'); // wooden cabinet
+  for (let i = 0; i <= 9; i++) g.hline(3 + i, 4 - Math.floor(i * 0.3), 20 - 2 * i, 'k'); // domed top
+  g.box(6, 12, 14, 10, 'q', 'e', 'E'); // the lit arch (warm amber)
+  g.rect(8, 14, 10, 6, 'z'); g.set(12, 16, 'Z');
+  for (let y = 24; y < 32; y += 2) g.hline(7, y, 12, 'A'); // speaker grille
+  g.set(9, 9, 'z'); g.set(16, 9, 'z'); // pilot lights
+  g.outline('X');
+  const s = g.render();
+  return s;
+}
+
 /** Wall console / terminal. */
 function console_(): Sprite {
   const g = new Grid(26, 30);
@@ -462,9 +477,10 @@ const GLOW_C: Record<CrystalKind, [number, number, number]> = {
 
 let cseed = 100;
 const objs: Placed[] = [
-  // garage — Grandpa's Bench + console
+  // garage — Grandpa's Bench + console + Banjo in the corner
   { s: bench(), col: 5, row: 8, solid: true, glow: { r: 16, col: [30, 60, 110] } },
-  { s: console_(), col: 11, row: 8, solid: true },
+  { s: banjo(), col: 9, row: 8, solid: true, glow: { r: 16, col: [120, 80, 24] } },
+  { s: console_(), col: 13, row: 8, solid: true },
   { s: crate(), col: 12, row: 4 },
   // quarters — cots + a crate
   { s: bed(), col: 18, row: 3, solid: true },
@@ -574,12 +590,16 @@ writeFileSync(
     grass: [],
     spawn: { x: 6, y: 5 }, // in the garage, by the Bench
     exits: [{ x: 19, y: 19, scene: 'elevator' }], // step onto the lift apron → up to the Field
-    interacts: [{ x: 5, y: 7, kind: 'bench' }], // Grandpa's Bench
+    interacts: [
+      { x: 5, y: 7, kind: 'bench' }, // Eli's Bench
+      { x: 9, y: 7, kind: 'banjo' }, // Banjo, the old Jukeboxer
+      { x: 13, y: 7, kind: 'eli' }, // a photo + the logbook (E.V.)
+    ],
     npcs: [
-      { char: 'npc_elder', col: 8, row: 6, name: 'Grandma Mabel', lines: [
-        "You built him at Eli's bench, from Eli's parts. That makes him family. Mind him well.",
-        'Your grandfather could coax a song out of a dead radio. I still hear it, some nights.',
-        "Boone's sending you topside. Come back to me, you hear? The both of you.",
+      { char: 'npc_elder', col: 7, row: 6, name: 'Grandma Mabel', lines: [
+        'Built from Eli\'s parts, woken at Eli\'s bench. That makes it family now. Mind it well.',
+        'Your grandfather could coax a song out of a dead radio. Banjo still hums it, some nights.',
+        "Boone wants you topside at first light. Come back to me, you hear? The both of you.",
       ] },
       { char: 'npc_rancher', col: 21, row: 12, name: 'Cass', lines: [
         "They won't let me up the lift. 'Too young,' Boone says. You're barely older than me!",
