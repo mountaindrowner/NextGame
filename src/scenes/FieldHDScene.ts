@@ -213,6 +213,12 @@ export class FieldHDScene extends Phaser.Scene {
   }
 
   create(): void {
+    // the scene instance is reused across scene.start, so clear transient locks
+    // left over from a trainer/Warden challenge — otherwise the walker stays
+    // frozen on return from battle (the post-combat softlock).
+    this.moving = false;
+    this.toastObj = undefined;
+    this.toastTimer = undefined;
     this.field = this.cache.json.get(this.dataKey()) as FieldData;
     if (hasGameState()) getGameState().flags[`visited:${this.mapId}`] = true; // world-map
     this.buildLedges();
