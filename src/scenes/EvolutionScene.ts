@@ -84,8 +84,11 @@ export class EvolutionScene extends Phaser.Scene {
 
   override update(): void {
     if (this.phase === 'prompt') {
-      if (this.controls.consume('a')) this.startAnimation();
-      else if (this.controls.consume('b')) {
+      if (this.controls.consume('a')) {
+        getAudio().select();
+        this.startAnimation();
+      } else if (this.controls.consume('b')) {
+        getAudio().back();
         this.text.setText('You eased the resonance back down. It can change later.');
         this.phase = 'done';
         this.time.delayedCall(900, () => this.next());

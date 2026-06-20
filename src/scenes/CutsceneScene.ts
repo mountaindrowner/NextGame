@@ -161,6 +161,7 @@ export class CutsceneScene extends Phaser.Scene {
     }
     this.full = step.text;
     this.shown = 0;
+    getAudio().textBlip(); // a soft tick as each line begins
     this.acc = 0;
     this.typing = true;
     this.prompt.setVisible(false);

@@ -145,13 +145,16 @@ export class TitleScene extends Phaser.Scene {
     if (this.prompt) this.prompt.setAlpha(this.blink % 900 < 450 ? 1 : 0.25);
     if (this.controls.consume('up')) {
       this.cursor = (this.cursor + this.items.length - 1) % this.items.length;
+      getAudio().cursor();
       this.refresh();
     }
     if (this.controls.consume('down')) {
       this.cursor = (this.cursor + 1) % this.items.length;
+      getAudio().cursor();
       this.refresh();
     }
     if (this.controls.consume('a') || this.controls.consume('start')) {
+      getAudio().select();
       this.items[this.cursor]?.run();
     }
   }

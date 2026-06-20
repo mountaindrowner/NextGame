@@ -752,12 +752,27 @@ export class FieldHDScene extends Phaser.Scene {
 
   private banner(text: string): void {
     this.toastObj?.destroy();
-    const box = this.add.rectangle(240, 300, 460, 28, 0x1a1410, 0.82).setStrokeStyle(2, 0xe8d8a8);
-    const t = this.add.text(0, 0, text, { fontFamily: 'monospace', fontSize: '11px', color: '#f4ecd8' }).setOrigin(0.5);
-    t.setPosition(240, 300);
+    const W = 460;
+    const PAD = 14;
+    // wrap to the box so long NPC lines never run off-screen; size the box to the text
+    const t = this.add
+      .text(0, 0, text, {
+        fontFamily: 'monospace',
+        fontSize: '11px',
+        color: '#f4ecd8',
+        align: 'center',
+        wordWrap: { width: W - PAD * 2 },
+      })
+      .setOrigin(0.5);
+    const h = Math.max(28, Math.round(t.height) + PAD);
+    const cy = 320 - 8 - h / 2; // rest just above the bottom edge
+    const box = this.add.rectangle(240, cy, W, h, 0x1a1410, 0.82).setStrokeStyle(2, 0xe8d8a8);
+    t.setPosition(240, cy);
     const c = this.add.container(0, 0, [box, t]).setScrollFactor(0).setDepth(200);
     this.toastObj = c;
-    this.time.delayedCall(2200, () => {
+    getAudio().textBlip();
+    const ms = Math.max(2200, Math.min(5200, 1500 + text.length * 28)); // longer text lingers longer
+    this.time.delayedCall(ms, () => {
       if (this.toastObj === c) {
         c.destroy();
         this.toastObj = undefined;

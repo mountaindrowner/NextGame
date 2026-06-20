@@ -44,7 +44,7 @@ describe('audio manifest', () => {
       expect(h.channels, t.key).toBe(1);
       expect(h.bits, t.key).toBe(16);
       expect(h.rate, t.key).toBe(11025);
-      expect(h.dataSize, t.key).toBeGreaterThan(h.rate / 2); // at least ~0.5s
+      expect(h.dataSize, t.key).toBeGreaterThan(800); // non-empty (UI blips are ~0.1s; music far longer)
     }
   });
 

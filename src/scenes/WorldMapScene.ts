@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { fitLegacy } from './legacy';
 import { Controls } from '../input/controls';
+import { getAudio } from '../game/audio';
 import { UI } from '../ui/colors';
 import { getGameState } from '../game/state';
 import { BIOME_COLORS, RIDEABLES, WORLD_LINKS, WORLD_MAP } from '../data/region';
@@ -40,18 +41,24 @@ export class WorldMapScene extends Phaser.Scene {
   override update(): void {
     if (this.controls.consume('up') || this.controls.consume('left')) {
       this.cursor = (this.cursor + this.ids.length - 1) % this.ids.length;
+      getAudio().cursor();
       this.redraw();
     }
     if (this.controls.consume('down') || this.controls.consume('right')) {
       this.cursor = (this.cursor + 1) % this.ids.length;
+      getAudio().cursor();
       this.redraw();
     }
     if (this.controls.consume('b') || this.controls.consume('start')) {
+      getAudio().back();
       this.scene.stop();
       this.scene.resume('menu');
       return;
     }
-    if (this.controls.consume('a')) this.travel();
+    if (this.controls.consume('a')) {
+      getAudio().select();
+      this.travel();
+    }
   }
 
   private visited(id: string): boolean {

@@ -3,6 +3,7 @@ import { fitLegacy } from './legacy';
 import { connections, generatePuzzle, isSolved, rotateCell, type Puzzle } from '../core/puzzle';
 import { Rng } from '../core/rng';
 import { Controls } from '../input/controls';
+import { getAudio } from '../game/audio';
 import { UI } from '../ui/colors';
 
 interface PuzzleInit {
@@ -61,11 +62,12 @@ export class PuzzleScene extends Phaser.Scene {
       return;
     }
     const n = this.puzzle.size;
-    if (this.controls.consume('up')) this.cursorY = (this.cursorY + n - 1) % n;
-    if (this.controls.consume('down')) this.cursorY = (this.cursorY + 1) % n;
-    if (this.controls.consume('left')) this.cursorX = (this.cursorX + n - 1) % n;
-    if (this.controls.consume('right')) this.cursorX = (this.cursorX + 1) % n;
+    if (this.controls.consume('up')) { this.cursorY = (this.cursorY + n - 1) % n; getAudio().cursor(); }
+    if (this.controls.consume('down')) { this.cursorY = (this.cursorY + 1) % n; getAudio().cursor(); }
+    if (this.controls.consume('left')) { this.cursorX = (this.cursorX + n - 1) % n; getAudio().cursor(); }
+    if (this.controls.consume('right')) { this.cursorX = (this.cursorX + 1) % n; getAudio().cursor(); }
     if (this.controls.consume('a')) {
+      getAudio().select();
       rotateCell(this.puzzle, this.cursorX, this.cursorY);
       if (isSolved(this.puzzle)) {
         this.draw();

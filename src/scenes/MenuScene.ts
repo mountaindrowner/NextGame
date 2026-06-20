@@ -61,10 +61,12 @@ export class MenuScene extends Phaser.Scene {
     if (count > 0) {
       if (this.controls.consume('up')) {
         this.cursor = (this.cursor + count - 1) % count;
+        getAudio().cursor();
         this.redraw();
       }
       if (this.controls.consume('down')) {
         this.cursor = (this.cursor + 1) % count;
+        getAudio().cursor();
         this.redraw();
       }
     }
@@ -73,10 +75,14 @@ export class MenuScene extends Phaser.Scene {
       if (this.controls.consume('right')) this.adjustSetting(1);
     }
     if (this.controls.consume('b') || this.controls.consume('start')) {
+      getAudio().back();
       this.back();
       return;
     }
-    if (this.controls.consume('a')) this.select();
+    if (this.controls.consume('a')) {
+      getAudio().select();
+      this.select();
+    }
   }
 
   /** Adjust the focused audio setting: volumes ±0.1, mute toggles. */
@@ -88,11 +94,11 @@ export class MenuScene extends Phaser.Scene {
     } else if (this.cursor === 1) {
       a.sfxVolume = Math.max(0, Math.min(1, Math.round((a.sfxVolume + dir * 0.1) * 10) / 10));
       getAudio().setSfxVolume(a.sfxVolume);
-      getAudio().playOneShot('sting.quest_update'); // a blip so SFX volume is audible while tuning
     } else {
       a.muted = !a.muted;
       getAudio().setMuted(a.muted);
     }
+    getAudio().cursor(); // a tick that also previews the SFX volume while tuning
     this.redraw();
   }
 
@@ -291,7 +297,7 @@ export class MenuScene extends Phaser.Scene {
     const all = Object.values(PATCHES);
     all.forEach((p, i) => {
       const has = owned.has(p.id);
-      const y = 32 + i * 14;
+      const y = 30 + i * 13;
       this.chip(22, y + 4, has ? UI.good : 0x9098a0);
       this.label(32, y, has ? `${p.name} — ${p.colony}` : `??? — ${p.colony}`, { color: has ? '#303030' : '#9098a0', hl: has });
     });
@@ -325,7 +331,7 @@ export class MenuScene extends Phaser.Scene {
       const sp = GAME_DATA.species(b.speciesNum);
       this.label(20, y, `${here ? '>' : ' '}${b.name} Lv${b.level}`, { hl: here });
       this.chip(150, y + 4, TYPE_COLORS[sp.type]);
-      const flags = `${b.integrity <= 0 ? ' DOWN' : ''}${b.status ? ` ${b.status}` : ''}`;
+      const flags = `${b.integrity <= 0 ? ' DOWN' : ''}${b.status ? ` ${b.status.slice(0, 4)}` : ''}`;
       this.label(20, y + 9, `  ${this.bar(b.integrity, b.stats.integrity)} ${b.integrity}/${b.stats.integrity}${flags}`);
     });
     this.label(16, 150, 'A: use   B: back');

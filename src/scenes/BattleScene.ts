@@ -35,6 +35,10 @@ type Mode = 'anim' | 'command' | 'moves' | 'party' | 'pack' | 'puzzle' | 'over';
 const COMMANDS = ['FIGHT', 'SWAP', 'PACK', 'RUN'] as const;
 
 /** Status set-messages that read like English, not like a flag name. */
+/** Compact status tags for the cramped HUD name plate (full word overflows the box). */
+const STATUS_SHORT: Record<StatusName, string> = {
+  OVERHEAT: 'OVHT', SHORT: 'SHRT', CORRUPTED: 'CORR', STANDBY: 'STBY', LOCKED: 'LOCK', GLITCHED: 'GLCH',
+};
 const STATUS_VERB: Record<StatusName, string> = {
   OVERHEAT: 'overheats!',
   SHORT: 'shorts out!',
@@ -337,15 +341,21 @@ export class BattleScene extends Phaser.Scene {
     }
     const count = this.menuTexts.length;
     if (count > 0) {
+      const prev = this.cursor;
       if (this.controls.consume('left') || this.controls.consume('up')) this.cursor = (this.cursor + count - 1) % count;
       if (this.controls.consume('right') || this.controls.consume('down')) this.cursor = (this.cursor + 1) % count;
-      this.updateMenuCursor();
+      if (this.cursor !== prev) {
+        this.updateMenuCursor();
+        getAudio().cursor();
+      }
     }
     if (this.controls.consume('b') && this.mode !== 'command') {
+      getAudio().back();
       this.showCommands();
       return;
     }
     if (!this.controls.consume('a')) return;
+    getAudio().select();
 
     if (this.mode === 'command') {
       const pick = COMMANDS[this.cursor];
@@ -496,7 +506,7 @@ export class BattleScene extends Phaser.Scene {
   private refreshNames(): void {
     const foe = this.battle.foe;
     const me = this.battle.active;
-    this.foeName.setText(`${foe.name}  Lv${foe.level}${foe.status ? `  ${foe.status}` : ''}`);
-    this.playerName.setText(`${me.name}  Lv${me.level}${me.status ? `  ${me.status}` : ''}`);
+    this.foeName.setText(`${foe.name}  Lv${foe.level}${foe.status ? `  ${STATUS_SHORT[foe.status]}` : ''}`);
+    this.playerName.setText(`${me.name}  Lv${me.level}${me.status ? `  ${STATUS_SHORT[me.status]}` : ''}`);
   }
 }

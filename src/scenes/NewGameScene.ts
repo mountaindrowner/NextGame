@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { fitLegacy } from './legacy';
 import { Controls } from '../input/controls';
+import { getAudio } from '../game/audio';
 import { fadeTo, FADE_WARM } from './transition';
 import { grounded } from '../cutscene/script';
 
@@ -37,9 +38,11 @@ export class NewGameScene extends Phaser.Scene {
   override update(): void {
     if (this.controls.consume('left') || this.controls.consume('right')) {
       this.cursor = 1 - this.cursor;
+      getAudio().cursor();
       this.updateCursor();
     }
     if (this.controls.consume('a')) {
+      getAudio().select();
       const preset = this.cursor === 0 ? 'SAL' : 'WREN';
       fadeTo(this, 'cutscene', { cutscene: grounded(preset) }, FADE_WARM, 420);
     }

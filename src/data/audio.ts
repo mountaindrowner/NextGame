@@ -44,17 +44,19 @@ const CUE = [
   'cue.factory_settings', 'cue.grandpa_breakthrough', 'cue.broadcast', 'cue.ending', 'cue.freeme_hook',
 ];
 const AMBIENCE = ['amb.current', 'amb.net', 'amb.wind', 'amb.cave'];
+const UISFX = ['sfx.cursor', 'sfx.select', 'sfx.back', 'sfx.text'];
 
 export const BGM_TRACKS: readonly AudioTrack[] = tracks([...AREA, ...BATTLE, ...MENU]);
 export const JINGLE_TRACKS: readonly AudioTrack[] = tracks(JINGLE);
 export const CUE_TRACKS: readonly AudioTrack[] = tracks(CUE);
-export const SFX_TRACKS: readonly AudioTrack[] = tracks(AMBIENCE);
-export const ALL_AUDIO: readonly AudioTrack[] = tracks([...AREA, ...BATTLE, ...MENU, ...JINGLE, ...CUE, ...AMBIENCE]);
+export const SFX_TRACKS: readonly AudioTrack[] = tracks([...AMBIENCE, ...UISFX]);
+export const ALL_AUDIO: readonly AudioTrack[] = tracks([...AREA, ...BATTLE, ...MENU, ...JINGLE, ...CUE, ...AMBIENCE, ...UISFX]);
 
 /** Eager set (loaded in BootScene); everything else lazy-loads in its scene. */
 export const BOOT_SET: readonly AudioTrack[] = tracks([
   'bgm.sys.title', 'bgm.sys.mainmenu', 'bgm.field.overworld', 'bgm.battle.wild', 'bgm.battle.trainer',
   ...JINGLE, // jingles are tiny and fire everywhere — never hitch them
+  ...UISFX, // cursor/select/back/text blips — tiny, must never hitch
 ]);
 
 // --- selection ---

@@ -82,9 +82,10 @@ export class BenchScene extends Phaser.Scene {
 
   override update(): void {
     if (this.picked) return;
-    if (this.controls.consume('up')) { this.cursor = (this.cursor + CHOICES.length - 1) % CHOICES.length; this.refresh(); }
-    if (this.controls.consume('down')) { this.cursor = (this.cursor + 1) % CHOICES.length; this.refresh(); }
+    if (this.controls.consume('up')) { this.cursor = (this.cursor + CHOICES.length - 1) % CHOICES.length; getAudio().cursor(); this.refresh(); }
+    if (this.controls.consume('down')) { this.cursor = (this.cursor + 1) % CHOICES.length; getAudio().cursor(); this.refresh(); }
     if (this.controls.consume('a')) {
+      getAudio().select();
       this.picked = true;
       const picks: BenchPicks = { starter: CHOICES[this.cursor]!.id };
       setGameState(newGame(this.preset, picks));

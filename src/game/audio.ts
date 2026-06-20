@@ -121,6 +121,20 @@ class AudioManager {
     });
   }
 
+  // ---- UI cue shorthands (cursor move / confirm / cancel / text advance) ----
+  cursor(): void {
+    this.playOneShot('sfx.cursor');
+  }
+  select(): void {
+    this.playOneShot('sfx.select');
+  }
+  back(): void {
+    this.playOneShot('sfx.back');
+  }
+  textBlip(): void {
+    this.playOneShot('sfx.text');
+  }
+
   // ---- prefs ----
   applyPrefs(p: AudioPrefsLike): void {
     this.safe(() => {

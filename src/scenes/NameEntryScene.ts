@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { fitLegacy, LEGACY_H, LEGACY_W } from './legacy';
 import { Controls } from '../input/controls';
+import { getAudio } from '../game/audio';
 import { GAME_DATA } from '../data/dataview';
 import { getGameState, hasGameState } from '../game/state';
 import { UI } from '../ui/colors';
@@ -101,12 +102,12 @@ export class NameEntryScene extends Phaser.Scene {
 
   override update(): void {
     const row = ROWS[this.r]!;
-    if (this.controls.consume('up')) { this.r = (this.r + ROWS.length - 1) % ROWS.length; this.c = Math.min(this.c, ROWS[this.r]!.length - 1); this.refresh(); }
-    if (this.controls.consume('down')) { this.r = (this.r + 1) % ROWS.length; this.c = Math.min(this.c, ROWS[this.r]!.length - 1); this.refresh(); }
-    if (this.controls.consume('left')) { this.c = (this.c + row.length - 1) % row.length; this.refresh(); }
-    if (this.controls.consume('right')) { this.c = (this.c + 1) % row.length; this.refresh(); }
-    if (this.controls.consume('a')) this.type(row[this.c]!);
-    if (this.controls.consume('b')) this.type('<');
-    if (this.controls.consume('start')) this.confirm();
+    if (this.controls.consume('up')) { this.r = (this.r + ROWS.length - 1) % ROWS.length; this.c = Math.min(this.c, ROWS[this.r]!.length - 1); getAudio().cursor(); this.refresh(); }
+    if (this.controls.consume('down')) { this.r = (this.r + 1) % ROWS.length; this.c = Math.min(this.c, ROWS[this.r]!.length - 1); getAudio().cursor(); this.refresh(); }
+    if (this.controls.consume('left')) { this.c = (this.c + row.length - 1) % row.length; getAudio().cursor(); this.refresh(); }
+    if (this.controls.consume('right')) { this.c = (this.c + 1) % row.length; getAudio().cursor(); this.refresh(); }
+    if (this.controls.consume('a')) { getAudio().cursor(); this.type(row[this.c]!); }
+    if (this.controls.consume('b')) { getAudio().back(); this.type('<'); }
+    if (this.controls.consume('start')) { getAudio().select(); this.confirm(); }
   }
 }
