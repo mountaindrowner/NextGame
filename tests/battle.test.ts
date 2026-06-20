@@ -147,7 +147,7 @@ describe('battle engine', () => {
     const party = [makeBattler(GAME_DATA.species(1), 8, GAME_DATA)];
     const foe = makeBattler(GAME_DATA.species(10), 5, GAME_DATA);
     const battle = new Battle(
-      { kind: 'trainer', seed: 9, party, foes: [foe], foeName: 'Redbed Raider Clay' },
+      { kind: 'trainer', seed: 9, party, foes: [foe], foeName: 'Rook' },
       GAME_DATA,
     );
     battle.intro();

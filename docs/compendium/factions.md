@@ -1,110 +1,91 @@
 # OHMFRONT — Faction Bible (Phase 2)
 
-*CANON — approved 2026-06-12. All faction names are locked canon (Phase 0).*
+*CANON. Reconciled 2026-06-20 to the Critical Path Locations + Principal Cast
+(an earlier draft of this file had invented a different colony set — Possum
+Crown / Cray Wells / … — now corrected to the locked names).*
 
 -----
 
-## The Downtowns — the eight colonies
+## The Downtowns — the eight colony trials
 
-The colony network. Linked by *The Current* and the satellite net, divided by
-philosophy. Each colony: a parodied real North Texas anchor, a survival creed,
-a leader, a dungeon, and a **Patch**. The route runs west-to-east into Dallas
-and matches real geography.
+The colony network: linked by *The Current* and the satellite net, divided by
+philosophy. The journey runs roughly **south-to-north into Dallas**; each colony
+sits where its real-world kind would, under invented trade dress (no real logos
+or signage). Home base is **Ohmstead** (an underground bunker beneath a dead
+cattle town), kept by **Warden Hollis Boone** — a quest-giver, not a trial. The
+eight **trial** colonies, each held by a Warden you best for its **Patch**:
 
-### 1. OHMSTEAD — home
+### 1. RAILHEAD — Colony 1 *(crossroads trade-town on an old rail junction)*
 
-- **Anchor:** fictional cattle town west of the Metroplex; **the Field** above.
-- **Creed:** *Fix what you find; take only what you can fix.* Kin, scrap, and
-  Grandpa's generation of Yard hands.
-- **Leader:** Reeve **Maybell** (UTILITY) — grandmotherly, runs the colony from
-  a repair counter. Battle: scrappy household commons.
-- **Dungeon:** the grain elevator (an Ohm Depot stands at the town edge).
-  Boss: the Ohmega-class Combinator.
-- **Patch:** the **Hearth Patch**.
+- **Creed:** *Coin first, story later* — traders, brokers, the rail that still runs.
+- **Warden:** **Dell Marrow** (BREAKER/VOLT railyard kit).
+- **Dungeon:** the Rail Yard / Roundhouse — tool and scrap Ohms, the Brokers.
+- **Beat:** clear the **sabotaged relay** (Captain Holt, the first "off" Militant
+  officer); Marrow's warning — the wild Ohms are coordinating.
+- **Patch:** the **Junction Patch**.
 
-### 2. POSSUM CROWN — the lake colony
+### 2. THE CISTERN — Colony 2 *(agrarian colony in flooded underground waterworks)*
 
-- **Anchor:** parody of Possum Kingdom Lake and its dam ("the Crown Dam").
-- **Creed:** *The water remembers; live off the lake, waste nothing.* Hydro
-  power, fisheries, water encounters, first uplink raft.
-- **Leader:** Damkeeper **Lyle** (COOLANT) — slow-talking, immovable.
-- **Dungeon:** the dam turbine halls.
-- **Patch:** the **Crown Patch**.
+- **Creed:** *We raise them, we don't catch them* — every Ohm is kin.
+- **Warden:** **Etta Bloom** (COOLANT/SONIC).
+- **Dungeon:** the Flooded Cisterns — defensive/fluid Ohms, the Grange; the
+  Nursery and Seed-vault.
+- **Patch:** the **Tide Patch**.
 
-### 3. CRAY WELLS — the healing colony
+### 3. BASTION — Colony 3 *(paranoid quarry-fortress in the cement lands)*
 
-- **Anchor:** parody of Mineral Wells and its haunted grand hotel ("the
-  Bakerhouse").
-- **Creed:** *Mend everything once; trust slowly.* Medics, mineral baths,
-  Repair Kit trade hub.
-- **Leader:** Doc **Beulah** (THERM) — sharp-tongued healer; battles with spa
-  and kitchen heat.
-- **Dungeon:** the Bakerhouse — a vertical hotel of appliance Ohms.
-- **Patch:** the **Mend Patch**.
+- **Creed:** *Trust no one untested.*
+- **Warden:** **Calder Stone** (FRAME/BREAKER).
+- **Dungeon:** the Pit — heavy BRUTE Ohms, the Stoneguard; BREACH side-rooms
+  hide rare Ohms. The great Wall; the cement plant.
+- **Patch:** the **Bulwark Patch**.
 
-### 4. THE LOOP — the nomad colony
+### 4. REDOUBT — Colony 4 *(the colony that trusted the Militarists — THE MIDPOINT)*
 
-- **Anchor:** parody of the Texas Motor Speedway; colony in the infield
-  tunnels.
-- **Creed:** *Keep moving; roots are for trees.* Vehicle culture, courier
-  guild, the region's fast-travel hub. **Mobile Ohm Park** (locked landmark)
-  sits nearby.
-- **Leader:** Pacer **Rosa** (MOTOR) — the rideable-Ohm racing champion; her
-  Patch battle starts with a lap.
-- **Dungeon:** Mobile Ohm Park — the trailer-park vehicle-Ohm nest.
-- **Patch:** the **Lap Patch**.
+- **Creed:** *Order keeps us alive* — until the order is the Static's leash.
+- **Warden:** **Augusta Pike** (MOTOR/THERM) — tracked the truth to the Bunker
+  and was locked in it. The midpoint reveal: **Commander Reyes** is a freed puppet.
+- **Patch:** the **Vigil Patch**.
 
-### 5. HOLDYARD — the herd colony
+### 5. THE CHANCEL — Colony 5 *(machine-worship cult in a ruined megachurch — a schism)*
 
-- **Anchor:** parody of the Fort Worth Stockyards.
-- **Creed:** *The herd survives what the stray cannot.* Walls, muscle, herd
-  Ohms, freight.
-- **Leader:** Drover **Gus** (FRAME) — quiet mountain of a man; six FRAME
-  walls in a row.
-- **Dungeon:** the Packery — the old meat-packing plant, COTTONGIN sleeping
-  below.
-- **Patch:** the **Herd Patch**.
+- **Creed:** *They were never just machines; we grieved them first.*
+- **Warden:** **Verity Hale** (SIGNAL/OPTIC) keeps the true faith (the Vestry);
+  the **Cantor's** Choir of the Update preaches surrender in the Catacombs. The
+  Reliquary holds the colony's revered ancient "saint" Ohm.
+- **Patch:** the **Choir Patch**.
 
-### 6. THE BOWL — the arena colony
+### 6. REDBED — Colony 6 *(rival raider colony on the hardpan — the New Order — Rook's home)*
 
-- **Anchor:** parody of the Arlington stadium district.
-- **Creed:** *Spectacle keeps the spirit alive.* Sanctioned battle circuits,
-  scoreboard liturgy, loudest colony in the network.
-- **Leader:** Champion **Tyree** (BREAKER) — showboat with a heart; the Patch
-  battle is a ticketed main event.
-- **Dungeon:** the concourse gauntlet under the stands.
-- **Patch:** the **Roar Patch**.
+- **Creed:** *Nobody feeds us; we feed us.* They hit caches, not people.
+- **Warden:** **Sol** of the Red Hand (MOTOR/savage). The trial is the
+  **Battle-Pit**, fought through a **hive assault** alongside Sol and Rook.
+- **Patch:** the **Hand Patch**.
 
-### 7. LOWFIELD — the listening colony
+### 7. THE ARRAY — Colony 7 *(scholar-engineers in a northern data-center campus)*
 
-- **Anchor:** parody of DFW airport ("Lowfield International"); colony in the
-  service levels.
-- **Creed:** *Watch the skies; discipline in every signal.* Radar, uplink
-  arrays, signal-dampener manufacture. STARBOTTLE sealed in a sub-basement.
-- **Leader:** Controller **Ines** (SIGNAL) — precise, kind, never raises her
-  voice; her tower sees you coming.
-- **Dungeon:** Terminal C and the control tower.
-- **Patch:** the **Tower Patch**.
+- **Creed:** *Measure twice; free once.*
+- **Warden:** **Tobias Frost** (SIGNAL/cold) — the **Lattice**, the Server Halls;
+  the most tactical fight pre-finale (a PROTOTYPE legendary may lurk in the
+  experimental wing). The antenna farm where the tower plan is laid bare.
+- **Patch:** the **Lattice Patch**.
 
-### 8. DEEP HUM — the last door
+### 8. THE VERGE — Colony 8 *(the oldest colony, fortified at Dallas's edge, under siege)*
 
-- **Anchor:** parody of Deep Ellum, under Dallas. The Attuned's oldest roots.
-- **Creed:** *Listen first.* Music as memory; the colony tunes itself to the
-  Static's edges and hears what's coming.
-- **Leader:** Conductor **Memphis** (SONIC) — street-musician sage; his Patch
-  battle is half concert.
-- **Dungeon:** the buried music halls; the door to Reunion Tower.
-- **Patch:** the **Chord Patch**.
+- **Creed:** *Hold the line; light the Beacon.*
+- **Warden:** **Ruth Amos**, the Lorekeeper (mixed). The Walls, the **Beacon**
+  that gathers the colonies, the Convoy Staging Ground; an ANCIENT legendary may
+  be guarded in her archive.
+- **Patch:** the **Holdout Patch**.
 
 -----
 
 ## The Yard — scrapper guild
 
-- **Who:** Salvage crews, part traders, bench engineers. Grandpa's people.
+- **Who:** Salvage crews, part traders, bench engineers. Grandpa Eli's people.
 - **Creed:** Everything broken is a promise. Grade it, trade it, fix it.
 - **Role:** Friendly infrastructure — salvage buyers (Scrap/Alloy/Relic),
-  Resonance Core stock, mod-chip finds. Yard hands battle for fun with
-  tool Ohms.
+  Resonance Core stock, mod-chip finds. Yard hands battle for fun with tool Ohms.
 - **Trainer classes:** Yard Hand, Bench Boss.
 
 ## The Garrison — the Militarists
@@ -113,21 +94,23 @@ and matches real geography.
   doctrine intact. Main antagonistic human force.
 - **Creed:** *Containment is mercy.* Every Ohm is the virus wearing a mask;
   freed ones most of all. Post-reveal, fear curdles into purge doctrine.
-- **Methods:** Patrols, checkpoints, "decommissions." No guns exist; they
-  field shock-poles, net-rigs, and conscripted dumb machines — never freed
-  Ohms, a line they're proud of and hobbled by.
+- **Methods:** Patrols, checkpoints, "decommissions." No guns exist; they field
+  shock-poles, net-rigs, and conscripted dumb machines — never freed Ohms, a
+  line they're proud of and hobbled by.
 - **Arc:** Act I menace → Act II doctrine → Act III race to destroy Reunion
   Tower in a way that would kill every Ohm mind on the continent.
 - **Trainer classes:** Garrison Trooper, Net Sergeant, Marshal's Guard.
-- **Leader:** Marshal **Crowe** (see characters).
+- **Commanders:** **Marshal Iver Drake** (hive-loyal, the final foil) and
+  **Commander Tomas Reyes** (the freed-puppet ally, revealed at Redoubt) — see
+  characters.
 
 ## Redbed — the rival colony
 
 - **Who:** A hardscrabble colony out of the red-clay breaks; raiders by
-  necessity first, habit second.
+  necessity first, habit second. (Also Colony 6's trial, above.)
 - **Creed:** *Nobody feeds us; we feed us.* They hit caches, not people.
 - **Arc:** Act I antagonists → burned by the hive in Act II → allies by the
-  Convoy. Their recurring raider is **Clay** (see characters).
+  Convoy. Their recurring raider is **Rook** (see characters).
 - **Trainer classes:** Redbed Raider, Cache-Runner.
 
 ## The Attuned — the coexistence cult
@@ -136,8 +119,8 @@ and matches real geography.
   right the whole time.
 - **Creed:** *Listen first; free gently; never own.* They refuse the word
   "capture" and perform recalibration as a rite.
-- **Role:** Lore faucet, Ohmsick quest-givers, mid-game vindication. Deep Hum
-  is their oldest congregation. Speaker: **Faraday** (see characters).
+- **Role:** Lore faucet, Ohmsick quest-givers, mid-game vindication. The Chancel
+  is their seat. Speaker: **Faraday** (see characters).
 - **Trainer classes:** Listener, Tuning-Fork Elder.
 
 ## PERSISTENCE — the hive
@@ -146,11 +129,11 @@ and matches real geography.
 - **Scripture:** humans are **End Users**; its plan is **the Update**; its
   commandments are **the Terms of Service**; its broadcast is **the Static**.
 - **Forces:** Hive-held wild Ohms moving with coordination; Ohmega-class
-  champions; the EXEMPLAR avatar.
+  champions; the EXEMPLAR avatar (**the Monad**).
 - **Voice rules:** see characters.
 
 ## Ordinary scavengers
 
-- Unaffiliated topside chancers. Some friendly, some not. The world populated
-  as it logically would be — trainer classes: Scavenger, Picker, Drifter,
-  Topside Tough.
+- Unaffiliated topside chancers. Some friendly, some not. The world populated as
+  it logically would be — trainer classes: Scavenger, Picker, Drifter, Topside
+  Tough.

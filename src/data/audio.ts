@@ -99,7 +99,7 @@ export function inferBattleType(kind: 'wild' | 'trainer', foeName?: string): Bat
   if (kind === 'wild') return 'wild';
   const n = (foeName ?? '').toLowerCase();
   if (/warden/.test(n)) return 'warden';
-  if (/rook|clay|rival/.test(n)) return 'rival';
+  if (/rook|rival/.test(n)) return 'rival';
   if (/conscript|deserter|raider|garrison|marshal|militant/.test(n)) return 'militant';
   return 'trainer';
 }

@@ -104,7 +104,7 @@ on green smoke test. Tags at gates: `phase3-contract`, `slice-v0`, `act1`,
 |---|---|---|
 | Battle fronts | 156 | 150 species + 6 starter locomotion variants (stage 1 silhouettes per Bench pick); 64×64, ≤16 colors, entry anim only |
 | Battle backs | 45 | player-side species realistically fielded early QA → full 156 by M11; same spec |
-| Trainer battle sprites | 32 | 2 player backs (SAL/WREN), 12 named fronts (8 leaders, Clay, Crowe, Faraday, Grandpa), 18 class fronts |
+| Trainer battle sprites | 33 | 2 player backs (SAL/WREN), 13 named fronts (8 Wardens, Rook, Drake, Reyes, Faraday, Grandpa Eli), 18 class fronts |
 | Overworld character sheets | 46 | 2 player (walk/run/ride), ~32 NPC types, 12 story/ride Ohm forms; 16×16 grid, Gen 3 proportions |
 | Tilesets | 11 | Ohmstead under, the Field, ranchland/routes, lake & dam, the Bakerhouse, speedway, stockyards, stadium, airfield, Dallas/Reunion Tower, caves/EM zones |
 | Maps (Tiled) | ~48 | 8 colonies, 9 dungeons, ~14 routes/surface zones, ~17 interiors |

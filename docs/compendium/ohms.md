@@ -55,7 +55,7 @@ Lv16 + Resonance Core, finals at Lv36 + Prime Core. Names [PROPOSAL].
 | 046 | **Barbwyre** | barbed-wire spool | FRAME | Coil lashes, snare fields. Lore: unspools at night to fence in what it loves. |
 | 047–048 | **Mowlet → Mowrauder** (Lv22) | push mower → riding mower | MOTOR | Blade rushes, clippings smog. `[SHEAR]`. Lore: keeps one lawn perfect in a town with no one to mow for. |
 
-## Westward — Possum Crown, Cray Wells, ranchland (049–087)
+## Westward — the Cistern & Bastion lands, ranchland (049–087)
 
 | # | Ohm | Object | Type | Notes |
 |---|---|---|---|---|
@@ -80,7 +80,7 @@ Lv16 + Resonance Core, finals at Lv36 + Prime Core. Names [PROPOSAL].
 | 082–084 | **Tillbit → Furrower → Combinator** (Lv20/Lv37) | tractor → combine | MOTOR | Furrow quakes, thresher sweeps. `[HAUL]` at final. Lore: cuts one straight line through everything. The Field's grain-elevator Ohmega is an overgrown Combinator. |
 | 085–087 | **Smokelet → Brisketeer → Pitmastodon** (Lv19/Lv36) | smoker grill → BBQ pit rig | THERM | Smoke screens, low-and-slow burns, mesquite musk. **OG:** Region 1 signature line. Lore: judged by its bark, feared for its bite. |
 
-## Towns & airwaves — Holdyard, the Bowl, Lowfield, Deep Hum (088–129)
+## Towns & airwaves — the Chancel, Array & Verge corridor (088–129)
 
 | # | Ohm | Object | Type | Notes |
 |---|---|---|---|---|
@@ -126,10 +126,10 @@ Lv16 + Resonance Core, finals at Lv36 + Prime Core. Names [PROPOSAL].
 
 | # | Ohm | Class | Object | Type | Notes |
 |---|---|---|---|---|---|
-| 144 | **COTTONGIN** | ANCIENT | cotton gin | FRAME | Sleeps under a Holdyard warehouse. Lore: the machine that taught machines to take work from hands. |
+| 144 | **COTTONGIN** | ANCIENT | cotton gin | FRAME | Sleeps under an old cotton warehouse in the cement lands. Lore: the machine that taught machines to take work from hands. |
 | 145 | **TELEGRAPHEME** | ANCIENT | telegraph exchange | SIGNAL | Haunts the rail depots. Lore: the first voice to cross the plains without a rider; it taps old traffic nobody answers. |
 | 146 | **LOCOMOTIVA** | ANCIENT | steam locomotive | MOTOR | Sleeps in a buried roundhouse. Lore: the deep machine age on iron wheels; the rails still hum where it dreams. |
-| 147 | **STARBOTTLE** | PROTOTYPE | experimental fusion reactor | THERM | Sealed under Lowfield. Lore: a star in a jar, never switched on, awake anyway. |
+| 147 | **STARBOTTLE** | PROTOTYPE | experimental fusion reactor | THERM | Sealed under the Array. Lore: a star in a jar, never switched on, awake anyway. |
 | 148 | **PECANTHEON** | ORGANIC-HYBRID | ancient pecan tree | VERDANT | The state tree, virus-taken. Lore: cables root through heartwood; it drops fruit of bark and chrome. |
 | 149 | **ROSARITHM** | ORGANIC-HYBRID | heritage rose garden | VERDANT | East of the region; blooms in fractal spirals. Lore: the virus tried to understand beauty here, and almost did. |
 | 150 | **EXEMPLAR** | PROTOTYPE | PERSISTENCE's avatar | SIGNAL | The final battle. Lore: the Update made walking scripture — every End User's machine, perfected and hollow. |

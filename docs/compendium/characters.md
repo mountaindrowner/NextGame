@@ -28,7 +28,7 @@
 - **Sample, post-reveal:** "Chapter four says ask a thing what it was for.
   Nobody warned me it might answer."
 
-## GRANDPA HARLAN — the scrapper
+## ELI VANE — Grandpa, the scrapper
 
 - **Yard hand of forty years.** Covers for the protagonist; his rare-parts
   collection builds the starter at the Bench. Likely coined "Ohm."
@@ -50,42 +50,61 @@
   the festival's last night his shell plays two notes, order reversed —
   something new in there, learning the old hello.
 
-## CLAY — the Redbed rival
+## ROOK — the Redbed rival
 
 - **Age 15.** Redbed's best cache-runner. Sharp, proud, hungry — raids
   Ohmstead's stores in Act I and keeps crossing the protagonist's route.
 - **Voice:** Says "y'all got more than you need" like a creed. Counts
   everything out loud, an accountant of grievances.
-- **Arc:** Rivalry → grudging respect → the hive burns Redbed and Clay arrives
+- **Arc:** Rivalry → grudging respect → the hive burns Redbed and Rook arrives
   asking for help with empty hands → convoy ally and final-gauntlet second.
 - **Team:** MOTOR/BREAKER raiders' kit; signature Ohm: a Rustler named
   "Payday" that evolves to Longhauler for the Convoy.
 
-## ARCHIVIST VERA — Ohmstead's record-keeper
+## ODESSA — archivist & comms
 
-- Assigns the **Ohmwork**: fill **the Manifest**. Dry wit, drier ledgers.
-  Pays per entry; post-reveal she re-titles the Manifest a census of persons
-  and won't discuss it further.
+- Ohmstead's record-keeper, and the **recurring comms voice** on the handheld
+  for the whole journey. Assigns the **Ohmwork**: fill **the Manifest**. Dry
+  wit, drier ledgers. Pays per entry; post-reveal she re-titles the Manifest a
+  census of persons and won't discuss it further.
 
-## REEVE MAYBELL, DAMKEEPER LYLE, DOC BEULAH, PACER ROSA, DROVER GUS, CHAMPION TYREE, CONTROLLER INES, CONDUCTOR MEMPHIS
+## THE EIGHT WARDENS — the colony trial leaders
 
-- The eight colony leaders. Creeds, types, dungeons, and Patches in
-  `factions.md`. Full battle teams and per-leader dialogue in Phase 3 content
-  passes; each leader's pre/post-reveal line pair drafts with the area script.
+- The eight Downtowns colonies, in critical-path order, each held by a Warden
+  (gym-leader analog; beat them for the colony **Patch**, GDD §10.8):
+  - **Railhead** — Warden **Dell Marrow** (the rail-junction broker)
+  - **The Cistern** — Warden **Etta Bloom** (raises Ohms as kin)
+  - **Bastion** — Warden **Calder Stone** (trust-no-one quarry-fortress)
+  - **Redoubt** — Warden **Augusta Pike** (the imprisoned truth-tracker)
+  - **The Chancel** — Warden **Verity Hale** (the true-faith Attuned)
+  - **Redbed** — Warden **Sol** (the Red Hand's roost; Rook's home)
+  - **The Array** — Warden **Tobias Frost** (the data-center lattice)
+  - **The Verge** — Warden **Ruth Amos** (the last holdout before Dallas)
+- Ohmstead itself is home, kept by **Warden Hollis Boone** (quest-giver, not a
+  trial). Full battle teams + per-Warden dialogue land with each area script.
 
-## MARSHAL CROWE — the Garrison
+## COMMANDER TOMAS REYES — the freed Garrison ally
+
+- **A Garrison commander, revealed at Redoubt to be a Static-puppet.** Once
+  freed, he is the soldier who remembers — the midpoint that recontextualizes
+  the whole faction. Becomes an ally and sacrifices himself at the tower.
+- **Voice:** A career officer's clarity warring with the gaps the Static left.
+  "I gave the orders. I'd swear I never *chose* one."
+
+## MARSHAL IVER DRAKE — the Garrison, hive-loyal
 
 - **Commander of the Garrison.** Polite, exact, terrifyingly reasonable. Lost
-  her unit to the hive at the Waking; built a doctrine out of never grieving.
+  his unit to the hive at the Waking; built a doctrine out of never grieving.
+  Reyes's mirror — the one who never breaks free.
 - **Voice:** Quartermaster's grammar — inventories, procedures, acceptable
   losses. Calls Ohms "units." Calls the protagonist "civilian" until the
-  Spire, where she finally uses their name.
+  Spire, where he finally uses their name.
 - **Arc:** Containment → purge doctrine post-reveal → races to demolish
-  Reunion Tower in Act III → her final order is the player's last clock.
+  Reunion Tower in Act III → his final order is the player's last clock.
 
 ## FARADAY — speaker of the Attuned
 
-- **Elder of Deep Hum's congregation.** Speaks in held silences; tunes a fork
+- **Elder of the Attuned's congregation.** Speaks in held silences; tunes a fork
   against doorframes before entering.
 - **Role:** Teaches the rite reading of recalibration, gives the Ohmsick
   pattern its frame, delivers the "we never needed proof" scene at the

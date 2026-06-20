@@ -26,9 +26,10 @@ describe('colony Patches', () => {
     }
   });
 
-  it('there are 5 obtainable now, of the canon 8', () => {
-    expect(Object.keys(PATCHES).length).toBe(5);
+  it('defines the canon 8 colonies, 5 of them built so far', () => {
+    expect(Object.keys(PATCHES).length).toBe(8);
     expect(TOTAL_PATCHES).toBe(8);
+    expect(Object.values(PATCHES).filter((p) => p.built).length).toBe(5);
   });
 
   it('PATCH_BY_MAP maps each colony map to its patch', () => {
