@@ -36,16 +36,12 @@ export class ShopScene extends Phaser.Scene {
     this.fieldMap = data?.map ?? getGameState().location?.map ?? 'the-field';
   }
 
-  preload(): void {
-    getAudio().loadTracks(this, ['bgm.menu.shop']);
-  }
-
   create(): void {
     fitLegacy(this);
     this.mode = 'menu';
     this.cursor = 0;
     this.controls = new Controls(this);
-    getAudio().playBgm('bgm.menu.shop');
+    getAudio().ensureBgm(this, 'bgm.menu.shop');
     this.redraw();
   }
 
@@ -78,7 +74,7 @@ export class ShopScene extends Phaser.Scene {
 
   private back(): void {
     if (this.mode === 'menu') {
-      getAudio().playBgm(bgmForMap(this.fieldMap)); // restore the field theme before handing back
+      getAudio().ensureBgm(this, bgmForMap(this.fieldMap)); // restore the field theme before handing back
       this.scene.stop();
       this.scene.resume(this.launcher);
       return;

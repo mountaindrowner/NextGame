@@ -203,7 +203,6 @@ export class FieldHDScene extends Phaser.Scene {
     for (const f of FX) if (!this.textures.exists(f)) this.load.image(f, `world/fx/${f}.png`);
     for (let i = 0; i < WATER_FRAMES; i++)
       if (!this.textures.exists(`water_${i}`)) this.load.image(`water_${i}`, `world/fx/water_${i}.png`);
-    getAudio().loadTracks(this, [bgmForMap(this.mapId)]); // this map's theme
   }
 
   create(): void {
@@ -321,7 +320,7 @@ export class FieldHDScene extends Phaser.Scene {
       this.time.delayedCall(5200, () => this.banner('Say goodbye to Grandma, look in on Banjo — then find the lift topside.'));
     }
     if (hasGameState()) getAudio().applyPrefs(getGameState().audio); // restore saved volume/mute
-    getAudio().playBgm(bgmForMap(this.mapId)); // per-map theme; guard keeps it seamless across edge-warps
+    getAudio().ensureBgm(this, bgmForMap(this.mapId)); // per-map theme; background-loads, never blocks create
     this.input.keyboard?.on('keydown-M', () => getAudio().toggleMute());
   }
 

@@ -100,7 +100,7 @@ export class TitleScene extends Phaser.Scene {
       this.tweens.add({ targets: this.menuObjs, alpha: 1, duration: 400, delay: 1000, onComplete: () => (this.intro = false) });
     }
     this.refresh();
-    getAudio().playBgm('bgm.sys.title');
+    getAudio().ensureBgm(this, 'bgm.sys.title');
     this.input.keyboard?.on('keydown-M', () => getAudio().toggleMute()); // throwaway mute (full UI in pass #2)
   }
 

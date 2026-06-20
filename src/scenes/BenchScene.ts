@@ -41,7 +41,6 @@ export class BenchScene extends Phaser.Scene {
       const n = STARTER_SPECIES[c.id];
       if (!this.textures.exists(`ohm_${n}_front_hd`)) this.load.image(`ohm_${n}_front_hd`, `sprites/ohms/${n}_front_hd.png`);
     }
-    getAudio().loadTracks(this, ['bgm.menu.bench']);
   }
 
   create(): void {
@@ -69,7 +68,7 @@ export class BenchScene extends Phaser.Scene {
     this.blurb = this.add.text(8, 124, '', { fontFamily: 'monospace', fontSize: '9px', color: '#2a2018', wordWrap: { width: 224 } });
     this.add.text(120, 154, '↑/↓ choose    A: wake it', { fontFamily: 'monospace', fontSize: '7px', color: '#8a8478' }).setOrigin(0.5);
     this.cameras.main.fadeIn(360, 18, 12, 8);
-    getAudio().playBgm('bgm.menu.bench');
+    getAudio().ensureBgm(this, 'bgm.menu.bench');
     this.refresh();
   }
 

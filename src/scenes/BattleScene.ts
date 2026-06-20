@@ -46,8 +46,8 @@ const STAT_LABEL: Record<string, string> = {
 };
 const FOE_X = 176;
 const FOE_Y = 44;
-const PLAYER_X = 58;
-const PLAYER_Y = 96;
+const PLAYER_X = 56;
+const PLAYER_Y = 78; // lifted so the 60px back-sprite (box bottom ~108) clears the message panel top
 const BATTLE_SPRITE_PX = 60; // on-screen footprint in the 240-layout (zoomed ×2)
 
 export class BattleScene extends Phaser.Scene {
@@ -91,8 +91,6 @@ export class BattleScene extends Phaser.Scene {
       if (hasHdBack(n)) this.load.image(`ohm_${n}_back_hd`, `sprites/ohms/${n}_back_hd.png`);
       else if (hasBack(n)) this.load.image(`ohm_${n}_back`, `sprites/ohms/${n}_back.png`);
     }
-    const type = this.init_.battleType ?? inferBattleType(this.init_.kind, this.init_.foeName);
-    getAudio().loadTracks(this, [bgmForBattle(this.init_), victoryJingleFor(type)]);
   }
 
   create(): void {
@@ -126,7 +124,7 @@ export class BattleScene extends Phaser.Scene {
     this.mode = 'anim';
     this.pump();
 
-    getAudio().playBgm(bgmForBattle(this.init_)); // wild/trainer/warden/militant/… per the foe
+    getAudio().ensureBgm(this, bgmForBattle(this.init_)); // wild/trainer/warden/… per the foe; never blocks create
     this.input.keyboard?.on('keydown-M', () => getAudio().toggleMute());
   }
 
@@ -293,17 +291,23 @@ export class BattleScene extends Phaser.Scene {
     this.drawMenu(COMMANDS.map((c) => c));
   }
 
-  private drawMenu(items: string[]): void {
+  /**
+   * Two layouts in the bottom panel (y108-160), both clear of the message line
+   * (y116) and each other: short COMMANDS sit 2×2 on the right; LIST menus
+   * (moves/party/pack) get wide left columns on the lower rows so long labels
+   * like "Chassis Bash 20/20" fit without colliding.
+   */
+  private drawMenu(items: string[], list = false): void {
     this.clearMenu();
     items.forEach((label, i) => {
       const col = i % 2;
       const row = Math.floor(i / 2);
+      const x = list ? 10 + col * 116 : 132 + col * 52;
+      const y = list ? 132 + row * 13 : 118 + row * 16;
       this.menuTexts.push(
-        this.add.text(120 + col * 56, 118 + row * 14, label, {
-          fontFamily: 'monospace',
-          fontSize: '9px',
-          color: '#303030',
-        }),
+        this.add
+          .text(x, y, label, { fontFamily: 'monospace', fontSize: list ? '8px' : '9px', color: '#303030' })
+          .setDepth(8),
       );
     });
     this.updateMenuCursor();
@@ -342,20 +346,20 @@ export class BattleScene extends Phaser.Scene {
         this.cursor = 0;
         const labels = this.battle.active.moves.map((m) => `${GAME_DATA.move(m.id).name} ${m.pp}/${m.maxPp}`);
         this.say('Pick a move.');
-        this.drawMenu(labels);
+        this.drawMenu(labels, true);
       } else if (pick === 'SWAP') {
         this.mode = 'party';
         this.cursor = 0;
         const state = getGameState();
         this.say('Send out which Ohm?');
-        this.drawMenu(state.party.map((p) => `${p.name} Lv${p.level} ${p.integrity}/${p.stats.integrity}`));
+        this.drawMenu(state.party.map((p) => `${p.name} Lv${p.level} ${p.integrity}/${p.stats.integrity}`), true);
       } else if (pick === 'PACK') {
         this.mode = 'pack';
         this.cursor = 0;
         const state = getGameState();
         const usable = Object.entries(state.bag).filter(([, n]) => n > 0);
         this.say('Use what?');
-        this.drawMenu(usable.map(([id, n]) => `${ITEMS_BY_ID.get(id)?.name ?? id} x${n}`));
+        this.drawMenu(usable.map(([id, n]) => `${ITEMS_BY_ID.get(id)?.name ?? id} x${n}`), true);
       } else if (pick === 'RUN') {
         this.dispatch(() => this.battle.submit({ type: 'run' }));
       }
