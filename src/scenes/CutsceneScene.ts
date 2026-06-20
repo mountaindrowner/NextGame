@@ -161,7 +161,6 @@ export class CutsceneScene extends Phaser.Scene {
     }
     this.full = step.text;
     this.shown = 0;
-    getAudio().textBlip(); // a soft tick as each line begins
     this.acc = 0;
     this.typing = true;
     this.prompt.setVisible(false);
@@ -202,7 +201,10 @@ export class CutsceneScene extends Phaser.Scene {
       if (this.controls.consume('a') || this.controls.consume('start')) {
         this.shown = this.full.length;
       } else if (target > this.shown) {
+        const prev = this.shown;
         this.shown = target;
+        // a subtle running tick as the line populates (every ~3 chars, skip spaces)
+        if (Math.floor(prev / 3) !== Math.floor(this.shown / 3) && this.full[this.shown - 1] !== ' ') getAudio().textBlip();
       }
       this.body.setText(this.full.slice(0, this.shown));
       if (this.shown >= this.full.length) {

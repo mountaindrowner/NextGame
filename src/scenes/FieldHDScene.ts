@@ -103,6 +103,7 @@ export class FieldHDScene extends Phaser.Scene {
   private facing: Dir = 'down';
   private moving = false;
   private toastObj?: Phaser.GameObjects.Container;
+  private toastTimer?: Phaser.Time.TimerEvent;
   private sway: Sway[] = [];
   private waterSprites: Phaser.GameObjects.Image[] = [];
   private waterFrame = 0;
@@ -752,28 +753,54 @@ export class FieldHDScene extends Phaser.Scene {
 
   private banner(text: string): void {
     this.toastObj?.destroy();
+    this.toastTimer?.remove();
     const W = 460;
     const PAD = 14;
-    // wrap to the box so long NPC lines never run off-screen; size the box to the text
-    const t = this.add
-      .text(0, 0, text, {
-        fontFamily: 'monospace',
-        fontSize: '11px',
-        color: '#f4ecd8',
-        align: 'center',
-        wordWrap: { width: W - PAD * 2 },
-      })
-      .setOrigin(0.5);
+    // left-aligned so it can type out cleanly; wrap to the box so long lines never overflow.
+    const style = {
+      fontFamily: 'monospace',
+      fontSize: '11px',
+      color: '#f4ecd8',
+      align: 'left' as const,
+      wordWrap: { width: W - PAD * 2 },
+    };
+    // measure the FULL text first to size the box, so it doesn't resize while typing
+    const t = this.add.text(0, 0, text, style).setOrigin(0, 0);
     const h = Math.max(28, Math.round(t.height) + PAD);
     const cy = 320 - 8 - h / 2; // rest just above the bottom edge
     const box = this.add.rectangle(240, cy, W, h, 0x1a1410, 0.82).setStrokeStyle(2, 0xe8d8a8);
-    t.setPosition(240, cy);
+    t.setPosition(240 - W / 2 + PAD, cy - h / 2 + PAD / 2);
     const c = this.add.container(0, 0, [box, t]).setScrollFactor(0).setDepth(200);
     this.toastObj = c;
+
+    // type the dialogue out with a subtle running tick so you can see/hear it populate
+    t.setText('');
+    let shown = 0;
     getAudio().textBlip();
-    const ms = Math.max(2200, Math.min(5200, 1500 + text.length * 28)); // longer text lingers longer
+    this.toastTimer = this.time.addEvent({
+      delay: 26,
+      loop: true,
+      callback: () => {
+        if (this.toastObj !== c) {
+          this.toastTimer?.remove();
+          return;
+        }
+        const prev = shown;
+        shown = Math.min(text.length, shown + 1);
+        t.setText(text.slice(0, shown));
+        if (Math.floor(prev / 3) !== Math.floor(shown / 3) && text[shown - 1] !== ' ') getAudio().textBlip();
+        if (shown >= text.length) {
+          this.toastTimer?.remove();
+          this.toastTimer = undefined;
+        }
+      },
+    });
+
+    const ms = text.length * 26 + 2200; // finish typing (~26ms/char) then linger ~2.2s to read
     this.time.delayedCall(ms, () => {
       if (this.toastObj === c) {
+        this.toastTimer?.remove();
+        this.toastTimer = undefined;
         c.destroy();
         this.toastObj = undefined;
       }
