@@ -34,7 +34,7 @@ interface MapJson {
   zone?: string;
   spawn: { x: number; y: number };
   exits?: Array<{ x: number; y: number; scene: string; mapId?: string }>;
-  npcs?: Array<{ name?: string; lines?: string[]; shop?: string }>;
+  npcs?: Array<{ name?: string; lines?: string[]; shop?: string; warden?: { team: Array<{ num: number; level: number }>; patch: string } }>;
   trainers?: Array<{ name: string; team: Array<{ num: number; level: number }>; bark?: string }>;
   items?: Array<{ credits: number; label?: string; hidden?: boolean }>;
   signs?: Array<{ text: string }>;
@@ -269,7 +269,9 @@ function playMap(run: Run, mapId: string): void {
       // remain reflect real fight difficulty, not under-levelling.
       const zoneMax = Math.max(...zone.slots.map((s) => s.maxLevel));
       const trMax = Math.max(0, ...(m.trainers ?? []).flatMap((t) => t.team.map((mem) => mem.level)));
-      const target = Math.max(zoneMax, trMax);
+      // a colony Warden gates progress, so a player grinds to clear it — match the ace
+      const wardenMax = Math.max(0, ...(m.npcs ?? []).flatMap((n) => n.warden?.team.map((mem) => mem.level) ?? []));
+      const target = Math.max(zoneMax, trMax, wardenMax);
       const rng = new Rng(0xABCD ^ mapId.length ^ run.starter.length);
       let fights = 0; let caught = 0; let kos = 0; let losses = 0; let koBeforeCatch = 0; let steps = 0;
       while (lead(run.party) < target && fights < 50 && steps < 900) {
@@ -313,6 +315,20 @@ function playMap(run: Run, mapId: string): void {
     run.log.push(line);
     if (r.outcome === 'defeat') { flag(`Lost to trainer "${t.name}" (${mapId}, team to Lv${tLv}) at lead Lv${lead(run.party)} — possible difficulty wall / under-levelling.`); run.credits += 120; healParty(run, true); }
     else if (r.outcome === 'win') run.credits += 120;
+  }
+
+  // the colony Warden boss (the gym-leader gate) — fought after the local trainers
+  const wardenNpc = (m.npcs ?? []).find((n) => n.warden);
+  if (wardenNpc?.warden) {
+    if (garage) healParty(run, true); else patchUp(run);
+    const w = wardenNpc.warden;
+    const foes = w.team.map((mem) => makeBattler(GAME_DATA.species(mem.num), mem.level, GAME_DATA));
+    const wLv = Math.max(...w.team.map((mem) => mem.level));
+    const r = playBattle(run, foes, 'trainer', nextSeedRun(run), false);
+    tryEvolve(run);
+    if (r.outcome === 'win' && !run.flags[w.patch]) run.flags[w.patch] = true; // earned the Patch
+    run.log.push(`  ⚔ WARDEN ${wardenNpc.name} (${w.team.map((mem) => `${SPECIES_BY_NUM.get(mem.num)?.name} L${mem.level}`).join('+')}) → ${r.outcome.toUpperCase()} (lead Lv${lead(run.party)})${r.outcome === 'win' ? ` {earned ${w.patch}}` : ''}`);
+    if (r.outcome === 'defeat') { flag(`Lost to WARDEN "${wardenNpc.name}" (${mapId}, team to Lv${wLv}) at lead Lv${lead(run.party)} — the colony gate is a wall here.`); healParty(run, true); }
   }
 
   // curve note: arriving badly under the local trainers

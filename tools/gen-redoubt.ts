@@ -166,7 +166,7 @@ writeFileSync(
     spawn: { x: 21, y: 24 }, // the yard, entered from the Military Road (south)
     exits: [
       { x: 21, y: 26, scene: 'fieldhd', mapId: 'bastion' }, // south → back toward Bastion
-      { x: 40, y: 15, scene: 'fieldhd', mapId: 'trinity' }, // east yard → on into the Trinity Bottoms (Act II)
+      { x: 40, y: 15, scene: 'fieldhd', mapId: 'trinity', gate: 'warden' }, // east → the Trinity Bottoms (Warden-gated, Act II)
     ],
     interacts: [{ x: 27, y: 8, kind: 'eli' }], // the Eli Vane photo + logbook
     trainers: [
@@ -187,10 +187,13 @@ writeFileSync(
         'There is a voice in the Static, soldier. It speaks through the towers, and your hands just obey.',
         'A photo in the command center — a scrapper who warned us, years back. Vane, the log says. We did not listen.',
       ] },
-      { char: 'npc_elder', col: 18, row: 7, name: 'Warden Augusta Pike', lines: [
+      { char: 'npc_elder', col: 18, row: 7, name: 'Warden Augusta Pike',
+        warden: { patch: 'patch-redoubt', bark: "Warden Pike: Prove you're no puppet of the Static, soldier. Raise your Ohms and show me.",
+          team: [{ num: 80, level: 19 }, { num: 68, level: 20 }, { num: 83, level: 21 }] }, // MOTOR/THERM militarist
+        lines: [
         'I trusted the Militarists to shield Redoubt. I tracked the truth to this bunker, and they locked me in it.',
         'It was never the men. Something *uses* them — the same way it uses the wild Ohms swarming your road.',
-        'Free Reyes and you free a soldier. Free the rest, and maybe you free us all.',
+        'You fight clear-headed. No puppet. Take the east road to Trinity — and free the rest, if you can.',
       ] },
       { char: 'npc_kid', col: 9, row: 16, name: 'Freed Conscript', lines: [
         'I think my name is Tobe? The Static took it. I pick a new one every morning, just to have one.',

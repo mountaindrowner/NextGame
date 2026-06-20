@@ -163,10 +163,13 @@ writeFileSync(
     ],
     npcs: [
       { char: 'npc_elder', col: 14, row: 18, name: 'Almoner Wend', shop: 'depot', lines: ['The Chancel shares what it can. Take a kit, a core. Leave salvage for the congregation if you would.'] },
-      { char: 'npc_elder', col: 12, row: 12, name: 'Warden Verity Hale', lines: [
+      { char: 'npc_elder', col: 12, row: 12, name: 'Warden Verity Hale',
+        warden: { patch: 'patch-chancel', bark: "Warden Hale: You feel it too — that they were never just machines. Then sing with me. Show me your congregation's heart.",
+          team: [{ num: 115, level: 26 }, { num: 98, level: 27 }, { num: 99, level: 28 }] }, // SIGNAL/OPTIC sacred
+        lines: [
         "You feel it too, don't you. That they were never just machines. We have known it here the longest.",
         'We sang to them. We grieved them. The Update calls that sentiment a sickness to be cured. We call it the whole point.',
-        'The Cantor was one of us, once. Now he opens the doors and calls the hollowing-out holy. Stop his rite — gently, if you can.',
+        'You fought like one who grieves them too. The Cantor was one of us, once. Stop his rite — gently, if you can.',
       ] },
       { char: 'npc_elder', col: 21, row: 11, name: 'the Cantor', lines: [
         'Peace, traveler. You carry such a heavy little congregation. Are they not tired of choosing?',

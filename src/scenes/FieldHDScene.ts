@@ -21,15 +21,21 @@ interface FieldData {
   grassAny?: number[];
   water?: number[];
   placements?: Array<{ type: string; col: number; row: number }>;
-  npcs?: Array<{ char: string; col: number; row: number; name?: string; lines?: string[]; shop?: string }>;
+  npcs?: Array<{ char: string; col: number; row: number; name?: string; lines?: string[]; shop?: string; warden?: WardenDef }>;
   trainers?: TrainerDef[];
   items?: Array<{ col: number; row: number; credits: number; label?: string; hidden?: boolean }>;
   signs?: Array<{ col: number; row: number; text: string }>;
   spawn?: { x: number; y: number };
-  exits?: Array<{ x: number; y: number; scene: string; mapId?: string; to?: { x: number; y: number } }>;
+  exits?: Array<{ x: number; y: number; scene: string; mapId?: string; to?: { x: number; y: number }; gate?: string }>;
   interacts?: Array<{ x: number; y: number; kind: string; tier?: string }>;
   ledges?: Array<{ col: number; row: number; dir: 'n' | 's' | 'e' | 'w' }>;
   zone?: string; // encounter-zone id for this map's grass (default field-grass)
+}
+
+interface WardenDef {
+  team: Array<{ num: number; level: number }>;
+  patch: string; // colony Patch id awarded on victory
+  bark?: string; // pre-fight taunt
 }
 
 interface TrainerDef {
@@ -264,8 +270,8 @@ export class FieldHDScene extends Phaser.Scene {
       else if (this.textures.exists(npc.char)) this.add.image(px, py, npc.char).setOrigin(0.5, 0.92).setScale(1.3).setDepth(npc.row);
       else continue;
       this.npcCells.add(`${npc.col},${npc.row}`);
-      if ((npc.lines && npc.lines.length) || npc.shop)
-        this.npcTalk.set(`${npc.col},${npc.row}`, { name: npc.name ?? 'Someone', lines: npc.lines ?? [], idx: 0, shop: npc.shop });
+      if ((npc.lines && npc.lines.length) || npc.shop || npc.warden)
+        this.npcTalk.set(`${npc.col},${npc.row}`, { name: npc.name ?? 'Someone', lines: npc.lines ?? [], idx: 0, shop: npc.shop, warden: npc.warden });
     }
 
     // trainers — placed fighters who challenge you on sight (Pokémon routes)
@@ -393,7 +399,7 @@ export class FieldHDScene extends Phaser.Scene {
   }
 
   private npcCells = new Set<string>();
-  private npcTalk = new Map<string, { name: string; lines: string[]; idx: number; shop?: string }>();
+  private npcTalk = new Map<string, { name: string; lines: string[]; idx: number; shop?: string; warden?: WardenDef }>();
   private trainers: Array<{ def: TrainerDef; idx: number; beaten: boolean; sprite?: Phaser.GameObjects.Sprite }> = [];
   private itemSprites = new Map<number, Phaser.GameObjects.Image>();
 
@@ -446,6 +452,33 @@ export class FieldHDScene extends Phaser.Scene {
     return false;
   }
 
+  /** Has this colony's Warden been beaten? (gate + post-fight dialogue key) */
+  private wardenBeaten(): boolean {
+    return hasGameState() && getGameState().flags[`beat:${this.mapId}:warden`] === true;
+  }
+
+  /** Talk to a Warden → the colony boss fight (warden theme, Patch reward, gate). */
+  private startWarden(name: string, warden: WardenDef): void {
+    this.moving = true;
+    const state = getGameState();
+    state.location = { map: this.mapId, x: this.px, y: this.py };
+    this.banner(warden.bark ?? `${name}: Show me what you've made.`);
+    this.time.delayedCall(900, () => {
+      const foes = warden.team.map((m) => makeBattler(GAME_DATA.species(m.num), m.level, GAME_DATA));
+      for (const f of foes) if (!state.manifest.seen.includes(f.speciesNum)) state.manifest.seen.push(f.speciesNum);
+      this.scene.start('battle', {
+        kind: 'trainer',
+        foes,
+        foeName: name,
+        battleType: 'warden',
+        patch: warden.patch,
+        seed: nextSeed(state),
+        returnScene: 'fieldhd',
+        onVictoryFlag: `beat:${this.mapId}:warden`,
+      });
+    });
+  }
+
   private startTrainer(tr: { def: TrainerDef; idx: number }): void {
     this.moving = true; // lock the walker
     const state = getGameState();
@@ -473,8 +506,15 @@ export class FieldHDScene extends Phaser.Scene {
         this.scene.pause();
         return true;
       }
-      this.banner(`${talk.name}: ${talk.lines[talk.idx]}`);
-      talk.idx = (talk.idx + 1) % talk.lines.length;
+      // an un-beaten Warden challenges you to a boss fight; after, their lore lines read
+      if (talk.warden && !this.wardenBeaten()) {
+        this.startWarden(talk.name, talk.warden);
+        return true;
+      }
+      if (talk.lines.length) {
+        this.banner(`${talk.name}: ${talk.lines[talk.idx]}`);
+        talk.idx = (talk.idx + 1) % talk.lines.length;
+      }
       return true;
     }
     for (const s of this.field.signs ?? []) {
@@ -509,6 +549,10 @@ export class FieldHDScene extends Phaser.Scene {
   private checkExit(): boolean {
     for (const ex of this.field.exits ?? []) {
       if (ex.x === this.px && ex.y === this.py) {
+        if (ex.gate === 'warden' && !this.wardenBeaten()) {
+          this.banner('The colony Warden holds this gate — best them first.');
+          return true; // stand at the gate; no warp until the Warden is beaten
+        }
         if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
         this.cameras.main.fade(360, 12, 10, 8);
         const { scene, mapId, to } = ex;

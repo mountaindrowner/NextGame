@@ -11,6 +11,7 @@ import { ITEMS_BY_ID } from '../data/items';
 import { getGameState } from '../game/state';
 import { getAudio } from '../game/audio';
 import { bgmForBattle, inferBattleType, victoryJingleFor, type BattleType } from '../data/audio';
+import { patchName } from '../data/patches';
 import { Controls } from '../input/controls';
 import { TYPE_COLORS, UI } from '../ui/colors';
 
@@ -25,6 +26,8 @@ interface BattleInit {
   onVictoryFlag?: string;
   /** explicit music tier (warden/rival/boss/legendary/…); inferred from foeName otherwise */
   battleType?: BattleType;
+  /** colony Patch id to award on a Warden victory */
+  patch?: string;
 }
 
 type Mode = 'anim' | 'command' | 'moves' | 'party' | 'pack' | 'puzzle' | 'over';
@@ -261,8 +264,13 @@ export class BattleScene extends Phaser.Scene {
     }
     if (this.outcome === 'victory' && this.init_.kind === 'trainer') {
       state.credits += 120;
-      this.say('Won 120 credits!');
       if (this.init_.onVictoryFlag) state.flags[this.init_.onVictoryFlag] = true; // mark this trainer beaten
+      if (this.init_.patch && !state.patches.includes(this.init_.patch)) {
+        state.patches.push(this.init_.patch); // colony Patch earned — opens the gate forward
+        this.say(`Won 120 credits — and earned the ${patchName(this.init_.patch)}!`);
+      } else {
+        this.say('Won 120 credits!');
+      }
     }
     if (this.outcome === 'defeat') {
       // party wipe loses nothing (GDD §6): recharge and wake at the garage

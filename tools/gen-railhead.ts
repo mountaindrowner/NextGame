@@ -202,7 +202,7 @@ writeFileSync(
     zone: 'railhead-yard',
     spawn: { x: 22, y: 25 }, // entry from Farm Road (south)
     exits: [
-      { x: 22, y: 1, scene: 'fieldhd', mapId: 'cistern' }, // north → on toward the Cistern
+      { x: 22, y: 1, scene: 'fieldhd', mapId: 'cistern', gate: 'warden' }, // north → the Cistern (Warden-gated)
     ],
     trainers: [
       { char: 'npc_rancher', col: 24, row: 22, facing: 'w', name: 'Salt Broker', range: 5, team: [{ num: 32, level: 9 }], bark: 'Salt Broker: Coin first, story later. Beat me, then I listen.' },
@@ -217,9 +217,12 @@ writeFileSync(
     ],
     npcs: [
       { char: 'npc_rancher', col: 34, row: 24, name: 'Counter-clerk Hettie', shop: 'colony', lines: ['Railhead supply. Kits, nodes, a D-FIB if you can spare the credits. Salvage bought here.'] },
-      { char: 'npc_elder', col: 11, row: 14, name: 'Warden Dell Marrow', lines: [
+      { char: 'npc_elder', col: 11, row: 14, name: 'Warden Dell Marrow',
+        warden: { patch: 'patch-railhead', bark: 'Warden Marrow: Coin talks here, kid — results talk louder. Show me yours.',
+          team: [{ num: 54, level: 11 }, { num: 49, level: 12 }, { num: 51, level: 13 }] }, // VOLT/BREAKER railyard
+        lines: [
         "A key that frees every machine on Earth. I've heard taller tales, kid — none that walked in on their own feet.",
-        "Clear our sabotaged relay and you'll have Railhead's ear. Coin talks here. Results talk louder.",
+        "You cleared the relay and bested me besides. Railhead's ear is yours. Coin talks; you talk louder.",
         'One thing gnaws at me: the wild Ohms lately move *together*. Like something is conducting them.',
       ] },
       { char: 'npc_rancher', col: 36, row: 24, name: 'Scrap Broker', lines: [

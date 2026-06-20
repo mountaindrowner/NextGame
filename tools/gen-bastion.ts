@@ -146,7 +146,7 @@ writeFileSync(
     spawn: { x: 21, y: 24 }, // the gate approach (south)
     exits: [
       { x: 21, y: 26, scene: 'fieldhd', mapId: 'cistern' }, // south → back toward the Cistern
-      { x: 2, y: 13, scene: 'fieldhd', mapId: 'redoubt' }, // west quarry edge → the Military Road to Redoubt
+      { x: 2, y: 13, scene: 'fieldhd', mapId: 'redoubt', gate: 'warden' }, // west → Redoubt (Warden-gated)
     ],
     trainers: [
       { char: 'npc_rancher', col: 16, row: 14, facing: 'e', name: 'Quarryman Cobb', range: 4, team: [{ num: 52, level: 13 }], bark: "Quarryman Cobb: You don't pass the stone 'til you earn it." },
@@ -161,10 +161,13 @@ writeFileSync(
     ],
     npcs: [
       { char: 'npc_rancher', col: 21, row: 22, name: 'Stores-keep Marl', shop: 'colony', lines: ['Bastion holds its stock close. Kits, nodes, a revive. Bring salvage and I pay fair.'] },
-      { char: 'npc_elder', col: 17, row: 11, name: 'Warden Calder Stone', lines: [
-        'Bastion survived by trusting no one. You are no exception. Prove yourself at the Pit, or get gone.',
+      { char: 'npc_elder', col: 17, row: 11, name: 'Warden Calder Stone',
+        warden: { patch: 'patch-bastion', bark: "Warden Stone: Bastion trusts no one untested. Face my Stoneguard, or get gone.",
+          team: [{ num: 138, level: 16 }, { num: 52, level: 17 }, { num: 135, level: 18 }] }, // FRAME/BREAKER quarry
+        lines: [
+        'Bastion survived by trusting no one. You are no exception — and you passed the test.',
         "Hear that on the walls? Feral Ohms. The ordinary hack won't reach them — they answer to something deeper.",
-        "Beat my Stoneguard and you'll have the colony's respect. It's all we've left worth giving.",
+        "You bested my Stoneguard. The west gate to Redoubt is yours. The colony's respect with it.",
       ] },
       { char: 'npc_kid', col: 9, row: 9, name: 'Flint', lines: [
         "Stone says wall up and wait. I say somebody's got to watch. So I watch. You should too.",

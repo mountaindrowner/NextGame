@@ -9,13 +9,14 @@ import { ITEMS_BY_ID } from '../data/items';
 import { SPECIES } from '../data/species';
 import { getGameState } from '../game/state';
 import { getAudio } from '../game/audio';
+import { PATCHES, TOTAL_PATCHES } from '../data/patches';
 import { browserStorage, SaveSlots, SLOT_COUNT } from '../save/save';
 import { Controls } from '../input/controls';
 import { TYPE_COLORS, UI } from '../ui/colors';
 
-type Mode = 'hub' | 'party' | 'detail' | 'manifest' | 'bag' | 'usetarget' | 'save' | 'settings';
+type Mode = 'hub' | 'party' | 'detail' | 'manifest' | 'bag' | 'usetarget' | 'save' | 'settings' | 'patches';
 
-const HUB = ['PARTY', 'MANIFEST', 'BAG', 'MAP', 'SETTINGS', 'SAVE', 'CLOSE'] as const;
+const HUB = ['PARTY', 'MANIFEST', 'PATCHES', 'BAG', 'MAP', 'SETTINGS', 'SAVE', 'CLOSE'] as const;
 const STAT_LABEL: Record<string, string> = {
   integrity: 'INTEG',
   output: 'OUTPUT',
@@ -112,6 +113,7 @@ export class MenuScene extends Phaser.Scene {
         return SLOT_COUNT;
       case 'settings':
         return 3;
+      case 'patches':
       case 'detail':
         return 0;
     }
@@ -145,6 +147,7 @@ export class MenuScene extends Phaser.Scene {
     if (this.mode === 'bag') return 'BAG';
     if (this.mode === 'save') return 'SAVE';
     if (this.mode === 'settings') return 'SETTINGS';
+    if (this.mode === 'patches') return 'PATCHES';
     return 'CLOSE';
   }
 
@@ -278,6 +281,21 @@ export class MenuScene extends Phaser.Scene {
     else if (this.mode === 'usetarget') this.drawUseTarget();
     else if (this.mode === 'save') this.drawSave();
     else if (this.mode === 'settings') this.drawSettings();
+    else if (this.mode === 'patches') this.drawPatches();
+  }
+
+  private drawPatches(): void {
+    const owned = new Set(getGameState().patches);
+    this.label(16, 12, 'PATCHES', { hl: true });
+    this.label(120, 12, `${owned.size}/${TOTAL_PATCHES} earned`, { color: '#586068' });
+    const all = Object.values(PATCHES);
+    all.forEach((p, i) => {
+      const has = owned.has(p.id);
+      const y = 32 + i * 14;
+      this.chip(22, y + 4, has ? UI.good : 0x9098a0);
+      this.label(32, y, has ? `${p.name} — ${p.colony}` : `??? — ${p.colony}`, { color: has ? '#303030' : '#9098a0', hl: has });
+    });
+    this.label(16, 150, 'B: back');
   }
 
   private drawSettings(): void {
@@ -316,7 +334,7 @@ export class MenuScene extends Phaser.Scene {
   private drawHub(): void {
     const state = getGameState();
     this.label(16, 12, 'OHMFRONT', { hl: true });
-    this.label(120, 12, `${state.credits} cr   ${state.patches.length}/8 Patches`);
+    this.label(120, 12, `${state.credits} cr   ${state.patches.length}/${TOTAL_PATCHES} Patches`);
     HUB.forEach((item, i) => this.label(28, 36 + i * 16, `${i === this.cursor ? '>' : ' '}${item}`, { hl: i === this.cursor }));
   }
 

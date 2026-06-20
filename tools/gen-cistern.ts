@@ -152,7 +152,7 @@ writeFileSync(
     spawn: { x: 20, y: 24 }, // the south entry dock
     exits: [
       { x: 20, y: 26, scene: 'fieldhd', mapId: 'railhead' }, // south → back toward Railhead
-      { x: 20, y: 1, scene: 'fieldhd', mapId: 'bastion' }, // north → on toward Bastion
+      { x: 20, y: 1, scene: 'fieldhd', mapId: 'bastion', gate: 'warden' }, // north → Bastion (Warden-gated)
     ],
     interacts: [{ x: 20, y: 22, kind: 'heal' }], // the waterworks recharge station by the dock
     trainers: [
@@ -167,10 +167,13 @@ writeFileSync(
       { col: 20, row: 23, text: "THE CISTERN — Colony 2. Mind the water; you'll need a way across it to reach the heart." },
     ],
     npcs: [
-      { char: 'npc_elder', col: 7, row: 7, name: 'Warden Etta Bloom', lines: [
+      { char: 'npc_elder', col: 7, row: 7, name: 'Warden Etta Bloom',
+        warden: { patch: 'patch-cistern', bark: "Warden Bloom: We raise our Ohms here, child — they fight for kin. Mind they don't drown yours.",
+          team: [{ num: 88, level: 13 }, { num: 128, level: 14 }, { num: 25, level: 15 }] }, // SONIC/COOLANT waterworks
+        lines: [
         "We don't catch Ohms here, child. We raise them. Every one is kin, the same as you.",
         "Trust the Militarists least of all. I've watched good water poisoned by men sure they meant well.",
-        "The trial's heart sits past the flood. You'll need a vehicle Ohm that hovers to cross — no other way.",
+        "You bested the cistern's best. The way north is yours — but tread soft past the flood.",
       ] },
       { char: 'npc_rancher', col: 32, row: 9, name: 'Mud Cole', lines: [
         "Mud's the name, mud's the trade. I move the herd-Ohms between chambers. They're shy, like me.",
