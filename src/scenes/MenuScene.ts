@@ -8,13 +8,14 @@ import { GAME_DATA } from '../data/dataview';
 import { ITEMS_BY_ID } from '../data/items';
 import { SPECIES } from '../data/species';
 import { getGameState } from '../game/state';
+import { getAudio } from '../game/audio';
 import { browserStorage, SaveSlots, SLOT_COUNT } from '../save/save';
 import { Controls } from '../input/controls';
 import { TYPE_COLORS, UI } from '../ui/colors';
 
-type Mode = 'hub' | 'party' | 'detail' | 'manifest' | 'bag' | 'usetarget' | 'save';
+type Mode = 'hub' | 'party' | 'detail' | 'manifest' | 'bag' | 'usetarget' | 'save' | 'settings';
 
-const HUB = ['PARTY', 'MANIFEST', 'BAG', 'MAP', 'SAVE', 'CLOSE'] as const;
+const HUB = ['PARTY', 'MANIFEST', 'BAG', 'MAP', 'SETTINGS', 'SAVE', 'CLOSE'] as const;
 const STAT_LABEL: Record<string, string> = {
   integrity: 'INTEG',
   output: 'OUTPUT',
@@ -66,11 +67,32 @@ export class MenuScene extends Phaser.Scene {
         this.redraw();
       }
     }
+    if (this.mode === 'settings') {
+      if (this.controls.consume('left')) this.adjustSetting(-1);
+      if (this.controls.consume('right')) this.adjustSetting(1);
+    }
     if (this.controls.consume('b') || this.controls.consume('start')) {
       this.back();
       return;
     }
     if (this.controls.consume('a')) this.select();
+  }
+
+  /** Adjust the focused audio setting: volumes ±0.1, mute toggles. */
+  private adjustSetting(dir: number): void {
+    const a = getGameState().audio;
+    if (this.cursor === 0) {
+      a.musicVolume = Math.max(0, Math.min(1, Math.round((a.musicVolume + dir * 0.1) * 10) / 10));
+      getAudio().setMusicVolume(a.musicVolume);
+    } else if (this.cursor === 1) {
+      a.sfxVolume = Math.max(0, Math.min(1, Math.round((a.sfxVolume + dir * 0.1) * 10) / 10));
+      getAudio().setSfxVolume(a.sfxVolume);
+      getAudio().playOneShot('sting.quest_update'); // a blip so SFX volume is audible while tuning
+    } else {
+      a.muted = !a.muted;
+      getAudio().setMuted(a.muted);
+    }
+    this.redraw();
   }
 
   private optionCount(): number {
@@ -88,6 +110,8 @@ export class MenuScene extends Phaser.Scene {
         return Math.max(1, state.party.length);
       case 'save':
         return SLOT_COUNT;
+      case 'settings':
+        return 3;
       case 'detail':
         return 0;
     }
@@ -120,6 +144,7 @@ export class MenuScene extends Phaser.Scene {
     if (this.mode === 'manifest') return 'MANIFEST';
     if (this.mode === 'bag') return 'BAG';
     if (this.mode === 'save') return 'SAVE';
+    if (this.mode === 'settings') return 'SETTINGS';
     return 'CLOSE';
   }
 
@@ -148,6 +173,7 @@ export class MenuScene extends Phaser.Scene {
       return;
     } else if (this.mode === 'save') {
       this.slots.save(this.cursor, getGameState());
+      getAudio().playOneShot('jingle.save');
       this.flash('Progress saved. Stay current.');
     }
     this.redraw();
@@ -251,6 +277,23 @@ export class MenuScene extends Phaser.Scene {
     else if (this.mode === 'bag') this.drawBag();
     else if (this.mode === 'usetarget') this.drawUseTarget();
     else if (this.mode === 'save') this.drawSave();
+    else if (this.mode === 'settings') this.drawSettings();
+  }
+
+  private drawSettings(): void {
+    const a = getGameState().audio;
+    this.label(16, 12, 'SETTINGS', { hl: true });
+    const rows: Array<[string, string]> = [
+      ['MUSIC', `${this.bar(Math.round(a.musicVolume * 10), 10)} ${Math.round(a.musicVolume * 100)}%`],
+      ['SFX', `${this.bar(Math.round(a.sfxVolume * 10), 10)} ${Math.round(a.sfxVolume * 100)}%`],
+      ['MUTE', a.muted ? 'ON' : 'OFF'],
+    ];
+    rows.forEach(([name, val], i) => {
+      const here = i === this.cursor;
+      this.label(24, 40 + i * 18, `${here ? '>' : ' '}${name}`, { hl: here });
+      this.label(86, 40 + i * 18, val, { color: here ? '#303030' : '#586068' });
+    });
+    this.label(16, 150, 'left/right: adjust   B: back');
   }
 
   private drawUseTarget(): void {

@@ -203,6 +203,7 @@ export class FieldHDScene extends Phaser.Scene {
     for (const f of FX) if (!this.textures.exists(f)) this.load.image(f, `world/fx/${f}.png`);
     for (let i = 0; i < WATER_FRAMES; i++)
       if (!this.textures.exists(`water_${i}`)) this.load.image(`water_${i}`, `world/fx/water_${i}.png`);
+    getAudio().loadTracks(this, [bgmForMap(this.mapId)]); // this map's theme
   }
 
   create(): void {
@@ -319,7 +320,8 @@ export class FieldHDScene extends Phaser.Scene {
       this.time.delayedCall(2400, () => this.banner('Move with the arrow keys. Press A to talk, read, and rummage.'));
       this.time.delayedCall(5200, () => this.banner('Say goodbye to Grandma, look in on Banjo — then find the lift topside.'));
     }
-    getAudio().playBgm(bgmForMap(this.mapId)); // overworld theme; guard keeps it seamless across edge-warps
+    if (hasGameState()) getAudio().applyPrefs(getGameState().audio); // restore saved volume/mute
+    getAudio().playBgm(bgmForMap(this.mapId)); // per-map theme; guard keeps it seamless across edge-warps
     this.input.keyboard?.on('keydown-M', () => getAudio().toggleMute());
   }
 
@@ -364,6 +366,7 @@ export class FieldHDScene extends Phaser.Scene {
       b.glitchedTurns = 0;
       for (const m of b.moves) m.pp = m.maxPp;
     }
+    getAudio().playOneShot('jingle.recharge');
     this.banner(msg);
   }
 
@@ -419,6 +422,7 @@ export class FieldHDScene extends Phaser.Scene {
       state.flags[`got:${this.mapId}:${i}`] = true;
       state.credits += it.credits;
       this.itemSprites.get(i)?.destroy();
+      getAudio().playOneShot('jingle.obtain_item');
       this.banner(`${it.label ?? (it.hidden ? 'Hidden cache' : 'A node pickup')} — found ${it.credits} credits!`);
     }
   }
@@ -466,7 +470,7 @@ export class FieldHDScene extends Phaser.Scene {
     const talk = this.npcTalk.get(`${fx},${fy}`);
     if (talk) {
       if (talk.shop) {
-        this.scene.launch('shop', { tier: talk.shop, from: 'fieldhd' });
+        this.scene.launch('shop', { tier: talk.shop, from: 'fieldhd', map: this.mapId });
         this.scene.pause();
         return true;
       }
@@ -491,7 +495,7 @@ export class FieldHDScene extends Phaser.Scene {
         } else if (it.kind === 'heal') {
           this.recharge('A field medic tops off your Ohms — recharged. Stay current.');
         } else if (it.kind === 'shop') {
-          this.scene.launch('shop', { tier: it.tier ?? 'colony', from: 'fieldhd' });
+          this.scene.launch('shop', { tier: it.tier ?? 'colony', from: 'fieldhd', map: this.mapId });
           this.scene.pause();
         } else {
           this.banner('You poke at it. Nothing happens.');

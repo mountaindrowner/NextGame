@@ -10,6 +10,7 @@ import { hasHdBack, hasHdFront } from '../data/sprite-manifest-hd';
 import { ITEMS_BY_ID } from '../data/items';
 import { getGameState } from '../game/state';
 import { getAudio } from '../game/audio';
+import { bgmForBattle, inferBattleType, victoryJingleFor, type BattleType } from '../data/audio';
 import { Controls } from '../input/controls';
 import { TYPE_COLORS, UI } from '../ui/colors';
 
@@ -22,6 +23,8 @@ interface BattleInit {
   returnScene?: string;
   /** a flag set true in game state on a trainer victory (so it stays beaten) */
   onVictoryFlag?: string;
+  /** explicit music tier (warden/rival/boss/legendary/…); inferred from foeName otherwise */
+  battleType?: BattleType;
 }
 
 type Mode = 'anim' | 'command' | 'moves' | 'party' | 'pack' | 'puzzle' | 'over';
@@ -88,6 +91,8 @@ export class BattleScene extends Phaser.Scene {
       if (hasHdBack(n)) this.load.image(`ohm_${n}_back_hd`, `sprites/ohms/${n}_back_hd.png`);
       else if (hasBack(n)) this.load.image(`ohm_${n}_back`, `sprites/ohms/${n}_back.png`);
     }
+    const type = this.init_.battleType ?? inferBattleType(this.init_.kind, this.init_.foeName);
+    getAudio().loadTracks(this, [bgmForBattle(this.init_), victoryJingleFor(type)]);
   }
 
   create(): void {
@@ -121,7 +126,7 @@ export class BattleScene extends Phaser.Scene {
     this.mode = 'anim';
     this.pump();
 
-    getAudio().playBgm('bgm.battle.wild'); // pass #1: one battle theme for wild & trainer
+    getAudio().playBgm(bgmForBattle(this.init_)); // wild/trainer/warden/militant/… per the foe
     this.input.keyboard?.on('keydown-M', () => getAudio().toggleMute());
   }
 
@@ -188,6 +193,7 @@ export class BattleScene extends Phaser.Scene {
         break;
       case 'levelUp':
         this.say(`${ev.name} reached Lv${ev.level}!`);
+        getAudio().playOneShot('jingle.levelup');
         next(600);
         break;
       case 'moveLearned':
@@ -197,6 +203,7 @@ export class BattleScene extends Phaser.Scene {
       case 'salvage': {
         const state = getGameState();
         state.bag[ev.itemId] = (state.bag[ev.itemId] ?? 0) + 1;
+        getAudio().playOneShot('jingle.obtain_item');
         this.say(`Salvage recovered: ${ITEMS_BY_ID.get(ev.itemId)?.name ?? ev.itemId}.`);
         next(600);
         break;
@@ -247,9 +254,12 @@ export class BattleScene extends Phaser.Scene {
     this.mode = 'over';
     const state = getGameState();
     const back = this.init_.returnScene ?? 'overworld';
-    if (this.outcome === 'victory' || this.outcome === 'captured') {
-      getAudio().stopBgm(); // cut the battle theme and ring the fanfare
-      getAudio().playOneShot('jingle.victory_wild');
+    if (this.outcome === 'victory') {
+      getAudio().stopBgm(); // cut the battle theme and ring the fanfare for this tier
+      getAudio().playOneShot(victoryJingleFor(this.init_.battleType ?? inferBattleType(this.init_.kind, this.init_.foeName)));
+    } else if (this.outcome === 'captured') {
+      getAudio().stopBgm();
+      getAudio().playOneShot('jingle.capture_success');
     }
     if (this.outcome === 'victory' && this.init_.kind === 'trainer') {
       state.credits += 120;

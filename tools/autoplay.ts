@@ -326,7 +326,7 @@ function playMap(run: Run, mapId: string): void {
     const hasRide = [...run.party, ...run.garage].some((b) => RIDEABLES.has(b.speciesNum));
     run.log.push(`  opened the world-map: ${hasRide ? 'fast-travel available (caught a rideable)' : 'no rideable caught yet (Kartwheel is in the rail-yard — keep trying)'}`);
     const slots = new SaveSlots(new MemoryStorage());
-    const snapshot = { schema: 1 as const, preset: 'SAL' as const, party: run.party, garage: run.garage, manifest: run.manifest, patches: [], bag: run.bag, credits: run.credits, location: { map: mapId, x: 0, y: 0 }, flags: run.flags, playtimeSeconds: 0, seedCounter: run.seedCounter };
+    const snapshot = { schema: 2 as const, preset: 'SAL' as const, audio: { musicVolume: 0.7, sfxVolume: 0.85, muted: false }, party: run.party, garage: run.garage, manifest: run.manifest, patches: [], bag: run.bag, credits: run.credits, location: { map: mapId, x: 0, y: 0 }, flags: run.flags, playtimeSeconds: 0, seedCounter: run.seedCounter };
     slots.save(0, snapshot);
     const loaded = slots.load(0);
     run.log.push(`  saved + reloaded: ${loaded && serialize(loaded) === serialize(snapshot) ? 'roundtrip ✓' : 'MISMATCH ✗'}`);

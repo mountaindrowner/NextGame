@@ -13,6 +13,7 @@ const PORTRAIT: Record<'SAL' | 'WREN', string> = { SAL: 'world/char/sal_96.png',
 /** The cold open — the Waking → under → the broken surface → the Static. */
 export const COLD_OPEN: Cutscene = {
   next: 'newgame',
+  bgm: 'cue.night_call',
   steps: [
     { kind: 'bg', image: 'ui/cutscene/co_waking.png', dark: 0.12, motes: [150, 220, 255] },
     { kind: 'line', speaker: '', text: 'Five hundred years ago, the world woke up.' },
@@ -39,6 +40,7 @@ export function grounded(preset: 'SAL' | 'WREN'): Cutscene {
   return {
     next: 'bench',
     nextData: { preset },
+    bgm: 'cue.opening_bench',
     steps: [
       { kind: 'bg', image: 'ui/cutscene/garage.png', dark: 0.05, motes: [255, 200, 120] },
       { kind: 'line', speaker: 'GRANDMA MABEL', portrait: MABEL, text: 'Topside. Again. In your good boots.' },

@@ -98,3 +98,39 @@ export const HOME: Phrase = [
   { beat: 2, dur: 1, pitch: 'G4' },
   { beat: 3, dur: 1, pitch: 'D4' },
 ];
+
+/** ELI / Grandpa — a tender descending lullaby (A minor), simple and sad. */
+export const ELI: Phrase = [
+  { beat: 0, dur: 1, pitch: 'E5' },
+  { beat: 1, dur: 1, pitch: 'C5' },
+  { beat: 2, dur: 1, pitch: 'B4' },
+  { beat: 3, dur: 1, pitch: 'A4' },
+];
+
+/** PERSISTENCE — a cold minor + tritone mechanical ostinato; "the Update". */
+export const PERSISTENCE: Phrase = [
+  { beat: 0, dur: 0.5, pitch: 'D4', duty: 0.5 },
+  { beat: 0.5, dur: 0.5, pitch: 'D4', duty: 0.5 },
+  { beat: 1, dur: 0.5, pitch: 'G#4', duty: 0.5 }, // the tritone
+  { beat: 1.5, dur: 0.5, pitch: 'D4', duty: 0.5 },
+  { beat: 2, dur: 0.5, pitch: 'F4', duty: 0.5 },
+  { beat: 2.5, dur: 0.5, pitch: 'D4', duty: 0.5 },
+  { beat: 3, dur: 0.5, pitch: 'G#4', duty: 0.5 },
+  { beat: 3.5, dur: 0.5, pitch: 'C#4', duty: 0.5 },
+];
+
+/** STATIC — an atonal encroaching texture (use on the noise + a detuned pulse). */
+export const STATIC: Phrase = [
+  { beat: 0, dur: 0.25, drum: 'hat', vel: 0.5 },
+  { beat: 0.75, dur: 0.25, drum: 'hat', vel: 0.35 },
+  { beat: 1.5, dur: 0.25, drum: 'snare', vel: 0.3 },
+  { beat: 2.25, dur: 0.25, drum: 'hat', vel: 0.45 },
+  { beat: 3, dur: 0.25, drum: 'hat', vel: 0.4 },
+  { beat: 3.5, dur: 0.25, drum: 'snare', vel: 0.25 },
+];
+
+/** BREAKER / Pull — a single repeating "calling" pulse (the device's hum). */
+export const BREAKER: Phrase = [
+  { beat: 0, dur: 1.5, pitch: 'A4', duty: 0.125, vel: 0.7 },
+  { beat: 2, dur: 0.5, pitch: 'E5', duty: 0.125, vel: 0.5 },
+];

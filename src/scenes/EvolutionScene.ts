@@ -4,6 +4,7 @@ import { applyEvolution, type EvoOffer } from '../core/evolution';
 import { GAME_DATA } from '../data/dataview';
 import { ITEMS_BY_ID } from '../data/items';
 import { getGameState } from '../game/state';
+import { getAudio } from '../game/audio';
 import { Controls } from '../input/controls';
 import { TYPE_COLORS, UI } from '../ui/colors';
 
@@ -129,6 +130,7 @@ export class EvolutionScene extends Phaser.Scene {
     const toType = GAME_DATA.species(member.speciesNum).type;
     this.sprite.setFillStyle(TYPE_COLORS[toType]).setScale(1).setAlpha(1);
     this.cameras.main.flash(250, 240, 240, 255);
+    getAudio().playOneShot('jingle.evolution');
     this.text.setText(`${offer.fromName} reconfigured into ${to}!`);
     this.phase = 'done';
     this.time.delayedCall(1100, () => this.next());

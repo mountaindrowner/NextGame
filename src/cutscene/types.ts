@@ -41,6 +41,7 @@ export interface Cutscene {
   steps: Step[];
   next: string; // scene key to start when the cutscene ends
   nextData?: Record<string, unknown>;
+  bgm?: string; // optional music cue played under the scene
 }
 
 /** All image paths a cutscene references (for preloading / test validation). */

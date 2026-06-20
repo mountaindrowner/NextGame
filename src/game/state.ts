@@ -9,9 +9,17 @@ export interface BenchPicks {
   starter: StarterChoice;
 }
 
+export interface AudioPrefs {
+  musicVolume: number; // 0..1
+  sfxVolume: number; // 0..1
+  muted: boolean;
+}
+export const DEFAULT_AUDIO: AudioPrefs = { musicVolume: 0.7, sfxVolume: 0.85, muted: false };
+
 export interface GameState {
-  schema: 1;
+  schema: 2;
   preset: 'SAL' | 'WREN';
+  audio: AudioPrefs;
   party: Battler[]; // ≤3 (GDD §10.1)
   garage: Battler[]; // Network Garage, unlimited
   manifest: { seen: number[]; freed: number[] };
@@ -37,8 +45,9 @@ export function buildStarter(picks: BenchPicks, preset: 'SAL' | 'WREN'): Battler
 export function newGame(preset: 'SAL' | 'WREN', picks: BenchPicks): GameState {
   const num = STARTER_SPECIES[picks.starter];
   return {
-    schema: 1,
+    schema: 2,
     preset,
+    audio: { ...DEFAULT_AUDIO },
     party: [buildStarter(picks, preset)],
     garage: [],
     manifest: { seen: [num], freed: [num] },

@@ -13,7 +13,7 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 
-export const SAMPLE_RATE = 22050; // lo-fi on purpose — suits the GBA crunch, keeps WAVs small
+export const SAMPLE_RATE = 11025; // lo-fi on purpose — suits the GBA crunch, keeps ~80 WAVs in budget
 
 export type Channel = 'pulseA' | 'pulseB' | 'triangle' | 'noise';
 export type Drum = 'kick' | 'snare' | 'hat';

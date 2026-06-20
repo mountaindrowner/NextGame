@@ -4,6 +4,8 @@ import { buyItem, sellItem, sellValue, type Wallet } from '../core/shop';
 import { ITEMS_BY_ID } from '../data/items';
 import { SHOP_STOCK, DEFAULT_SHOP } from '../data/shops';
 import { getGameState } from '../game/state';
+import { getAudio } from '../game/audio';
+import { bgmForMap } from '../data/audio';
 import { Controls } from '../input/controls';
 import { UI } from '../ui/colors';
 
@@ -26,9 +28,16 @@ export class ShopScene extends Phaser.Scene {
     super('shop');
   }
 
-  init(data: { tier?: string; from?: string }): void {
+  private fieldMap = 'the-field';
+
+  init(data: { tier?: string; from?: string; map?: string }): void {
     this.stock = SHOP_STOCK[data?.tier ?? DEFAULT_SHOP] ?? SHOP_STOCK[DEFAULT_SHOP]!;
     this.launcher = data?.from ?? 'fieldhd';
+    this.fieldMap = data?.map ?? getGameState().location?.map ?? 'the-field';
+  }
+
+  preload(): void {
+    getAudio().loadTracks(this, ['bgm.menu.shop']);
   }
 
   create(): void {
@@ -36,6 +45,7 @@ export class ShopScene extends Phaser.Scene {
     this.mode = 'menu';
     this.cursor = 0;
     this.controls = new Controls(this);
+    getAudio().playBgm('bgm.menu.shop');
     this.redraw();
   }
 
@@ -68,6 +78,7 @@ export class ShopScene extends Phaser.Scene {
 
   private back(): void {
     if (this.mode === 'menu') {
+      getAudio().playBgm(bgmForMap(this.fieldMap)); // restore the field theme before handing back
       this.scene.stop();
       this.scene.resume(this.launcher);
       return;

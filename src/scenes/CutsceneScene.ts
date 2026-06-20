@@ -3,6 +3,7 @@ import { fitLegacy, LEGACY_H, LEGACY_W } from './legacy';
 import { Controls } from '../input/controls';
 import { UI } from '../ui/colors';
 import { fadeTo, FADE_COLD } from './transition';
+import { getAudio } from '../game/audio';
 import { cutsceneImages, type Cutscene, type LineStep } from '../cutscene/types';
 
 const CPS = 48; // typewriter characters per second
@@ -47,6 +48,7 @@ export class CutsceneScene extends Phaser.Scene {
 
   preload(): void {
     for (const path of cutsceneImages(this.cut)) if (!this.textures.exists(path)) this.load.image(path, path);
+    if (this.cut.bgm) getAudio().loadTracks(this, [this.cut.bgm]);
   }
 
   create(): void {
@@ -62,6 +64,7 @@ export class CutsceneScene extends Phaser.Scene {
     this.add.rectangle(LEGACY_W / 2, 7, LEGACY_W, 14, 0x000000, 0.92).setDepth(9);
     this.add.rectangle(LEGACY_W / 2, LEGACY_H - 7, LEGACY_W, 14, 0x000000, 0.92).setDepth(9);
     this.add.text(6, 1, 'B: skip', { fontFamily: 'monospace', fontSize: '7px', color: '#6a7078' }).setDepth(10).setAlpha(0.8);
+    if (this.cut.bgm) getAudio().playBgm(this.cut.bgm);
 
     // drifting ambient motes (colour set per bg)
     this.moteTimer = this.time.addEvent({ delay: 520, loop: true, callback: () => this.spawnMote() });

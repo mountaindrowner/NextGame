@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { ALL_AUDIO } from '../data/audio';
+import { BOOT_SET } from '../data/audio';
 import { getAudio } from '../game/audio';
 
 /**
@@ -13,8 +13,8 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload(): void {
-    // load the soundtrack once; cache keys are game-global so every scene can play
-    for (const t of ALL_AUDIO) {
+    // eager-load the common set; per-scene tracks lazy-load in their own preload
+    for (const t of BOOT_SET) {
       if (!this.cache.audio.exists(t.key)) this.load.audio(t.key, t.src);
     }
   }

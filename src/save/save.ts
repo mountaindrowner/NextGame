@@ -12,17 +12,24 @@ export interface SaveFile {
   state: GameState;
 }
 
-export const CURRENT_VERSION = 1;
+export const CURRENT_VERSION = 2;
 
 type Migration = (raw: Record<string, unknown>) => Record<string, unknown>;
 
-/** v0 → v1: pre-release saves lacked the Network Garage and manifest split. */
 const MIGRATIONS: Record<number, Migration> = {
+  // v0 → v1: pre-release saves lacked the Network Garage and manifest split.
   0: (raw) => {
     const state = (raw['state'] ?? {}) as Record<string, unknown>;
     state['garage'] ??= [];
     state['manifest'] ??= { seen: [], freed: [] };
     return { ...raw, version: 1, state };
+  },
+  // v1 → v2: audio preferences (music/SFX volume + mute) added.
+  1: (raw) => {
+    const state = (raw['state'] ?? {}) as Record<string, unknown>;
+    state['audio'] ??= { musicVolume: 0.7, sfxVolume: 0.85, muted: false };
+    state['schema'] = 2;
+    return { ...raw, version: 2, state };
   },
 };
 
@@ -46,7 +53,7 @@ export function deserialize(json: string): GameState {
 }
 
 export function validate(state: GameState): void {
-  if (state.schema !== 1) throw new Error('bad schema');
+  if (state.schema !== 2) throw new Error('bad schema');
   if (!Array.isArray(state.party) || state.party.length === 0 || state.party.length > 3) {
     throw new Error('party must hold 1-3 Ohms');
   }
