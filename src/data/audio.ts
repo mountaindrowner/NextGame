@@ -45,18 +45,24 @@ const CUE = [
 ];
 const AMBIENCE = ['amb.current', 'amb.net', 'amb.wind', 'amb.cave'];
 const UISFX = ['sfx.cursor', 'sfx.select', 'sfx.back', 'sfx.text', 'sfx.stamp', 'sfx.newgame'];
+// per-type battle move SFX — one element cue per TypeName + a generic hit tick
+const MOVESFX = [
+  'sfx.mv.volt', 'sfx.mv.therm', 'sfx.mv.coolant', 'sfx.mv.frame', 'sfx.mv.optic', 'sfx.mv.sonic',
+  'sfx.mv.signal', 'sfx.mv.motor', 'sfx.mv.breaker', 'sfx.mv.utility', 'sfx.mv.verdant', 'sfx.mv.hit',
+];
 
 export const BGM_TRACKS: readonly AudioTrack[] = tracks([...AREA, ...BATTLE, ...MENU]);
 export const JINGLE_TRACKS: readonly AudioTrack[] = tracks(JINGLE);
 export const CUE_TRACKS: readonly AudioTrack[] = tracks(CUE);
-export const SFX_TRACKS: readonly AudioTrack[] = tracks([...AMBIENCE, ...UISFX]);
-export const ALL_AUDIO: readonly AudioTrack[] = tracks([...AREA, ...BATTLE, ...MENU, ...JINGLE, ...CUE, ...AMBIENCE, ...UISFX]);
+export const SFX_TRACKS: readonly AudioTrack[] = tracks([...AMBIENCE, ...UISFX, ...MOVESFX]);
+export const ALL_AUDIO: readonly AudioTrack[] = tracks([...AREA, ...BATTLE, ...MENU, ...JINGLE, ...CUE, ...AMBIENCE, ...UISFX, ...MOVESFX]);
 
 /** Eager set (loaded in BootScene); everything else lazy-loads in its scene. */
 export const BOOT_SET: readonly AudioTrack[] = tracks([
   'bgm.sys.title', 'bgm.sys.mainmenu', 'bgm.field.overworld', 'bgm.battle.wild', 'bgm.battle.trainer',
   ...JINGLE, // jingles are tiny and fire everywhere — never hitch them
   ...UISFX, // cursor/select/back/text blips — tiny, must never hitch
+  ...MOVESFX, // battle move cues fire mid-fight — must be ready, never hitch
 ]);
 
 // --- selection ---

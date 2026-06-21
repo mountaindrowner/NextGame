@@ -244,7 +244,7 @@ export class Battle {
       const slot = user.moves.find((m) => m.id === move?.id);
       if (slot) slot.pp = Math.max(0, slot.pp - 1);
     }
-    ev.push({ type: 'moveUsed', side, name: user.name, moveName: move.name });
+    ev.push({ type: 'moveUsed', side, name: user.name, moveName: move.name, moveType: move.type });
 
     if (move.accuracy > 0) {
       const stage = user.stages.accuracy - target.stages.evasion;

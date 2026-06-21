@@ -5,6 +5,7 @@ import type {
   StatBlock,
   StatusName,
   TypeChart,
+  TypeName,
 } from '../defs';
 
 /**
@@ -63,7 +64,7 @@ export type Side = 'player' | 'foe';
 
 export type BattleEvent =
   | { type: 'message'; text: string }
-  | { type: 'moveUsed'; side: Side; name: string; moveName: string }
+  | { type: 'moveUsed'; side: Side; name: string; moveName: string; moveType: TypeName }
   | { type: 'damage'; side: Side; amount: number; integrity: number; max: number; effectiveness: number; crit: boolean }
   | { type: 'heal'; side: Side; amount: number; integrity: number; max: number }
   | { type: 'statusSet'; side: Side; status: StatusName }

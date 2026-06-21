@@ -15,12 +15,13 @@ import { JINGLE_TRACKS_DATA } from './tracks-jingle';
 import { CUE_TRACKS } from './tracks-cue';
 import { AMBIENCE_TRACKS } from './tracks-ambience';
 import { SFX_TRACKS_DATA } from './tracks-sfx';
+import { MOVE_SFX_DATA } from './tracks-movesfx';
 
 const ROOT = new URL('../..', import.meta.url).pathname;
 const OUT = join(ROOT, 'public/audio');
 
 const ALL: Record<string, Track> = {
-  ...AREA_TRACKS, ...BATTLE_TRACKS, ...MENU_TRACKS, ...JINGLE_TRACKS_DATA, ...CUE_TRACKS, ...AMBIENCE_TRACKS, ...SFX_TRACKS_DATA,
+  ...AREA_TRACKS, ...BATTLE_TRACKS, ...MENU_TRACKS, ...JINGLE_TRACKS_DATA, ...CUE_TRACKS, ...AMBIENCE_TRACKS, ...SFX_TRACKS_DATA, ...MOVE_SFX_DATA,
 };
 
 export const pathFor = (id: string): string => id.replace(/\./g, '/') + '.wav';

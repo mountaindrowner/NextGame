@@ -161,6 +161,7 @@ export class BattleScene extends Phaser.Scene {
         break;
       case 'moveUsed':
         this.say(`${ev.name} used ${ev.moveName}!`);
+        getAudio().playOneShot(`sfx.mv.${ev.moveType.toLowerCase()}`); // per-element move cue
         this.lunge(ev.side);
         next(550);
         break;
@@ -181,6 +182,7 @@ export class BattleScene extends Phaser.Scene {
       case 'damage': {
         const strong = ev.crit || ev.effectiveness > 1;
         this.setBar(ev.side, ev.integrity, ev.max, true);
+        getAudio().playOneShot('sfx.mv.hit'); // impact tick under the element cue
         this.hitFlash(ev.side, strong);
         this.popDamage(ev.side, ev.amount, ev.crit);
         if (ev.crit) this.say('A critical hit!');

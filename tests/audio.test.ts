@@ -6,6 +6,7 @@ import {
   bgmForMap, bgmForBattle, victoryJingleFor, inferBattleType,
 } from '../src/data/audio';
 import { WORLD_MAP } from '../src/data/region';
+import { TYPES } from '../src/core/defs';
 import { newGame } from '../src/game/state';
 import { deserialize, serialize } from '../src/save/save';
 
@@ -86,6 +87,13 @@ describe('audio selection', () => {
   it('cutscene cues are catalogued', () => {
     expect(CUE_TRACKS.some((t) => t.key === 'cue.night_call')).toBe(true);
     expect(CUE_TRACKS.some((t) => t.key === 'cue.opening_bench')).toBe(true);
+  });
+
+  it('every element type has a move SFX (BattleScene plays sfx.mv.<type>)', () => {
+    for (const type of TYPES) {
+      expect(known.has(`sfx.mv.${type.toLowerCase()}`), `missing move SFX for ${type}`).toBe(true);
+    }
+    expect(known.has('sfx.mv.hit')).toBe(true);
   });
 });
 

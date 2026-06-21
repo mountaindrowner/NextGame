@@ -872,6 +872,13 @@ export class FieldHDScene extends Phaser.Scene {
       if (Phaser.Math.Between(0, 100) < 22) this.banner('The grass rustles — a wild Ohm is near!');
       return;
     }
+    // one-time typing primer the first time you wade into tall grass — taught
+    // before the first wild fight, so the lesson lands when it matters
+    if (!this.flag('tut_types')) {
+      getGameState().flags['tut_types'] = true;
+      this.typingPrimer();
+      return; // hold this step's encounter so the lesson isn't cut off by a battle
+    }
     const zone = ZONES_BY_ID.get(this.field.zone ?? 'field-grass') ?? ZONES_BY_ID.get('field-grass');
     if (!zone) return;
     const state = getGameState();
@@ -885,6 +892,13 @@ export class FieldHDScene extends Phaser.Scene {
 
   private placePlayer(): void {
     this.player.setPosition(this.px * this.field.tile + this.field.tile / 2, this.py * this.field.tile + this.field.tile / 2);
+  }
+
+  /** One-time "how typing works" primer (playtest #7), three terse banners. */
+  private typingPrimer(): void {
+    this.banner('Tall grass hides wild Ohms. Time to put that partner to work.');
+    this.time.delayedCall(4000, () => this.banner('Every Ohm and every move has a TYPE. Hit a weakness and it is SUPER EFFECTIVE: big damage.'));
+    this.time.delayedCall(8200, () => this.banner('Hit a resistance and it barely scratches. Read the foe and pick the move that counters it.'));
   }
 
   /** Banjo — Grandpa's old Jukeboxer — hums its two-note hello (charm beat). */
