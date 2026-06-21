@@ -53,6 +53,18 @@ describe('prologue beats on the Field', () => {
     expect(getGameState().flags['pro_done']).toBe(true);
   });
 
+  it('the surface lift sits at the arrival spawn so you can ride back down', async () => {
+    getGameState().flags['pro_supply'] = true; // cache in hand, lift active
+    h = await bootGame(SCENES);
+    h.seedMapData('the-field');
+    await h.start('fieldhd', { mapId: 'the-field' });
+    const scene = h.scene('fieldhd');
+    const garage = priv<[number, number]>(scene, 'garage');
+    const field = priv<{ spawn?: { x: number; y: number } }>(scene, 'field');
+    expect(field.spawn).toBeTruthy();
+    expect(garage).toEqual([field.spawn!.x, field.spawn!.y]);
+  });
+
   it('after the Breaker, re-entry is free daytime roam (done stays set, walker free)', async () => {
     getGameState().flags['pro_done'] = true;
     getGameState().flags['pro_charge'] = true;

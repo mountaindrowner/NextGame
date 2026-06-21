@@ -240,7 +240,10 @@ export class FieldHDScene extends Phaser.Scene {
     const open = this.findOpenSpawn();
     const home = this.field.spawn ?? { x: open[0], y: open[1] };
     if (this.mapDef.garage) {
-      [this.garage[0], this.garage[1]] = this.findOpenSpawn();
+      // the surface lift sits where you step off the elevator, so "up" and
+      // "down" are the same marked shaft (no hunting for a separate pad)
+      if (this.mapId === 'the-field' && this.field.spawn) [this.garage[0], this.garage[1]] = [this.field.spawn.x, this.field.spawn.y];
+      else [this.garage[0], this.garage[1]] = this.findOpenSpawn();
       this.drawGarage();
     } else {
       this.garage = [-99, -99]; // no recharge pad underground
@@ -436,7 +439,7 @@ export class FieldHDScene extends Phaser.Scene {
       if (!this.flag(PRO.done)) {
         const got = this.flag(PRO.supply);
         this.time.delayedCall(2200, () =>
-          this.banner(got ? "You've got what Grandma needs. Head back to the lift and go home." : 'The supply cache is out here in the grass. Grab it and get home before dark.'),
+          this.banner(got ? 'You have what Grandma needs. Go back to the lift you rode up (the glowing pad) and step on it to ride down.' : 'The supply cache is out here in the grass. Grab it and get home before dark.'),
         );
       } else if (!this.flag(PRO.charge)) {
         // fresh off the Breaker reveal: the charge to leave Ohmstead
@@ -749,6 +752,11 @@ export class FieldHDScene extends Phaser.Scene {
         if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
         if (this.checkExit()) return;
         this.checkItems();
+        // supply run: stepping back onto the lift you rode up rides you down home
+        if (this.mapId === 'the-field' && this.atGarage() && this.flag(PRO.supply) && !this.flag(PRO.nightcall)) {
+          this.descendToColony();
+          return;
+        }
         if (this.checkTrainers()) return;
         if (this.isGrass(this.px, this.py)) this.tryEncounter();
       },
@@ -846,6 +854,11 @@ export class FieldHDScene extends Phaser.Scene {
         if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
         if (this.checkExit()) return;
         this.checkItems();
+        // supply run: stepping back onto the lift you rode up rides you down home
+        if (this.mapId === 'the-field' && this.atGarage() && this.flag(PRO.supply) && !this.flag(PRO.nightcall)) {
+          this.descendToColony();
+          return;
+        }
         if (this.checkTrainers()) return;
         if (this.isGrass(this.px, this.py)) this.tryEncounter();
       },
