@@ -29,16 +29,32 @@ function eyes(g: Grid, lx: number, rx: number, y: number, col = 'X'): void {
 function foot(g: Grid, x: number, y: number, w: number, base_ = 'A'): void { g.box(x, y, w, 7, 'a', base_, 'x'); }
 
 // ---- the starter trio (stage 1): scooter / drone / dog ------------------
-function scootlet(): Sprite { // 001 kick e-scooter — MOTOR
+function scootlet(): Sprite { // 001 kick e-scooter — MOTOR (clean side profile)
   const g = base();
-  for (const wx of [36, 60]) { g.ellipse(wx, 82, 8, 8, 'x'); g.ellipse(wx, 82, 4, 4, 'a'); g.set(wx, 82, 'l'); } // wheels
-  g.box(32, 74, 32, 6, 'm', 'u', 'U'); // deck
-  g.rect(40, 78, 16, 3, 'b'); // a cheeky red stripe
-  g.box(44, 30, 9, 46, 'm', 'u', 'U'); // stem
-  g.box(34, 32, 30, 5, 'a', 'A', 'x'); g.ellipse(34, 34, 3, 3, 'x'); g.ellipse(64, 34, 3, 3, 'x'); // handlebars + grips
-  g.ellipse(48, 26, 9, 9, 'l'); g.ellipse(48, 26, 6, 6, 'I'); g.ellipse(47, 25, 3, 3, '1'); g.set(46, 24, '*'); // single headlight eye
+  // --- two wheels on the ground line (rear left, front right) ---
+  // rubber tyre (dark) → metal rim (hi/base/shadow) → glowing hub.
+  for (const [wx, wy] of [[26, 82], [70, 82]] as Array<[number, number]>) {
+    g.ellipse(wx, wy, 9, 9, 'x'); // black rubber tyre
+    g.ellipse(wx, wy, 6, 6, 'a'); g.ellipse(wx - 1, wy - 1, 5, 5, 'l'); g.set(wx + 3, wy + 3, 'A'); // metal rim, lit top-left
+    g.ellipse(wx, wy, 2, 2, '1'); g.set(wx - 1, wy - 1, '*'); // bright hub
+  }
+  // --- foot deck: a horizontal platform riding just above the ground ---
+  g.box(24, 76, 50, 7, 'm', 'u', 'U'); // deck slab (hi top-left / base / shadow bottom-right)
+  g.hline(25, 76, 48, 'm'); // crisp top sheen on the standing surface
+  g.rect(34, 79, 22, 2, 'b'); g.set(34, 79, 'B'); // a cheeky red grip stripe
+  // little wheel-fork necks tying the deck down to each axle
+  g.box(24, 80, 5, 4, 'a', 'A', 'x'); g.box(69, 80, 5, 4, 'a', 'A', 'x');
+  // --- steering stem: rises from the FRONT (right) wheel, leans forward ---
+  for (let y = 30; y <= 78; y++) { const x = 70 - Math.round((78 - y) * 0.10); g.set(x, y, 'u'); g.set(x - 1, y, 'm'); g.set(x + 1, y, 'U'); g.set(x - 2, y, 'm'); g.set(x + 2, y, 'U'); } // 5px wide column, lit-left/shadow-right
+  g.box(64, 70, 12, 8, 'a', 'A', 'x'); // fork crown clamp over the front wheel
+  // --- handlebar: horizontal T-bar across the top of the stem ---
+  g.box(54, 30, 28, 5, 'l', 'a', 'A'); // the bar
+  g.ellipse(54, 32, 3, 3, 'x'); g.ellipse(82, 32, 3, 3, 'x'); // rubber grips (both ends)
+  g.set(55, 31, 'b'); g.set(81, 31, 'b'); // grip caps
+  // --- friendly headlight eye on the head of the stem (faces forward/right) ---
+  g.ellipse(70, 42, 8, 8, 'l'); g.ellipse(71, 42, 6, 6, 'I'); g.ellipse(72, 41, 3, 3, '1'); g.set(73, 40, '*'); // single big sensor eye, looking ahead
   g.outline('X');
-  const s = g.render(); glow(s, 48, 26, 14, [40, 90, 130]); return s;
+  const s = g.render(); glow(s, 72, 42, 13, [40, 90, 130]); return s; // headlight glow
 }
 function dronelet(): Sprite { // 004 pocket quadcopter — SIGNAL
   const g = base();

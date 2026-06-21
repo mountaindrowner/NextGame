@@ -7,12 +7,17 @@ import { song, mel } from './compose';
 import { MAIN, WONDER, at } from './motifs';
 
 export const MENU_TRACKS: Record<string, Track> = {
-  // bgm.sys.title — D maj 84 · Main, Wonder · grand but worn
+  // bgm.sys.title — D maj 84 · Main, Wonder · grand but worn. Fuller arrangement:
+  // a denser arp shimmer + an answering lead phrase so the back four bars sing too.
   'bgm.sys.title': song({
     bpm: 84, bars: 8, key: 'D4', mode: 'major', progression: [1, 5, 6, 4, 1, 5, 4, 1], bass: 'roots', drums: 'gentle',
-    arp: { duty: 0.25, vel: 0.34 },
+    arp: { duty: 0.25, vel: 0.4, step: 1 },
     lead: [...MAIN, ...at(2, WONDER), ...mel([['C#5', 1], ['A4', 1], ['E4', 1], ['A4', 1]], 4),
-      ...mel([['B4', 1], ['D5', 1], ['F#5', 1], ['D5', 1]], 8), ...mel([['G4', 1], ['A4', 1], ['F#4', 1], ['D4', 1]], 12)],
+      ...mel([['B4', 1], ['D5', 1], ['F#5', 1], ['D5', 1]], 8), ...mel([['G4', 1], ['A4', 1], ['F#4', 1], ['D4', 1]], 12),
+      // answering phrase over bars 5-8 (was bare arp/bass before)
+      ...mel([['D5', 1], ['F#5', 1], ['A5', 1], ['F#5', 1]], 16), ...mel([['E5', 1], ['C#5', 1], ['A4', 1], ['C#5', 1]], 20),
+      ...mel([['B4', 1], ['G4', 1], ['D5', 1], ['B4', 1]], 24), ...mel([['A4', 1], ['F#4', 1], ['D4', 2]], 28)],
+    pads: mel([['F#4', 4], ['E4', 4], ['D4', 4], ['B3', 4], ['F#4', 4], ['E4', 4], ['G4', 4], ['F#4', 4]], 0, { vel: 0.16, duty: 0.5 }),
   }),
   // bgm.sys.mainmenu — D maj 72 · Main(soft) · quiet, expectant
   'bgm.sys.mainmenu': song({

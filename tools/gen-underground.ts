@@ -594,6 +594,16 @@ writeFileSync(
       { x: 5, y: 7, kind: 'bench' }, // Eli's Bench
       { x: 9, y: 7, kind: 'banjo' }, // Banjo, the old Jukeboxer
       { x: 13, y: 7, kind: 'eli' }, // a photo + the logbook (E.V.)
+      { x: 18, y: 3, kind: 'bed' }, // the kid's bunk — sleep here after the supply run (the night-call beat)
+    ],
+    // placards that name each chamber, so the colony reads as a place, not a maze
+    signs: [
+      { col: 4, row: 3, text: "ELI'S GARAGE — the Bench, and everything he left you." },
+      { col: 17, row: 2, text: 'THE BUNKS — yours is the one by the wall.' },
+      { col: 27, row: 4, text: 'STORES — rations, nodes, and salvage. Hands off without a chit.' },
+      { col: 17, row: 10, text: 'OHMSTEAD COMMONS — the heart of the colony.' },
+      { col: 4, row: 13, text: 'THE WORKS — water, power, and the air that keeps us all breathing.' },
+      { col: 25, row: 14, text: 'THE YARD — scrap, ore, and the cart up to the surface line.' },
     ],
     npcs: [
       { char: 'npc_elder', col: 7, row: 6, name: 'Grandma Mabel', lines: [

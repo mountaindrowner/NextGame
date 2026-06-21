@@ -9,6 +9,14 @@ import { getGameState, hasGameState, nextSeed } from '../game/state';
 import { getAudio } from '../game/audio';
 import { bgmForMap } from '../data/audio';
 import { type Dir4, neighbor, OPPOSITE } from '../data/region';
+import { fadeTo, FADE_COLD } from './transition';
+import { NIGHT_CALL, BREAKER_BOUND } from '../cutscene/script';
+
+// Prologue ("The Call", Story Bible): supply run -> return -> night-call ->
+// inciting fight -> the Breaker binds. Tracked in save flags so it survives the
+// battle round-trip and reloads.
+const PRO = { supply: 'pro_supply', nightcall: 'pro_nightcall', breaker: 'pro_breaker', done: 'pro_done', charge: 'pro_charge' } as const;
+const WARPED_SPECIES = 49; // Sawlet (BREAKER type) — the Static-warped guardian of the safe
 
 interface FieldData {
   tile: number;
@@ -330,13 +338,14 @@ export class FieldHDScene extends Phaser.Scene {
     this.cameras.main.fadeIn(360, 18, 12, 8);
     this.banner(this.mapDef.banner);
     if (this.introTutorial) {
-      // the first walk: a gentle objective + a wave-off, then a hint to the lift
+      // first walk: controls, then the supply-run charge (the colony sends you up)
       this.time.delayedCall(2400, () => this.banner('Move with the arrow keys. Press A to talk, read, and rummage.'));
-      this.time.delayedCall(5200, () => this.banner('Say goodbye to Grandma, look in on Banjo — then find the lift topside.'));
+      this.time.delayedCall(5200, () => this.banner('Grandma needs a supply cache from topside. Say bye, look in on Banjo, then take the lift up.'));
     }
     if (hasGameState()) getAudio().applyPrefs(getGameState().audio); // restore saved volume/mute
     getAudio().ensureBgm(this, bgmForMap(this.mapId)); // per-map theme; background-loads, never blocks create
     this.input.keyboard?.on('keydown-M', () => getAudio().toggleMute());
+    this.handlePrologue();
   }
 
   /** Build per-direction walk anims for a 3×3 walk sheet (S=0-2,N=3-5,W=6-8). */
@@ -384,6 +393,105 @@ export class FieldHDScene extends Phaser.Scene {
     this.banner(msg);
   }
 
+  // ---- Prologue: "The Call" (Story Bible) ---------------------------------
+
+  private flag(k: string): boolean {
+    return hasGameState() && getGameState().flags[k] === true;
+  }
+  /** The opening sequence is unfinished (gates the region edges + drives beats). */
+  private prologueActive(): boolean {
+    return hasGameState() && !this.flag(PRO.done);
+  }
+  /** The night-call beat is live: the surface is dark and a fight is waiting. */
+  private prologueNight(): boolean {
+    return this.flag(PRO.nightcall) && !this.flag(PRO.done);
+  }
+
+  /** A blue night wash over the whole scene during the night-call beat. */
+  private applyNightTint(): void {
+    this.add.rectangle(0, 0, this.field.width, this.field.height, 0x0a1430, 0.5).setOrigin(0, 0).setDepth(80);
+  }
+
+  /** Run whatever prologue beat the current map + flags call for. */
+  private handlePrologue(): void {
+    if (!hasGameState()) return;
+    if (this.prologueNight()) this.applyNightTint();
+
+    if (this.mapId === 'the-field') {
+      // won the night fight -> the Breaker binds, then the road opens
+      if (this.flag(PRO.breaker) && !this.flag(PRO.done)) {
+        getGameState().flags[PRO.done] = true; // mark done so the return is free to travel
+        this.moving = true;
+        this.time.delayedCall(700, () => fadeTo(this, 'cutscene', { cutscene: BREAKER_BOUND }, FADE_COLD, 480));
+        return;
+      }
+      // back up at night: a Static-warped Ohm guards the buried safe — forced fight
+      if (this.prologueNight()) {
+        this.moving = true;
+        this.banner('The Field is wrong at night. Something is clawing at the dead ground ahead.');
+        this.time.delayedCall(1500, () => this.startIncitingFight());
+        return;
+      }
+      // daytime supply run: objective, or the nudge home once the cache is in hand
+      if (!this.flag(PRO.done)) {
+        const got = this.flag(PRO.supply);
+        this.time.delayedCall(2200, () =>
+          this.banner(got ? "You've got what Grandma needs. Head back to the lift and go home." : 'The supply cache is out here in the grass. Grab it and get home before dark.'),
+        );
+      } else if (!this.flag(PRO.charge)) {
+        // fresh off the Breaker reveal: the charge to leave Ohmstead
+        getGameState().flags[PRO.charge] = true;
+        this.time.delayedCall(900, () => this.banner('Get home. Wake Grandma. The colony has to hear this. The road north is open now.'));
+      }
+    }
+
+    // returned to the colony after the supply run: steer the kid to the bunk
+    if (this.mapId === 'ohmstead' && !this.introTutorial && this.flag(PRO.supply) && !this.flag(PRO.nightcall)) {
+      this.time.delayedCall(1800, () => this.banner("Grandma's asleep. Get some rest — your bunk's in the corner. (Press A at the bed.)"));
+    }
+  }
+
+  /** The bunk: only meaningful the night after the supply run — it triggers
+   * the night-call beat (the handheld wakes). */
+  private useBed(): void {
+    if (this.flag(PRO.supply) && !this.flag(PRO.nightcall)) {
+      getGameState().flags[PRO.nightcall] = true;
+      this.moving = true;
+      this.banner('You lie down. Sleep takes you fast...');
+      this.time.delayedCall(1200, () => fadeTo(this, 'cutscene', { cutscene: NIGHT_CALL }, FADE_COLD, 600));
+    } else if (this.flag(PRO.done)) {
+      this.banner('Your bunk. You could sleep for a week. No time for that now.');
+    } else {
+      this.banner("Your bunk. No time to sleep yet — there's a supply run to finish.");
+    }
+  }
+
+  /** Ride the lift back down into the colony at the end of the supply run. */
+  private descendToColony(): void {
+    if (hasGameState()) getGameState().location = { map: 'the-field', x: this.px, y: this.py };
+    this.moving = true;
+    this.banner('You ride the lift back down into Ohmstead.');
+    this.cameras.main.fade(420, 8, 8, 12);
+    this.time.delayedCall(440, () => this.scene.start('fieldhd', { mapId: 'ohmstead' }));
+  }
+
+  /** The inciting battle: the warped guardian of the safe (win -> the Breaker). */
+  private startIncitingFight(): void {
+    const state = getGameState();
+    state.location = { map: 'the-field', x: this.px, y: this.py };
+    const foe = makeBattler(GAME_DATA.species(WARPED_SPECIES), 7, GAME_DATA);
+    if (!state.manifest.seen.includes(foe.speciesNum)) state.manifest.seen.push(foe.speciesNum);
+    this.scene.start('battle', {
+      kind: 'trainer',
+      foes: [foe],
+      foeName: 'A Static-warped Ohm',
+      battleType: 'legendary', // ominous theme + a heavier victory fanfare
+      seed: nextSeed(state),
+      returnScene: 'fieldhd',
+      onVictoryFlag: PRO.breaker,
+    });
+  }
+
   override update(_time: number, delta: number): void {
     this.animate(delta); // wind sway + water flow run every frame
     if (this.moving) return;
@@ -394,6 +502,11 @@ export class FieldHDScene extends Phaser.Scene {
     }
     if (this.controls.consume('a')) {
       if (this.atGarage()) {
+        // during the supply run the lift head carries you back down to the colony
+        if (this.mapId === 'the-field' && this.flag(PRO.supply) && !this.flag(PRO.nightcall)) {
+          this.descendToColony();
+          return;
+        }
         this.recharge();
         return;
       }
@@ -437,6 +550,12 @@ export class FieldHDScene extends Phaser.Scene {
       state.credits += it.credits;
       this.itemSprites.get(i)?.destroy();
       getAudio().playOneShot('jingle.obtain_item');
+      // the first Field pickup during the opening IS the supply run's cache
+      if (this.mapId === 'the-field' && i === 0 && this.prologueActive() && !this.flag(PRO.nightcall)) {
+        state.flags[PRO.supply] = true;
+        this.banner('Supply cache, secured. For a heartbeat the grass goes still — then nothing. Get home before dark.');
+        continue;
+      }
       this.banner(`${it.label ?? (it.hidden ? 'Hidden cache' : 'A node pickup')} — found ${it.credits} credits!`);
     }
   }
@@ -535,13 +654,15 @@ export class FieldHDScene extends Phaser.Scene {
     for (const it of this.field.interacts ?? []) {
       if ((it.x === fx && it.y === fy) || (it.x === this.px && it.y === this.py)) {
         if (it.kind === 'bench') {
-          this.banner("Grandpa's Bench — your partner was built here. (Press ⤓ topside to recharge.)");
+          this.banner("Grandpa's Bench. Your partner was built here. (Press the lift topside to recharge.)");
         } else if (it.kind === 'eli') {
-          this.banner('A photograph and a worn logbook. The face is a stranger… but the initials are E.V. Why is that name a chill?');
+          this.banner('A photograph and a worn logbook. The face is a stranger... but the initials are E.V. Why is that name a chill?');
         } else if (it.kind === 'banjo') {
           this.banjoHello(it.x, it.y);
+        } else if (it.kind === 'bed') {
+          this.useBed();
         } else if (it.kind === 'heal') {
-          this.recharge('A field medic tops off your Ohms — recharged. Stay current.');
+          this.recharge('A field medic tops off your Ohms. Recharged. Stay current.');
         } else if (it.kind === 'shop') {
           this.scene.launch('shop', { tier: it.tier ?? 'colony', from: 'fieldhd', map: this.mapId });
           this.scene.pause();
@@ -680,6 +801,12 @@ export class FieldHDScene extends Phaser.Scene {
     const ny = this.py + dy;
     // stepping off an open map edge → seamless edge-warp to the region neighbour
     if (nx < 0 || ny < 0 || nx >= this.field.cols || ny >= this.field.rows) {
+      // the opening prologue pins you to the Field until the Breaker is yours
+      if (this.mapId === 'the-field' && this.prologueActive()) {
+        this.placePlayer();
+        this.banner('Not yet. Finish what you came up for, then get home.');
+        return;
+      }
       const d4: Dir4 = dir === 'up' ? 'n' : dir === 'down' ? 's' : dir === 'left' ? 'w' : 'e';
       const nb = neighbor(this.mapId, d4);
       if (nb && MAPS[nb]) {

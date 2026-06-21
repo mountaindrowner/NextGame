@@ -235,8 +235,8 @@ function mabel(): Sprite {
   g.box(8, 90, 72, 22, 'l', 'w', 'W');
   g.box(32, 86, 24, 22, 'w', 'W', 'A'); // apron bib
   g.line(34, 88, 36, 110, 'A'); g.line(54, 88, 52, 110, 'A'); // apron straps
-  // neck
-  g.box(38, 68, 12, 14, 'H', 'S', 's');
+  // neck — runs down into the shoulders/apron so the head connects (no gap)
+  g.box(38, 68, 12, 24, 'H', 'S', 's');
   // head
   g.ellipse(cx, 46, 20, 24, 's'); g.ellipse(cx - 2, 44, 18, 22, 'S'); g.ellipse(cx - 5, 40, 12, 15, 'H');
   g.ellipse(cx, 60, 12, 8, 'S');

@@ -58,3 +58,45 @@ export function grounded(preset: 'SAL' | 'WREN'): Cutscene {
 
 /** Known speaker labels (for the data-integrity test). '' = the narrator. */
 export const SPEAKERS = new Set(['', 'GRANDMA MABEL', 'SAL', 'WREN', 'BANJO', 'BOONE', 'CASS']);
+
+/**
+ * The Call (Prologue, Story Bible): the first topside trip is a daytime supply
+ * run that ends with a scare and a safe return. THAT NIGHT the handheld wakes
+ * and pulls the kid back to the surface against every rule. Plays after the
+ * supply run, triggered from the bunk in the colony.
+ */
+export const NIGHT_CALL: Cutscene = {
+  next: 'fieldhd',
+  nextData: { mapId: 'the-field' },
+  bgm: 'cue.night_call',
+  steps: [
+    { kind: 'bg', image: 'ui/cutscene/garage.png', dark: 0.55, motes: [120, 90, 60] },
+    { kind: 'line', speaker: '', text: 'The colony sleeps. Three floors of quiet stacked over your head.' },
+    { kind: 'line', speaker: '', text: "On the Bench, your grandfather's old handheld stirs. A hum. A pull, low in your teeth." },
+    { kind: 'fx', effect: 'glow' },
+    { kind: 'line', speaker: '', text: "Every rule says stay in your bunk. You've never been much good at rules." },
+    { kind: 'line', speaker: '', text: 'You take the lift up alone, into the dark.' },
+  ],
+};
+
+/**
+ * The Breaker binds (Prologue, Story Bible): the night fight ends, the buried
+ * safe breaks open, and the Breaker fixes itself to the handheld and locks to
+ * the kid alone. Plays right after the inciting battle is won.
+ */
+export const BREAKER_BOUND: Cutscene = {
+  next: 'fieldhd',
+  nextData: { mapId: 'the-field' },
+  bgm: 'cue.breaker_bonds',
+  steps: [
+    { kind: 'bg', image: 'ui/cutscene/co_static.png', dark: 0.4, motes: [150, 100, 200] },
+    { kind: 'line', speaker: '', text: 'The warped Ohm folds. Behind it, a buried safe hangs open, its old seal finally broken.' },
+    { kind: 'line', speaker: '', text: 'Inside: a sliver of pre-collapse tech, humming the exact note as your handheld.' },
+    { kind: 'fx', effect: 'flash' },
+    { kind: 'line', speaker: '', text: 'It leaps to the device in a flare of light. Locks. Yours now, and no one else can wield it.' },
+    { kind: 'bg', image: 'ui/cutscene/co_surface.png', dark: 0.3, motes: [210, 200, 160] },
+    { kind: 'line', speaker: '', text: "Grandpa called this the Breaker. A key that could unchain every machine on Earth." },
+    { kind: 'line', speaker: '', text: 'His handheld led you straight to it. Five years gone, and still a step ahead of you.' },
+    { kind: 'line', speaker: '', text: 'Whatever sent that creature knows the key has surfaced. And it knows where you live.' },
+  ],
+};
