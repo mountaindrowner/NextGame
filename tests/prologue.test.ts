@@ -5,6 +5,8 @@
 // drive the real FieldHDScene through each beat's flag state on a headless boot
 // and assert create() resolves it without throwing or stranding the walker.
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import type { Harness } from './helpers/headless-game';
 import { bootGame } from './helpers/headless-game';
 import { FieldHDScene } from '../src/scenes/FieldHDScene';
@@ -73,6 +75,18 @@ describe('prologue beats on the Field', () => {
     await h.start('fieldhd', { mapId: 'the-field' });
     expect(getGameState().flags['pro_done']).toBe(true);
     expect(priv(h.scene('fieldhd'), 'moving')).toBe(false);
+  });
+});
+
+describe('colony lift is A-to-Use (no walk-on warp soft-block)', () => {
+  it('Ohmstead has a lift interact and no scene-warp exits', () => {
+    const json = JSON.parse(readFileSync(join(process.cwd(), 'public/world/ohmstead.json'), 'utf8')) as {
+      exits?: Array<{ scene?: string }>;
+      interacts?: Array<{ kind?: string }>;
+    };
+    expect((json.interacts ?? []).some((i) => i.kind === 'lift')).toBe(true);
+    // the elevator must not be a walk-on exit anymore (that was the soft-block)
+    expect((json.exits ?? []).some((e) => e.scene === 'elevator')).toBe(false);
   });
 });
 

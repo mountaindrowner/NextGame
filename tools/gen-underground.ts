@@ -589,12 +589,13 @@ writeFileSync(
     collision,
     grass: [],
     spawn: { x: 6, y: 5 }, // in the garage, by the Bench
-    exits: [{ x: 19, y: 19, scene: 'elevator' }], // step onto the lift apron → up to the Field
+    exits: [], // the lift is an A-to-Use interact now (no accidental walk-on warp)
     interacts: [
       { x: 5, y: 7, kind: 'bench' }, // Eli's Bench
       { x: 9, y: 7, kind: 'banjo' }, // Banjo, the old Jukeboxer
       { x: 13, y: 7, kind: 'eli' }, // a photo + the logbook (E.V.)
       { x: 18, y: 3, kind: 'bed' }, // the kid's bunk — sleep here after the supply run (the night-call beat)
+      { x: 19, y: 19, kind: 'lift' }, // the freight lift up to the Field (press A to use)
     ],
     // placards that name each chamber, so the colony reads as a place, not a maze
     signs: [

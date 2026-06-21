@@ -248,9 +248,12 @@ export class FieldHDScene extends Phaser.Scene {
       if (this.mapId === 'the-field' && this.field.spawn) [this.garage[0], this.garage[1]] = [this.field.spawn.x, this.field.spawn.y];
       else [this.garage[0], this.garage[1]] = this.findOpenSpawn();
       this.drawGarage();
+      this.drawUseHint(this.garage[0], this.garage[1]); // the lift / recharge pad reads as usable
     } else {
       this.garage = [-99, -99]; // no recharge pad underground
     }
+    // the colony freight lift (and any A-to-Use lift cell) shows a prompt
+    for (const it of this.field.interacts ?? []) if (it.kind === 'lift') this.drawUseHint(it.x, it.y);
 
     const state = hasGameState() ? getGameState() : undefined;
     const loc = state?.location;
@@ -443,7 +446,7 @@ export class FieldHDScene extends Phaser.Scene {
       if (!this.flag(PRO.done)) {
         const got = this.flag(PRO.supply);
         this.time.delayedCall(2200, () =>
-          this.banner(got ? 'You have what Grandma needs. Go back to the lift you rode up (the glowing pad) and step on it to ride down.' : 'The supply cache is out here in the grass. Grab it and get home before dark.'),
+          this.banner(got ? 'You have what Grandma needs. Head back to the lift you rode up (the glowing pad) and press A to ride down.' : 'The supply cache is out here in the grass. Grab it and get home before dark.'),
         );
       } else if (!this.flag(PRO.charge)) {
         // fresh off the Breaker reveal: the charge to leave Ohmstead
@@ -471,6 +474,29 @@ export class FieldHDScene extends Phaser.Scene {
     } else {
       this.banner("Your bunk. No time to sleep yet — there's a supply run to finish.");
     }
+  }
+
+  /** The colony freight lift up to the Field (A-to-Use, with a tooltip). It is
+   * off-limits while you owe Grandma a night's sleep, so the night-call beat
+   * can't be skipped by riding up again. */
+  private useLift(): void {
+    if (this.flag(PRO.supply) && !this.flag(PRO.nightcall)) {
+      this.banner("Not now. You're back with the cache — get some rest first. Your bunk's in the corner.");
+      return;
+    }
+    if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
+    getAudio().select();
+    this.scene.start('elevator');
+  }
+
+  /** A bobbing "A: Use" prompt floating over a lift / interact cell. */
+  private drawUseHint(col: number, row: number, label = 'A to Use'): void {
+    const t = this.field.tile;
+    const x = col * t + t / 2;
+    const y = row * t - 4;
+    const bg = this.add.rectangle(x, y, label.length * 5 + 8, 11, 0x14110c, 0.8).setStrokeStyle(1, 0x6a5638).setDepth(150);
+    const txt = this.add.text(x, y, label, { fontFamily: 'monospace', fontSize: '8px', color: '#ffd27a' }).setOrigin(0.5).setDepth(151);
+    this.tweens.add({ targets: [bg, txt], y: '-=2', yoyo: true, repeat: -1, duration: 760, ease: 'Sine.InOut' });
   }
 
   /** Ride the lift back down into the colony at the end of the supply run. */
@@ -715,6 +741,8 @@ export class FieldHDScene extends Phaser.Scene {
           this.banjoHello(it.x, it.y);
         } else if (it.kind === 'bed') {
           this.useBed();
+        } else if (it.kind === 'lift') {
+          this.useLift();
         } else if (it.kind === 'heal') {
           this.recharge('A field medic tops off your Ohms. Recharged. Stay current.');
         } else if (it.kind === 'shop') {
@@ -803,11 +831,6 @@ export class FieldHDScene extends Phaser.Scene {
         if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
         if (this.checkExit()) return;
         this.checkItems();
-        // supply run: stepping back onto the lift you rode up rides you down home
-        if (this.mapId === 'the-field' && this.atGarage() && this.flag(PRO.supply) && !this.flag(PRO.nightcall)) {
-          this.descendToColony();
-          return;
-        }
         if (this.checkTrainers()) return;
         if (this.isGrass(this.px, this.py)) this.tryEncounter();
       },
@@ -905,11 +928,6 @@ export class FieldHDScene extends Phaser.Scene {
         if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
         if (this.checkExit()) return;
         this.checkItems();
-        // supply run: stepping back onto the lift you rode up rides you down home
-        if (this.mapId === 'the-field' && this.atGarage() && this.flag(PRO.supply) && !this.flag(PRO.nightcall)) {
-          this.descendToColony();
-          return;
-        }
         if (this.checkTrainers()) return;
         if (this.isGrass(this.px, this.py)) this.tryEncounter();
       },
