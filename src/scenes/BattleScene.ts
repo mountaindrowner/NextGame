@@ -102,6 +102,11 @@ export class BattleScene extends Phaser.Scene {
 
   create(): void {
     fitLegacy(this);
+    // the scene instance is reused across battles — clear last fight's state,
+    // or a stale `outcome` makes the next battle finish() the instant it opens.
+    this.outcome = undefined;
+    this.queue = [];
+    this.mode = 'anim';
     const state = getGameState();
     this.battle = new Battle(
       { kind: this.init_.kind, seed: this.init_.seed, party: state.party, foes: this.init_.foes, foeName: this.init_.foeName },

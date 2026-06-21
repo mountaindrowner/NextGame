@@ -219,6 +219,8 @@ export class FieldHDScene extends Phaser.Scene {
     this.moving = false;
     this.toastObj = undefined;
     this.toastTimer = undefined;
+    this.npcCells.clear(); // else the previous map's NPC collisions/dialogue bleed in
+    this.npcTalk.clear();
     this.field = this.cache.json.get(this.dataKey()) as FieldData;
     if (hasGameState()) getGameState().flags[`visited:${this.mapId}`] = true; // world-map
     this.buildLedges();
