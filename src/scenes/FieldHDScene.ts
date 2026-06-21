@@ -10,13 +10,16 @@ import { getAudio } from '../game/audio';
 import { bgmForMap } from '../data/audio';
 import { type Dir4, neighbor, OPPOSITE } from '../data/region';
 import { fadeTo, FADE_COLD } from './transition';
-import { NIGHT_CALL, BREAKER_BOUND } from '../cutscene/script';
+import { NIGHT_CALL, BREAKER_BOUND, THE_SPOTTING, ROOK_AFTERMATH } from '../cutscene/script';
 
 // Prologue ("The Call", Story Bible): supply run -> return -> night-call ->
 // inciting fight -> the Breaker binds. Tracked in save flags so it survives the
 // battle round-trip and reloads.
 const PRO = { supply: 'pro_supply', nightcall: 'pro_nightcall', breaker: 'pro_breaker', done: 'pro_done', charge: 'pro_charge' } as const;
 const WARPED_SPECIES = 49; // Sawlet (BREAKER type) — the Static-warped guardian of the safe
+// Act I, beat 5/6 ("The Spotting" + Rook): the first rival battle on the Farm Road.
+const ACT1 = { spotting: 'seen_spotting', rook: 'beat_rook', rookDone: 'rook_done' } as const;
+const ROOK_TEAM: Array<{ num: number; level: number }> = [{ num: 54, level: 6 }, { num: 10, level: 7 }]; // Cellet, Toastlet
 
 interface FieldData {
   tile: number;
@@ -349,6 +352,7 @@ export class FieldHDScene extends Phaser.Scene {
     getAudio().ensureBgm(this, bgmForMap(this.mapId)); // per-map theme; background-loads, never blocks create
     this.input.keyboard?.on('keydown-M', () => getAudio().toggleMute());
     this.handlePrologue();
+    this.handleActI();
   }
 
   /** Build per-direction walk anims for a 3×3 walk sheet (S=0-2,N=3-5,W=6-8). */
@@ -492,6 +496,53 @@ export class FieldHDScene extends Phaser.Scene {
       seed: nextSeed(state),
       returnScene: 'fieldhd',
       onVictoryFlag: PRO.breaker,
+    });
+  }
+
+  // ---- Act I: "The Spotting" + Rook, the first rival battle ----------------
+
+  /** Drive the Farm Road's opening beat: the Spotting cutscene, the forced
+   * rival fight with Rook, and his parting words. */
+  private handleActI(): void {
+    if (this.mapId !== 'farmroad' || !hasGameState()) return;
+    if (!this.flag(PRO.done)) return; // only after the prologue hands you the road
+    const f = getGameState().flags;
+    // beat Rook -> his parting words, then the road is yours
+    if (f[ACT1.rook] === true && f[ACT1.rookDone] !== true) {
+      f[ACT1.rookDone] = true;
+      this.moving = true;
+      this.time.delayedCall(700, () => fadeTo(this, 'cutscene', { cutscene: ROOK_AFTERMATH }, FADE_COLD, 480));
+      return;
+    }
+    // first arrival on the road: the Spotting, then Rook's challenge
+    if (f[ACT1.spotting] !== true) {
+      f[ACT1.spotting] = true;
+      this.moving = true;
+      this.time.delayedCall(800, () => fadeTo(this, 'cutscene', { cutscene: THE_SPOTTING }, FADE_COLD, 600));
+      return;
+    }
+    // seen the Spotting but not yet beaten Rook: the forced rival fight
+    if (f[ACT1.rook] !== true) {
+      this.moving = true;
+      this.banner('Rook is already on the road, arms crossed, waiting for you.');
+      this.time.delayedCall(1400, () => this.startRivalFight());
+    }
+  }
+
+  /** The first rival battle: Rook's raider team (rival theme + fanfare). */
+  private startRivalFight(): void {
+    const state = getGameState();
+    state.location = { map: 'farmroad', x: this.px, y: this.py };
+    const foes = ROOK_TEAM.map((m) => makeBattler(GAME_DATA.species(m.num), m.level, GAME_DATA));
+    for (const fo of foes) if (!state.manifest.seen.includes(fo.speciesNum)) state.manifest.seen.push(fo.speciesNum);
+    this.scene.start('battle', {
+      kind: 'trainer',
+      foes,
+      foeName: 'Rook',
+      battleType: 'rival',
+      seed: nextSeed(state),
+      returnScene: 'fieldhd',
+      onVictoryFlag: ACT1.rook,
     });
   }
 

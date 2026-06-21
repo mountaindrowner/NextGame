@@ -75,3 +75,37 @@ describe('prologue beats on the Field', () => {
     expect(priv(h.scene('fieldhd'), 'moving')).toBe(false);
   });
 });
+
+describe('Act I beat on the Farm Road (the Spotting + Rook)', () => {
+  function donePrologue(): void {
+    const f = getGameState().flags;
+    f['pro_supply'] = true; f['pro_nightcall'] = true; f['pro_breaker'] = true; f['pro_done'] = true; f['pro_charge'] = true;
+  }
+
+  it('first Farm Road arrival fires the Spotting and locks the walker', async () => {
+    donePrologue();
+    h = await bootGame(SCENES);
+    h.seedMapData('farmroad');
+    await h.start('fieldhd', { mapId: 'farmroad' });
+    expect(getGameState().flags['seen_spotting']).toBe(true);
+    expect(priv(h.scene('fieldhd'), 'moving')).toBe(true); // pending the Spotting cutscene
+  });
+
+  it('beating Rook flips rook_done so the road clears', async () => {
+    donePrologue();
+    getGameState().flags['seen_spotting'] = true;
+    getGameState().flags['beat_rook'] = true;
+    h = await bootGame(SCENES);
+    h.seedMapData('farmroad');
+    await h.start('fieldhd', { mapId: 'farmroad' });
+    expect(getGameState().flags['rook_done']).toBe(true);
+  });
+
+  it('does not fire before the prologue is done', async () => {
+    // fresh game, no prologue flags: arriving on the Farm Road must not trigger Act I
+    h = await bootGame(SCENES);
+    h.seedMapData('farmroad');
+    await h.start('fieldhd', { mapId: 'farmroad' });
+    expect(getGameState().flags['seen_spotting']).toBeUndefined();
+  });
+});

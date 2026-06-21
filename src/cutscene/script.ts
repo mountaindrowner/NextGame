@@ -57,7 +57,45 @@ export function grounded(preset: 'SAL' | 'WREN'): Cutscene {
 }
 
 /** Known speaker labels (for the data-integrity test). '' = the narrator. */
-export const SPEAKERS = new Set(['', 'GRANDMA MABEL', 'SAL', 'WREN', 'BANJO', 'BOONE', 'CASS']);
+export const SPEAKERS = new Set(['', 'GRANDMA MABEL', 'SAL', 'WREN', 'BANJO', 'BOONE', 'CASS', 'ROOK']);
+
+/**
+ * The Spotting (Act I, beat 5). The dark turn on the farm road: a Garrison
+ * patrol decommissions three freed Ohms by the book, and the rival raider
+ * **Rook** appears to take a swing at the Breaker. Leads straight into the first
+ * rival battle (the Field scene auto-starts it on the flag).
+ */
+export const THE_SPOTTING: Cutscene = {
+  next: 'fieldhd',
+  nextData: { mapId: 'farmroad' },
+  steps: [
+    { kind: 'bg', image: 'ui/cutscene/co_surface.png', dark: 0.16, motes: [210, 200, 160] },
+    { kind: 'line', speaker: '', text: 'The farm road north. The widest sky you have ever stood under.' },
+    { kind: 'line', speaker: '', text: 'Down the lane a Garrison patrol has three freed Ohms cornered. No fight left in them. They were someone\'s, once.' },
+    { kind: 'fx', effect: 'flash' },
+    { kind: 'line', speaker: '', text: 'The soldiers shut them down where they stand. By the book. Like switching off lamps.' },
+    { kind: 'line', speaker: '', text: 'You learn something, watching. Out here, "alive" is an argument most people decided long ago.' },
+    { kind: 'line', speaker: 'ROOK', text: 'Easy, fresh meat. Stare any harder and they\'ll add you to the pile.' },
+    { kind: 'line', speaker: 'ROOK', text: 'Name\'s Rook. Redbed. And that spark flickering on your handheld? Pretty. It\'s coming home with me.' },
+    { kind: 'line', speaker: 'ROOK', text: 'Nothing personal, colony kid. My people eat what I drag back. Show me what you\'re worth.' },
+  ],
+};
+
+/**
+ * Rook, beaten (Act I). Parting words that set the rivalry — competition now,
+ * a casualty later (Bible) — and the first whisper of the Pull (beat 6).
+ */
+export const ROOK_AFTERMATH: Cutscene = {
+  next: 'fieldhd',
+  nextData: { mapId: 'farmroad' },
+  steps: [
+    { kind: 'bg', image: 'ui/cutscene/co_surface.png', dark: 0.1, motes: [210, 200, 160] },
+    { kind: 'line', speaker: 'ROOK', text: 'Tch. Lucky. That is all that was.' },
+    { kind: 'line', speaker: 'ROOK', text: 'Keep your spark, kid. I will take it off you when it actually counts.' },
+    { kind: 'line', speaker: '', text: 'He whistles his Ohms back and melts into the scrub, north and west, toward the hardpan.' },
+    { kind: 'line', speaker: '', text: 'And you feel it for the first time: a faint pull at your back. Stand still out here and the wild ones drift toward you. Keep moving.' },
+  ],
+};
 
 /**
  * The Call (Prologue, Story Bible): the first topside trip is a daytime supply

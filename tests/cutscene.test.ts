@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { cutsceneImages, type Cutscene } from '../src/cutscene/types';
-import { COLD_OPEN, grounded, SPEAKERS } from '../src/cutscene/script';
+import { COLD_OPEN, grounded, NIGHT_CALL, BREAKER_BOUND, THE_SPOTTING, ROOK_AFTERMATH, SPEAKERS } from '../src/cutscene/script';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const SCENES = new Set(['title', 'newgame', 'bench', 'nameentry', 'cutscene', 'fieldhd', 'elevator']);
@@ -11,6 +11,10 @@ const all: Array<[string, Cutscene]> = [
   ['COLD_OPEN', COLD_OPEN],
   ['grounded(SAL)', grounded('SAL')],
   ['grounded(WREN)', grounded('WREN')],
+  ['NIGHT_CALL', NIGHT_CALL],
+  ['BREAKER_BOUND', BREAKER_BOUND],
+  ['THE_SPOTTING', THE_SPOTTING],
+  ['ROOK_AFTERMATH', ROOK_AFTERMATH],
 ];
 
 describe('opening cutscene scripts', () => {
