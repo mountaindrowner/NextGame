@@ -49,8 +49,23 @@ export class TitleScene extends Phaser.Scene {
       this.glow = this.add.image(117, 84, 'node_glow').setDepth(1).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0);
       this.tweens.add({ targets: this.glow, alpha: 0.9, scale: 1.35, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.InOut', delay: 350 });
 
-      this.logo = this.add.image(cx, cy - 6, 'title_logo').setDepth(2).setScale(scale * 1.06).setAlpha(0);
-      this.tweens.add({ targets: this.logo, y: cy, scale, alpha: 1, duration: 680, ease: 'Back.Out', delay: 360 });
+      // the wordmark stamps in: it drops from oversized to its settled size with
+      // an accelerating slam, then a camera shake + metal-stamp hit on impact
+      this.logo = this.add.image(cx, cy, 'title_logo').setDepth(2).setScale(scale * 1.7).setAlpha(0);
+      this.tweens.add({ targets: this.logo, alpha: 1, duration: 130, delay: 360 });
+      this.tweens.add({
+        targets: this.logo,
+        scale,
+        duration: 230,
+        ease: 'Quad.In',
+        delay: 360,
+        onComplete: () => {
+          if (this.intro) {
+            this.cameras.main.shake(180, 0.007);
+            getAudio().playOneShot('sfx.stamp');
+          }
+        },
+      });
     } else if (this.textures.exists('title')) {
       this.add.image(cx, cy, 'title').setDisplaySize(LEGACY_W, LEGACY_H).setDepth(0);
       this.intro = false;
@@ -61,7 +76,7 @@ export class TitleScene extends Phaser.Scene {
     }
 
     this.controls = new Controls(this);
-    this.items = [{ label: 'NEW GAME', run: () => fadeTo(this, 'cutscene', { cutscene: COLD_OPEN }, FADE_COLD, 420) }];
+    this.items = [{ label: 'NEW GAME', run: () => this.startNewGame() }];
     const slots = new SaveSlots(browserStorage());
     for (let s = 0; s < SLOT_COUNT; s++) {
       const summary = slots.summary(s);
@@ -69,6 +84,7 @@ export class TitleScene extends Phaser.Scene {
         this.items.push({
           label: `CONTINUE ${s + 1}: ${summary}`,
           run: () => {
+            getAudio().select();
             const state = slots.load(s);
             if (state) {
               setGameState(state);
@@ -91,7 +107,7 @@ export class TitleScene extends Phaser.Scene {
         .setDepth(5),
     );
     this.prompt = this.add
-      .text(LEGACY_W / 2, LEGACY_H - panelH - 4, '— press START —', { fontFamily: 'monospace', fontSize: '7px', color: '#ffd27a' })
+      .text(LEGACY_W / 2, LEGACY_H - panelH - 14, 'PRESS START', { fontFamily: 'monospace', fontSize: '8px', color: '#ffd27a', fontStyle: 'bold' })
       .setOrigin(0.5)
       .setDepth(5);
     this.menuObjs = [strip, ...this.texts, this.prompt];
@@ -154,8 +170,15 @@ export class TitleScene extends Phaser.Scene {
       this.refresh();
     }
     if (this.controls.consume('a') || this.controls.consume('start')) {
-      getAudio().select();
       this.items[this.cursor]?.run();
     }
+  }
+
+  /** Begin a fresh run: a "here we go" flourish + a screen flash, then fade to
+   * the cold open. */
+  private startNewGame(): void {
+    getAudio().playOneShot('sfx.newgame');
+    this.cameras.main.flash(280, 255, 250, 235);
+    this.time.delayedCall(200, () => fadeTo(this, 'cutscene', { cutscene: COLD_OPEN }, FADE_COLD, 420));
   }
 }

@@ -55,13 +55,15 @@ export class CutsceneScene extends Phaser.Scene {
     this.add.rectangle(LEGACY_W / 2, LEGACY_H / 2, LEGACY_W, LEGACY_H, 0x05060a).setDepth(0);
     this.dim = this.add.rectangle(LEGACY_W / 2, LEGACY_H / 2, LEGACY_W, LEGACY_H, 0x000000, 0).setDepth(2);
 
-    this.box = this.add.rectangle(LEGACY_W / 2, 134, 238, 50, UI.paper).setStrokeStyle(2, UI.frame).setDepth(6).setVisible(false);
-    this.speaker = this.add.text(10, 110, '', { fontFamily: 'monospace', fontSize: '8px', color: '#7a5a2a', fontStyle: 'bold' }).setDepth(7);
-    this.body = this.add.text(10, 120, '', { fontFamily: 'monospace', fontSize: '9px', color: '#2a2018', wordWrap: { width: 220 } }).setDepth(7);
-    this.prompt = this.add.text(226, 150, '▼', { fontFamily: 'monospace', fontSize: '8px', color: '#7a5a2a' }).setOrigin(1, 1).setDepth(7).setVisible(false);
+    // the dialogue box sits fully in the band between the letterbox bars (the
+    // old box ran behind the bottom bar, clipping its lower edge and last line)
+    this.box = this.add.rectangle(LEGACY_W / 2, 124, 238, 44, UI.paper).setStrokeStyle(2, UI.frame).setDepth(6).setVisible(false);
+    this.speaker = this.add.text(12, 105, '', { fontFamily: 'monospace', fontSize: '8px', color: '#7a5a2a', fontStyle: 'bold' }).setDepth(7);
+    this.body = this.add.text(12, 116, '', { fontFamily: 'monospace', fontSize: '9px', color: '#2a2018', wordWrap: { width: 216 }, lineSpacing: 1 }).setDepth(7);
+    this.prompt = this.add.text(226, 142, '▼', { fontFamily: 'monospace', fontSize: '8px', color: '#7a5a2a' }).setOrigin(1, 1).setDepth(7).setVisible(false);
     // cinematic letterbox bars (framing)
-    this.add.rectangle(LEGACY_W / 2, 7, LEGACY_W, 14, 0x000000, 0.92).setDepth(9);
-    this.add.rectangle(LEGACY_W / 2, LEGACY_H - 7, LEGACY_W, 14, 0x000000, 0.92).setDepth(9);
+    this.add.rectangle(LEGACY_W / 2, 6, LEGACY_W, 12, 0x000000, 0.92).setDepth(9);
+    this.add.rectangle(LEGACY_W / 2, LEGACY_H - 6, LEGACY_W, 12, 0x000000, 0.92).setDepth(9);
     this.add.text(6, 1, 'B: skip', { fontFamily: 'monospace', fontSize: '7px', color: '#6a7078' }).setDepth(10).setAlpha(0.8);
     if (this.cut.bgm) getAudio().ensureBgm(this, this.cut.bgm);
 

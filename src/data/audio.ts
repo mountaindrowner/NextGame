@@ -44,7 +44,7 @@ const CUE = [
   'cue.factory_settings', 'cue.grandpa_breakthrough', 'cue.broadcast', 'cue.ending', 'cue.freeme_hook',
 ];
 const AMBIENCE = ['amb.current', 'amb.net', 'amb.wind', 'amb.cave'];
-const UISFX = ['sfx.cursor', 'sfx.select', 'sfx.back', 'sfx.text'];
+const UISFX = ['sfx.cursor', 'sfx.select', 'sfx.back', 'sfx.text', 'sfx.stamp', 'sfx.newgame'];
 
 export const BGM_TRACKS: readonly AudioTrack[] = tracks([...AREA, ...BATTLE, ...MENU]);
 export const JINGLE_TRACKS: readonly AudioTrack[] = tracks(JINGLE);
