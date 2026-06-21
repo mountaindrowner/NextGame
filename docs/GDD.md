@@ -159,8 +159,9 @@ Full character sheets in `docs/compendium/characters.md` (Phase 2).
 ### ACT I — THE FIELD (hrs 1–8)
 
 1. **Grounded.** Ohmstead colony, underground. The protagonist's stunt gets
-   them grounded; Grandpa covers for them in his garage. *Ohm's Law* ch. 1
-   quote. **The Bench:** build the first Ohm from Grandpa's rare parts (§8.2).
+   them grounded; **Grandma Mabel** covers for them in **Eli's garage** (Grandpa
+   Eli is gone five years — Story Bible governs his status). *Ohm's Law* ch. 1
+   quote. **The Bench:** build the first Ohm from Eli's rare parts (§8.2).
 2. **First Run.** Sneak up the colony elevator into **the Field** — the ruined
    cattle town above. Tutorial battles, first capture (clear the static), the
    **Ohmwork** assignment from the colony archivist: fill **the Manifest**.
@@ -176,7 +177,8 @@ Full character sheets in `docs/compendium/characters.md` (Phase 2).
    + Patch, ×8), each colony a different philosophy of survival. The Redbed
    rival recurs; the Garrison escalates.
 6. **The Static Grows.** Hive Ohms start moving with coordination and purpose.
-   Grandpa lets slip he's seen this pattern before.
+   A fragment from Eli's handheld lets slip he'd seen this pattern before — the
+   boy doesn't yet know who is speaking (Story Bible: Eli's reveal is staged).
 7. **MIDPOINT — The Reveal (~hr 15).** The player's starter does something no
    program would: an unscripted act of grief — an Ohm mourning a factory-reset
    friend. They're not pretending. The Attuned knew all along; the Garrison's

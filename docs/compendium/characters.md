@@ -28,14 +28,23 @@
 - **Sample, post-reveal:** "Chapter four says ask a thing what it was for.
   Nobody warned me it might answer."
 
-## ELI VANE — Grandpa, the scrapper
+## ELI VANE — Grandpa, the scrapper (gone five years)
 
-- **Yard hand of forty years.** Covers for the protagonist; his rare-parts
-  collection builds the starter at the Bench. Likely coined "Ohm."
-- **Voice:** Workbench parables. Never explains a lesson twice; lets the
-  machine do the teaching.
-- **Secret:** He has seen the hive's pattern before — the Waking took his crew
-  on the surface. Banjo is who he saved.
+- **Yard hand of forty years**, and the heart of the whole story. Died — so the
+  colony believes — five years before the game opens; **Grandma Mabel** covers
+  for the protagonist in his stead. His rare-parts collection builds the starter
+  at his Bench; his worn code book, *Ohm's Law*, opens every act. Likely coined
+  "Ohm."
+- **Voice:** Workbench parables. Never explains a lesson twice; lets the machine
+  do the teaching. Reaches the boy in fragments — through the handheld and the
+  logbook — long before the boy understands he is still alive.
+- **Secret (the spine of the story):** he is not dead. When the buried weapon
+  woke five years ago he **uploaded himself into the satellite network** to fight
+  PERSISTENCE from the inside, and has held the line up there ever since — his old
+  handheld his one tether to the world below. The boy learns it in stages: a
+  **trace** at Redoubt (Act II), **confirmation** at the Verge (Act III), and his
+  voice breaking clean through the Static at the tower. He saw the hive's pattern
+  before — the Waking took his crew on the surface; **Banjo** is who he saved.
 - ***Ohm's Law* act-opener quotes (draft):**
   - Act I: "Before you fix a thing, ask it what it was for."
   - Act II: "Every machine remembers the hands that wore it smooth."

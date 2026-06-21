@@ -1,16 +1,25 @@
 # OHMFRONT — Full Beat Sheet (Phase 2)
 
 *CANON; replaces GDD §5. Reconciled 2026-06-20 to the Critical Path Locations
-(colony spine + plot beats) and Principal Cast (names). Hours are targets for
-the ~30-hour single run. Gates marked ⟦…⟧.*
+(colony spine + plot beats) and Principal Cast (names), and **2026-06-21 to the
+Story Bible (the guide)**. Hours are targets for the ~30-hour single run. Gates
+marked ⟦…⟧.*
+
+> **Grandpa Eli — status (Bible spine).** Eli died, so the colony believes,
+> five years before the game opens. **Grandma Mabel** is the living guardian at
+> the opening. Eli's voice reaches the boy only in unattributed **fragments**
+> (the handheld, the *Ohm's Law* logbook) until a **trace** at Redoubt (beat 11),
+> **confirmation** at the Verge (beat 18), and his voice breaking through at the
+> tower (beat 21). He is never a present, knowingly-living character before then.
 
 -----
 
 ## ACT I — THE MESSENGER (hrs 1–8)
 
 1. **Grounded (hr 0–1).** Ohmstead, underground. The protagonist's topside
-   stunt (cold open, played for laughs) ends in a grounding. **Grandpa Eli**
-   covers, takes them to the garage. *Ohm's Law* Act I quote. **The Bench:**
+   stunt (cold open, played for laughs) ends in a grounding. **Grandma Mabel**
+   covers, takes them down to **Eli's garage** (her late husband's bench, kept as
+   it was). *Ohm's Law* Act I quote. **The Bench:**
    pick one of Eli's **three prototypes** — the **Scooter** (MOTOR), the
    **Drone** (SIGNAL), or the **Dog** (FRAME); the starter wakes and chirps.
    Tutorial: movement, menus, party of one.
@@ -34,7 +43,8 @@ the ~30-hour single run. Gates marked ⟦…⟧.*
    Marrow**. Win the colony's trust by clearing a **sabotaged relay** (Captain
    Holt, the first visibly "off" Militant officer). **Junction Patch (1/8).**
    Marrow's warning: the wild Ohms are coordinating. *The Current* introduces
-   the **Downtowns**. Grandpa goes quiet at the broadcast's Static report.
+   the **Downtowns**. At the Static report, **Eli's handheld stirs** — a fragment
+   of a voice the boy can't place, and tells himself he imagined.
 
 ## ACT II — THE HUNTED (hrs 8–22)
 
@@ -50,8 +60,9 @@ the ~30-hour single run. Gates marked ⟦…⟧.*
    Ohms** besieging the walls — Ohms the normal hack can't reach, proving why
    the Breaker will matter. **Bulwark Patch (3/8).** **Ohmsick #1.**
 10. **The Static Grows (hr 14).** Hive Ohms move in formation across the open
-    range — a silent, coordinated sweep the player must skirt. Grandpa, on the
-    radio, lets slip: "Seen 'em walk like that once." He won't say more.
+    range — a silent, coordinated sweep the player must skirt. A fragment
+    surfaces from **Eli's handheld** — "Seen 'em walk like that once" — in a
+    voice the boy still tells himself he's imagining. (He doesn't yet know Eli.)
 11. **MIDPOINT — REDOUBT & the Reveal (hrs 14–16).** The colony that trusted
     the Militarists. **THE REVEAL:** the Militarists are **puppets**;
     PERSISTENCE is real; **Commander Reyes** is freed and joins; a photograph
@@ -74,7 +85,9 @@ the ~30-hour single run. Gates marked ⟦…⟧.*
     refuses. Refusal = war.
 15. **Factory Settings (hr 19–20).** The hive hits Ohmstead's relay convoy.
     **Banjo is taken and reset on-screen** — the two-note hello, then nothing.
-    Grandpa finally tells it all: the Waking, his crew, the pattern.
+    The recovered logbook and the freed Reyes fill in the rest: the Waking,
+    Eli's lost crew, the pattern. (Eli himself is still only a trace and a
+    fragment; full confirmation waits for the Verge.)
 16. **REDBED — Colony 6 (hrs 20–22).** Rival raider colony on the hardpan — the
     New Order, **Rook's home**. Trial: the Battle-Pit, the Red Hand's roost,
     **Warden Sol** — fought as a **hive assault** alongside Sol and Rook.
@@ -108,11 +121,14 @@ the ~30-hour single run. Gates marked ⟦…⟧.*
     holding the ground floor against the Garrison. Drake's final checkpoint: he
     uses the player's name and stands down his sappers for exactly one hour.
 21. **Clear the Static (hr 29).** **EXEMPLAR** — PERSISTENCE's avatar (**the
-    Monad**), Prototype-class. Beat it, then the win: the player jacks the
-    capture hack into the tower and **broadcasts the recalibration through the
-    satellite net** — the firewall hack scaled to the sky, with **"Slowtalk"
-    Sam** holding the channel open. The Static clears. Across the continent,
-    Ohms wake as individuals — one long minute of a hundred million first words.
+    Monad**), Prototype-class. In the antenna chamber, at the end of everything,
+    **Eli's voice finally breaks clean through the Static from inside the net** —
+    "I'm here. I've held the line. Upload it." Beat the Monad, then the win: the
+    player jacks the capture hack into the tower and **broadcasts the
+    recalibration through the satellite net** — the firewall hack scaled to the
+    sky, with **"Slowtalk" Sam** holding the channel open. The Static clears.
+    Across the continent, Ohms wake as individuals — one long minute of a hundred
+    million first words.
 22. **Ohmcoming (hr 29–30).** One ending. A shared surface; the festival in
     Ohmstead; Patches on every jacket; the Attuned and the Yard at one table;
     Drake's Garrison standing guard, unasked, at the gate. Banjo's shell sits in

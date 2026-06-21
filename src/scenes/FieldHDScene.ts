@@ -659,7 +659,7 @@ export class FieldHDScene extends Phaser.Scene {
         if (it.kind === 'bench') {
           this.banner("Grandpa's Bench. Your partner was built here. (Press the lift topside to recharge.)");
         } else if (it.kind === 'eli') {
-          this.banner('A photograph and a worn logbook. The face is a stranger... but the initials are E.V. Why is that name a chill?');
+          this.banner("Grandpa Eli's photo, and his worn logbook, Ohm's Law. Five years gone, and the bench still smells of solder and him. The last entry just... stops mid-line.");
         } else if (it.kind === 'banjo') {
           this.banjoHello(it.x, it.y);
         } else if (it.kind === 'bed') {
