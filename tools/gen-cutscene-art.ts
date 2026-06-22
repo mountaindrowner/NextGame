@@ -267,7 +267,8 @@ save(under(), join(UI, 'co_under.png'));
 save(surface(), join(UI, 'co_surface.png'));
 save(staticCard(), join(UI, 'co_static.png'));
 save(garage(), join(UI, 'garage.png'));
-save(protagBust('r', 'R', { grin: true, freckles: true }), join(CHAR, 'sal_96.png'));
-save(protagBust('y', 'Y', { ponytail: true, smudge: true }), join(CHAR, 'wren_96.png'));
+// SAL/WREN portraits now come from creator art via tools/import-portraits.ts —
+// do not overwrite them here. (protagBust is kept for reference/fallback.)
+void protagBust;
 save(mabel(), join(CHAR, 'mabel_96.png'));
-console.log('cutscene art: 5 layered cards + SAL/WREN/Mabel portraits → public/ui/cutscene/ + public/world/char/');
+console.log('cutscene art: 5 layered cards + Mabel portrait → public/ui/cutscene/ + public/world/char/ (SAL/WREN portraits via import-portraits)');
