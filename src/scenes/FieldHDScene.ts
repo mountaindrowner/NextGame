@@ -21,6 +21,10 @@ const PLAYER_TARGET_PX = 48; // on-screen content height for the hi-res protagon
 // Act I, beat 5/6 ("The Spotting" + Rook): the first rival battle on the Farm Road.
 const ACT1 = { spotting: 'seen_spotting', rook: 'beat_rook', rookDone: 'rook_done' } as const;
 const ROOK_TEAM: Array<{ num: number; level: number }> = [{ num: 54, level: 6 }, { num: 10, level: 7 }]; // Cellet, Toastlet
+// Act I, beat 7 (Railhead, Colony 1): clear the sabotaged relay (Captain Holt,
+// the first "off" Militant) to earn the colony's trust before the Warden fight.
+const RAIL = { relay: 'railhead_relay', intro: 'railhead_intro', relayDone: 'railhead_relay_done' } as const;
+const HOLT_TEAM: Array<{ num: number; level: number }> = [{ num: 54, level: 10 }, { num: 51, level: 11 }]; // Cellet, Buzzsawyer
 
 interface FieldData {
   tile: number;
@@ -378,6 +382,7 @@ export class FieldHDScene extends Phaser.Scene {
     this.input.keyboard?.on('keydown-M', () => getAudio().toggleMute());
     this.handlePrologue();
     this.handleActI();
+    this.handleRailhead();
   }
 
   /** Build per-direction walk anims. n = frames/dir: NPCs/WREN use a 3-wide
@@ -596,6 +601,54 @@ export class FieldHDScene extends Phaser.Scene {
     });
   }
 
+  // ---- Act I, beat 7: Railhead (Colony 1) — the sabotaged-relay trial -------
+
+  /** Railhead's arrival beat (The Current / the Downtowns) and the post-relay
+   * nudge toward the Warden. */
+  private handleRailhead(): void {
+    if (this.mapId !== 'railhead' || !hasGameState()) return;
+    const f = getGameState().flags;
+    if (f[RAIL.intro] !== true) {
+      f[RAIL.intro] = true;
+      this.time.delayedCall(2000, () => this.banner("The Current crackles from a wall-set: '...Garrison patrols pushing north, herding wild Ohms...' Static eats the rest."));
+      this.time.delayedCall(6600, () => this.banner('RAILHEAD, the rail junction. Warden Marrow holds court at the Roundhouse, west. But the colony relay is down. Sabotaged. Clear it and Railhead might just listen to you.'));
+    } else if (f[RAIL.relay] === true && f[RAIL.relayDone] !== true) {
+      f[RAIL.relayDone] = true;
+      this.time.delayedCall(1500, () => this.banner('The relay hums back to life. Warden Marrow will see you now, west at the Roundhouse.'));
+    }
+    // a marker over the switch-house until the relay is cleared
+    if (f[RAIL.relay] !== true)
+      for (const it of this.field.interacts ?? []) if (it.kind === 'relay') this.drawUseHint(it.x, it.y, 'A: Relay');
+  }
+
+  /** The sabotaged relay: a stand-off with Captain Holt, the first visibly
+   * Static-touched Militant. Beating him clears the relay (and the Warden gate). */
+  private useRelay(): void {
+    if (this.flag(RAIL.relay)) {
+      this.banner('The relay hums steady again. Railhead is back on the air.');
+      return;
+    }
+    this.moving = true;
+    this.banner('A Garrison officer stands at the relay, eyes glassy. "Captain Holt. This is a... lawful checkpoint. Stand— stand down." His words land a half-second late.');
+    this.time.delayedCall(1700, () => this.startRelayFight());
+  }
+
+  private startRelayFight(): void {
+    const state = getGameState();
+    state.location = { map: 'railhead', x: this.px, y: this.py };
+    const foes = HOLT_TEAM.map((m) => makeBattler(GAME_DATA.species(m.num), m.level, GAME_DATA));
+    for (const fo of foes) if (!state.manifest.seen.includes(fo.speciesNum)) state.manifest.seen.push(fo.speciesNum);
+    this.scene.start('battle', {
+      kind: 'trainer',
+      foes,
+      foeName: 'Captain Holt',
+      battleType: 'militant',
+      seed: nextSeed(state),
+      returnScene: 'fieldhd',
+      onVictoryFlag: RAIL.relay,
+    });
+  }
+
   override update(_time: number, delta: number): void {
     this.animate(delta); // wind sway + water flow run every frame
     if (this.moving) return;
@@ -697,6 +750,12 @@ export class FieldHDScene extends Phaser.Scene {
 
   /** Talk to a Warden → the colony boss fight (warden theme, Patch reward, gate). */
   private startWarden(name: string, warden: WardenDef): void {
+    // Railhead's Warden won't spar until you've earned the colony's trust by
+    // clearing the sabotaged relay (the first-colony trial, Bible beat 7).
+    if (this.mapId === 'railhead' && !this.flag(RAIL.relay)) {
+      this.banner("Warden Marrow: Coin's one thing. Trust is another. Clear the sabotaged relay first, then we'll talk.");
+      return;
+    }
     this.moving = true;
     const state = getGameState();
     state.location = { map: this.mapId, x: this.px, y: this.py };
@@ -773,6 +832,8 @@ export class FieldHDScene extends Phaser.Scene {
           this.useBed();
         } else if (it.kind === 'lift') {
           this.useLift();
+        } else if (it.kind === 'relay') {
+          this.useRelay();
         } else if (it.kind === 'heal') {
           this.recharge('A field medic tops off your Ohms. Recharged. Stay current.');
         } else if (it.kind === 'shop') {

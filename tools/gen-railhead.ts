@@ -204,6 +204,9 @@ writeFileSync(
     exits: [
       { x: 22, y: 1, scene: 'fieldhd', mapId: 'cistern', gate: 'warden' }, // north → the Cistern (Warden-gated)
     ],
+    interacts: [
+      { x: 30, y: 8, kind: 'relay' }, // the sabotaged switch-house — Captain Holt guards it (the colony trial)
+    ],
     trainers: [
       { char: 'npc_rancher', col: 24, row: 22, facing: 'w', name: 'Salt Broker', range: 5, team: [{ num: 32, level: 9 }], bark: 'Salt Broker: Coin first, story later. Beat me, then I listen.' },
       { char: 'npc_kid', col: 38, row: 24, facing: 'w', name: 'Card Sharp', range: 4, team: [{ num: 49, level: 8 }, { num: 30, level: 10 }], bark: "Card Sharp: Double or nothing — let's see your hand." },

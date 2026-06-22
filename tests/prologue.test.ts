@@ -90,6 +90,29 @@ describe('colony lift is A-to-Use (no walk-on warp soft-block)', () => {
   });
 });
 
+describe('Railhead trial (Colony 1: the sabotaged relay gates the Warden)', () => {
+  it('the map has a relay interact, a Warden npc, and a Warden-gated forward exit', () => {
+    const j = JSON.parse(readFileSync(join(process.cwd(), 'public/world/railhead.json'), 'utf8')) as {
+      interacts?: Array<{ kind?: string }>;
+      npcs?: Array<{ warden?: unknown }>;
+      exits?: Array<{ gate?: string }>;
+    };
+    expect((j.interacts ?? []).some((i) => i.kind === 'relay')).toBe(true);
+    expect((j.npcs ?? []).some((n) => n.warden)).toBe(true);
+    expect((j.exits ?? []).some((e) => e.gate === 'warden')).toBe(true);
+  });
+
+  it('arriving in Railhead fires the intro beat once', async () => {
+    setGameState(newGame('SAL', { starter: 'dog' }));
+    getGameState().flags['pro_done'] = true; // past the prologue
+    h = await bootGame(SCENES);
+    h.seedMapData('railhead');
+    await h.start('fieldhd', { mapId: 'railhead' });
+    expect(getGameState().flags['railhead_intro']).toBe(true);
+    expect(getGameState().flags['railhead_relay']).toBeUndefined(); // relay still to clear
+  });
+});
+
 describe('Act I beat on the Farm Road (the Spotting + Rook)', () => {
   function donePrologue(): void {
     const f = getGameState().flags;
