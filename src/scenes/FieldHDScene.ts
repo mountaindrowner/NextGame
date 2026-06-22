@@ -382,7 +382,7 @@ export class FieldHDScene extends Phaser.Scene {
    * sheet ([0,1,0,2] bounce); SAL uses a 4-wide sheet (a true 0→1→2→3 cycle). */
   private makeWalk(key: string, n = 3): void {
     if (!this.textures.exists(key)) return;
-    const fps = key.includes('run') ? 11 : n === 4 ? 8 : 7;
+    const fps = key.includes('run') ? 11 : n === 4 ? 10 : 7; // SAL's 4-frame cycle reads smoother a touch brisker
     const mk = (d: string, frames: number[]): void => {
       const k = `${key}-${d}`;
       if (!this.anims.exists(k)) this.anims.create({ key: k, frames: frames.map((f) => ({ key, frame: f })), frameRate: fps, repeat: -1 });
@@ -619,6 +619,12 @@ export class FieldHDScene extends Phaser.Scene {
         this.step(dir);
         return;
       }
+    }
+    // no direction held → settle on the idle/contact frame and stop the cycle
+    if (this.useSheet && this.player.anims.isPlaying) {
+      this.player.anims.stop();
+      const d = this.facing === 'up' ? 'n' : this.facing === 'down' ? 's' : 'w';
+      this.player.setFrame(this.idleFrame(d, this.playerN));
     }
   }
 
@@ -943,10 +949,10 @@ export class FieldHDScene extends Phaser.Scene {
       duration: run ? RUN_MS : WALK_MS,
       onComplete: () => {
         this.moving = false;
-        if (this.useSheet) {
-          this.player.anims.stop();
-          this.player.setFrame(this.idleFrame(d, this.playerN));
-        }
+        // NB: do not stop/reset the walk anim here — when a direction is still
+        // held the next step() keeps it playing, so the 4-frame cycle flows
+        // instead of restarting every tile (which read as jitter). update()
+        // settles to the idle frame once no direction is held.
         if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
         if (this.checkExit()) return;
         this.checkItems();
