@@ -17,6 +17,7 @@ import { NIGHT_CALL, BREAKER_BOUND, THE_SPOTTING, ROOK_AFTERMATH } from '../cuts
 // battle round-trip and reloads.
 const PRO = { supply: 'pro_supply', nightcall: 'pro_nightcall', breaker: 'pro_breaker', done: 'pro_done', charge: 'pro_charge' } as const;
 const WARPED_SPECIES = 49; // Sawlet (BREAKER type) — the Static-warped guardian of the safe
+const SAL_TARGET_PX = 48; // on-screen content height for SAL's hi-res sprite (rendered down, not baked down)
 // Act I, beat 5/6 ("The Spotting" + Rook): the first rival battle on the Farm Road.
 const ACT1 = { spotting: 'seen_spotting', rook: 'beat_rook', rookDone: 'rook_done' } as const;
 const ROOK_TEAM: Array<{ num: number; level: number }> = [{ num: 54, level: 6 }, { num: 10, level: 7 }]; // Cellet, Toastlet
@@ -109,6 +110,7 @@ export class FieldHDScene extends Phaser.Scene {
   private player!: Phaser.GameObjects.Sprite;
   private walkKey = 'sal_walk';
   private useSheet = false;
+  private playerN = 3; // walk frames per direction (SAL hi-res = 4, others = 3)
   private px = 0;
   private py = 0;
   private facing: Dir = 'down';
@@ -213,9 +215,18 @@ export class FieldHDScene extends Phaser.Scene {
     // pixelified protagonist sprites (from real art via the pixelify pipeline)
     // original protagonist sprites (YoYoPixel grid method)
     if (!this.textures.exists('player')) this.load.image('player', 'world/char/player.png');
-    // 4-direction walk sheets (grid char pipeline): 3 frames × 3 dirs on a 20×32 cell
-    const sheets = ['sal_walk', 'wren_walk', 'npc_rancher_walk', 'npc_elder_walk', 'npc_kid_walk'];
+    // NPC + WREN sheets: 3 frames × 3 dirs on a 20×32 cell
+    const sheets = ['wren_walk', 'npc_rancher_walk', 'npc_elder_walk', 'npc_kid_walk'];
     for (const s of sheets) if (!this.textures.exists(s)) this.load.spritesheet(s, `world/char/${s}.png`, { frameWidth: 20, frameHeight: 32 });
+    // SAL: a hi-res 4-frame sheet. Its frame size comes from a tiny meta file
+    // loaded first, so the sheet slices correctly (native res, rendered down).
+    if (!this.textures.exists('sal_walk')) {
+      this.load.json('sal_walk_meta', 'world/char/sal_walk.meta.json');
+      this.load.once('filecomplete-json-sal_walk_meta', () => {
+        const m = this.cache.json.get('sal_walk_meta') as { frameW: number; frameH: number } | undefined;
+        if (m) this.load.spritesheet('sal_walk', 'world/char/sal_walk.png', { frameWidth: m.frameW, frameHeight: m.frameH });
+      });
+    }
     for (const n of NPC_CHARS) if (!this.textures.exists(n)) this.load.image(n, `world/char/${n}.png`);
     // animated world-layer assets
     for (const f of FX) if (!this.textures.exists(f)) this.load.image(f, `world/fx/${f}.png`);
@@ -284,7 +295,8 @@ export class FieldHDScene extends Phaser.Scene {
       this.py = home.y;
     }
 
-    for (const k of ['sal_walk', 'wren_walk', 'npc_rancher_walk', 'npc_elder_walk', 'npc_kid_walk']) this.makeWalk(k);
+    for (const k of ['wren_walk', 'npc_rancher_walk', 'npc_elder_walk', 'npc_kid_walk']) this.makeWalk(k);
+    this.makeWalk('sal_walk', 4);
 
     // NPCs (placed townsfolk; block their tile) — facing the player, idle
     const t = this.field.tile;
@@ -329,13 +341,21 @@ export class FieldHDScene extends Phaser.Scene {
       }
     }
 
-    // player = the chosen preset's 4-direction walk sprite
+    // player = the chosen preset's walk sprite (SAL = hi-res 4-frame, WREN = 20×32)
     const preset = hasGameState() ? getGameState().preset : 'SAL';
-    this.walkKey = preset === 'WREN' ? 'wren_walk' : 'sal_walk';
+    const isSal = preset !== 'WREN' && this.textures.exists('sal_walk');
+    this.walkKey = isSal ? 'sal_walk' : 'wren_walk';
+    this.playerN = isSal ? 4 : 3;
     this.useSheet = this.textures.exists(this.walkKey);
     const key = this.useSheet ? this.walkKey : this.textures.exists('player') ? 'player' : this.walkKey;
-    this.player = this.add.sprite(0, 0, key, 0).setOrigin(0.5, 0.92).setDepth(50);
-    this.player.setScale(this.useSheet ? 1.25 : 1.3);
+    this.player = this.add.sprite(0, 0, key, 0).setDepth(50);
+    if (isSal) {
+      const m = this.cache.json.get('sal_walk_meta') as { originY?: number; contentH?: number } | undefined;
+      this.textures.get('sal_walk').setFilter(Phaser.Textures.FilterMode.LINEAR); // smooth render-down, no baked crush
+      this.player.setOrigin(0.5, m?.originY ?? 0.95).setScale(SAL_TARGET_PX / (m?.contentH ?? 144));
+    } else {
+      this.player.setOrigin(0.5, 0.92).setScale(this.useSheet ? 1.25 : 1.3);
+    }
     this.placePlayer();
 
     this.cameras.main.setBounds(0, 0, this.field.width, this.field.height);
@@ -358,20 +378,22 @@ export class FieldHDScene extends Phaser.Scene {
     this.handleActI();
   }
 
-  /** Build per-direction walk anims for a 3×3 walk sheet (S=0-2,N=3-5,W=6-8). */
-  private makeWalk(key: string): void {
+  /** Build per-direction walk anims. n = frames/dir: NPCs/WREN use a 3-wide
+   * sheet ([0,1,0,2] bounce); SAL uses a 4-wide sheet (a true 0→1→2→3 cycle). */
+  private makeWalk(key: string, n = 3): void {
     if (!this.textures.exists(key)) return;
-    const fps = key.includes('run') ? 11 : 7;
+    const fps = key.includes('run') ? 11 : n === 4 ? 8 : 7;
     const mk = (d: string, frames: number[]): void => {
       const k = `${key}-${d}`;
       if (!this.anims.exists(k)) this.anims.create({ key: k, frames: frames.map((f) => ({ key, frame: f })), frameRate: fps, repeat: -1 });
     };
-    mk('s', [0, 1, 0, 2]);
-    mk('n', [3, 4, 3, 5]);
-    mk('w', [6, 7, 6, 8]);
+    const cyc = n === 4 ? [0, 1, 2, 3] : [0, 1, 0, 2];
+    mk('s', cyc.map((c) => 0 * n + c));
+    mk('n', cyc.map((c) => 1 * n + c));
+    mk('w', cyc.map((c) => 2 * n + c));
   }
-  private idleFrame(d: string): number {
-    return d === 'n' ? 3 : d === 'w' ? 6 : 0;
+  private idleFrame(d: string, n = 3): number {
+    return (d === 'n' ? 1 : d === 'w' ? 2 : 0) * n;
   }
 
   private garage: [number, number] = [1, 1];
@@ -826,7 +848,7 @@ export class FieldHDScene extends Phaser.Scene {
         this.moving = false;
         if (this.useSheet) {
           this.player.anims.stop();
-          this.player.setFrame(this.idleFrame(d));
+          this.player.setFrame(this.idleFrame(d, this.playerN));
         }
         if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
         if (this.checkExit()) return;
@@ -923,7 +945,7 @@ export class FieldHDScene extends Phaser.Scene {
         this.moving = false;
         if (this.useSheet) {
           this.player.anims.stop();
-          this.player.setFrame(this.idleFrame(d));
+          this.player.setFrame(this.idleFrame(d, this.playerN));
         }
         if (hasGameState()) getGameState().location = { map: this.mapId, x: this.px, y: this.py };
         if (this.checkExit()) return;

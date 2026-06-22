@@ -90,7 +90,7 @@ function recompute(): void {
 
 // ---- animated previews ----------------------------------------------------
 
-const CYCLE = [0, 1, 0, 2];
+const CYCLE = [0, 1, 2, 3];
 let tick = 0;
 function frameFor(dir: Dir, step: number): RGBA | null {
   const list = composed?.framesByDir[dir];
@@ -186,7 +186,13 @@ function buildControls(): void {
     num('Frame H', cfg.fh, (v) => (cfg.fh = Math.max(1, v | 0))),
     num('Head pad', cfg.padTop, (v) => (cfg.padTop = Math.max(0, v | 0))),
     check('Auto-trim transparent', cfg.trim, (v) => (cfg.trim = v)),
+    check('Native res (no downscale)', cfg.native, (v) => (cfg.native = v)),
   );
+  target.append(btn('Fit frame to content', () => {
+    if (!composed) return;
+    cfg.fw = composed.contentW + 12; cfg.fh = composed.contentH + 16;
+    buildControls(); recompute();
+  }));
   controls.append(target);
 
   const out = section('Export');

@@ -14,6 +14,7 @@ export interface SliceConfig {
   fw: number; fh: number;
   padTop: number;
   trim: boolean;
+  native: boolean; // keep frames at native res (scale 1; the game renders down)
   order: Dir[];
   map: Record<Dir, DirMap>;
 }
@@ -67,7 +68,7 @@ function renderFrame(src: RGBA, box: Box, c: SliceConfig, scale: number, flip: b
   return out;
 }
 
-export interface Composed { sheet: RGBA; framesByDir: Record<Dir, RGBA[]>; maxCols: number; scale: number }
+export interface Composed { sheet: RGBA; framesByDir: Record<Dir, RGBA[]>; maxCols: number; scale: number; contentW: number; contentH: number }
 
 export function compose(src: RGBA, c: SliceConfig): Composed {
   // gather boxes for every used frame, then a single global scale
@@ -81,7 +82,7 @@ export function compose(src: RGBA, c: SliceConfig): Composed {
   }
   const maxH = Math.max(1, ...boxes.map((b) => b.box.h));
   const maxW = Math.max(1, ...boxes.map((b) => b.box.w));
-  const scale = Math.min((c.fh - c.padTop) / maxH, c.fw / maxW);
+  const scale = c.native ? 1 : Math.min((c.fh - c.padTop) / maxH, c.fw / maxW);
 
   const framesByDir = { s: [], n: [], w: [] } as Record<Dir, RGBA[]>;
   const maxCols = Math.max(...c.order.map((d) => c.map[d].cols.length));
@@ -92,7 +93,7 @@ export function compose(src: RGBA, c: SliceConfig): Composed {
     const rowIndex = c.order.indexOf(b.dir);
     blit(sheet, frame, b.ci * c.fw, rowIndex * c.fh);
   }
-  return { sheet, framesByDir, maxCols, scale };
+  return { sheet, framesByDir, maxCols, scale, contentW: maxW, contentH: maxH };
 }
 
 function blit(dst: RGBA, srcF: RGBA, dx: number, dy: number): void {
@@ -106,7 +107,7 @@ function blit(dst: RGBA, srcF: RGBA, dx: number, dy: number): void {
 
 export const DEFAULT_CONFIG: SliceConfig = {
   cols: 4, rows: 4, cellW: 192, cellH: 192, offX: 0, offY: 0, spX: 0, spY: 0,
-  fw: 20, fh: 32, padTop: 1, trim: true,
+  fw: 88, fh: 160, padTop: 1, trim: true, native: true,
   order: ['s', 'n', 'w'],
-  map: { s: { row: 0, cols: [0, 1, 2], flip: false }, n: { row: 2, cols: [0, 1, 2], flip: false }, w: { row: 1, cols: [0, 1, 2], flip: false } },
+  map: { s: { row: 0, cols: [0, 1, 2, 3], flip: false }, n: { row: 2, cols: [0, 1, 2, 3], flip: false }, w: { row: 1, cols: [0, 1, 2, 3], flip: true } },
 };
