@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OHMFRONT — Sprite Slicer</title>
+    <style>
+      :root { --bg:#141017; --panel:#1c1822; --ink:#e8e0d0; --accent:#ffd27a; --line:#332c3e; }
+      * { box-sizing: border-box; }
+      html, body { margin:0; min-height:100%; background:var(--bg); color:var(--ink); font:13px/1.4 system-ui, sans-serif; }
+      header { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:8px 12px; background:var(--panel); border-bottom:1px solid var(--line); }
+      header h1 { font-size:14px; margin:0 12px 0 0; color:var(--accent); }
+      #wrap { display:flex; gap:14px; padding:14px; align-items:flex-start; flex-wrap:wrap; }
+      #left { flex:1; min-width:300px; }
+      #right { width:340px; }
+      canvas { image-rendering: pixelated; background:#0e0b12; border:1px solid var(--line); border-radius:4px; }
+      .panel { background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:10px; margin-bottom:12px; }
+      .panel h2 { font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--accent); margin:0 0 8px; }
+      .anims { display:flex; gap:14px; flex-wrap:wrap; }
+      .anims figure { margin:0; text-align:center; }
+      .anims figcaption { font-size:11px; color:#a99fbb; margin-top:3px; }
+      .section { border-top:1px solid var(--line); padding-top:8px; margin-top:8px; }
+      .section h3 { font-size:11px; text-transform:uppercase; color:var(--accent); margin:0 0 6px; }
+      label.field { display:inline-flex; flex-direction:column; width:72px; margin:0 6px 6px 0; font-size:11px; color:#a99fbb; }
+      label.field input { width:100%; }
+      input, button { background:#120f17; color:var(--ink); border:1px solid var(--line); border-radius:4px; padding:4px; font:inherit; }
+      button.action { cursor:pointer; margin:0 6px 6px 0; }
+      button.action:hover { background:#36303f; }
+      label.check { display:block; margin:4px 0; font-size:12px; cursor:pointer; }
+      .dirrow { display:flex; gap:6px; align-items:flex-end; flex-wrap:wrap; margin-bottom:6px; }
+      .dirtag { font-size:11px; color:var(--ink); width:120px; }
+      #status { font-family:monospace; font-size:12px; color:#b9b0c4; padding:0 12px 10px; }
+      .hint { font-size:11px; color:#8a8197; margin-top:6px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>OHMFRONT — Sprite Slicer</h1>
+      <button id="load-default" class="action">Load default (SAL)</button>
+      <label class="action" style="cursor:pointer">Upload sheet… <input id="upload" type="file" accept="image/png" style="display:none" /></label>
+    </header>
+    <div id="status">Loading…</div>
+    <div id="wrap">
+      <div id="left">
+        <div class="panel">
+          <h2>Source + grid</h2>
+          <canvas id="src-canvas"></canvas>
+          <div class="hint">Coloured boxes are the rows mapped to S/N/W. Adjust Cell/Offset/Spacing until each box frames one character.</div>
+        </div>
+        <div class="panel">
+          <h2>Walk preview</h2>
+          <div class="anims">
+            <figure><canvas id="anim-s"></canvas><figcaption>Down (S)</figcaption></figure>
+            <figure><canvas id="anim-n"></canvas><figcaption>Up (N)</figcaption></figure>
+            <figure><canvas id="anim-w"></canvas><figcaption>Left (W)</figcaption></figure>
+            <figure><canvas id="anim-e"></canvas><figcaption>Right (mirror)</figcaption></figure>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Output sheet (sal_walk.png)</h2>
+          <canvas id="sheet-canvas"></canvas>
+        </div>
+      </div>
+      <div id="right">
+        <div class="panel"><h2>Controls</h2><div id="controls"></div></div>
+      </div>
+    </div>
+    <script type="module" src="/src/slicer/main.ts"></script>
+  </body>
+</html>
