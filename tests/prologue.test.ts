@@ -138,6 +138,15 @@ describe('Act I beat on the Farm Road (the Spotting + Rook)', () => {
     expect(getGameState().flags['rook_done']).toBe(true);
   });
 
+  it('Odessa is on the Farm Road to assign the Ohmwork (fill the Manifest)', () => {
+    const j = JSON.parse(readFileSync(join(process.cwd(), 'public/world/farmroad.json'), 'utf8')) as {
+      npcs?: Array<{ name?: string; lines?: string[] }>;
+    };
+    const odessa = (j.npcs ?? []).find((n) => n.name === 'Odessa');
+    expect(odessa).toBeTruthy();
+    expect((odessa?.lines ?? []).some((l) => /MANIFEST/.test(l))).toBe(true);
+  });
+
   it('does not fire before the prologue is done', async () => {
     // fresh game, no prologue flags: arriving on the Farm Road must not trigger Act I
     h = await bootGame(SCENES);

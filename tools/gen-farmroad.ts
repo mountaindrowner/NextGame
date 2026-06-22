@@ -191,7 +191,14 @@ writeFileSync(
       'Resting my feet. Farm-to-market road, this — runs clear to the Railhead if your legs hold out.',
       "There's a recharge cot back of my wagon — top your Ohms off before the climb. No charge for a Vane.",
       'Watch the fence-lines. Runners and Scrappers lay up in the grass, looking for a wager or a fight.',
-    ] }], // a traveler resting by the road
+    ] },
+    // Odessa, Ohmstead comms — assigns the Ohmwork (fill the Manifest)
+    { char: 'npc_rancher', col: 13, row: 22, name: 'Odessa', lines: [
+      "Odessa — Ohmstead comms, patched to your handheld. That key has the whole Downtowns whispering. Means they're finally listening.",
+      'So earn your keep while you walk: every Ohm you meet, I want it on record. Open your menu, MANIFEST — it tracks them all.',
+      "Weaken a wild one, spend a storage node, clear its static, and it's Freed — yours, and logged. A hundred and fifty out there.",
+      'The more of the world we know, the longer we last. Fill the Manifest. Stay current.',
+    ] }],
     interacts: [{ x: 17, y: 26, kind: 'heal' }], // Sully's roadside recharge cot
     trainers: [
       { char: 'npc_kid', col: 10, row: 24, facing: 'e', name: 'Runner Dusty', range: 5, team: [{ num: 10, level: 6 }], bark: "Runner Dusty: Found my Ohm in a dumpster — still tougher than yours!" },
