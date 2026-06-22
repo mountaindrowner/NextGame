@@ -36,6 +36,10 @@ for (let y = 0; y < ROWS; y++) { setG(0, y, '#'); setG(COLS - 1, y, '#'); }
 rectG(14, 6, 13, 16, '~');
 rectG(20, 6, 1, 16, '='); // vertical catwalk
 rectG(14, 13, 13, 2, '='); // horizontal catwalk
+// THE HOVER GATE: a full-width flooded band just past the entry dock. The whole
+// colony sits north of it; the only way across is an Ohm that can HOVER. The
+// catwalk is "out" here (overwritten), so even col 20 must be hovered.
+rectG(1, 20, 38, 2, '~');
 // chamber-dividing walls (mossy concrete) framing the four rooms
 rectG(2, 12, 12, 1, '#'); rectG(27, 12, 11, 1, '#');
 // reed beds (encounters) along the SE chamber + a couple basin fringes
@@ -133,6 +137,7 @@ const collision: number[] = [];
 const grass: number[] = [];
 const grassAny: number[] = [];
 const waterArr: number[] = [];
+const hoverArr: number[] = []; // 1 = open water you can only cross with a HOVER Ohm
 for (let r = 0; r < ROWS; r++)
   for (let c = 0; c < COLS; c++) {
     const ch = MAP[r]![c]!;
@@ -141,20 +146,24 @@ for (let r = 0; r < ROWS; r++)
     grass.push(ch === 'r' ? 1 : 0); // reed beds = encounters
     grassAny.push(ch === 'r' ? 1 : 0);
     waterArr.push(0); // cave/cistern water is baked, not the animated surface overlay
+    hoverArr.push(ch === '~' ? 1 : 0); // open water = hover-crossable (collision-solid otherwise)
   }
 
 writeFileSync(
   join(OUT, 'cistern.json'),
   JSON.stringify({
     tile: T, cols: COLS, rows: ROWS, width: W, height: H,
-    collision, grass, grassAny, water: waterArr, placements: [],
+    collision, grass, grassAny, water: waterArr, hover: hoverArr, placements: [],
     zone: 'cistern-reeds',
     spawn: { x: 20, y: 24 }, // the south entry dock
     exits: [
       { x: 20, y: 26, scene: 'fieldhd', mapId: 'railhead' }, // south → back toward Railhead
       { x: 20, y: 1, scene: 'fieldhd', mapId: 'bastion', gate: 'warden' }, // north → Bastion (Warden-gated)
     ],
-    interacts: [{ x: 20, y: 22, kind: 'heal' }], // the waterworks recharge station by the dock
+    interacts: [
+      { x: 20, y: 22, kind: 'heal' }, // the waterworks recharge station by the dock
+      { x: 22, y: 23, kind: 'hovergift' }, // a survey-Dronelet cradle on the entry dock (south of the flood)
+    ],
     trainers: [
       { char: 'npc_kid', col: 10, row: 19, facing: 'n', name: 'Mud Cole', range: 4, team: [{ num: 12, level: 11 }], bark: 'Mud Cole: Careful — my Ohms are slippery as a wet rope.' },
       { char: 'npc_rancher', col: 31, row: 9, facing: 'w', name: 'Sower Tansy', range: 4, team: [{ num: 38, level: 11 }, { num: 25, level: 12 }], bark: 'Sower Tansy: Raised mine from a flicker. Go gentle now.' },
@@ -180,10 +189,10 @@ writeFileSync(
         "Sela could show you the gentle side of these machines. They feel, you know. World just won't say it.",
         "Weather-Watcher swears the EM shimmer rolls in tonight. He's wrong every time — till the time he isn't.",
       ] },
-      { char: 'npc_kid', col: 9, row: 18, name: 'Cistern-keeper Reeva', lines: [
+      { char: 'npc_kid', col: 18, row: 23, name: 'Cistern-keeper Reeva', lines: [
+        "Can't cross the flood on foot — the catwalk's out. But there's a survey drone in the cradle yonder; it hovers. Take it.",
         'I work the sluices. Open the wrong gate and the whole nursery floods. No pressure.',
         'Word is the Militarists are fracturing — some turning on their own. Why would a man fight himself?',
-        "Mind the deep channels. The slippery Ohms down there'll drag you under and call it a hug.",
       ] },
     ],
   }),

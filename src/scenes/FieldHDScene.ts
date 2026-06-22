@@ -11,6 +11,7 @@ import { bgmForMap } from '../data/audio';
 import { type Dir4, neighbor, OPPOSITE } from '../data/region';
 import { fadeTo, FADE_COLD } from './transition';
 import { NIGHT_CALL, BREAKER_BOUND, THE_SPOTTING, ROOK_AFTERMATH } from '../cutscene/script';
+import { partyHasFieldAbility, HOVER_GIFT_SPECIES } from '../data/field-abilities';
 
 // Prologue ("The Call", Story Bible): supply run -> return -> night-call ->
 // inciting fight -> the Breaker binds. Tracked in save flags so it survives the
@@ -36,6 +37,7 @@ interface FieldData {
   grass: number[];
   grassAny?: number[];
   water?: number[];
+  hover?: number[]; // open water you can only cross with a HOVER Ohm in the party
   placements?: Array<{ type: string; col: number; row: number }>;
   npcs?: Array<{ char: string; col: number; row: number; name?: string; lines?: string[]; shop?: string; warden?: WardenDef }>;
   trainers?: TrainerDef[];
@@ -269,7 +271,10 @@ export class FieldHDScene extends Phaser.Scene {
       this.garage = [-99, -99]; // no recharge pad underground
     }
     // the colony freight lift (and any A-to-Use lift cell) shows a prompt
-    for (const it of this.field.interacts ?? []) if (it.kind === 'lift') this.drawUseHint(it.x, it.y);
+    for (const it of this.field.interacts ?? []) {
+      if (it.kind === 'lift') this.drawUseHint(it.x, it.y);
+      else if (it.kind === 'hovergift' && !this.flag('got_hover') && !this.partyHasHover()) this.drawUseHint(it.x, it.y, 'A: Drone');
+    }
 
     const state = hasGameState() ? getGameState() : undefined;
     const loc = state?.location;
@@ -834,6 +839,8 @@ export class FieldHDScene extends Phaser.Scene {
           this.useLift();
         } else if (it.kind === 'relay') {
           this.useRelay();
+        } else if (it.kind === 'hovergift') {
+          this.takeHoverDrone();
         } else if (it.kind === 'heal') {
           this.recharge('A field medic tops off your Ohms. Recharged. Stay current.');
         } else if (it.kind === 'shop') {
@@ -871,6 +878,37 @@ export class FieldHDScene extends Phaser.Scene {
     if (this.npcCells.has(`${cx},${cy}`)) return true;
     if (this.ledgeCells.has(`${cx},${cy}`)) return true; // ledges blocked except the one-way hop
     return this.field.collision[cy * this.field.cols + cx] === 1;
+  }
+
+  /** Open water that only a HOVER Ohm can cross (the Cistern gate). */
+  private isHoverGate(cx: number, cy: number): boolean {
+    const h = this.field.hover;
+    return !!h && h[cy * this.field.cols + cx] === 1;
+  }
+  private partyHasHover(): boolean {
+    return hasGameState() && partyHasFieldAbility(getGameState().party, 'HOVER');
+  }
+
+  /** Take the Cistern's survey Dronelet — guarantees a HOVER Ohm so any party
+   * can cross the flood. */
+  private takeHoverDrone(): void {
+    const state = getGameState();
+    if (this.partyHasHover()) {
+      this.banner('The survey drone bobs in its cradle. One of yours already hovers — leave this for the next crew.');
+      return;
+    }
+    if (state.flags['got_hover']) {
+      this.banner('The cradle is empty. You already took the survey drone.');
+      return;
+    }
+    const ohm = makeBattler(GAME_DATA.species(HOVER_GIFT_SPECIES), 10, GAME_DATA);
+    if (!state.manifest.freed.includes(ohm.speciesNum)) state.manifest.freed.push(ohm.speciesNum);
+    if (!state.manifest.seen.includes(ohm.speciesNum)) state.manifest.seen.push(ohm.speciesNum);
+    if (state.party.length < 3) state.party.push(ohm);
+    else state.garage.push(ohm);
+    state.flags['got_hover'] = true;
+    getAudio().playOneShot('jingle.obtain_item');
+    this.banner('You lift a battered survey Dronelet from its cradle. It hums, rises, and tucks in beside you. It can HOVER you across the flood.');
   }
 
   private ledgeCells = new Map<string, Dir>();
@@ -995,8 +1033,18 @@ export class FieldHDScene extends Phaser.Scene {
       return;
     }
     if (this.solid(nx, ny)) {
-      this.placePlayer(); // bump
-      return;
+      // open water (the HOVER gate): a hovering Ohm glides you across; otherwise bump
+      if (this.isHoverGate(nx, ny)) {
+        if (!this.partyHasHover()) {
+          this.placePlayer();
+          this.banner('The flooded chamber blocks the way. You need an Ohm that can HOVER to cross.');
+          return;
+        }
+        // fall through — glide onto the water tile
+      } else {
+        this.placePlayer(); // bump
+        return;
+      }
     }
     this.moving = true;
     this.px = nx;
