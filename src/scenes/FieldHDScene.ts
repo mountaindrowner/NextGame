@@ -17,7 +17,7 @@ import { NIGHT_CALL, BREAKER_BOUND, THE_SPOTTING, ROOK_AFTERMATH } from '../cuts
 // battle round-trip and reloads.
 const PRO = { supply: 'pro_supply', nightcall: 'pro_nightcall', breaker: 'pro_breaker', done: 'pro_done', charge: 'pro_charge' } as const;
 const WARPED_SPECIES = 49; // Sawlet (BREAKER type) — the Static-warped guardian of the safe
-const SAL_TARGET_PX = 48; // on-screen content height for SAL's hi-res sprite (rendered down, not baked down)
+const PLAYER_TARGET_PX = 48; // on-screen content height for the hi-res protagonist sprites (rendered down, not baked down)
 // Act I, beat 5/6 ("The Spotting" + Rook): the first rival battle on the Farm Road.
 const ACT1 = { spotting: 'seen_spotting', rook: 'beat_rook', rookDone: 'rook_done' } as const;
 const ROOK_TEAM: Array<{ num: number; level: number }> = [{ num: 54, level: 6 }, { num: 10, level: 7 }]; // Cellet, Toastlet
@@ -215,16 +215,17 @@ export class FieldHDScene extends Phaser.Scene {
     // pixelified protagonist sprites (from real art via the pixelify pipeline)
     // original protagonist sprites (YoYoPixel grid method)
     if (!this.textures.exists('player')) this.load.image('player', 'world/char/player.png');
-    // NPC + WREN sheets: 3 frames × 3 dirs on a 20×32 cell
-    const sheets = ['wren_walk', 'npc_rancher_walk', 'npc_elder_walk', 'npc_kid_walk'];
+    // NPC sheets: 3 frames × 3 dirs on a 20×32 cell
+    const sheets = ['npc_rancher_walk', 'npc_elder_walk', 'npc_kid_walk'];
     for (const s of sheets) if (!this.textures.exists(s)) this.load.spritesheet(s, `world/char/${s}.png`, { frameWidth: 20, frameHeight: 32 });
-    // SAL: a hi-res 4-frame sheet. Its frame size comes from a tiny meta file
-    // loaded first, so the sheet slices correctly (native res, rendered down).
-    if (!this.textures.exists('sal_walk')) {
-      this.load.json('sal_walk_meta', 'world/char/sal_walk.meta.json');
-      this.load.once('filecomplete-json-sal_walk_meta', () => {
-        const m = this.cache.json.get('sal_walk_meta') as { frameW: number; frameH: number } | undefined;
-        if (m) this.load.spritesheet('sal_walk', 'world/char/sal_walk.png', { frameWidth: m.frameW, frameHeight: m.frameH });
+    // protagonists (SAL + WREN): hi-res 4-frame sheets. Frame size comes from a
+    // meta file loaded first, so each sheet slices right (native res, rendered down).
+    for (const name of ['sal_walk', 'wren_walk']) {
+      if (this.textures.exists(name)) continue;
+      this.load.json(`${name}_meta`, `world/char/${name}.meta.json`);
+      this.load.once(`filecomplete-json-${name}_meta`, () => {
+        const m = this.cache.json.get(`${name}_meta`) as { frameW: number; frameH: number } | undefined;
+        if (m) this.load.spritesheet(name, `world/char/${name}.png`, { frameWidth: m.frameW, frameHeight: m.frameH });
       });
     }
     for (const n of NPC_CHARS) if (!this.textures.exists(n)) this.load.image(n, `world/char/${n}.png`);
@@ -295,8 +296,8 @@ export class FieldHDScene extends Phaser.Scene {
       this.py = home.y;
     }
 
-    for (const k of ['wren_walk', 'npc_rancher_walk', 'npc_elder_walk', 'npc_kid_walk']) this.makeWalk(k);
-    this.makeWalk('sal_walk', 4);
+    for (const k of ['npc_rancher_walk', 'npc_elder_walk', 'npc_kid_walk']) this.makeWalk(k);
+    for (const k of ['sal_walk', 'wren_walk']) this.makeWalk(k, 4);
 
     // NPCs (placed townsfolk; block their tile) — facing the player, idle
     const t = this.field.tile;
@@ -341,18 +342,19 @@ export class FieldHDScene extends Phaser.Scene {
       }
     }
 
-    // player = the chosen preset's walk sprite (SAL = hi-res 4-frame, WREN = 20×32)
+    // player = the chosen preset's hi-res 4-frame walk sprite (SAL or WREN)
     const preset = hasGameState() ? getGameState().preset : 'SAL';
-    const isSal = preset !== 'WREN' && this.textures.exists('sal_walk');
-    this.walkKey = isSal ? 'sal_walk' : 'wren_walk';
-    this.playerN = isSal ? 4 : 3;
+    const sheet = preset === 'WREN' ? 'wren_walk' : 'sal_walk';
+    const hiRes = this.textures.exists(sheet);
+    this.walkKey = hiRes ? sheet : 'wren_walk';
     this.useSheet = this.textures.exists(this.walkKey);
+    this.playerN = 4;
     const key = this.useSheet ? this.walkKey : this.textures.exists('player') ? 'player' : this.walkKey;
     this.player = this.add.sprite(0, 0, key, 0).setDepth(50);
-    if (isSal) {
-      const m = this.cache.json.get('sal_walk_meta') as { originY?: number; contentH?: number } | undefined;
-      this.textures.get('sal_walk').setFilter(Phaser.Textures.FilterMode.LINEAR); // smooth render-down, no baked crush
-      this.player.setOrigin(0.5, m?.originY ?? 0.95).setScale(SAL_TARGET_PX / (m?.contentH ?? 144));
+    const m = hiRes ? (this.cache.json.get(`${sheet}_meta`) as { originY?: number; contentH?: number } | undefined) : undefined;
+    if (hiRes && m) {
+      this.textures.get(sheet).setFilter(Phaser.Textures.FilterMode.LINEAR); // smooth render-down, no baked crush
+      this.player.setOrigin(0.5, m.originY ?? 0.95).setScale(PLAYER_TARGET_PX / (m.contentH ?? 144));
     } else {
       this.player.setOrigin(0.5, 0.92).setScale(this.useSheet ? 1.25 : 1.3);
     }

@@ -198,7 +198,7 @@ function buildControls(): void {
   const out = section('Export');
   out.append(
     btn('⬇ Download sal_walk.png', exportSheet),
-    btn('⧉ Copy config JSON', () => void navigator.clipboard?.writeText(JSON.stringify(cfg, null, 2)).then(() => setStatus('Config copied — paste it back and I will bake it into tools/import-sal.ts.'))),
+    btn('⧉ Copy config JSON', () => void navigator.clipboard?.writeText(JSON.stringify(cfg, null, 2)).then(() => setStatus('Config copied — paste it back and I will bake it into tools/import-chars.ts.'))),
     btn('⬇ Download config', () => download('sal_walk.config.json', JSON.stringify(cfg, null, 2))),
   );
   controls.append(out);

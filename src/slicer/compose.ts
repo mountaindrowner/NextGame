@@ -1,6 +1,6 @@
 /**
  * Pure sprite-sheet slicing/compositing used by the Sprite Slicer tool (and
- * mirrors tools/import-sal.ts so an exported config can be baked into the game
+ * mirrors tools/import-chars.ts so an exported config can be baked into the game
  * pipeline 1:1). No DOM — operates on raw RGBA buffers.
  */
 export type Dir = 's' | 'n' | 'w';
