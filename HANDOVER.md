@@ -1,5 +1,39 @@
 # HANDOVER
 
+## Session 2026-06-23 (cont.) — PixelLab NPC cast (Ohmstead→Railhead)
+
+- **Mark's call: NPC art is made with PixelLab** (not the grid method). The grid
+  method stays for tiles/Ohms; PixelLab makes the cast.
+- **Mabel reworked + the next 20 NPCs generated** via PixelLab, in encounter
+  order Ohmstead→Railhead: Boone, Cass, Odessa, Odell, Rivet, Bex, Mesa,
+  Cricket, Sully, Rook, Dusty, Wade, Junie, Marrow, Hettie, Pax, Scrap Broker,
+  Salt Broker, Card Sharp, Holt. Each has a **dialogue portrait** (`<id>_portrait.png`),
+  a **4-direction character** (`<id>__{south,east,north,west}.png` + `__rotation.png`),
+  and a **south walk cycle** (`<id>_walk__strip.png` + `__f0..8.png`), all in
+  `assets/reference/` with prompt sidecars. Mark approved the look (contact
+  sheets sent).
+- **NOT wired in-game yet** — these are source art. Next step (when Mark says):
+  portrait → the dialogue box (overworld banner has no portrait today — that's a
+  small FieldHDScene addition), and each `__rotation`/walk → an overworld sprite
+  (the engine wants S/N/W walk sheets; PixelLab gives S/E/N/W facings + a S walk
+  — will need repacking via an import step, cf. `tools/import-chars.ts`).
+- **Tooling (committed, reusable):** `tools/pixellab-char.ts`
+  (`npm run pixellab:char -- character|animate`) = the v2 job client (4-dir
+  characters + text animation, polling + credit reporting); `tools/gen-npc-pixellab.ts`
+  (`npm run gen:npc-cast [-- --only <id>] [--no-walk]`) = the resumable,
+  credit-guarded cast driver (CAST list + canon-look prompts). Stops before the
+  **1000-generation floor** (Mark's budget rule).
+- **PixelLab credits = "generations".** Started 2000; **1912 remain** (~88 used:
+  barrel probe, Mabel, the 20). Check balance: GET `api.pixellab.ai/v2/balance`
+  → `subscription.generations`. ~4 generations per NPC (1 portrait + 1 char +
+  2 walk). The full remaining cast (Cistern→Dallas, ~28 more) ≈ 110 generations.
+- **API shapes learned (live-verified):** v1 `generate-image-pixflux` (sync,
+  `{image:{base64}}`); v2 `create-character-with-4-directions` (async job →
+  `last_response.images.{south,east,north,west}` as **rgba_bytes**, ~1 gen);
+  v2 `animate-with-text-v3` (`first_frame:{type:'base64',base64:<png>}` + `action`
+  → `last_response.images[]` as **base64 PNGs**, ~2 gens). Poll
+  `/v2/background-jobs/{id}` until `status:completed`.
+
 ## Session 2026-06-23 (cont.) — PixelLab confirmed live
 
 - **PixelLab REST pipeline is verified.** `PIXELLAB_API_KEY` is present in the
