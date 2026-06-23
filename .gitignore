@@ -2,3 +2,7 @@ node_modules/
 dist/
 playtest-report.md
 playtest-shots/
+
+# local secrets (PixelLab etc.)
+.env
+.env.local
