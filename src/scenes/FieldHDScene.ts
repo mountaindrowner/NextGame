@@ -1161,15 +1161,13 @@ export class FieldHDScene extends Phaser.Scene {
     this.toastTimer?.remove();
     const W = 460;
     const PAD = 14;
-    const PORTRAIT_H = 56; // display height of portrait image inside the box
+    const RISE = 34; // how far the speaker's bust peeks up above the box's top edge
 
-    // portrait slot: fixed-width column on the left when portrait is available
+    // a small speaker bust that sits BEHIND the text box, its head rising just
+    // above the top edge (the box covers the rest). Text spans the full width.
     const portrait = portraitKey && this.textures.exists(portraitKey)
       ? this.add.image(0, 0, portraitKey)
       : null;
-    const portraitScale = portrait ? PORTRAIT_H / portrait.height : 0;
-    const PW = portrait ? Math.round(portrait.width * portraitScale) : 0;
-    const textW = W - PAD * 2 - (PW > 0 ? PW + PAD : 0);
 
     // left-aligned so it can type out cleanly; wrap to the box so long lines never overflow.
     const style = {
@@ -1177,20 +1175,21 @@ export class FieldHDScene extends Phaser.Scene {
       fontSize: '11px',
       color: '#f4ecd8',
       align: 'left' as const,
-      wordWrap: { width: textW },
+      wordWrap: { width: W - PAD * 2 },
     };
     // measure the FULL text first to size the box, so it doesn't resize while typing
     const t = this.add.text(0, 0, text, style).setOrigin(0, 0);
-    const h = Math.max(portrait ? PORTRAIT_H + PAD : 28, Math.round(t.height) + PAD);
+    const h = Math.max(28, Math.round(t.height) + PAD);
     const cy = 320 - 8 - h / 2; // rest just above the bottom edge
-    const box = this.add.rectangle(240, cy, W, h, 0x1a1410, 0.82).setStrokeStyle(2, 0xe8d8a8);
-    const textX = 240 - W / 2 + PAD + (PW > 0 ? PW + PAD : 0);
-    t.setPosition(textX, cy - h / 2 + PAD / 2);
-    const items: Phaser.GameObjects.GameObject[] = [box, t];
+    const box = this.add.rectangle(240, cy, W, h, 0x1a1410, 0.92).setStrokeStyle(2, 0xe8d8a8);
+    t.setPosition(240 - W / 2 + PAD, cy - h / 2 + PAD / 2);
+    const items: Phaser.GameObjects.GameObject[] = [];
     if (portrait) {
-      portrait.setScale(portraitScale).setOrigin(0, 0.5).setPosition(240 - W / 2 + PAD / 2, cy);
-      items.push(portrait);
+      // bottom-anchored at the box's lower edge so a constant RISE of head shows above
+      portrait.setScale((h + RISE) / portrait.height).setOrigin(0.5, 1).setPosition(240 - W / 2 + 56, cy + h / 2 - 1);
+      items.push(portrait); // pushed first → renders behind the box
     }
+    items.push(box, t);
     const c = this.add.container(0, 0, items).setScrollFactor(0).setDepth(200);
     this.toastObj = c;
 
