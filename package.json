@@ -51,7 +51,8 @@
     "gen:cutscene-art": "tsx tools/gen-cutscene-art.ts",
     "playtest": "tsx tools/playtest.ts",
     "autoplay": "tsx tools/autoplay.ts",
-    "screenshots": "tsx tools/screenshot.ts"
+    "screenshots": "tsx tools/screenshot.ts",
+    "import:npc-chars": "tsx tools/import-npc-chars.ts"
   },
   "dependencies": {
     "phaser": "^3.85.2"

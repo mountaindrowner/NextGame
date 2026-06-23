@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "water-system tender, waterproofed coat, thick rubber gloves, dripping wet, serious focused, JRPG dialogue portrait bust, front facing, pixel art, post-apocalyptic rural Texas",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-23T16:36:12.575Z"
+}

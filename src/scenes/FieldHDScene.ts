@@ -19,6 +19,7 @@ import { partyHasFieldAbility, HOVER_GIFT_SPECIES } from '../data/field-abilitie
 const PRO = { supply: 'pro_supply', nightcall: 'pro_nightcall', breaker: 'pro_breaker', done: 'pro_done', charge: 'pro_charge' } as const;
 const WARPED_SPECIES = 49; // Sawlet (BREAKER type) — the Static-warped guardian of the safe
 const PLAYER_TARGET_PX = 48; // on-screen content height for the hi-res protagonist sprites (rendered down, not baked down)
+const NPC_TARGET_PX = 40; // on-screen content height for hi-res PixelLab NPC sprites
 // Act I, beat 5/6 ("The Spotting" + Rook): the first rival battle on the Farm Road.
 const ACT1 = { spotting: 'seen_spotting', rook: 'beat_rook', rookDone: 'rook_done' } as const;
 const ROOK_TEAM: Array<{ num: number; level: number }> = [{ num: 54, level: 6 }, { num: 10, level: 7 }]; // Cellet, Toastlet
@@ -87,6 +88,17 @@ const MAPS: Record<string, MapDef> = {
 };
 
 const NPC_CHARS = ['npc_rancher', 'npc_elder', 'npc_kid'] as const;
+// Generated PixelLab NPC character ids — batch 1 (Ohmstead→Railhead) + batch 2 (Cistern→Chancel)
+const NPC_CHAR_IDS = [
+  'mabel', 'boone', 'cass', 'odessa', 'odell', 'rivet', 'bex', 'mesa', 'cricket',
+  'sully', 'rook', 'dusty', 'wade', 'junie', 'marrow', 'hettie', 'pax',
+  'scrap_broker', 'salt_broker', 'card_sharp', 'holt',
+  'bloom', 'sela', 'mud_cole', 'weather_watcher', 'nursery_matron', 'seed_keeper',
+  'hydromancer', 'stone', 'flint', 'knock_twice', 'doomsayer', 'gate_warden',
+  'rationer', 'lookout', 'pike', 'reyes', 'conscript', 'base_scrapper',
+  'deserter', 'sarge', 're_enlister', 'hale', 'cantor', 'brother_hum',
+  'apostate', 'bell_keeper', 'reliquary_warden', 'confessor',
+] as const;
 const FX = ['grass_0', 'grass_1', 'grass_2', 'leaf_0', 'leaf_1', 'leaf_2', 'trunk'] as const;
 const WATER_FRAMES = 6;
 
@@ -235,6 +247,18 @@ export class FieldHDScene extends Phaser.Scene {
       });
     }
     for (const n of NPC_CHARS) if (!this.textures.exists(n)) this.load.image(n, `world/char/${n}.png`);
+    // hi-res PixelLab NPC chars: metadata-driven walk sheets + portrait busts
+    for (const id of NPC_CHAR_IDS) {
+      const name = `${id}_walk`;
+      if (!this.textures.exists(name)) {
+        this.load.json(`${name}_meta`, `world/char/${name}.meta.json`);
+        this.load.once(`filecomplete-json-${name}_meta`, () => {
+          const m = this.cache.json.get(`${name}_meta`) as { frameW: number; frameH: number } | undefined;
+          if (m) this.load.spritesheet(name, `world/char/${name}.png`, { frameWidth: m.frameW, frameHeight: m.frameH });
+        });
+      }
+      if (!this.textures.exists(`${id}_96`)) this.load.image(`${id}_96`, `world/char/${id}_96.png`);
+    }
     // animated world-layer assets
     for (const f of FX) if (!this.textures.exists(f)) this.load.image(f, `world/fx/${f}.png`);
     for (let i = 0; i < WATER_FRAMES; i++)
@@ -307,6 +331,7 @@ export class FieldHDScene extends Phaser.Scene {
 
     for (const k of ['npc_rancher_walk', 'npc_elder_walk', 'npc_kid_walk']) this.makeWalk(k);
     for (const k of ['sal_walk', 'wren_walk']) this.makeWalk(k, 4);
+    for (const id of NPC_CHAR_IDS) this.makeWalk(`${id}_walk`, 4);
 
     // NPCs (placed townsfolk; block their tile) — facing the player, idle
     const t = this.field.tile;
@@ -314,12 +339,21 @@ export class FieldHDScene extends Phaser.Scene {
       const sk = `${npc.char}_walk`;
       const px = npc.col * t + t / 2;
       const py = npc.row * t + t;
-      if (this.textures.exists(sk)) this.add.sprite(px, py, sk, 0).setOrigin(0.5, 0.92).setScale(1.25).setDepth(npc.row);
-      else if (this.textures.exists(npc.char)) this.add.image(px, py, npc.char).setOrigin(0.5, 0.92).setScale(1.3).setDepth(npc.row);
-      else continue;
+      if (this.textures.exists(sk)) {
+        const nm = this.cache.json.get(`${sk}_meta`) as { originY?: number; contentH?: number } | undefined;
+        const spr = this.add.sprite(px, py, sk, 0).setDepth(npc.row);
+        if (nm) {
+          this.textures.get(sk).setFilter(Phaser.Textures.FilterMode.LINEAR);
+          spr.setOrigin(0.5, nm.originY ?? 0.96).setScale(NPC_TARGET_PX / (nm.contentH ?? 92));
+        } else {
+          spr.setOrigin(0.5, 0.92).setScale(1.25);
+        }
+      } else if (this.textures.exists(npc.char)) {
+        this.add.image(px, py, npc.char).setOrigin(0.5, 0.92).setScale(1.3).setDepth(npc.row);
+      } else continue;
       this.npcCells.add(`${npc.col},${npc.row}`);
       if ((npc.lines && npc.lines.length) || npc.shop || npc.warden)
-        this.npcTalk.set(`${npc.col},${npc.row}`, { name: npc.name ?? 'Someone', lines: npc.lines ?? [], idx: 0, shop: npc.shop, warden: npc.warden });
+        this.npcTalk.set(`${npc.col},${npc.row}`, { char: npc.char, name: npc.name ?? 'Someone', lines: npc.lines ?? [], idx: 0, shop: npc.shop, warden: npc.warden });
     }
 
     // trainers — placed fighters who challenge you on sight (Pokémon routes)
@@ -689,7 +723,7 @@ export class FieldHDScene extends Phaser.Scene {
   }
 
   private npcCells = new Set<string>();
-  private npcTalk = new Map<string, { name: string; lines: string[]; idx: number; shop?: string; warden?: WardenDef }>();
+  private npcTalk = new Map<string, { char?: string; name: string; lines: string[]; idx: number; shop?: string; warden?: WardenDef }>();
   private trainers: Array<{ def: TrainerDef; idx: number; beaten: boolean; sprite?: Phaser.GameObjects.Sprite }> = [];
   private itemSprites = new Map<number, Phaser.GameObjects.Image>();
 
@@ -814,7 +848,8 @@ export class FieldHDScene extends Phaser.Scene {
         return true;
       }
       if (talk.lines.length) {
-        this.banner(`${talk.name}: ${talk.lines[talk.idx]}`);
+        const pk = talk.char ? `${talk.char}_96` : undefined;
+        this.banner(`${talk.name}: ${talk.lines[talk.idx]}`, pk && this.textures.exists(pk) ? pk : undefined);
         talk.idx = (talk.idx + 1) % talk.lines.length;
       }
       return true;
@@ -1121,26 +1156,42 @@ export class FieldHDScene extends Phaser.Scene {
     this.banner('Banjo — Grandpa\'s old Jukeboxer — hums two notes: its hello. You hum them back.');
   }
 
-  private banner(text: string): void {
+  private banner(text: string, portraitKey?: string): void {
     this.toastObj?.destroy();
     this.toastTimer?.remove();
     const W = 460;
     const PAD = 14;
+    const PORTRAIT_H = 56; // display height of portrait image inside the box
+
+    // portrait slot: fixed-width column on the left when portrait is available
+    const portrait = portraitKey && this.textures.exists(portraitKey)
+      ? this.add.image(0, 0, portraitKey)
+      : null;
+    const portraitScale = portrait ? PORTRAIT_H / portrait.height : 0;
+    const PW = portrait ? Math.round(portrait.width * portraitScale) : 0;
+    const textW = W - PAD * 2 - (PW > 0 ? PW + PAD : 0);
+
     // left-aligned so it can type out cleanly; wrap to the box so long lines never overflow.
     const style = {
       fontFamily: 'monospace',
       fontSize: '11px',
       color: '#f4ecd8',
       align: 'left' as const,
-      wordWrap: { width: W - PAD * 2 },
+      wordWrap: { width: textW },
     };
     // measure the FULL text first to size the box, so it doesn't resize while typing
     const t = this.add.text(0, 0, text, style).setOrigin(0, 0);
-    const h = Math.max(28, Math.round(t.height) + PAD);
+    const h = Math.max(portrait ? PORTRAIT_H + PAD : 28, Math.round(t.height) + PAD);
     const cy = 320 - 8 - h / 2; // rest just above the bottom edge
     const box = this.add.rectangle(240, cy, W, h, 0x1a1410, 0.82).setStrokeStyle(2, 0xe8d8a8);
-    t.setPosition(240 - W / 2 + PAD, cy - h / 2 + PAD / 2);
-    const c = this.add.container(0, 0, [box, t]).setScrollFactor(0).setDepth(200);
+    const textX = 240 - W / 2 + PAD + (PW > 0 ? PW + PAD : 0);
+    t.setPosition(textX, cy - h / 2 + PAD / 2);
+    const items: Phaser.GameObjects.GameObject[] = [box, t];
+    if (portrait) {
+      portrait.setScale(portraitScale).setOrigin(0, 0.5).setPosition(240 - W / 2 + PAD / 2, cy);
+      items.push(portrait);
+    }
+    const c = this.add.container(0, 0, items).setScrollFactor(0).setDepth(200);
     this.toastObj = c;
 
     // type the dialogue out with a subtle running tick so you can see/hear it populate
