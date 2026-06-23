@@ -1,5 +1,5 @@
 /**
- * Generate the OHMSTEAD→RAILHEAD NPC cast via PixelLab (npm run gen:npc-cast).
+ * Generate the colony NPC cast via PixelLab (npm run gen:npc-cast).
  *
  * For each NPC it produces, into assets/reference/:
  *   <id>_portrait.png      a dialogue portrait bust (v1 pixflux)
@@ -30,28 +30,42 @@ const BUST_STYLE = 'JRPG dialogue portrait bust, front facing, pixel art, post-a
 const FLOOR = 1000; // never let the balance drop to/under this without flagging
 
 interface Npc { id: string; look: string }
-// Ohmstead → the Field → Farm Road → Railhead, in encounter order (SAL/WREN/Mabel done).
+// Batch 2: Cistern → Bastion → Redoubt → Chancel, in encounter order.
+// (Batch 1 — Ohmstead→Railhead, 20 NPCs — done & approved; driver skips existing files.)
+// Canon looks per docs/design/colony-npc-casts.md + principal-cast.md.
 const CAST: Npc[] = [
-  { id: 'boone', look: 'gruff weathered colony chief, grizzled grey beard, brimmed leather hat, worn long duster coat, stern' },
-  { id: 'cass', look: 'teenage scavenger youth, short brown hair, freckles, patched work jacket, eager' },
-  { id: 'odessa', look: 'colony archivist woman, dark hair tied back, radio headset, satchel of papers, practical jacket, clever warm' },
-  { id: 'odell', look: 'older quartermaster shopkeeper, grey hair, flat cap, supply apron, holding a ledger' },
-  { id: 'rivet', look: 'salvager scrapper, welding mask pushed up on the forehead, heavy gloves, grimy coveralls, pry-bar' },
-  { id: 'bex', look: 'young child collector, oversized boots, satchel of trinkets, curious bright-eyed' },
-  { id: 'mesa', look: 'ancient storyteller elder, long white hair, sun-weathered face, faded poncho, walking cane' },
-  { id: 'cricket', look: 'young scavenger kid runner, patched jacket, oversized goggles on head, salvage backpack, energetic' },
-  { id: 'sully', look: 'road-worn old wanderer, dusty travel coat, wide-brim hat, walking staff, weary kind' },
-  { id: 'rook', look: 'hard-edged young raider, grease war-paint streaks on face, spiked scrap-metal shoulder armor, red bandana, scowling' },
-  { id: 'dusty', look: 'scrappy kid runner, dusty jacket, goggles, light shoes, cocky grin' },
-  { id: 'wade', look: 'cattle-wrangler, worn wide cowboy hat, leather vest, coil of cable lasso on belt, rugged' },
-  { id: 'junie', look: 'little girl collector, pigtails, satchel of small glowing trinkets, cheerful' },
-  { id: 'marrow', look: 'shrewd trade-boss warden, sharp eyes, fine merchant coat, holding a ledger, fair but skeptical' },
-  { id: 'hettie', look: 'middle-aged shop counter-clerk woman, headscarf, work apron, friendly busy' },
-  { id: 'pax', look: 'lanky teenage track-runner, light layered clothes, lean athletic, quick' },
-  { id: 'scrap_broker', look: 'flashy market magnate, salvaged finery coat, many rings, heavy coin purse, smug' },
-  { id: 'salt_broker', look: 'lean shrewd trader, dust coat, salt-stained gloves, patient calculating' },
-  { id: 'card_sharp', look: 'gambler, slick patterned vest, fan of playing cards, brimmed hat, sly grin' },
-  { id: 'holt', look: 'militarist officer, matte grey plate armor, full visor helmet, rigid posture, vacant off-tempo stare' },
+  // --- THE CISTERN (Colony 2) ---
+  { id: 'bloom', look: 'Warden Etta Bloom, nurturing matriarch, warm middle-aged woman, practical rolled-sleeve work clothes, strong gentle hands, kind steady eyes' },
+  { id: 'sela', look: 'colony caretaker-healer, young woman, soft dark hair, healer wrap apron, calm compassionate expression' },
+  { id: 'mud_cole', look: 'farmhand caked head-to-toe in dried mud, grins through it, heavy rolled-up overalls, big mud-caked boots' },
+  { id: 'weather_watcher', look: 'old man weather-reader, wild white hair, long ratty coat, battered wind gauge in hand, squinting skyward with cheerful certainty' },
+  { id: 'nursery_matron', look: 'Ohmlet nursery keeper, plump warm older woman, padded work coat, lanyard of small tools, gentle hands' },
+  { id: 'seed_keeper', look: 'Ohm bloodline archivist, thin bookish person, wire spectacles, annotated field notebook, careful precise expression' },
+  { id: 'hydromancer', look: 'water-system tender, waterproofed coat, thick rubber gloves, dripping wet, serious focused' },
+  // --- BASTION (Colony 3) ---
+  { id: 'stone', look: 'Warden Calder Stone, isolationist, broad-shouldered man, heavy stone-grey armor plate, arms crossed, unreadable stern face' },
+  { id: 'flint', look: 'young scout, lean athletic, patched scouting gear, bandana tied on arm, bright defiant eyes' },
+  { id: 'knock_twice', look: 'shut-in glimpsed through a door-slot, wide suspicious eye, unkempt grey hair, narrow gap of a dim doorway' },
+  { id: 'doomsayer', look: 'ranting doomsday prophet, wild white beard, torn robes, raised fist, sandwich board worn over chest, manic energy' },
+  { id: 'gate_warden', look: 'bureaucratic gate warden, neat worn uniform over scavenged armor, clipboard of demands, suspicious squint' },
+  { id: 'rationer', look: 'supply rationer, gaunt hollow face, miserly expression, worn apron, guarding crates behind him' },
+  { id: 'lookout', look: 'quarry rim lookout, lean wiry figure, long-range goggles, crouched alert posture' },
+  // --- REDOUBT (Colony 4) ---
+  { id: 'pike', look: 'Warden Augusta Pike, pragmatic battle-worn leader, close-cropped hair, military coat torn at the shoulder, haunted determined' },
+  { id: 'reyes', look: 'Commander Tomas Reyes, weathered militarist officer, grey-streaked hair, worn dress uniform, firm steady gaze, honorable bearing' },
+  { id: 'conscript', look: 'freed conscript, dazed young person, militarist uniform collar torn open, blinking uncertain, apologetic' },
+  { id: 'base_scrapper', look: 'military installation scavenger, heavy salvage pack, bolt-cutters on belt, scavenging crouch' },
+  { id: 'deserter', look: 'militarist deserter, jittery wiry figure, tattered uniform under civilian clothes, scanning warily, hunted look' },
+  { id: 'sarge', look: 'freed soldier with no memory of his name, beefy cheerful man, mismatched uniform pieces, taped-over name-tag, open grin' },
+  { id: 're_enlister', look: 'over-conditioned soldier, rigid posture, eager pleading eyes, hands raised ready to salute' },
+  // --- THE CHANCEL (Colony 5) ---
+  { id: 'hale', look: 'Warden Verity Hale, true-believer matriarch, silver-haired serene woman, flowing white-grey robe, hands folded, wise warm eyes' },
+  { id: 'cantor', look: 'the Cantor, human zealot, tall imperious figure, elaborate ceremonial robes, arms spread in sermon, intense hypnotic gaze' },
+  { id: 'brother_hum', look: 'humming monk, round robes, serene round face, eyes half-closed, hands together in peace' },
+  { id: 'apostate', look: 'sarcastic ex-convert, ordinary clothes with a torn robe hem hanging off, arms crossed, side-eye smirk' },
+  { id: 'bell_keeper', look: 'bell-keeper, stocky strong hands, worn bell-pull harness across chest, ear protection around neck, methodical calm' },
+  { id: 'reliquary_warden', look: 'reliquary guard, ornate but battered ceremonial armor, standing at attention, reverential stillness' },
+  { id: 'confessor', look: 'Confessor, tired empathetic figure, simple robes, dark circles under kind eyes, listening posture, burdened by doubt' },
 ];
 
 const flag = (n: string): boolean => process.argv.includes(n);
