@@ -50,6 +50,34 @@ function readPng(path: string): PNG | null {
   try { return PNG.sync.read(readFileSync(path)); } catch { return null; }
 }
 
+/**
+ * Strip the flat grey [128,128,128] background that the animate-with-text-v3
+ * walk frames come back with (the 4-direction stills are already transparent).
+ * Border-seeded flood-fill so only edge-connected background is removed —
+ * interior grey/silver pixels (armour, metal) survive untouched. Mutates img.
+ */
+function keyGreyBackground(img: PNG, tol = 24): void {
+  const W = img.width, H = img.height;
+  const isGrey = (x: number, y: number): boolean => {
+    const i = (y * W + x) * 4;
+    if (img.data[i + 3]! < 200) return false; // already transparent / translucent
+    return Math.abs(img.data[i]! - 128) <= tol && Math.abs(img.data[i + 1]! - 128) <= tol && Math.abs(img.data[i + 2]! - 128) <= tol;
+  };
+  const seen = new Uint8Array(W * H);
+  const stack: number[] = [];
+  const push = (x: number, y: number): void => {
+    if (x < 0 || y < 0 || x >= W || y >= H || seen[y * W + x] || !isGrey(x, y)) return;
+    seen[y * W + x] = 1; stack.push(x, y);
+  };
+  for (let x = 0; x < W; x++) { push(x, 0); push(x, H - 1); }
+  for (let y = 0; y < H; y++) { push(0, y); push(W - 1, y); }
+  while (stack.length) {
+    const y = stack.pop()!, x = stack.pop()!;
+    push(x + 1, y); push(x - 1, y); push(x, y + 1); push(x, y - 1);
+  }
+  for (let p = 0; p < seen.length; p++) if (seen[p]) img.data[p * 4 + 3] = 0;
+}
+
 function pixel(img: PNG, x: number, y: number): P4 {
   if (x < 0 || y < 0 || x >= img.width || y >= img.height) return [0, 0, 0, 0];
   const i = (y * img.width + x) * 4;
@@ -95,6 +123,10 @@ function importWalkSheet(id: string): boolean {
     console.warn(`  ${id}: missing directional stills — skipping walk sheet`);
     return false;
   }
+
+  // Walk frames carry a flat grey [128,128,128] background; the stills are already
+  // transparent. Key the grey out of every frame (no-op on the transparent stills).
+  for (const f of [south, north, west, ...walkFrames]) if (f) keyGreyBackground(f);
 
   // find global tight bounds across all frames we'll use
   const allImgs: PNG[] = [south, north, west, ...walkFrames.filter(Boolean) as PNG[]];
