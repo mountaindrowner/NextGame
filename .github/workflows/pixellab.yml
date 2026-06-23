@@ -1,0 +1,56 @@
+name: pixellab
+
+# Runs the PixelLab generator inside GitHub Actions, where the
+# PIXELLAB_API_KEY repo secret is available (it is NOT available in the Claude
+# Code sandbox). Gated on "[pixellab]" in the commit message so it only fires
+# when we ask, and on manual dispatch. Generates one image and uploads it as an
+# artifact so we can confirm the key + API + client all work end to end.
+on:
+  push:
+    branches: ['claude/**']
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: Prompt
+        required: true
+        default: a rusty steel barrel, top-down game asset, transparent background
+      out:
+        description: Output name
+        required: true
+        default: pixellab_smoke
+      size:
+        description: Size (px)
+        required: false
+        default: '64'
+
+jobs:
+  generate:
+    # only run on a push when the commit asks for it; always run on manual dispatch
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[pixellab]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Generate
+        env:
+          PIXELLAB_API_KEY: ${{ secrets.PIXELLAB_API_KEY }}
+        run: |
+          if [ -z "$PIXELLAB_API_KEY" ]; then
+            echo "::error::PIXELLAB_API_KEY secret is empty/unavailable to this workflow. If you stored it as a GitHub *Environment* secret, the job needs 'environment: <name>'. A repo-level Actions secret works without that."
+            exit 1
+          fi
+          npm run pixellab -- \
+            --prompt "${{ github.event.inputs.prompt || 'a rusty steel barrel, top-down game asset, transparent background' }}" \
+            --out "${{ github.event.inputs.out || 'pixellab_smoke' }}" \
+            --size "${{ github.event.inputs.size || '64' }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pixellab-output
+          path: |
+            assets/reference/*.png
+            assets/reference/*.prompt.json
+          if-no-files-found: error
