@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "road-worn old wanderer, dusty travel coat, wide-brim hat, walking staff, weary kind, JRPG dialogue portrait bust, front facing, pixel art, post-apocalyptic rural Texas",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-23T06:37:25.167Z"
+}

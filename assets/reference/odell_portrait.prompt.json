@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "older quartermaster shopkeeper, grey hair, flat cap, supply apron, holding a ledger, JRPG dialogue portrait bust, front facing, pixel art, post-apocalyptic rural Texas",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-23T06:20:41.309Z"
+}

@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "lean shrewd trader, dust coat, salt-stained gloves, patient calculating, JRPG dialogue portrait bust, front facing, pixel art, post-apocalyptic rural Texas",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-23T07:02:16.119Z"
+}

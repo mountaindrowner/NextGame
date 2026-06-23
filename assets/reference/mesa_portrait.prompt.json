@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "ancient storyteller elder, long white hair, sun-weathered face, faded poncho, walking cane, JRPG dialogue portrait bust, front facing, pixel art, post-apocalyptic rural Texas",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-23T06:30:36.912Z"
+}
