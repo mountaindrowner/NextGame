@@ -1,60 +1,114 @@
 # HANDOVER
 
-## Session 2026-06-23 — Act I journey, HD protagonists, tooling, PixelLab
+## Session 2026-06-23 — COMPLETE HANDOVER (read fully; this continues the conversation)
 
-**START HERE.** Branch `claude/make-this-happen-o0q20w`. 141 tests green;
-typecheck/lint/build clean. Latest playtest build on githack:
-`https://rawcdn.githack.com/mountaindrowner/NextGame/<sha>/dist/index.html`.
+> Written so a new session needs no re-uploads and no re-explaining. Everything
+> below is already committed + pushed. Newest commit at handover: `b1a3ab7`.
 
-### Immediate next task — finish the PixelLab integration (chosen path: REST pipeline)
-- The key is set as a **Claude Code environment variable** `PIXELLAB_API_KEY`.
-  It is injected at session start, so it IS available in this fresh session (the
-  previous session predated it and couldn't see it). **First, confirm presence**
-  without printing the value: `node -e "console.log(!!process.env.PIXELLAB_API_KEY)"`.
-- Client is built: `tools/pixellab.ts` + `npm run pixellab -- --prompt "..." --out name --size 96 [--no-bg]`.
-  It POSTs to `https://api.pixellab.ai/v1/generate-image-pixflux` (Bearer auth),
-  writes `assets/reference/<name>.png` + a `.prompt.json` sidecar. Response
-  parsing is defensive but UNVERIFIED against a live call.
-- **Do:** run one live generation, inspect the real JSON response, fix the
-  base64-extraction field names in `tools/pixellab.ts` if needed, then extend to
-  the v2 job-based endpoints: 4-direction character sheets
-  (`/v2/create-character-with-4-directions`), animation (`/v2/animate-with-text-v3`),
-  tilesets (`/v2/create-tileset`) — async (returns job_id, poll `/v2/background-jobs/{id}`).
-  Wire character output into `tools/import-chars.ts` (the 4×4 → game sheet flow).
-- Network to api.pixellab.ai is open from the sandbox. Docs: `docs/pixellab.md`.
+### 0. Orientation / non-negotiables
+- **Branch:** `claude/make-this-happen-o0q20w`. Develop + push ONLY here (never
+  main). No PRs unless Mark explicitly asks. Repo: `mountaindrowner/NextGame`.
+- **State:** working tree clean, all pushed. **141 tests green**; `npm run
+  typecheck`/`lint`/`build` all clean.
+- **Playtest = githack.** Mark can't run a browser; he opens a pinned link.
+  After EVERY meaningful push give him one (standing instruction):
+  `https://rawcdn.githack.com/mountaindrowner/NextGame/<sha>/dist/index.html`
+  (game) · `…/dist/editor.html` (level editor) · `…/dist/slicer.html` (sprite
+  slicer). `dist/` is gitignored but force-added each commit: build, then
+  `git add -f -A dist`.
+- **Commit footer on every commit (verbatim):**
+  `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>` and
+  `Claude-Session: https://claude.ai/code/session_011145P3mq8AKQQDw7ZjrAxF`.
+  Never put the model id in commits/PRs/code/artifacts.
 
-### What shipped this session (Act I is now a gated, playable spine)
-- **Opening (Story Bible "The Call"):** prologue = supply run → night-call (the
-  handheld wakes) → inciting fight (warped Sawlet) → the Breaker binds. Flag-driven
-  in `FieldHDScene` (`pro_*` flags), cutscenes in `src/cutscene/script.ts`.
-- **Act I beats:** The Spotting + **Rook** first rival fight on the Farm Road
-  (`seen_spotting`/`beat_rook`); **Odessa** on the Farm Road assigns the Ohmwork
-  (fill the MANIFEST — that menu view already existed); **Railhead** sabotaged-relay
-  trial (Captain Holt) gates Warden Marrow (`railhead_relay`); **Cistern HOVER gate**
-  (field-ability system, `src/data/field-abilities.ts`) — a full-width flooded band
-  gates the colony, crossable only with a Drone-line Ohm; a survey-Dronelet gift
-  (`got_hover`) guarantees progress. The colony lift is now A-to-Use (no walk-on softlock).
-- **HD protagonists:** SAL + WREN use creator 4×4 walk sheets at NATIVE res
-  (`tools/import-chars.ts` → `world/char/{sal,wren}_walk.png` + `.meta.json`),
-  rendered down with a LINEAR filter, true 4-frame walk (no per-tile reset jitter).
-  Portraits via `tools/import-portraits.ts` → `{sal,wren}_96.png`. Per-type move
-  SFX + a type-chart tutorial were added earlier this session.
-- **Tooling (new Vite pages):** **Level editor** `dist/editor.html`
-  (`src/editor/`) — edit any map's collision/grass/entities, export JSON. **Sprite
-  slicer** `dist/slicer.html` (`src/slicer/`) — tune character-sheet slicing, live
-  walk preview, export. Both run on githack.
-- **Canon:** reconciled docs to the Story Bible (Grandpa Eli is dead-believed /
-  secretly in the satnet; Mabel is the opening guardian). Diagnostics removed
-  from `main.ts`.
+### 1. How Mark works (so you don't re-explain)
+- **No browser in the sandbox** (Chromium blocked) — you cannot run or see the
+  game. Verify with tests + the headless harness; Mark plays on githack and
+  reports bugs. You build pixel art "blind": make principled edits, regenerate,
+  and `Read` the output PNG (the Read tool renders images) to sanity-check, then
+  rely on Mark's eyes.
+- **Art pipeline = Retro Diffusion + PixelLab + procedural.** Mark generates
+  source art externally and uploads PNGs; you import them with the tools below.
+  Replies: outcome-first, concise, end with the githack link.
 
-### Known issues / open
-- Battle balance is tuned blind (can't playtest here): Rook ~L6-7, Holt ~L10,
-  Wardens climb. Adjust on Mark's feedback (levels in `FieldHDScene` consts /
-  warden payloads).
-- NPCs still use the old 20×32 sprites (only SAL/WREN are HD).
-- Next colonies after Cistern: **Bastion** (Colony 3, deep-hive-feral beat — sets
-  up why the Breaker matters), then Redoubt (midpoint reveal). The **Pull**
-  mechanic is still unbuilt (foreshadowed in Rook's aftermath).
+### 2. Your uploaded files are ALREADY committed (NO re-upload)
+- `assets/reference/sal_walk_source.png`, `wren_walk_source.png` — the 4×4
+  768px character walk sheets (front/side/back/back-angle).
+- `assets/reference/sal_portrait_source.png`, `wren_portrait_source.png` — the
+  1254² bust portraits.
+- `public/reference/{sal,wren}_walk_source.png` — copies the slicer loads.
+
+### 3. IMMEDIATE TASK — finish PixelLab (chosen path: REST pipeline)
+- Key is a **Claude Code env var `PIXELLAB_API_KEY`**, injected at session start
+  (so it's live in THIS new session; it wasn't in the old one, which predated
+  it). **First, confirm without printing it:**
+  `node -e "console.log(!!process.env.PIXELLAB_API_KEY)"`.
+- Client built: `tools/pixellab.ts` + `npm run pixellab -- --prompt "..." --out
+  name --size 96 [--no-bg]`. POSTs `https://api.pixellab.ai/v1/generate-image-pixflux`
+  (Bearer), writes `assets/reference/<name>.png` + `.prompt.json`. Response
+  parsing is defensive but **UNVERIFIED against a live call**.
+- **Do:** run one live generation, inspect the real JSON, fix base64 field names
+  in `tools/pixellab.ts` if needed. Then extend to v2 (async job: returns
+  job_id, poll `/v2/background-jobs/{id}`): `/v2/create-character-with-4-directions`,
+  `/v2/animate-with-text-v3`, `/v2/create-tileset`. Feed character output into
+  `tools/import-chars.ts`. Network to api.pixellab.ai is open. Docs:
+  `docs/pixellab.md`. (A GitHub-Actions path was tried + removed — the secret is
+  in the Claude env, not GitHub.)
+
+### 4. What shipped this session (the arc, newest → oldest)
+- HOVER field ability + Cistern flooded gate · Odessa/the Ohmwork · Railhead
+  relay trial (Captain Holt gates Warden Marrow) · SAL+WREN portraits · WREN art
+  + both protagonists generalized to hi-res 4-frame · walk-jitter fix · SAL
+  native-res sprite + L/R + smooth walk · level editor + sprite slicer · lift
+  A-to-Use softlock fix · The Spotting + Rook (first rival) · per-move SFX +
+  type-chart tutorial · canon reconciled to the Story Bible · prologue "The
+  Call" (supply run → night-call → Breaker) · title/opening polish · headless
+  scene-lifecycle test agent · wild-combat + stale-scene-state fixes.
+
+### 5. Commands
+- `npm test` (vitest, 141) · `npx tsc --noEmit` · `npx tsx tools/check-canon.ts`
+  (lint) · `npm run build` (then `git add -f -A dist`).
+- Maps: `npx tsx tools/gen-<map>.ts` (cistern/railhead/farmroad/underground[=ohmstead]/…)
+  — **edit the generator, not the JSON**.
+- Art import: `npx tsx tools/import-chars.ts` (SAL+WREN walk sheets) ·
+  `npx tsx tools/import-portraits.ts` (busts) · `npm run pixellab` · audio:
+  `npx tsx tools/audio/build-tracks.ts` · headless engine playthrough:
+  `npm run autoplay`.
+
+### 6. Architecture / gotchas the new session MUST know
+- **Phaser scenes are reused singletons** across `scene.start()` — reset every
+  per-visit instance field in `create()` or you get softlocks (the bug class
+  that bit us). `src/scenes/FieldHDScene.ts` is the big one: overworld + ALL the
+  gating/story logic + flags + the player sprite/anim.
+- **Story flags** live in `GameState.flags`: `pro_supply/nightcall/breaker/done/charge`
+  (prologue), `seen_spotting/beat_rook/rook_done` (Rook), `railhead_intro/relay/relay_done`,
+  `got_hover`, `tut_types`. Cutscenes are data in `src/cutscene/script.ts`
+  (ASCII only — em-dashes/curly quotes render as garbage; SPEAKERS set is tested).
+- **Headless tests** (run in node, no browser): `tests/helpers/headless-game.ts`
+  boots real Phaser via happy-dom + canvas/XHR/Image stubs (`dom-canvas.ts`).
+  Suites: scene-lifecycle, scene-smoke, prologue, field-abilities, + the engine
+  unit tests. Default env is node; scene tests use `// @vitest-environment happy-dom`.
+- **Maps**: `public/world/*.json` (schema = `FieldData` in FieldHDScene). The
+  level editor (`/editor.html`) exports JSON you drop into `public/world/`.
+  Hover-gate water = a `hover[]` mask (collision-solid, passable only with a
+  HOVER Ohm); verify gating changes with a flood-fill from spawn.
+- **Sprites**: SAL/WREN are hi-res 4-frame (`world/char/<n>_walk.png` +
+  `.meta.json`, LINEAR filter, scaled to ~48px). NPCs still 20×32/3-frame.
+  Player scale = `PLAYER_TARGET_PX / meta.contentH`; walk fps in `makeWalk`.
+- **Canon law:** `docs/design/story-bible.md` (the Bible) governs; `beats.md`/
+  GDD reconciled to it. Eli is dead-believed / secretly in the satnet; Mabel is
+  the opening guardian.
+
+### 7. Roadmap (next, in order)
+- **Bastion (Colony 3)** — deep-hive-feral-Ohms beat (sets up *why the Breaker
+  matters*); mirror the Railhead trial pattern + a colony crisis.
+- **The Pull** mechanic (foreshadowed in Rook's aftermath) — lingering draws
+  wild Ohms / pressures forward movement.
+- HD sprites for NPCs (only SAL/WREN are HD). Battle balance tuned blind —
+  adjust on Mark's feedback (levels in FieldHDScene consts / warden payloads).
+
+
+## Session 2026-06-16 (cont.) — Progression & balance pass (auto-player fixes)
 
 
 ## Session 2026-06-16 (cont.) — Progression & balance pass (auto-player fixes)
