@@ -1,5 +1,28 @@
 # HANDOVER
 
+## Session 2026-06-23 (cont.) — PixelLab confirmed live
+
+- **PixelLab REST pipeline is verified.** `PIXELLAB_API_KEY` is present in the
+  Claude Code env (confirmed via `node -e "…"`). Ran a live call:
+  `npm run pixellab -- --prompt "a rusty steel barrel, top-down, game asset" --out barrel_test --size 64 --no-bg`
+  → wrote `assets/reference/barrel_test.png` (3 KB). Image is a clean top-down
+  barrel with material depth — correct. Response shape: `{ image: { base64: … },
+  usage: { type:'generations', generations:1 } }` — our `extractBase64` parser
+  already handles `image.base64`. No field-name fixes needed; the client is
+  production-ready. Test asset deleted.
+- **Colony boss fights (Wardens / Patches / gates) are already complete** —
+  all code was already in place from a prior session: `src/data/patches.ts`,
+  warden NPCs in all 5 colony gen files, `startWarden`/`wardenBeaten`/gate in
+  `FieldHDScene.ts`, patch award in `BattleScene.ts`, PATCHES view in
+  `MenuScene.ts`, `tests/patches.test.ts`. **141 tests green**, build clean.
+- **Next extensions (PixelLab v2):** async job endpoints for character sheets
+  (`/v2/create-character-with-4-directions`) and animation (`/v2/animate-with-text-v3`).
+  The v1 single-image path is confirmed; v2 needs a job-poll loop (job_id →
+  poll `/v2/background-jobs/{id}` until done → download). Build once you have a
+  specific character or tileset to generate.
+
+---
+
 ## Session 2026-06-23 — COMPLETE HANDOVER (read fully; this continues the conversation)
 
 > Written so a new session needs no re-uploads and no re-explaining. Everything
