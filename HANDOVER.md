@@ -1,5 +1,62 @@
 # HANDOVER
 
+## Session 2026-06-23 — Act I journey, HD protagonists, tooling, PixelLab
+
+**START HERE.** Branch `claude/make-this-happen-o0q20w`. 141 tests green;
+typecheck/lint/build clean. Latest playtest build on githack:
+`https://rawcdn.githack.com/mountaindrowner/NextGame/<sha>/dist/index.html`.
+
+### Immediate next task — finish the PixelLab integration (chosen path: REST pipeline)
+- The key is set as a **Claude Code environment variable** `PIXELLAB_API_KEY`.
+  It is injected at session start, so it IS available in this fresh session (the
+  previous session predated it and couldn't see it). **First, confirm presence**
+  without printing the value: `node -e "console.log(!!process.env.PIXELLAB_API_KEY)"`.
+- Client is built: `tools/pixellab.ts` + `npm run pixellab -- --prompt "..." --out name --size 96 [--no-bg]`.
+  It POSTs to `https://api.pixellab.ai/v1/generate-image-pixflux` (Bearer auth),
+  writes `assets/reference/<name>.png` + a `.prompt.json` sidecar. Response
+  parsing is defensive but UNVERIFIED against a live call.
+- **Do:** run one live generation, inspect the real JSON response, fix the
+  base64-extraction field names in `tools/pixellab.ts` if needed, then extend to
+  the v2 job-based endpoints: 4-direction character sheets
+  (`/v2/create-character-with-4-directions`), animation (`/v2/animate-with-text-v3`),
+  tilesets (`/v2/create-tileset`) — async (returns job_id, poll `/v2/background-jobs/{id}`).
+  Wire character output into `tools/import-chars.ts` (the 4×4 → game sheet flow).
+- Network to api.pixellab.ai is open from the sandbox. Docs: `docs/pixellab.md`.
+
+### What shipped this session (Act I is now a gated, playable spine)
+- **Opening (Story Bible "The Call"):** prologue = supply run → night-call (the
+  handheld wakes) → inciting fight (warped Sawlet) → the Breaker binds. Flag-driven
+  in `FieldHDScene` (`pro_*` flags), cutscenes in `src/cutscene/script.ts`.
+- **Act I beats:** The Spotting + **Rook** first rival fight on the Farm Road
+  (`seen_spotting`/`beat_rook`); **Odessa** on the Farm Road assigns the Ohmwork
+  (fill the MANIFEST — that menu view already existed); **Railhead** sabotaged-relay
+  trial (Captain Holt) gates Warden Marrow (`railhead_relay`); **Cistern HOVER gate**
+  (field-ability system, `src/data/field-abilities.ts`) — a full-width flooded band
+  gates the colony, crossable only with a Drone-line Ohm; a survey-Dronelet gift
+  (`got_hover`) guarantees progress. The colony lift is now A-to-Use (no walk-on softlock).
+- **HD protagonists:** SAL + WREN use creator 4×4 walk sheets at NATIVE res
+  (`tools/import-chars.ts` → `world/char/{sal,wren}_walk.png` + `.meta.json`),
+  rendered down with a LINEAR filter, true 4-frame walk (no per-tile reset jitter).
+  Portraits via `tools/import-portraits.ts` → `{sal,wren}_96.png`. Per-type move
+  SFX + a type-chart tutorial were added earlier this session.
+- **Tooling (new Vite pages):** **Level editor** `dist/editor.html`
+  (`src/editor/`) — edit any map's collision/grass/entities, export JSON. **Sprite
+  slicer** `dist/slicer.html` (`src/slicer/`) — tune character-sheet slicing, live
+  walk preview, export. Both run on githack.
+- **Canon:** reconciled docs to the Story Bible (Grandpa Eli is dead-believed /
+  secretly in the satnet; Mabel is the opening guardian). Diagnostics removed
+  from `main.ts`.
+
+### Known issues / open
+- Battle balance is tuned blind (can't playtest here): Rook ~L6-7, Holt ~L10,
+  Wardens climb. Adjust on Mark's feedback (levels in `FieldHDScene` consts /
+  warden payloads).
+- NPCs still use the old 20×32 sprites (only SAL/WREN are HD).
+- Next colonies after Cistern: **Bastion** (Colony 3, deep-hive-feral beat — sets
+  up why the Breaker matters), then Redoubt (midpoint reveal). The **Pull**
+  mechanic is still unbuilt (foreshadowed in Rook's aftermath).
+
+
 ## Session 2026-06-16 (cont.) — Progression & balance pass (auto-player fixes)
 
 Fixed the auto-player's top findings (the progression spine). Re-running
