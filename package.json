@@ -52,7 +52,8 @@
     "playtest": "tsx tools/playtest.ts",
     "autoplay": "tsx tools/autoplay.ts",
     "screenshots": "tsx tools/screenshot.ts",
-    "import:npc-chars": "tsx tools/import-npc-chars.ts"
+    "import:npc-chars": "tsx tools/import-npc-chars.ts",
+    "pixellab:tiles": "tsx tools/pixellab-tiles.ts"
   },
   "dependencies": {
     "phaser": "^3.85.2"
