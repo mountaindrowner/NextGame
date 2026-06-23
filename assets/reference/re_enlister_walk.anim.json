@@ -1,0 +1,8 @@
+{
+  "source": "pixellab",
+  "endpoint": "animate-with-text-v3",
+  "action": "walk cycle",
+  "from": "assets/reference/re_enlister__south.png",
+  "frames": 9,
+  "at": "2026-06-23T19:56:12.460Z"
+}
