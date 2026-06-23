@@ -105,6 +105,42 @@ function contactSheet(pngs: PNG[], cols: number, z: number): Buffer {
   return PNG.sync.write(out);
 }
 
+/** Flat individual tiles via /v2/create-tiles-pro (numbered description → set of 32px tiles). */
+async function proMode(): Promise<void> {
+  const desc = arg('desc'); const out = arg('out');
+  if (!desc || !out) throw new Error('usage: pro --desc "1. grass. 2. dirt path. ..." --out <name> [--size 32] [--view top-down]');
+  const size = parseInt(arg('size', '32')!, 10);
+  const view = arg('view', 'high top-down')!;
+  const outDir = join(ROOT, 'assets/tiles-pixellab', out);
+
+  const before = await balance();
+  console.log(`PixelLab tiles-pro: "${desc.slice(0, 80)}..." (${size}px, ${view}) → ${out}  [balance ${before}]`);
+  const sub = (await (await fetch(`${API}/v2/create-tiles-pro`, {
+    method: 'POST', headers: H,
+    body: JSON.stringify({ description: desc, tile_size: size, tile_view: view }),
+  })).json()) as { background_job_id?: string; tile_id?: string; detail?: unknown };
+  if (!sub.background_job_id || !sub.tile_id) throw new Error(`no job/tile id: ${JSON.stringify(sub).slice(0, 400)}`);
+  await pollJob(sub.background_job_id, 'tiles-pro');
+
+  const data = (await (await fetch(`${API}/v2/tiles-pro/${sub.tile_id}`, { headers: H })).json()) as {
+    storage_urls?: Record<string, string>;
+  };
+  const urls = Object.entries(data.storage_urls ?? {}).filter(([, v]) => typeof v === 'string' && v.startsWith('http'));
+  if (!urls.length) throw new Error(`no tile urls: ${JSON.stringify(data).slice(0, 300)}`);
+
+  mkdirSync(outDir, { recursive: true });
+  const pngs: PNG[] = [];
+  for (const [name, url] of urls) {
+    const buf = Buffer.from(await (await fetch(url)).arrayBuffer());
+    writeFileSync(join(outDir, `${name}.png`), buf);
+    try { pngs.push(PNG.sync.read(buf)); } catch { /* skip non-PNG */ }
+  }
+  if (pngs.length) writeFileSync(join(outDir, '_contact.png'), contactSheet(pngs, Math.min(8, pngs.length), 4));
+  writeFileSync(join(outDir, 'tiles.json'), JSON.stringify({ source: 'pixellab', endpoint: 'create-tiles-pro', description: desc, size, view, tile_id: sub.tile_id, count: urls.length, at: new Date().toISOString() }, null, 2));
+  const after = await balance();
+  console.log(`wrote ${urls.length} tiles + _contact.png → assets/tiles-pixellab/${out}/  | gen balance ${before}→${after} (tiles-pro may bill in USD)`);
+}
+
 async function main(): Promise<void> {
   const lower = arg('lower'); const upper = arg('upper'); const out = arg('out');
   if (!lower || !upper || !out) throw new Error('usage: --lower "<terrain>" --upper "<terrain>" --out <name> [--transition "..."] [--size 32] [--view "high top-down"]');
@@ -151,4 +187,5 @@ async function main(): Promise<void> {
   console.log(`wrote ${tiles.length} tiles + _contact.png → assets/tiles-pixellab/${out}/  | generations used: ${(before - after).toFixed(0)}, remaining: ${after}`);
 }
 
-main().catch((e) => { console.error(String(e instanceof Error ? e.message : e)); process.exit(1); });
+const entry = process.argv[2] === 'pro' ? proMode() : main();
+entry.catch((e) => { console.error(String(e instanceof Error ? e.message : e)); process.exit(1); });
