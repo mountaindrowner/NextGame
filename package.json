@@ -11,6 +11,7 @@
     "test": "vitest run",
     "gen:maps": "tsx tools/build-maps.ts",
     "pixellab": "tsx tools/pixellab.ts",
+    "pixellab:char": "tsx tools/pixellab-char.ts",
     "audio:build": "tsx tools/audio/build-tracks.ts",
     "gen:styleguide": "tsx tools/gen-styleguide.ts",
     "gen:sprites": "tsx tools/gen-sprites.ts",

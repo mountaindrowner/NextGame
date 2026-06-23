@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "portrait bust of a kind elderly grandmother, soft wrinkled smiling face, grey hair in a neat bun, round spectacles, warm work apron, post-apocalyptic homestead, pixel art character portrait, front facing, JRPG dialogue portrait",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-23T06:00:30.880Z"
+}
