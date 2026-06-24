@@ -8,7 +8,7 @@
  * the stone. Real additive lighting sells the glow. Composes
  * public/world/ohmstead.png + .json (collision, exits, interacts, npcs, spawn).
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { PNG } from 'pngjs';
 import { Grid } from './gridart';
@@ -25,63 +25,8 @@ const ROWS = 24;
 const W = COLS * T;
 const H = ROWS * T;
 
-// ---- tiles (32×32) -------------------------------------------------------
-/** Dark organic cavern rock — the colony is dug out of this. */
-function rockTile(seed: number): Sprite {
-  const g = new Grid(T, T);
-  const rng = new Rng(seed);
-  g.rect(0, 0, T, T, 'd');
-  for (let k = 0; k < 5; k++) g.ellipse(rng.int(3, T - 4), rng.int(3, T - 4), rng.int(2, 4), rng.int(2, 3), 'D');
-  for (let k = 0; k < 3; k++) {
-    const x0 = rng.int(2, T - 3);
-    const y0 = rng.int(2, T - 3);
-    g.line(x0, y0, x0 + rng.int(-6, 6), y0 + rng.int(-6, 6), 'D'); // cracks
-  }
-  for (let k = 0; k < 9; k++) g.set(rng.int(0, T - 1), rng.int(0, T - 1), rng.chance(55) ? 'D' : 'N');
-  return g.render();
-}
-
-/** Warm earthen cobblestone floor (brick-offset stones over dark mortar). */
-function dirtTile(seed: number): Sprite {
-  const g = new Grid(T, T);
-  const rng = new Rng(seed);
-  g.rect(0, 0, T, T, 'Q'); // mortar
-  let row = 0;
-  for (let y = -1; y < T; y += 6, row++) {
-    const off = row % 2 ? -3 : 0;
-    for (let x = off; x < T; x += 7) {
-      g.ellipse(x + 3, y + 3, 3, 2, 'M'); // stone body
-      g.hline(x + 1, y + 1, 4, 'T'); // lit top
-      g.set(x + 3, y + 4, 'Q'); // contact shade
-    }
-  }
-  for (let k = 0; k < 7; k++) g.set(rng.int(0, T - 1), rng.int(0, T - 1), rng.chance(50) ? 'Q' : 'T');
-  return g.render();
-}
-
-/** Grey stone block wall (the chamber walls). */
-function wallTile(): Sprite {
-  const g = new Grid(T, T);
-  g.box(0, 0, T, T, 'l', 'a', 'A');
-  let r = 0;
-  for (let y = 0; y < T; y += 8, r++) {
-    g.hline(0, y, T, 'A'); // mortar course
-    g.hline(0, y + 1, T, 'l'); // lit under-edge
-    const off = r % 2 ? 8 : 0;
-    for (let x = off; x < T; x += 16) g.vline(x, y + 2, 6, 'A'); // head joints
-  }
-  return g.render();
-}
-
-/** Deep cave water with teal glints. */
-function waterTile(seed: number): Sprite {
-  const g = new Grid(T, T);
-  const rng = new Rng(seed);
-  g.rect(0, 0, T, T, 'C');
-  for (let k = 0; k < 5; k++) g.hline(rng.int(2, T - 7), rng.int(2, T - 2), rng.int(3, 6), 'c');
-  for (let k = 0; k < 3; k++) g.hline(rng.int(2, T - 5), rng.int(2, T - 2), rng.int(2, 4), '7');
-  return g.render();
-}
+// Terrain tiles are PixelLab Wang sets now (see the raster section below);
+// the grid-method rock/dirt/wall/water tiles they replaced have been retired.
 
 // ---- objects -------------------------------------------------------------
 type CrystalKind = 'blue' | 'violet' | 'teal';
@@ -386,12 +331,7 @@ pool(2, 21, 3, 2);
 pool(33, 22, 3, 2);
 pool(34, 13, 2, 3);
 
-// ---- raster --------------------------------------------------------------
-const ROCK = [rockTile(1), rockTile(2), rockTile(3), rockTile(4), rockTile(5)];
-const DIRT = [dirtTile(11), dirtTile(12), dirtTile(13), dirtTile(14)];
-const WATER = [waterTile(21), waterTile(22)];
-const WALL = wallTile();
-
+// ---- raster: PixelLab Wang terrain via dual-grid -------------------------
 const big = new Sprite(W, H);
 const blit = (s: Sprite, x0: number, y0: number, over = true): void => {
   for (let y = 0; y < s.h; y++)
@@ -427,39 +367,75 @@ function glow(cx: number, cy: number, radius: number, col: [number, number, numb
     }
 }
 
-const trng = new Rng(99);
-for (let r = 0; r < ROWS; r++)
-  for (let c = 0; c < COLS; c++) {
-    const ch = MAP[r]![c]!;
-    const t =
-      ch === '=' ? WALL : ch === '~' ? WATER[trng.int(0, 1)]! : ch === '.' ? DIRT[trng.int(0, 3)]! : ROCK[trng.int(0, 4)]!;
-    blit(t, c * T, r * T, false);
-  }
+// Two 16-tile corner-Wang sets (cobblestone floor↔rock, teal water↔rock),
+// laid on a dual grid: each rendered tile sits at the intersection of FOUR
+// data cells, offset by half a tile, so floor/water blend into the surrounding
+// rock with seamless carved edges. Collision (below) stays on the data grid —
+// the visual floor centers on each '.' cell, so what's walkable matches what's
+// drawn. Corner mask packs NW<<3 | NE<<2 | SW<<1 | SE (1 = upper terrain).
+const TILES = join(new URL('..', import.meta.url).pathname, 'assets/tiles-pixellab');
 
-// organic edge: crumble dark rock pixels along dirt↔rock seams
-const erng = new Rng(7);
-for (let r = 0; r < ROWS; r++)
-  for (let c = 0; c < COLS; c++) {
-    if (MAP[r]![c] !== '.') continue;
-    const sides: Array<[number, number, number, number]> = [
-      [0, -1, c * T, r * T], // up edge
-      [0, 1, c * T, r * T + T - 1], // down
-      [-1, 0, c * T, r * T], // left
-      [1, 0, c * T + T - 1, r * T], // right
-    ];
-    for (const [dx, dy, ex, ey] of sides) {
-      if (MAP[r + dy]?.[c + dx] !== '#') continue;
-      for (let i = 0; i < T; i++) {
-        if (!erng.chance(38)) continue;
-        const x = dx === 0 ? ex + i : ex;
-        const y = dy === 0 ? ey + i : ey;
-        const depth = erng.int(0, 2);
-        const px = x + (dx === 1 ? -depth : dx === -1 ? depth : 0);
-        const py = y + (dy === 1 ? -depth : dy === -1 ? depth : 0);
-        big.set(px, py, [28, 20, 12, 255]);
-      }
+function loadWang(dir: string): Map<number, PNG> {
+  const meta = JSON.parse(readFileSync(join(TILES, dir, 'tileset.json'), 'utf8')) as {
+    tiles: Array<{ id?: string; name?: string; corners: Record<'NW' | 'NE' | 'SW' | 'SE', string> }>;
+  };
+  const byMask = new Map<number, PNG>();
+  meta.tiles.forEach((t, i) => {
+    const fname = `tile_${String(i).padStart(2, '0')}_${t.id ?? t.name ?? i}`.replace(/[^\w]+/g, '_') + '.png';
+    const png = PNG.sync.read(readFileSync(join(TILES, dir, fname)));
+    const c = t.corners;
+    const bit = (k: 'NW' | 'NE' | 'SW' | 'SE'): number => (c[k] === 'upper' ? 1 : 0);
+    byMask.set((bit('NW') << 3) | (bit('NE') << 2) | (bit('SW') << 1) | bit('SE'), png);
+  });
+  return byMask;
+}
+
+/** Alpha-blend a PixelLab tile onto `big` at pixel (x0,y0), clipped to canvas. */
+function blitTile(png: PNG, x0: number, y0: number): void {
+  for (let y = 0; y < png.height; y++) {
+    const py = y0 + y;
+    if (py < 0 || py >= H) continue;
+    for (let x = 0; x < png.width; x++) {
+      const px = x0 + x;
+      if (px < 0 || px >= W) continue;
+      const si = (y * png.width + x) * 4;
+      const a = png.data[si + 3]! / 255;
+      if (a === 0) continue;
+      const d = big.get(px, py);
+      big.set(px, py, [
+        Math.round(png.data[si]! * a + d[0] * (1 - a)),
+        Math.round(png.data[si + 1]! * a + d[1] * (1 - a)),
+        Math.round(png.data[si + 2]! * a + d[2] * (1 - a)),
+        255,
+      ]);
     }
   }
+}
+
+const floorWang = loadWang('ohmstead_floor_rock');
+const waterWang = loadWang('ohmstead_water_rock');
+const isFloorCell = (c: number, r: number): boolean => inb(c, r) && MAP[r]![c] === '.';
+const isWaterCell = (c: number, r: number): boolean => inb(c, r) && MAP[r]![c] === '~';
+
+/** Dual-grid lay: tile (i,j) samples data cells (i-1,j-1)=NW … (i,j)=SE. */
+function layWang(wang: Map<number, PNG>, sample: (c: number, r: number) => boolean, skipEmpty: boolean): void {
+  for (let j = 0; j <= ROWS; j++)
+    for (let i = 0; i <= COLS; i++) {
+      const mask =
+        ((sample(i - 1, j - 1) ? 1 : 0) << 3) |
+        ((sample(i, j - 1) ? 1 : 0) << 2) |
+        ((sample(i - 1, j) ? 1 : 0) << 1) |
+        (sample(i, j) ? 1 : 0);
+      if (skipEmpty && mask === 0) continue; // overlay: nothing to draw here
+      const png = wang.get(mask);
+      if (png) blitTile(png, i * T - T / 2, j * T - T / 2);
+    }
+}
+
+// base: rock fills the canvas, cobblestone where carved ('.'), seamless edges
+layWang(floorWang, isFloorCell, false);
+// overlay: teal water in the pools, framed by wet rock (only water-touching tiles)
+layWang(waterWang, isWaterCell, true);
 
 // ---- placements ----------------------------------------------------------
 interface Placed {
@@ -607,12 +583,12 @@ writeFileSync(
       { col: 25, row: 14, text: 'THE YARD — scrap, ore, and the cart up to the surface line.' },
     ],
     npcs: [
-      { char: 'npc_elder', col: 7, row: 6, name: 'Grandma Mabel', lines: [
+      { char: 'mabel', col: 7, row: 6, name: 'Grandma Mabel', lines: [
         'Built from Eli\'s parts, woken at Eli\'s bench. That makes it family now. Mind it well.',
         'Your grandfather could coax a song out of a dead radio. Banjo still hums it, some nights.',
         "Boone wants you topside at first light. Come back to me, you hear? The both of you.",
       ] },
-      { char: 'npc_rancher', col: 21, row: 12, name: 'Cass', lines: [
+      { char: 'cass', col: 21, row: 12, name: 'Cass', lines: [
         "They won't let me up the lift. 'Too young,' Boone says. You're barely older than me!",
         'Bring me back something from the surface. A bottle cap — anything that saw the sky.',
         "Everyone's spooked by the night signal. Pretend you're not, and I will too.",
