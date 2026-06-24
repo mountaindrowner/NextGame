@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "SAL, young scavenger hero, brown hair under a worn leather goggle-cap pushed up on the brow, red bandana at the neck, scuffed scrappy fur-collar work jacket, denim trousers with knee pads, worn boots, grimy muted industrial palette, determined, JRPG dialogue portrait bust, front facing, pixel art, post-apocalyptic rural Texas",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-24T17:12:49.789Z"
+}

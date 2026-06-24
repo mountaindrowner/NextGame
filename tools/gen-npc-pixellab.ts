@@ -34,6 +34,11 @@ interface Npc { id: string; look: string }
 // (Batch 1 — Ohmstead→Railhead, 20 NPCs — done & approved; driver skips existing files.)
 // Canon looks per docs/design/colony-npc-casts.md + principal-cast.md.
 const CAST: Npc[] = [
+  // --- PROTAGONISTS (presets) — redone to match the metal-vault look, canon
+  // design preserved (goggle-cap, red bandana, scrappy jacket, denim, boots),
+  // rendered grittier/muted to sit in the steel shelter. ---
+  { id: 'sal', look: 'SAL, young scavenger hero, brown hair under a worn leather goggle-cap pushed up on the brow, red bandana at the neck, scuffed scrappy fur-collar work jacket, denim trousers with knee pads, worn boots, grimy muted industrial palette, determined' },
+  { id: 'wren', look: 'WREN, young scavenger hero, blonde hair in a low ponytail, worn leather goggle-cap, red bandana at the neck, scuffed scrappy work jacket with a salvaged metal shoulder pad, denim trousers with knee pads, worn boots, grimy muted industrial palette, determined' },
   // --- THE CISTERN (Colony 2) ---
   { id: 'bloom', look: 'Warden Etta Bloom, nurturing matriarch, warm middle-aged woman, practical rolled-sleeve work clothes, strong gentle hands, kind steady eyes' },
   { id: 'sela', look: 'colony caretaker-healer, young woman, soft dark hair, healer wrap apron, calm compassionate expression' },

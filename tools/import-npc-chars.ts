@@ -35,6 +35,8 @@ const ALL_NPC_IDS = [
   'scrap_broker', 'salt_broker', 'card_sharp', 'holt',
   // Mabel (generated before batch tooling, same format)
   'mabel',
+  // Protagonists (presets) redone via PixelLab to match the vault look
+  'sal', 'wren',
   // Batch 2
   'bloom', 'sela', 'mud_cole', 'weather_watcher', 'nursery_matron', 'seed_keeper',
   'hydromancer', 'stone', 'flint', 'knock_twice', 'doomsayer', 'gate_warden',
