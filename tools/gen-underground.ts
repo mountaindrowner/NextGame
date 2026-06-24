@@ -22,8 +22,12 @@ const OUT = join(new URL('..', import.meta.url).pathname, 'public/world');
 mkdirSync(OUT, { recursive: true });
 
 const T = 32;
-const COLS = 46;
-const ROWS = 32;
+// The vault sits inside a margin of rock + solid exterior, so OX/OY shift the
+// whole floor plan inward and the surround reads as the world beyond.
+const OX = 5;
+const OY = 5;
+const COLS = 54;
+const ROWS = 42;
 const W = COLS * T;
 const H = ROWS * T;
 
@@ -285,16 +289,16 @@ const rooms: Record<string, Room> = {
   yard: { x: 30, y: 23, w: 14, h: 8 }, // the Yard — dig face + ore cart
 };
 
+// Rooms carve to solid floor; the thick metal walls are DERIVED at render time
+// as the band of non-floor cells hugging the floor, so every room and corridor
+// is framed without authoring wall cells by hand. carve()/carveRoom() apply the
+// OX/OY margin offset, so design coords below stay readable.
 function carveRoom(r: Room): void {
   for (let y = r.y; y < r.y + r.h; y++)
-    for (let x = r.x; x < r.x + r.w; x++) {
-      if (!inb(x, y)) continue;
-      const edge = x === r.x || x === r.x + r.w - 1 || y === r.y || y === r.y + r.h - 1;
-      MAP[y]![x] = edge ? '=' : '.';
-    }
+    for (let x = r.x; x < r.x + r.w; x++) carve(x, y);
 }
 function carve(x: number, y: number): void {
-  if (inb(x, y)) MAP[y]![x] = '.';
+  if (inb(x + OX, y + OY)) MAP[y + OY]![x + OX] = '.';
 }
 /** L-shaped corridor (carves a 2-wide doorway where it crosses a rock wall). */
 function corridor(x0: number, y0: number, x1: number, y1: number, w = 2): void {
@@ -401,13 +405,19 @@ function blitTile(png: PNG, x0: number, y0: number): void {
   }
 }
 
-const floorWang = loadWang('ohmstead_metal_rock');
+// Two modular Wang modules compose the vault, painter's-algorithm in layers:
+//   floorWall: upper = large steel floor plate, lower = thick bulkhead wall
+//   rockVoid:  upper = raw rock,                lower = solid exterior (the void)
+const floorWall = loadWang('vault_floor_wall');
+const rockVoid = loadWang('vault_rock_void');
 const isFloorCell = (c: number, r: number): boolean => inb(c, r) && MAP[r]![c] === '.';
 
-/** Dual-grid lay: tile (i,j) samples data cells (i-1,j-1)=NW … (i,j)=SE. */
-function layWang(wang: Map<number, PNG>, sample: (c: number, r: number) => boolean): void {
+/** Dual-grid lay: tile (i,j) samples corners (i-1,j-1)=NW … (i,j)=SE. `drawIf`
+ *  gates a layer so it only paints where it's relevant. */
+function layWang(wang: Map<number, PNG>, sample: (c: number, r: number) => boolean, drawIf?: (i: number, j: number) => boolean): void {
   for (let j = 0; j <= ROWS; j++)
     for (let i = 0; i <= COLS; i++) {
+      if (drawIf && !drawIf(i, j)) continue;
       const mask =
         ((sample(i - 1, j - 1) ? 1 : 0) << 3) |
         ((sample(i, j - 1) ? 1 : 0) << 2) |
@@ -418,12 +428,8 @@ function layWang(wang: Map<number, PNG>, sample: (c: number, r: number) => boole
     }
 }
 
-// base: rock fills the canvas, riveted steel where carved ('.'), seamless edges
-layWang(floorWang, isFloorCell);
-
-// fade-to-black: the rock darkens with distance from the nearest steel floor,
-// so the shelter sits in an encroaching void. BFS the cell-distance to floor,
-// then apply a smooth (bilinear-sampled) brightness multiply per pixel.
+// distance (in cells) from each cell to the nearest steel floor — drives the
+// derived wall band, the rock gradient, and where the exterior void begins.
 const DIST = new Int16Array(COLS * ROWS).fill(9999);
 {
   const q: number[] = [];
@@ -438,20 +444,39 @@ const DIST = new Int16Array(COLS * ROWS).fill(9999);
     }
   }
 }
-const bright = (d: number): number => (d <= 1 ? 1 : Math.max(0.04, Math.pow(0.6, d - 1)));
-const sampleB = (c: number, r: number): number =>
-  bright(DIST[Math.max(0, Math.min(ROWS - 1, r)) * COLS + Math.max(0, Math.min(COLS - 1, c))]!);
+const distAt = (c: number, r: number): number =>
+  DIST[Math.max(0, Math.min(ROWS - 1, r)) * COLS + Math.max(0, Math.min(COLS - 1, c))]!;
+
+const WALLBAND = 2; // thick metal walls = the 2 cells hugging the floor
+const ROCKMAX = 5; // rock gradient reaches this far out; beyond it, solid exterior
+// rock terrain: non-floor, within the gradient band, and off the 1-cell border
+// ring (which is always exterior so the vault reads as sitting inside the world)
+const isRockCell = (c: number, r: number): boolean =>
+  c >= 1 && r >= 1 && c < COLS - 1 && r < ROWS - 1 && inb(c, r) && MAP[r]![c] !== '.' && distAt(c, r) <= ROCKMAX;
+
+// LAYER 1 — raw rock dropping off into the solid exterior void (the world beyond)
+layWang(rockVoid, isRockCell);
+
+// gradient: darken by distance from the floor so the rock steps down to black.
+// Floor + walls (≤ WALLBAND) are repainted at full brightness in layer 2.
+const bright = (d: number): number => (d <= WALLBAND ? 1 : Math.max(0.04, Math.pow(0.62, d - WALLBAND)));
 for (let y = 0; y < H; y++)
   for (let x = 0; x < W; x++) {
     const fx = x / T - 0.5, fy = y / T - 0.5;
     const c0 = Math.floor(fx), r0 = Math.floor(fy), tx = fx - c0, ty = fy - r0;
     const b =
-      sampleB(c0, r0) * (1 - tx) * (1 - ty) + sampleB(c0 + 1, r0) * tx * (1 - ty) +
-      sampleB(c0, r0 + 1) * (1 - tx) * ty + sampleB(c0 + 1, r0 + 1) * tx * ty;
+      bright(distAt(c0, r0)) * (1 - tx) * (1 - ty) + bright(distAt(c0 + 1, r0)) * tx * (1 - ty) +
+      bright(distAt(c0, r0 + 1)) * (1 - tx) * ty + bright(distAt(c0 + 1, r0 + 1)) * tx * ty;
     if (b >= 0.999) continue;
     const p = big.get(x, y);
     big.set(x, y, [Math.round(p[0] * b), Math.round(p[1] * b), Math.round(p[2] * b), 255]);
   }
+
+// LAYER 2 — the steel vault: large floor plates + thick bulkhead walls, painted
+// only over the floor and its wall band (any tile corner within WALLBAND).
+const inVault = (i: number, j: number): boolean =>
+  distAt(i - 1, j - 1) <= WALLBAND || distAt(i, j - 1) <= WALLBAND || distAt(i - 1, j) <= WALLBAND || distAt(i, j) <= WALLBAND;
+layWang(floorWall, isFloorCell, inVault);
 
 // ---- placements ----------------------------------------------------------
 interface Placed {
@@ -543,8 +568,9 @@ for (const [col, row] of lampSpots) objs.push({ s: lamp(), col, row, glow: { r: 
 
 const extraSolid = new Set<string>();
 for (const o of objs) {
-  const ax = o.col * T + T / 2;
-  const ay = o.row * T + T;
+  const ocol = o.col + OX, orow = o.row + OY; // props use design coords; apply the margin
+  const ax = ocol * T + T / 2;
+  const ay = orow * T + T;
   blit(o.s, Math.round(ax - o.s.w / 2), Math.round(ay - o.s.h));
   if (o.glow) glow(ax, Math.round(ay - o.s.h * 0.55), o.glow.r, o.glow.col);
   if (o.solid) {
@@ -552,95 +578,102 @@ for (const o of objs) {
     const c1 = Math.floor((ax + o.s.w / 2 - 1) / T);
     const rowsUp = o.s.h > 40 ? 1 : 0;
     for (let cc = c0; cc <= c1; cc++)
-      for (let rr = o.row - rowsUp; rr <= o.row; rr++) extraSolid.add(`${cc},${rr}`);
+      for (let rr = orow - rowsUp; rr <= orow; rr++) extraSolid.add(`${cc},${rr}`);
   }
 }
 
-scatterClutter(big, { cols: COLS, rows: ROWS, tile: T, density: 'lived_in', biome: 'underground', seed: 4207, solid: (c, r) => { const ch = MAP[r]?.[c]; return ch === '#' || ch === '=' || extraSolid.has(`${c},${r}`); } });
+scatterClutter(big, { cols: COLS, rows: ROWS, tile: T, density: 'lived_in', biome: 'underground', seed: 4207, solid: (c, r) => MAP[r]?.[c] !== '.' || extraSolid.has(`${c},${r}`) });
 
 const png = new PNG({ width: W, height: H });
 png.data.set(big.data);
 writeFileSync(join(OUT, 'ohmstead.png'), PNG.sync.write(png));
 
 // ---- gameplay data -------------------------------------------------------
+// Solid = anything that isn't steel floor (derived walls, rock, exterior void)
+// plus prop footprints. The collision grid is the source of truth the player
+// moves on; the layered art above is painted to match it.
 const collision: number[] = [];
 for (let r = 0; r < ROWS; r++)
-  for (let c = 0; c < COLS; c++) {
-    const ch = MAP[r]![c]!;
-    const solid = ch === '#' || ch === '=' || extraSolid.has(`${c},${r}`);
-    collision.push(solid ? 1 : 0);
-  }
+  for (let c = 0; c < COLS; c++) collision.push(MAP[r]![c] !== '.' || extraSolid.has(`${c},${r}`) ? 1 : 0);
+
+// design coords below are margin-free; offset() shifts them by OX/OY to match
+// the carved map (which carve()/carveRoom() already offset).
+const off = <T extends { x?: number; y?: number; col?: number; row?: number }>(o: T): T => ({
+  ...o,
+  ...(o.x != null ? { x: o.x + OX } : {}),
+  ...(o.y != null ? { y: o.y + OY } : {}),
+  ...(o.col != null ? { col: o.col + OX } : {}),
+  ...(o.row != null ? { row: o.row + OY } : {}),
+});
+
+const interacts = [
+  { x: 4, y: 8, kind: 'bench' }, // Eli's Bench
+  { x: 8, y: 8, kind: 'banjo' }, // Banjo, the old Jukeboxer
+  { x: 11, y: 8, kind: 'eli' }, // a photo + the logbook (E.V.)
+  { x: 17, y: 4, kind: 'bed' }, // a bunk — sleep here after the supply run (the night-call beat)
+  { x: 22, y: 18, kind: 'lift' }, // the freight lift up to the Field (press A to use)
+];
+const signs = [
+  { col: 4, row: 3, text: "ELI'S GARAGE — the Bench, and everything he left you." },
+  { col: 16, row: 3, text: 'THE BUNKS — yours is the one by the wall.' },
+  { col: 28, row: 3, text: 'THE INFIRMARY — patch up before you ride the lift.' },
+  { col: 38, row: 3, text: "COMMAND — Warden Boone's post. Knock first." },
+  { col: 3, row: 14, text: "THE MESS — eat when the line's short." },
+  { col: 17, row: 12, text: 'OHMSTEAD COMMONS — the heart of the colony.' },
+  { col: 32, row: 13, text: 'COMMS & ARCHIVE — the Downtowns, when the signal holds.' },
+  { col: 3, row: 24, text: 'THE WORKS — water, power, the air we breathe.' },
+  { col: 18, row: 24, text: 'STORES — rations, nodes, salvage. Chit required.' },
+  { col: 31, row: 24, text: 'THE YARD — the dig face, and the cart to the surface line.' },
+];
+const npcs = [
+  { char: 'mabel', col: 7, row: 5, name: 'Grandma Mabel', lines: [
+    'Built from Eli\'s parts, woken at Eli\'s bench. That makes it family now. Mind it well.',
+    'Your grandfather could coax a song out of a dead radio. Banjo still hums it, some nights.',
+    "Boone wants you topside at first light. Come back to me, you hear? The both of you.",
+  ] },
+  { char: 'cass', col: 24, row: 16, name: 'Cass', lines: [
+    "They won't let me up the lift. 'Too young,' Boone says. You're barely older than me!",
+    'Bring me back something from the surface. A bottle cap — anything that saw the sky.',
+    "Everyone's spooked by the night signal. Pretend you're not, and I will too.",
+  ] },
+  { char: 'boone', col: 40, row: 5, name: 'Warden Boone', lines: [
+    "First light, topside. Grandma's cache won't haul itself, and the lift won't wait on nerves.",
+    'Stay current up there. The grass hides more than rust these days.',
+    "You're Eli's blood. That buys you one mistake. Spend it well.",
+  ] },
+  { char: 'sela', col: 30, row: 5, name: 'Medic Sela', lines: [
+    'Come back in one piece and I keep my record clean. Deal?',
+    "Your Ohm takes a hit, you bring it here. Don't let it run on a cracked core.",
+  ] },
+  { char: 'holt', col: 7, row: 16, name: 'Cook Holt', lines: [
+    'Ration stew again. It sticks to your ribs, which is the kindest thing I can say.',
+    "Eat before the lift. Nobody fights well on an empty tank.",
+  ] },
+  { char: 'rationer', col: 22, row: 26, name: 'the Rationer', lines: [
+    'A chit gets you a node and a day of light. No chit, no argument.',
+    "Salvage what you can topside. Stores runs thin the deeper we dig.",
+  ] },
+  { char: 'lookout', col: 36, row: 26, name: 'Lookout Dell', lines: [
+    'Cart runs up the surface line at the hour. Miss it, you walk.',
+    "I watch the dig face so it doesn't watch us back. Quiet today. Mostly.",
+  ] },
+  { char: 'nursery_matron', col: 7, row: 27, name: 'Tess, on the pumps', lines: [
+    'Air and water. Lose either and the rest of this stops mattering fast.',
+    "Eli kept these old pumps singing. I just try not to let them choke.",
+  ] },
+];
 
 writeFileSync(
   join(OUT, 'ohmstead.json'),
   JSON.stringify({
-    tile: T,
-    cols: COLS,
-    rows: ROWS,
-    width: W,
-    height: H,
-    collision,
+    tile: T, cols: COLS, rows: ROWS, width: W, height: H, collision,
     grass: [],
-    spawn: { x: 6, y: 6 }, // in the garage, by the Bench
+    spawn: { x: 6 + OX, y: 6 + OY }, // in the garage, by the Bench
     exits: [], // the lift is an A-to-Use interact now (no accidental walk-on warp)
-    interacts: [
-      { x: 4, y: 8, kind: 'bench' }, // Eli's Bench
-      { x: 8, y: 8, kind: 'banjo' }, // Banjo, the old Jukeboxer
-      { x: 11, y: 8, kind: 'eli' }, // a photo + the logbook (E.V.)
-      { x: 17, y: 4, kind: 'bed' }, // a bunk — sleep here after the supply run (the night-call beat)
-      { x: 22, y: 18, kind: 'lift' }, // the freight lift up to the Field (press A to use)
-    ],
-    // placards that name each vault section, so the colony reads as a place
-    signs: [
-      { col: 4, row: 3, text: "ELI'S GARAGE — the Bench, and everything he left you." },
-      { col: 16, row: 3, text: 'THE BUNKS — yours is the one by the wall.' },
-      { col: 28, row: 3, text: 'THE INFIRMARY — patch up before you ride the lift.' },
-      { col: 38, row: 3, text: "COMMAND — Warden Boone's post. Knock first." },
-      { col: 3, row: 14, text: "THE MESS — eat when the line's short." },
-      { col: 17, row: 12, text: 'OHMSTEAD COMMONS — the heart of the colony.' },
-      { col: 32, row: 13, text: 'COMMS & ARCHIVE — the Downtowns, when the signal holds.' },
-      { col: 3, row: 24, text: 'THE WORKS — water, power, the air we breathe.' },
-      { col: 18, row: 24, text: 'STORES — rations, nodes, salvage. Chit required.' },
-      { col: 31, row: 24, text: 'THE YARD — the dig face, and the cart to the surface line.' },
-    ],
-    npcs: [
-      { char: 'mabel', col: 7, row: 5, name: 'Grandma Mabel', lines: [
-        'Built from Eli\'s parts, woken at Eli\'s bench. That makes it family now. Mind it well.',
-        'Your grandfather could coax a song out of a dead radio. Banjo still hums it, some nights.',
-        "Boone wants you topside at first light. Come back to me, you hear? The both of you.",
-      ] },
-      { char: 'cass', col: 24, row: 16, name: 'Cass', lines: [
-        "They won't let me up the lift. 'Too young,' Boone says. You're barely older than me!",
-        'Bring me back something from the surface. A bottle cap — anything that saw the sky.',
-        "Everyone's spooked by the night signal. Pretend you're not, and I will too.",
-      ] },
-      { char: 'boone', col: 40, row: 5, name: 'Warden Boone', lines: [
-        "First light, topside. Grandma's cache won't haul itself, and the lift won't wait on nerves.",
-        'Stay current up there. The grass hides more than rust these days.',
-        "You're Eli's blood. That buys you one mistake. Spend it well.",
-      ] },
-      { char: 'sela', col: 30, row: 5, name: 'Medic Sela', lines: [
-        'Come back in one piece and I keep my record clean. Deal?',
-        "Your Ohm takes a hit, you bring it here. Don't let it run on a cracked core.",
-      ] },
-      { char: 'holt', col: 7, row: 16, name: 'Cook Holt', lines: [
-        'Ration stew again. It sticks to your ribs, which is the kindest thing I can say.',
-        "Eat before the lift. Nobody fights well on an empty tank.",
-      ] },
-      { char: 'rationer', col: 22, row: 26, name: 'the Rationer', lines: [
-        'A chit gets you a node and a day of light. No chit, no argument.',
-        "Salvage what you can topside. Stores runs thin the deeper we dig.",
-      ] },
-      { char: 'lookout', col: 36, row: 26, name: 'Lookout Dell', lines: [
-        'Cart runs up the surface line at the hour. Miss it, you walk.',
-        "I watch the dig face so it doesn't watch us back. Quiet today. Mostly.",
-      ] },
-      { char: 'nursery_matron', col: 7, row: 27, name: 'Tess, on the pumps', lines: [
-        'Air and water. Lose either and the rest of this stops mattering fast.',
-        "Eli kept these old pumps singing. I just try not to let them choke.",
-      ] },
-    ],
+    interacts: interacts.map(off),
+    signs: signs.map(off),
+    npcs: npcs.map(off),
   }),
 );
 
-console.log(`ohmstead: ${W}x${H} (${COLS}x${ROWS}), ${objs.length} objects, ${10} rooms — metal vault`);
+console.log(`ohmstead: ${W}x${H} (${COLS}x${ROWS}), ${objs.length} objects, 10 rooms — modular metal vault`);

@@ -1,12 +1,12 @@
 {
   "source": "pixellab",
   "endpoint": "create-tileset",
-  "lower": "dark jagged rock, deep shadow, raw stone",
-  "upper": "riveted steel vault floor, grey metal plates, bolts, scuffed industrial",
-  "transition": "steel plating bolted against raw rough rock at the edge",
+  "lower": "near-black solid bedrock, deep shadow, lightless void stone",
+  "upper": "dark grey jagged rock, rough raw stone, dim",
+  "transition": "rough rock crumbling into the black void",
   "size": 32,
   "view": "high top-down",
-  "tileset_id": "3bba0ec6-3bc2-491b-9eac-2fda5bde81d8",
+  "tileset_id": "18768f3f-d273-4d6f-9cd0-e7a3fffe9dac",
   "total": 16,
   "tiles": [
     {
@@ -656,9 +656,9 @@
       "upper"
     ],
     "terrain_prompts": {
-      "lower": "dark jagged rock, deep shadow, raw stone",
-      "upper": "riveted steel vault floor, grey metal plates, bolts, scuffed industrial",
-      "transition": "steel plating bolted against raw rough rock at the edge"
+      "lower": "near-black solid bedrock, deep shadow, lightless void stone",
+      "upper": "dark grey jagged rock, rough raw stone, dim",
+      "transition": "rough rock crumbling into the black void"
     },
     "terrain_ids": null,
     "transition_size": 0.25,
@@ -669,7 +669,7 @@
       "text_guidance_scale": 8,
       "tileset_adherence_freedom": 500
     },
-    "created_at": "2026-06-24T14:28:54.535500+00:00"
+    "created_at": "2026-06-24T16:54:46.578578+00:00"
   },
-  "at": "2026-06-24T14:28:59.812Z"
+  "at": "2026-06-24T16:54:53.412Z"
 }
