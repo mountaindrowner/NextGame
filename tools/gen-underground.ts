@@ -1,12 +1,14 @@
 /**
  * Ohmstead underground colony — terrain + assets (npm run gen:underground).
- * Grid method, shared palette. The opening stage, reimagined as a carved-out
- * cavern colony (ref: moody dungeon-town): organic rock walls, warm cobble
- * floors, grey stone chambers linked by winding paths, glowing Resonance
- * crystal clusters, amber lamps, and water pools — with the colony's machine
- * tech (Grandpa's Bench, consoles, tanks, the lift up to the Field) set into
- * the stone. Real additive lighting sells the glow. Composes
- * public/world/ohmstead.png + .json (collision, exits, interacts, npcs, spawn).
+ * The opening stage: a sprawling Fallout-style bomb shelter. Riveted steel
+ * vault floors (a PixelLab corner-Wang set, dual-grid laid) carved into raw
+ * rock that fades to black at the margins — ten chambers (garage, bunks,
+ * infirmary, command, mess, commons, comms, works, stores, yard) strung along
+ * a corridor network and lived-in with residents. Props (Grandpa's Bench,
+ * Banjo, consoles, tanks, beds, the lift up to the Field) and glowing Resonance
+ * crystals are grid-method sprites blitted over the terrain; additive lighting
+ * sells the glow. Composes public/world/ohmstead.png + .json (collision, exits,
+ * interacts, signs, npcs, spawn).
  */
 import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -20,8 +22,8 @@ const OUT = join(new URL('..', import.meta.url).pathname, 'public/world');
 mkdirSync(OUT, { recursive: true });
 
 const T = 32;
-const COLS = 36;
-const ROWS = 24;
+const COLS = 46;
+const ROWS = 32;
 const W = COLS * T;
 const H = ROWS * T;
 
@@ -256,15 +258,6 @@ function lift(): Sprite {
   return g.render();
 }
 
-/** Mossy patch for water edges. */
-function moss(seed: number): Sprite {
-  const g = new Grid(14, 7);
-  const rng = new Rng(seed);
-  g.ellipse(7, 4, 6, 2, 'g');
-  for (let k = 0; k < 6; k++) g.set(rng.int(1, 12), rng.int(2, 4), 'F');
-  for (let k = 0; k < 4; k++) g.set(rng.int(1, 12), rng.int(3, 5), 'f');
-  return g.render();
-}
 
 // ---- compose -------------------------------------------------------------
 const inb = (x: number, y: number): boolean => x >= 0 && y >= 0 && x < COLS && y < ROWS;
@@ -276,13 +269,20 @@ interface Room {
   w: number;
   h: number;
 }
+// A sprawling bomb-shelter floor plan: three bands of chambers (top / middle /
+// bottom) strung along corridors, a central Commons with the lift. Each room's
+// outer ring is '=' (reads as the rock wall); corridors carve doorways through.
 const rooms: Record<string, Room> = {
-  garage: { x: 3, y: 2, w: 12, h: 8 }, // Grandpa's garage (the Bench)
-  quarters: { x: 16, y: 1, w: 9, h: 6 }, // living quarters
-  storage: { x: 26, y: 3, w: 9, h: 9 }, // stores + shelves
-  hub: { x: 16, y: 9, w: 8, h: 7 }, // central plaza
-  works: { x: 3, y: 12, w: 13, h: 10 }, // machinery / tanks
-  yard: { x: 24, y: 13, w: 11, h: 8 }, // the Yard — ore cart, scrap
+  garage: { x: 2, y: 2, w: 12, h: 9 }, // Eli's garage — the Bench (spawn)
+  bunks: { x: 15, y: 2, w: 11, h: 8 }, // crew quarters / cots
+  medbay: { x: 27, y: 2, w: 9, h: 8 }, // the infirmary
+  command: { x: 37, y: 2, w: 7, h: 9 }, // the warden's command post
+  mess: { x: 2, y: 13, w: 12, h: 8 }, // the mess hall
+  commons: { x: 16, y: 11, w: 13, h: 11 }, // central atrium — monument + lift
+  comms: { x: 31, y: 12, w: 13, h: 9 }, // comms / archive
+  works: { x: 2, y: 23, w: 13, h: 8 }, // reactor + life support
+  stores: { x: 17, y: 23, w: 11, h: 8 }, // stores / armory
+  yard: { x: 30, y: 23, w: 14, h: 8 }, // the Yard — dig face + ore cart
 };
 
 function carveRoom(r: Room): void {
@@ -296,7 +296,7 @@ function carveRoom(r: Room): void {
 function carve(x: number, y: number): void {
   if (inb(x, y)) MAP[y]![x] = '.';
 }
-/** L-shaped dirt corridor (carves doorways where it crosses stone walls). */
+/** L-shaped corridor (carves a 2-wide doorway where it crosses a rock wall). */
 function corridor(x0: number, y0: number, x1: number, y1: number, w = 2): void {
   const xa = Math.min(x0, x1);
   const xb = Math.max(x0, x1);
@@ -305,31 +305,20 @@ function corridor(x0: number, y0: number, x1: number, y1: number, w = 2): void {
   const yb = Math.max(y0, y1);
   for (let y = ya; y <= yb; y++) for (let i = 0; i < w; i++) carve(x1 + i, y);
 }
-function pool(cx: number, cy: number, rx: number, ry: number): void {
-  for (let y = cy - ry; y <= cy + ry; y++)
-    for (let x = cx - rx; x <= cx + rx; x++) {
-      const nx = (x - cx) / rx;
-      const ny = (y - cy) / ry;
-      if (nx * nx + ny * ny <= 1 && inb(x, y) && MAP[y]![x] === '#') MAP[y]![x] = '~';
-    }
-}
 
 for (const r of Object.values(rooms)) carveRoom(r);
-// winding paths linking each chamber's interior to the central hub
-corridor(13, 7, 18, 11); // garage → hub
-corridor(20, 4, 20, 11); // quarters → hub
-corridor(27, 8, 22, 11); // storage → hub
-corridor(14, 16, 18, 13); // works → hub
-corridor(25, 16, 21, 13); // yard → hub
-corridor(19, 15, 19, 20); // hub → lift alcove (south)
-carve(18, 19);
-carve(20, 19);
-carve(18, 20);
-carve(20, 20); // lift apron
-// water pools tucked into the rock margins
-pool(2, 21, 3, 2);
-pool(33, 22, 3, 2);
-pool(34, 13, 2, 3);
+// Corridor network — three concourses (top / mid / bottom) tied together by
+// vertical arteries, so the vault reads as a connected warren. Reachability of
+// every room + interact from the spawn is asserted below by a flood fill.
+corridor(11, 5, 41, 5); // TOP concourse: garage ↔ bunks ↔ medbay ↔ command
+corridor(11, 16, 33, 16); // MID concourse: mess ↔ commons ↔ comms
+corridor(11, 27, 36, 27); // BOTTOM concourse: works ↔ stores ↔ yard
+corridor(21, 5, 21, 12); // top → commons (central spine)
+corridor(8, 9, 8, 14); // garage → mess (left artery)
+corridor(33, 9, 33, 13); // medbay → comms (right artery)
+corridor(8, 19, 8, 24); // mess → works
+corridor(22, 20, 22, 24); // commons → stores
+corridor(36, 19, 36, 24); // comms → yard
 
 // ---- raster: PixelLab Wang terrain via dual-grid -------------------------
 const big = new Sprite(W, H);
@@ -367,11 +356,11 @@ function glow(cx: number, cy: number, radius: number, col: [number, number, numb
     }
 }
 
-// Two 16-tile corner-Wang sets (cobblestone floor↔rock, teal water↔rock),
-// laid on a dual grid: each rendered tile sits at the intersection of FOUR
-// data cells, offset by half a tile, so floor/water blend into the surrounding
-// rock with seamless carved edges. Collision (below) stays on the data grid —
-// the visual floor centers on each '.' cell, so what's walkable matches what's
+// A 16-tile corner-Wang set (riveted steel vault floor ↔ dark rock), laid on a
+// dual grid: each rendered tile sits at the intersection of FOUR data cells,
+// offset by half a tile, so the metal floor blends into the surrounding rock
+// with seamless bolted edges. Collision (below) stays on the data grid — the
+// visual floor centers on each '.' cell, so what's walkable matches what's
 // drawn. Corner mask packs NW<<3 | NE<<2 | SW<<1 | SE (1 = upper terrain).
 const TILES = join(new URL('..', import.meta.url).pathname, 'assets/tiles-pixellab');
 
@@ -412,13 +401,11 @@ function blitTile(png: PNG, x0: number, y0: number): void {
   }
 }
 
-const floorWang = loadWang('ohmstead_floor_rock');
-const waterWang = loadWang('ohmstead_water_rock');
+const floorWang = loadWang('ohmstead_metal_rock');
 const isFloorCell = (c: number, r: number): boolean => inb(c, r) && MAP[r]![c] === '.';
-const isWaterCell = (c: number, r: number): boolean => inb(c, r) && MAP[r]![c] === '~';
 
 /** Dual-grid lay: tile (i,j) samples data cells (i-1,j-1)=NW … (i,j)=SE. */
-function layWang(wang: Map<number, PNG>, sample: (c: number, r: number) => boolean, skipEmpty: boolean): void {
+function layWang(wang: Map<number, PNG>, sample: (c: number, r: number) => boolean): void {
   for (let j = 0; j <= ROWS; j++)
     for (let i = 0; i <= COLS; i++) {
       const mask =
@@ -426,16 +413,45 @@ function layWang(wang: Map<number, PNG>, sample: (c: number, r: number) => boole
         ((sample(i, j - 1) ? 1 : 0) << 2) |
         ((sample(i - 1, j) ? 1 : 0) << 1) |
         (sample(i, j) ? 1 : 0);
-      if (skipEmpty && mask === 0) continue; // overlay: nothing to draw here
       const png = wang.get(mask);
       if (png) blitTile(png, i * T - T / 2, j * T - T / 2);
     }
 }
 
-// base: rock fills the canvas, cobblestone where carved ('.'), seamless edges
-layWang(floorWang, isFloorCell, false);
-// overlay: teal water in the pools, framed by wet rock (only water-touching tiles)
-layWang(waterWang, isWaterCell, true);
+// base: rock fills the canvas, riveted steel where carved ('.'), seamless edges
+layWang(floorWang, isFloorCell);
+
+// fade-to-black: the rock darkens with distance from the nearest steel floor,
+// so the shelter sits in an encroaching void. BFS the cell-distance to floor,
+// then apply a smooth (bilinear-sampled) brightness multiply per pixel.
+const DIST = new Int16Array(COLS * ROWS).fill(9999);
+{
+  const q: number[] = [];
+  for (let r = 0; r < ROWS; r++)
+    for (let c = 0; c < COLS; c++) if (isFloorCell(c, r)) { DIST[r * COLS + c] = 0; q.push(c, r); }
+  for (let head = 0; head < q.length; head += 2) {
+    const c = q[head]!, r = q[head + 1]!, d = DIST[r * COLS + c]!;
+    for (const [dc, dr] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as Array<[number, number]>) {
+      const nc = c + dc, nr = r + dr;
+      if (nc < 0 || nr < 0 || nc >= COLS || nr >= ROWS) continue;
+      if (DIST[nr * COLS + nc]! > d + 1) { DIST[nr * COLS + nc] = d + 1; q.push(nc, nr); }
+    }
+  }
+}
+const bright = (d: number): number => (d <= 1 ? 1 : Math.max(0.04, Math.pow(0.6, d - 1)));
+const sampleB = (c: number, r: number): number =>
+  bright(DIST[Math.max(0, Math.min(ROWS - 1, r)) * COLS + Math.max(0, Math.min(COLS - 1, c))]!);
+for (let y = 0; y < H; y++)
+  for (let x = 0; x < W; x++) {
+    const fx = x / T - 0.5, fy = y / T - 0.5;
+    const c0 = Math.floor(fx), r0 = Math.floor(fy), tx = fx - c0, ty = fy - r0;
+    const b =
+      sampleB(c0, r0) * (1 - tx) * (1 - ty) + sampleB(c0 + 1, r0) * tx * (1 - ty) +
+      sampleB(c0, r0 + 1) * (1 - tx) * ty + sampleB(c0 + 1, r0 + 1) * tx * ty;
+    if (b >= 0.999) continue;
+    const p = big.get(x, y);
+    big.set(x, y, [Math.round(p[0] * b), Math.round(p[1] * b), Math.round(p[2] * b), 255]);
+  }
 
 // ---- placements ----------------------------------------------------------
 interface Placed {
@@ -453,76 +469,77 @@ const GLOW_C: Record<CrystalKind, [number, number, number]> = {
 
 let cseed = 100;
 const objs: Placed[] = [
-  // garage — Grandpa's Bench + console + Banjo in the corner
-  { s: bench(), col: 5, row: 8, solid: true, glow: { r: 16, col: [30, 60, 110] } },
-  { s: banjo(), col: 9, row: 8, solid: true, glow: { r: 16, col: [120, 80, 24] } },
-  { s: console_(), col: 13, row: 8, solid: true },
-  { s: crate(), col: 12, row: 4 },
-  // quarters — cots + a crate
-  { s: bed(), col: 18, row: 3, solid: true },
-  { s: bed(), col: 22, row: 3, solid: true },
-  { s: crate(), col: 20, row: 5 },
-  // storage — shelves + crates
-  { s: shelf(), col: 29, row: 5, solid: true },
-  { s: crate(), col: 28, row: 9 },
-  { s: barrel(), col: 31, row: 9 },
-  { s: crate(), col: 32, row: 9 },
-  // works — tanks + machinery
-  { s: tank(), col: 5, row: 16, solid: true, glow: { r: 14, col: [20, 70, 60] } },
-  { s: tank(), col: 8, row: 16, solid: true },
-  { s: console_(), col: 12, row: 16, solid: true },
-  { s: barrel(), col: 5, row: 20 },
-  { s: barrel(), col: 13, row: 20 },
-  // yard — ore cart + scrap
-  { s: minecart(), col: 28, row: 17, solid: true },
-  { s: crate(), col: 26, row: 18 },
-  { s: barrel(), col: 32, row: 18 },
-  // hub — the monument
-  { s: pedestal(), col: 19, row: 13, solid: true, glow: { r: 30, col: [40, 80, 150] } },
-  // the lift up to the Field
-  { s: lift(), col: 18, row: 21, solid: true, glow: { r: 12, col: [40, 30, 12] } },
+  // garage (cols 3-12, rows 3-9) — Eli's Bench + console + Banjo
+  { s: bench(), col: 4, row: 8, solid: true, glow: { r: 16, col: [30, 60, 110] } },
+  { s: banjo(), col: 8, row: 8, solid: true, glow: { r: 16, col: [120, 80, 24] } },
+  { s: console_(), col: 11, row: 8, solid: true },
+  { s: crate(), col: 4, row: 4 },
+  { s: shelf(), col: 9, row: 3, solid: true },
+  // bunks (cols 16-24, rows 3-8) — cots
+  { s: bed(), col: 17, row: 4, solid: true },
+  { s: bed(), col: 20, row: 4, solid: true },
+  { s: bed(), col: 23, row: 4, solid: true },
+  { s: crate(), col: 18, row: 7 },
+  { s: barrel(), col: 22, row: 7 },
+  // medbay (cols 28-34, rows 3-8) — tanks + console
+  { s: tank(), col: 28, row: 7, solid: true, glow: { r: 14, col: [20, 70, 60] } },
+  { s: console_(), col: 31, row: 7, solid: true },
+  { s: bed(), col: 33, row: 4, solid: true },
+  // command (cols 38-42, rows 3-9) — Boone's post
+  { s: console_(), col: 39, row: 5, solid: true },
+  { s: tank(), col: 41, row: 8, solid: true },
+  { s: crate(), col: 39, row: 8 },
+  // mess (cols 3-12, rows 14-19) — tables-as-crates + barrels
+  { s: crate(), col: 4, row: 16 },
+  { s: crate(), col: 6, row: 16 },
+  { s: barrel(), col: 9, row: 15 },
+  { s: shelf(), col: 4, row: 14, solid: true },
+  { s: barrel(), col: 11, row: 18 },
+  // commons (cols 17-27, rows 12-20) — the monument + lift
+  { s: pedestal(), col: 21, row: 14, solid: true, glow: { r: 32, col: [40, 80, 150] } },
+  { s: lift(), col: 22, row: 20, solid: true, glow: { r: 14, col: [40, 30, 12] } },
+  { s: crate(), col: 18, row: 13 },
+  { s: barrel(), col: 26, row: 13 },
+  // comms / archive (cols 32-42, rows 13-19) — consoles + shelves
+  { s: console_(), col: 33, row: 16, solid: true },
+  { s: console_(), col: 36, row: 16, solid: true },
+  { s: shelf(), col: 40, row: 13, solid: true },
+  { s: crate(), col: 41, row: 18 },
+  // works / life support (cols 3-13, rows 24-29) — coolant tanks
+  { s: tank(), col: 4, row: 27, solid: true, glow: { r: 14, col: [20, 70, 60] } },
+  { s: tank(), col: 7, row: 27, solid: true },
+  { s: console_(), col: 11, row: 27, solid: true },
+  { s: barrel(), col: 4, row: 24 },
+  { s: barrel(), col: 12, row: 24 },
+  // stores / armory (cols 18-26, rows 24-29) — shelves + crates
+  { s: shelf(), col: 19, row: 24, solid: true },
+  { s: crate(), col: 18, row: 28 },
+  { s: barrel(), col: 21, row: 28 },
+  { s: crate(), col: 24, row: 28 },
+  // yard — dig face + ore cart (cols 31-42, rows 24-29)
+  { s: minecart(), col: 33, row: 27, solid: true },
+  { s: crate(), col: 31, row: 28 },
+  { s: barrel(), col: 37, row: 25 },
+  { s: crate(), col: 40, row: 28 },
 ];
 
-// crystal clusters tucked along the rock margins + grottos
+// Resonance crystal clusters in the dark rock margins — the colony's power,
+// glowing out of the void (placed in rock just outside the rooms).
 const crystalSpots: Array<[number, number, CrystalKind]> = [
-  [2, 6, 'blue'],
-  [13, 11, 'violet'],
-  [26, 2, 'teal'],
-  [33, 6, 'blue'],
-  [2, 15, 'violet'],
-  [15, 8, 'teal'],
-  [24, 12, 'blue'],
-  [34, 17, 'violet'],
-  [3, 22, 'teal'],
-  [32, 22, 'blue'],
-  [20, 22, 'violet'],
-  [9, 11, 'teal'],
+  [0, 11, 'blue'], [14, 10, 'violet'], [29, 10, 'teal'], [44, 10, 'blue'],
+  [0, 22, 'violet'], [15, 21, 'teal'], [28, 21, 'blue'], [44, 21, 'violet'],
+  [0, 31, 'teal'], [29, 31, 'blue'], [45, 31, 'violet'], [14, 31, 'teal'],
 ];
 for (const [col, row, kind] of crystalSpots)
   objs.push({ s: crystal(kind, cseed++), col, row, glow: { r: 22, col: GLOW_C[kind] } });
 
-// lamps along the paths and doorways
+// lamps lighting the corridors and doorways — pools of light in the dark
 const lampSpots: Array<[number, number]> = [
-  [17, 5],
-  [21, 7],
-  [19, 11],
-  [16, 16],
-  [23, 16],
-  [19, 18],
-  [15, 5],
-  [25, 7],
-  [10, 13],
-  [28, 14],
+  [13, 5], [26, 5], [36, 5], [21, 9], // top concourse
+  [8, 12], [33, 11], [13, 16], [29, 16], [21, 17], // mid arteries + commons
+  [8, 22], [22, 22], [36, 22], [13, 27], [29, 27], // bottom arteries
 ];
 for (const [col, row] of lampSpots) objs.push({ s: lamp(), col, row, glow: { r: 26, col: [120, 70, 22] } });
-
-// mossy fringes on the water pools
-for (const [col, row, sd] of [
-  [2, 19, 1],
-  [33, 20, 2],
-  [34, 11, 3],
-] as Array<[number, number, number]>)
-  objs.push({ s: moss(sd), col, row });
 
 const extraSolid = new Set<string>();
 for (const o of objs) {
@@ -539,7 +556,7 @@ for (const o of objs) {
   }
 }
 
-scatterClutter(big, { cols: COLS, rows: ROWS, tile: T, density: 'lived_in', biome: 'underground', seed: 4207, solid: (c, r) => { const ch = MAP[r]?.[c]; return ch === '#' || ch === '=' || ch === '~' || extraSolid.has(`${c},${r}`); } });
+scatterClutter(big, { cols: COLS, rows: ROWS, tile: T, density: 'lived_in', biome: 'underground', seed: 4207, solid: (c, r) => { const ch = MAP[r]?.[c]; return ch === '#' || ch === '=' || extraSolid.has(`${c},${r}`); } });
 
 const png = new PNG({ width: W, height: H });
 png.data.set(big.data);
@@ -550,7 +567,7 @@ const collision: number[] = [];
 for (let r = 0; r < ROWS; r++)
   for (let c = 0; c < COLS; c++) {
     const ch = MAP[r]![c]!;
-    const solid = ch === '#' || ch === '=' || ch === '~' || extraSolid.has(`${c},${r}`);
+    const solid = ch === '#' || ch === '=' || extraSolid.has(`${c},${r}`);
     collision.push(solid ? 1 : 0);
   }
 
@@ -564,37 +581,66 @@ writeFileSync(
     height: H,
     collision,
     grass: [],
-    spawn: { x: 6, y: 5 }, // in the garage, by the Bench
+    spawn: { x: 6, y: 6 }, // in the garage, by the Bench
     exits: [], // the lift is an A-to-Use interact now (no accidental walk-on warp)
     interacts: [
-      { x: 5, y: 7, kind: 'bench' }, // Eli's Bench
-      { x: 9, y: 7, kind: 'banjo' }, // Banjo, the old Jukeboxer
-      { x: 13, y: 7, kind: 'eli' }, // a photo + the logbook (E.V.)
-      { x: 18, y: 3, kind: 'bed' }, // the kid's bunk — sleep here after the supply run (the night-call beat)
-      { x: 19, y: 19, kind: 'lift' }, // the freight lift up to the Field (press A to use)
+      { x: 4, y: 8, kind: 'bench' }, // Eli's Bench
+      { x: 8, y: 8, kind: 'banjo' }, // Banjo, the old Jukeboxer
+      { x: 11, y: 8, kind: 'eli' }, // a photo + the logbook (E.V.)
+      { x: 17, y: 4, kind: 'bed' }, // a bunk — sleep here after the supply run (the night-call beat)
+      { x: 22, y: 18, kind: 'lift' }, // the freight lift up to the Field (press A to use)
     ],
-    // placards that name each chamber, so the colony reads as a place, not a maze
+    // placards that name each vault section, so the colony reads as a place
     signs: [
       { col: 4, row: 3, text: "ELI'S GARAGE — the Bench, and everything he left you." },
-      { col: 17, row: 2, text: 'THE BUNKS — yours is the one by the wall.' },
-      { col: 27, row: 4, text: 'STORES — rations, nodes, and salvage. Hands off without a chit.' },
-      { col: 17, row: 10, text: 'OHMSTEAD COMMONS — the heart of the colony.' },
-      { col: 4, row: 13, text: 'THE WORKS — water, power, and the air that keeps us all breathing.' },
-      { col: 25, row: 14, text: 'THE YARD — scrap, ore, and the cart up to the surface line.' },
+      { col: 16, row: 3, text: 'THE BUNKS — yours is the one by the wall.' },
+      { col: 28, row: 3, text: 'THE INFIRMARY — patch up before you ride the lift.' },
+      { col: 38, row: 3, text: "COMMAND — Warden Boone's post. Knock first." },
+      { col: 3, row: 14, text: "THE MESS — eat when the line's short." },
+      { col: 17, row: 12, text: 'OHMSTEAD COMMONS — the heart of the colony.' },
+      { col: 32, row: 13, text: 'COMMS & ARCHIVE — the Downtowns, when the signal holds.' },
+      { col: 3, row: 24, text: 'THE WORKS — water, power, the air we breathe.' },
+      { col: 18, row: 24, text: 'STORES — rations, nodes, salvage. Chit required.' },
+      { col: 31, row: 24, text: 'THE YARD — the dig face, and the cart to the surface line.' },
     ],
     npcs: [
-      { char: 'mabel', col: 7, row: 6, name: 'Grandma Mabel', lines: [
+      { char: 'mabel', col: 7, row: 5, name: 'Grandma Mabel', lines: [
         'Built from Eli\'s parts, woken at Eli\'s bench. That makes it family now. Mind it well.',
         'Your grandfather could coax a song out of a dead radio. Banjo still hums it, some nights.',
         "Boone wants you topside at first light. Come back to me, you hear? The both of you.",
       ] },
-      { char: 'cass', col: 21, row: 12, name: 'Cass', lines: [
+      { char: 'cass', col: 24, row: 16, name: 'Cass', lines: [
         "They won't let me up the lift. 'Too young,' Boone says. You're barely older than me!",
         'Bring me back something from the surface. A bottle cap — anything that saw the sky.',
         "Everyone's spooked by the night signal. Pretend you're not, and I will too.",
+      ] },
+      { char: 'boone', col: 40, row: 5, name: 'Warden Boone', lines: [
+        "First light, topside. Grandma's cache won't haul itself, and the lift won't wait on nerves.",
+        'Stay current up there. The grass hides more than rust these days.',
+        "You're Eli's blood. That buys you one mistake. Spend it well.",
+      ] },
+      { char: 'sela', col: 30, row: 5, name: 'Medic Sela', lines: [
+        'Come back in one piece and I keep my record clean. Deal?',
+        "Your Ohm takes a hit, you bring it here. Don't let it run on a cracked core.",
+      ] },
+      { char: 'holt', col: 7, row: 16, name: 'Cook Holt', lines: [
+        'Ration stew again. It sticks to your ribs, which is the kindest thing I can say.',
+        "Eat before the lift. Nobody fights well on an empty tank.",
+      ] },
+      { char: 'rationer', col: 22, row: 26, name: 'the Rationer', lines: [
+        'A chit gets you a node and a day of light. No chit, no argument.',
+        "Salvage what you can topside. Stores runs thin the deeper we dig.",
+      ] },
+      { char: 'lookout', col: 36, row: 26, name: 'Lookout Dell', lines: [
+        'Cart runs up the surface line at the hour. Miss it, you walk.',
+        "I watch the dig face so it doesn't watch us back. Quiet today. Mostly.",
+      ] },
+      { char: 'nursery_matron', col: 7, row: 27, name: 'Tess, on the pumps', lines: [
+        'Air and water. Lose either and the rest of this stops mattering fast.',
+        "Eli kept these old pumps singing. I just try not to let them choke.",
       ] },
     ],
   }),
 );
 
-console.log(`ohmstead: ${W}x${H} (${COLS}x${ROWS}), ${objs.length} objects, cavern colony`);
+console.log(`ohmstead: ${W}x${H} (${COLS}x${ROWS}), ${objs.length} objects, ${10} rooms — metal vault`);
