@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "cluster of three rusty corrugated grain silos, vines climbing them, a solar panel on top, post-apocalyptic solarpunk ruin, weathered rusted, overgrown with vines and moss, salvaged solar panels, high 3/4 top-down view, pixel art building sprite, clean transparent background, soft drop shadow at base",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-25T18:38:53.543Z"
+}

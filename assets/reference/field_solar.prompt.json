@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "tilted salvaged solar panel array on a scrap-metal frame, a few cracked cells, wires, post-apocalyptic solarpunk, weathered rusted salvaged, overgrown with vines, high 3/4 top-down view, pixel art prop sprite, clean transparent background, soft drop shadow at base",
+    "image_size": {
+      "width": 96,
+      "height": 96
+    },
+    "no_background": true
+  },
+  "at": "2026-06-25T18:33:37.935Z"
+}

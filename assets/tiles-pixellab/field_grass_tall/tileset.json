@@ -1,12 +1,12 @@
 {
   "source": "pixellab",
   "endpoint": "create-tileset",
-  "lower": "tall overgrown dry prairie grass, dense waist-high cover",
-  "upper": "dry golden-brown prairie grass, sparse dead tufts, post-collapse Texas",
-  "transition": "grass growing taller and denser",
+  "lower": "tall lush overgrown grass and reeds, wildflowers, dense waist-high green regrowth",
+  "upper": "overgrown reclaimed prairie, green regrowth and wildflowers mixed through dry golden grass, lush weedy patches, post-apocalyptic solarpunk nature reclaiming",
+  "transition": "grass growing taller greener and denser",
   "size": 32,
   "view": "high top-down",
-  "tileset_id": "e3a738f1-7812-4bd0-a9dd-32a9b14d400d",
+  "tileset_id": "14fc24e4-ac4c-4f18-a6d6-b34a4b2fd6dc",
   "total": 16,
   "tiles": [
     {
@@ -656,9 +656,9 @@
       "upper"
     ],
     "terrain_prompts": {
-      "lower": "tall overgrown dry prairie grass, dense waist-high cover",
-      "upper": "dry golden-brown prairie grass, sparse dead tufts, post-collapse Texas",
-      "transition": "grass growing taller and denser"
+      "lower": "tall lush overgrown grass and reeds, wildflowers, dense waist-high green regrowth",
+      "upper": "overgrown reclaimed prairie, green regrowth and wildflowers mixed through dry golden grass, lush weedy patches, post-apocalyptic solarpunk nature reclaiming",
+      "transition": "grass growing taller greener and denser"
     },
     "terrain_ids": null,
     "transition_size": 0.25,
@@ -669,7 +669,7 @@
       "text_guidance_scale": 8,
       "tileset_adherence_freedom": 500
     },
-    "created_at": "2026-06-25T06:17:25.371987+00:00"
+    "created_at": "2026-06-25T18:37:00.193729+00:00"
   },
-  "at": "2026-06-25T06:17:31.559Z"
+  "at": "2026-06-25T18:37:04.483Z"
 }

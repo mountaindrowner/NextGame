@@ -2,12 +2,12 @@
   "source": "pixellab",
   "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
   "body": {
-    "description": "old farm windmill, multi-blade fan on a steel lattice tower, weathered post-collapse rural Texas, high 3/4 top-down view, pixel art building sprite, clean transparent background, soft drop shadow at base",
+    "description": "jury-rigged wind turbine on a rusted salvaged lattice tower, patched mismatched blades, cables, post-apocalyptic solarpunk ruin, weathered rusted and worn down, overgrown with green vines and moss, reclaimed by nature, salvaged solar panels and makeshift wind turbines bolted on, hopeful green regrowth, high 3/4 top-down view, pixel art building sprite, clean transparent background, soft drop shadow at base",
     "image_size": {
       "width": 128,
       "height": 128
     },
     "no_background": true
   },
-  "at": "2026-06-25T06:14:34.537Z"
+  "at": "2026-06-25T18:35:50.035Z"
 }

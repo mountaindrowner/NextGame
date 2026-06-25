@@ -167,6 +167,18 @@ const objs: P[] = [
   { s: crate(), col: 11, row: 23 },
 ];
 
+// solarpunk salvage props (only added if their PixelLab PNG generated) — solar
+// arrays, jury-rigged turbines, and reclaimed garden beds scattered through town
+const propSpots: Array<[string, number, number, number]> = [
+  ['field_solar', 28, 11, 46], ['field_solar', 6, 21, 44],
+  ['field_turbine', 33, 11, 58], ['field_turbine', 27, 16, 54],
+  ['field_planter', 24, 13, 38], ['field_planter', 15, 19, 38], ['field_planter', 31, 24, 36],
+];
+for (const [name, col, row, h] of propSpots) {
+  const s = bld(name, h);
+  if (s) objs.push({ s, col, row, solid: 1 });
+}
+
 const big = new Sprite(W, H);
 const blit = (s: Sprite, x0: number, y0: number, over = true): void => {
   for (let y = 0; y < s.h; y++)

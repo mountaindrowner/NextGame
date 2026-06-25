@@ -2,12 +2,12 @@
   "source": "pixellab",
   "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
   "body": {
-    "description": "fortified concrete grain co-op turned bunker vault, heavy blast door, rusted attached silos, the hero building, weathered post-collapse rural Texas, high 3/4 top-down view, pixel art building sprite, clean transparent background, soft drop shadow at base",
+    "description": "fortified concrete grain co-op turned bunker vault, rusted and worn, vines, a salvaged rooftop solar array and small wind turbines, the hero building, post-apocalyptic solarpunk ruin, weathered rusted and worn down, overgrown with green vines and moss, reclaimed by nature, salvaged solar panels and makeshift wind turbines bolted on, hopeful green regrowth, high 3/4 top-down view, pixel art building sprite, clean transparent background, soft drop shadow at base",
     "image_size": {
       "width": 128,
       "height": 128
     },
     "no_background": true
   },
-  "at": "2026-06-25T06:15:32.206Z"
+  "at": "2026-06-25T18:36:52.215Z"
 }
