@@ -13,6 +13,7 @@ import { Grid } from './gridart';
 import { Sprite } from './spritekit';
 import { Rng } from '../src/core/rng';
 import { barn, watertower } from './world-builders';
+import { loadWang, layWang, loadBuilding } from './wang';
 import { scatterClutter } from './scatter';
 
 const T = 32;
@@ -97,20 +98,23 @@ const LEDGES: Array<{ col: number; row: number; dir: 's' }> = [
 // props (baked) — the cotton gin (barn), the water-tower lookout, dressing
 interface P { s: Sprite; col: number; row: number; solid?: number; }
 const objs: P[] = [
-  { s: barn(), col: 22, row: 6, solid: 1 }, // the abandoned cotton gin
-  { s: watertower(), col: 5, row: 8, solid: 1 }, // the lookout
+  { s: loadBuilding('field_cottongin', 116) ?? barn(), col: 22, row: 6, solid: 1 }, // the abandoned cotton gin
+  { s: loadBuilding('field_watertower', 116) ?? watertower(), col: 5, row: 8, solid: 1 }, // the lookout
   { s: tumbleweed(1), col: 16, row: 26 },
   { s: tumbleweed(2), col: 23, row: 17 },
   { s: tumbleweed(3), col: 6, row: 20 },
 ];
+// solarpunk salvage dressing along the road (only if their PNGs exist)
+const propSpots: Array<[string, number, number, number]> = [
+  ['field_solar', 21, 22, 44], ['field_turbine', 6, 12, 56],
+  ['field_planter', 16, 25, 36], ['field_planter', 23, 14, 36],
+];
+for (const [name, col, row, h] of propSpots) {
+  const s = loadBuilding(name, h);
+  if (s) objs.push({ s, col, row, solid: 1 });
+}
 
-const PR = [prairie(1), prairie(2), prairie(3)];
-const TA = [tall(11), tall(12)];
-const RD = [road(21), road(22)];
-const BO = [treeline(31), treeline(32)];
 const big = new Sprite(W, H);
-const trng = new Rng(7);
-const pick = (a: Sprite[]): Sprite => a[trng.int(0, a.length - 1)]!;
 const blit = (s: Sprite, x0: number, y0: number, over = true): void => {
   for (let y = 0; y < s.h; y++)
     for (let x = 0; x < s.w; x++) {
@@ -121,20 +125,23 @@ const blit = (s: Sprite, x0: number, y0: number, over = true): void => {
       big.set(x0 + x, y0 + y, [Math.round(c[0] * a + d[0] * (1 - a)), Math.round(c[1] * a + d[1] * (1 - a)), Math.round(c[2] * a + d[2] * (1 - a)), 255]);
     }
 };
+
+// PixelLab Wang terrain — reuses the Field's solarpunk prairie sets (overgrown
+// grass shared as the upper terrain; cracked road + lush tall-grass the lower).
+// Base lays grass+road everywhere; the tall-grass overlay paints only its patches.
+const grassRoad = loadWang('field_grass_road');
+const grassTall = loadWang('field_grass_tall');
+const isRoad = (c: number, r: number): boolean => inb(c, r) && MAP[r]![c] === 'd';
+const isTall = (c: number, r: number): boolean => inb(c, r) && MAP[r]![c] === 'T';
+layWang(big, T, COLS, ROWS, grassRoad, (c, r) => !isRoad(c, r));
+layWang(big, T, COLS, ROWS, grassTall, (c, r) => !isTall(c, r), 15);
+// tree-line walls: darken the '#' ring into a dense overgrown forest edge
 for (let r = 0; r < ROWS; r++)
   for (let c = 0; c < COLS; c++) {
-    const ch = MAP[r]![c]!;
-    const t = ch === '#' ? pick(BO) : ch === 'T' ? pick(TA) : ch === 'd' ? pick(RD) : pick(PR);
-    blit(t, c * T, r * T, false);
-  }
-// organic road↔grass edge crumble
-const erng = new Rng(9);
-for (let r = 0; r < ROWS; r++)
-  for (let c = 0; c < COLS; c++) {
-    if (MAP[r]![c] !== 'd') continue;
-    for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]] as Array<[number, number]>) {
-      if (MAP[r + dy]?.[c + dx] !== 'g') continue;
-      for (let i = 0; i < T; i++) if (erng.chance(30)) { const x = dx === 0 ? c * T + i : c * T + (dx === 1 ? T - 1 : 0); const y = dy === 0 ? r * T + i : r * T + (dy === 1 ? T - 1 : 0); big.set(x, y, [70, 90, 40, 255]); }
+    if (MAP[r]![c] !== '#') continue;
+    for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) {
+      const p = big.get(c * T + x, r * T + y);
+      big.set(c * T + x, r * T + y, [Math.round(p[0] * 0.46), Math.round(p[1] * 0.52), Math.round(p[2] * 0.4), 255]);
     }
   }
 
@@ -187,13 +194,13 @@ writeFileSync(
     collision, grass, grassAny, water: [], placements, ledges: LEDGES,
     zone: 'farmroad-fence',
     spawn: { x: 13, y: ROWS - 2 }, // fallback (edge-warps set the real entry)
-    npcs: [{ char: 'npc_elder', col: 19, row: 26, name: 'Traveler Sully', lines: [
+    npcs: [{ char: 'sully', col: 19, row: 26, name: 'Traveler Sully', lines: [
       'Resting my feet. Farm-to-market road, this — runs clear to the Railhead if your legs hold out.',
       "There's a recharge cot back of my wagon — top your Ohms off before the climb. No charge for a Vane.",
       'Watch the fence-lines. Runners and Scrappers lay up in the grass, looking for a wager or a fight.',
     ] },
     // Odessa, Ohmstead comms — assigns the Ohmwork (fill the Manifest)
-    { char: 'npc_rancher', col: 13, row: 22, name: 'Odessa', lines: [
+    { char: 'odessa', col: 13, row: 22, name: 'Odessa', lines: [
       "Odessa — Ohmstead comms, patched to your handheld. That key has the whole Downtowns whispering. Means they're finally listening.",
       'So earn your keep while you walk: every Ohm you meet, I want it on record. Open your menu, MANIFEST — it tracks them all.',
       "Weaken a wild one, spend a storage node, clear its static, and it's Freed — yours, and logged. A hundred and fifty out there.",
@@ -201,9 +208,9 @@ writeFileSync(
     ] }],
     interacts: [{ x: 17, y: 26, kind: 'heal' }], // Sully's roadside recharge cot
     trainers: [
-      { char: 'npc_kid', col: 10, row: 24, facing: 'e', name: 'Runner Dusty', range: 5, team: [{ num: 10, level: 6 }], bark: "Runner Dusty: Found my Ohm in a dumpster — still tougher than yours!" },
-      { char: 'npc_rancher', col: 22, row: 11, facing: 'w', name: 'Wrangler Wade', range: 5, team: [{ num: 19, level: 7 }, { num: 21, level: 8 }], bark: 'Wrangler Wade: Yeehp. You spook the herd, you answer for it.' },
-      { char: 'npc_kid', col: 16, row: 16, facing: 'e', name: 'Picker Junie', range: 5, team: [{ num: 12, level: 8 }], bark: 'Picker Junie: Mine lights up! Wanna see?' },
+      { char: 'dusty', col: 10, row: 24, facing: 'e', name: 'Runner Dusty', range: 5, team: [{ num: 10, level: 6 }], bark: "Runner Dusty: Found my Ohm in a dumpster — still tougher than yours!" },
+      { char: 'wade', col: 22, row: 11, facing: 'w', name: 'Wrangler Wade', range: 5, team: [{ num: 19, level: 7 }, { num: 21, level: 8 }], bark: 'Wrangler Wade: Yeehp. You spook the herd, you answer for it.' },
+      { char: 'junie', col: 16, row: 16, facing: 'e', name: 'Picker Junie', range: 5, team: [{ num: 12, level: 8 }], bark: 'Picker Junie: Mine lights up! Wanna see?' },
     ],
   }),
 );
