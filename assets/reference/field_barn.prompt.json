@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "big weathered red barn, peeling paint, gambrel tin roof, hay door, weathered post-collapse rural Texas, high 3/4 top-down view, pixel art building sprite, clean transparent background, soft drop shadow at base",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-25T06:12:46.847Z"
+}

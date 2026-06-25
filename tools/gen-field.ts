@@ -6,7 +6,7 @@
  * trees + clutter, at the depth/density bar. Replaces public/world/the-field.*.
  * The colony lift (ElevatorScene) deposits you at the hatch.
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { PNG } from 'pngjs';
 import { Grid } from './gridart';
@@ -112,17 +112,45 @@ rectG(4, 18, 7, 4, 'T');
 rectG(29, 18, 8, 4, 'T');
 
 // ---- buildings & props (baked, footprint solid) --------------------------
+// PixelLab building sprite (assets/reference/<name>.png): trim to content and
+// box-filter down to a target height; falls back to the grid builder if the
+// PNG isn't present, so the map always composes.
+function bld(name: string, targetH: number): Sprite | null {
+  const path = join(new URL('..', import.meta.url).pathname, 'assets/reference', `${name}.png`);
+  if (!existsSync(path)) return null;
+  const png = PNG.sync.read(readFileSync(path));
+  let x0 = png.width, y0 = png.height, x1 = -1, y1 = -1;
+  for (let y = 0; y < png.height; y++) for (let x = 0; x < png.width; x++)
+    if (png.data[(y * png.width + x) * 4 + 3]! >= 16) { if (x < x0) x0 = x; if (y < y0) y0 = y; if (x > x1) x1 = x; if (y > y1) y1 = y; }
+  if (x1 < 0) return null;
+  const bw = x1 - x0 + 1, bh = y1 - y0 + 1, scale = targetH / bh;
+  const ow = Math.max(1, Math.round(bw * scale)), oh = Math.max(1, Math.round(bh * scale));
+  const s = new Sprite(ow, oh);
+  for (let ty = 0; ty < oh; ty++) for (let tx = 0; tx < ow; tx++) {
+    const sx0 = x0 + Math.floor(tx / scale), sx1 = x0 + Math.max(Math.floor((tx + 1) / scale), Math.floor(tx / scale) + 1);
+    const sy0 = y0 + Math.floor(ty / scale), sy1 = y0 + Math.max(Math.floor((ty + 1) / scale), Math.floor(ty / scale) + 1);
+    let pr = 0, pg = 0, pb = 0, pa = 0, n = 0;
+    for (let sy = sy0; sy < sy1 && sy <= y1; sy++) for (let sx = sx0; sx < sx1 && sx <= x1; sx++) {
+      const i = (sy * png.width + sx) * 4, al = png.data[i + 3]! / 255;
+      pr += png.data[i]! * al; pg += png.data[i + 1]! * al; pb += png.data[i + 2]! * al; pa += png.data[i + 3]!; n++;
+    }
+    if (!n) continue;
+    const avgA = pa / n;
+    if (avgA > 0) { const k = 255 / (avgA * n); s.set(tx, ty, [Math.min(255, Math.round(pr * k)), Math.min(255, Math.round(pg * k)), Math.min(255, Math.round(pb * k)), Math.round(avgA)]); }
+  }
+  return s;
+}
 interface P { s: Sprite; col: number; row: number; solid?: number; }
 const objs: P[] = [
-  { s: coopVault(), col: 18, row: 12, solid: 3 }, // hero — the prologue Vault
-  { s: barn(), col: 29, row: 12, solid: 2 },
-  { s: house(), col: 7, row: 12, solid: 2 },
-  { s: siloCluster(), col: 35, row: 11, solid: 2 },
-  { s: silo(), col: 12, row: 11, solid: 2 },
-  { s: church(), col: 9, row: 22, solid: 3 },
-  { s: watertower(), col: 25, row: 21, solid: 1 },
-  { s: windmill(), col: 32, row: 22, solid: 1 },
-  { s: house(), col: 16, row: 22, solid: 2 },
+  { s: bld('field_coopvault', 120) ?? coopVault(), col: 18, row: 12, solid: 3 }, // hero — the prologue Vault
+  { s: bld('field_barn', 104) ?? barn(), col: 29, row: 12, solid: 2 },
+  { s: bld('field_farmhouse', 96) ?? house(), col: 7, row: 12, solid: 2 },
+  { s: bld('field_silo', 108) ?? siloCluster(), col: 35, row: 11, solid: 2 },
+  { s: bld('field_silo', 92) ?? silo(), col: 12, row: 11, solid: 2 },
+  { s: bld('field_church', 104) ?? church(), col: 9, row: 22, solid: 3 },
+  { s: bld('field_watertower', 116) ?? watertower(), col: 25, row: 21, solid: 1 },
+  { s: bld('field_windmill', 116) ?? windmill(), col: 32, row: 22, solid: 1 },
+  { s: bld('field_farmhouse', 96) ?? house(), col: 16, row: 22, solid: 2 },
   { s: elevatorHatch(), col: 20, row: 17, solid: 1 }, // spawn point
   // cattle pen (NE) + dressing
   { s: cattleFence(), col: 33, row: 24, solid: 1 },
@@ -139,14 +167,7 @@ const objs: P[] = [
   { s: crate(), col: 11, row: 23 },
 ];
 
-const PR = [prairie(1), prairie(2), prairie(3), prairie(4)];
-const TA = [tall(11), tall(12), tall(13)];
-const RD = [road(21), road(22), road(23)];
-const PK = [packed(31), packed(32)];
-const WA = [water(41), water(42)];
-const BO = [border(51), border(52)];
 const big = new Sprite(W, H);
-const trng = new Rng(7);
 const blit = (s: Sprite, x0: number, y0: number, over = true): void => {
   for (let y = 0; y < s.h; y++)
     for (let x = 0; x < s.w; x++) {
@@ -157,21 +178,67 @@ const blit = (s: Sprite, x0: number, y0: number, over = true): void => {
       big.set(x0 + x, y0 + y, [Math.round(c[0] * a + d[0] * (1 - a)), Math.round(c[1] * a + d[1] * (1 - a)), Math.round(c[2] * a + d[2] * (1 - a)), 255]);
     }
 };
-const pick = (arr: Sprite[]): Sprite => arr[trng.int(0, arr.length - 1)]!;
-for (let r = 0; r < ROWS; r++)
-  for (let c = 0; c < COLS; c++) {
-    const ch = MAP[r]![c]!;
-    const t = ch === 'd' ? pick(RD) : ch === 'T' ? pick(TA) : ch === 'e' ? pick(PK) : ch === 'w' ? pick(WA) : ch === '#' ? pick(BO) : pick(PR);
-    blit(t, c * T, r * T, false);
+
+// ---- PixelLab Wang terrain (dual-grid, layered) --------------------------
+// Three corner-Wang sets share the same dry-prairie grass as their UPPER
+// terrain; the feature (road / creek / tall-grass) is the LOWER. Laid on a
+// dual grid (each tile sits at the intersection of 4 data cells) so features
+// blend seamlessly into the grass. Base draws everywhere; overlays only paint
+// tiles that actually touch their feature (skip the all-grass tile, mask 15).
+const TILES = join(new URL('..', import.meta.url).pathname, 'assets/tiles-pixellab');
+function loadWang(dir: string): Map<number, PNG> {
+  const meta = JSON.parse(readFileSync(join(TILES, dir, 'tileset.json'), 'utf8')) as {
+    tiles: Array<{ id?: string; name?: string; corners: Record<'NW' | 'NE' | 'SW' | 'SE', string> }>;
+  };
+  const byMask = new Map<number, PNG>();
+  meta.tiles.forEach((t, i) => {
+    const fname = `tile_${String(i).padStart(2, '0')}_${t.id ?? t.name ?? i}`.replace(/[^\w]+/g, '_') + '.png';
+    const png = PNG.sync.read(readFileSync(join(TILES, dir, fname)));
+    const cr = t.corners;
+    const bit = (k: 'NW' | 'NE' | 'SW' | 'SE'): number => (cr[k] === 'upper' ? 1 : 0);
+    byMask.set((bit('NW') << 3) | (bit('NE') << 2) | (bit('SW') << 1) | bit('SE'), png);
+  });
+  return byMask;
+}
+function blitTile(png: PNG, x0: number, y0: number): void {
+  for (let y = 0; y < png.height; y++) {
+    const py = y0 + y; if (py < 0 || py >= H) continue;
+    for (let x = 0; x < png.width; x++) {
+      const px = x0 + x; if (px < 0 || px >= W) continue;
+      const si = (y * png.width + x) * 4; const a = png.data[si + 3]! / 255; if (a === 0) continue;
+      const d = big.get(px, py);
+      big.set(px, py, [Math.round(png.data[si]! * a + d[0] * (1 - a)), Math.round(png.data[si + 1]! * a + d[1] * (1 - a)), Math.round(png.data[si + 2]! * a + d[2] * (1 - a)), 255]);
+    }
   }
-// organic edge crumble where road/packed meets grass
-const erng = new Rng(9);
+}
+/** Dual-grid lay; `skip` drops tiles whose corner mask equals it (overlay = 15, all-grass). */
+function layWang(wang: Map<number, PNG>, up: (c: number, r: number) => boolean, skip = -1): void {
+  for (let j = 0; j <= ROWS; j++)
+    for (let i = 0; i <= COLS; i++) {
+      const mask = ((up(i - 1, j - 1) ? 1 : 0) << 3) | ((up(i, j - 1) ? 1 : 0) << 2) | ((up(i - 1, j) ? 1 : 0) << 1) | (up(i, j) ? 1 : 0);
+      if (mask === skip) continue;
+      const png = wang.get(mask);
+      if (png) blitTile(png, i * T - T / 2, j * T - T / 2);
+    }
+}
+const grassRoad = loadWang('field_grass_road');
+const grassWater = loadWang('field_grass_water');
+const grassTall = loadWang('field_grass_tall');
+const isRoad = (c: number, r: number): boolean => inb(c, r) && MAP[r]![c] === 'd';
+const isWater = (c: number, r: number): boolean => inb(c, r) && MAP[r]![c] === 'w';
+const isTall = (c: number, r: number): boolean => inb(c, r) && MAP[r]![c] === 'T';
+// base: grass everywhere, dirt road carved where 'd' (grass is the upper terrain)
+layWang(grassRoad, (c, r) => !isRoad(c, r));
+// overlays: creek + tall-grass patches, only where they actually appear
+layWang(grassWater, (c, r) => !isWater(c, r), 15);
+layWang(grassTall, (c, r) => !isTall(c, r), 15);
+// darken the border ring so the map reads as fenced-in by dense scrub
 for (let r = 0; r < ROWS; r++)
   for (let c = 0; c < COLS; c++) {
-    if (MAP[r]![c] !== 'd') continue;
-    for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]] as Array<[number, number]>) {
-      if (MAP[r + dy]?.[c + dx] !== 'g') continue;
-      for (let i = 0; i < T; i++) if (erng.chance(30)) { const x = dx === 0 ? c * T + i : c * T + (dx === 1 ? T - 1 : 0); const y = dy === 0 ? r * T + i : r * T + (dy === 1 ? T - 1 : 0); big.set(x, y, [70, 90, 40, 255]); }
+    if (MAP[r]![c] !== '#') continue;
+    for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) {
+      const p = big.get(c * T + x, r * T + y);
+      big.set(c * T + x, r * T + y, [Math.round(p[0] * 0.62), Math.round(p[1] * 0.62), Math.round(p[2] * 0.62), 255]);
     }
   }
 
@@ -224,25 +291,25 @@ writeFileSync(
     spawn: { x: 20, y: 18 }, // just below the elevator hatch
     // north edge is open → Farm Road (handled by the region edge-warp, not a portal)
     npcs: [
-      { char: 'npc_elder', col: 13, row: 13, name: 'Quartermaster Odell', shop: 'field', lines: ['Topside supply. Nodes, kits, and I buy salvage by the pound.'] },
-      { char: 'npc_rancher', col: 16, row: 13, name: 'Scrapper Rivet', lines: [
+      { char: 'odell', col: 13, row: 13, name: 'Quartermaster Odell', shop: 'field', lines: ['Topside supply. Nodes, kits, and I buy salvage by the pound.'] },
+      { char: 'rivet', col: 16, row: 13, name: 'Scrapper Rivet', lines: [
         'First run topside? Keep off the dead houses. Some flicker — there, then gone. The Static does that.',
         "Co-op Vault stood sealed since my grandfather's day. Funny — somebody cracked it open just last night.",
         'Pick clean, walk soft, never linger. Standing still up here gets you noticed.',
       ] },
-      { char: 'npc_kid', col: 9, row: 13, name: 'Picker Bex', lines: [
+      { char: 'bex', col: 9, row: 13, name: 'Picker Bex', lines: [
         'The tall grass is crawling with little ones — toasters, fans, a vacuum that spins like a dust devil!',
         'Weaken one first, then spend a storage node. Rush the catch and they rage and bolt.',
         'Odessa buzzed my handheld about some Manifest to fill. You get the assignment too?',
       ] },
-      { char: 'npc_elder', col: 12, row: 23, name: 'Old-timer Mesa', lines: [
+      { char: 'mesa', col: 12, row: 23, name: 'Old-timer Mesa', lines: [
         'This was cattle country, kid, long before the bunkers. Squint and you can still read the brands.',
         "That church bell hasn't rung in five hundred years. Some folks still wait on it.",
         "Grass grows, water runs. The world's broken — and it's trying awful hard to heal.",
       ] },
     ],
     trainers: [
-      { char: 'npc_kid', col: 24, row: 18, facing: 'w', name: 'Runner Cricket', range: 4, team: [{ num: 10, level: 4 }], bark: 'Runner Cricket: First one topside wins! ...usually.' },
+      { char: 'cricket', col: 24, row: 18, facing: 'w', name: 'Runner Cricket', range: 4, team: [{ num: 10, level: 4 }], bark: 'Runner Cricket: First one topside wins! ...usually.' },
     ],
     items: [
       { col: 28, row: 14, credits: 150, label: 'A dropped node' },
