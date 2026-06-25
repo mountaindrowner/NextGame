@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "WREN, young scavenger, blonde hair in a low ponytail, worn leather goggle-cap, red bandana at the neck, scuffed work jacket with a salvaged metal shoulder pad, deadpan calm expression, head and shoulders bust portrait, close-up framing shoulders and face only, JRPG dialogue portrait, pixel art, grimy muted industrial palette",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-25T06:01:01.057Z"
+}

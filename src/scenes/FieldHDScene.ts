@@ -1161,7 +1161,8 @@ export class FieldHDScene extends Phaser.Scene {
     this.toastTimer?.remove();
     const W = 460;
     const PAD = 14;
-    const RISE = 34; // how far the speaker's bust peeks up above the box's top edge
+    const PH = 54; // fixed (small) bust height — independent of how tall the box grows
+    const PEEK = 16; // how much of the bust's base tucks behind the box's top edge
 
     // a small speaker bust that sits BEHIND the text box, its head rising just
     // above the top edge (the box covers the rest). Text spans the full width.
@@ -1185,9 +1186,11 @@ export class FieldHDScene extends Phaser.Scene {
     t.setPosition(240 - W / 2 + PAD, cy - h / 2 + PAD / 2);
     const items: Phaser.GameObjects.GameObject[] = [];
     if (portrait) {
-      // bottom-anchored at the box's lower edge so a constant RISE of head shows above
-      portrait.setScale((h + RISE) / portrait.height).setOrigin(0.5, 1).setPosition(240 - W / 2 + 56, cy + h / 2 - 1);
-      items.push(portrait); // pushed first → renders behind the box
+      // a small fixed-size bust tucked behind the box's top-left, its base
+      // hidden by the box so just the head/shoulders peek above the top edge
+      const boxTop = cy - h / 2;
+      portrait.setScale(PH / portrait.height).setOrigin(0.5, 1).setPosition(240 - W / 2 + 44, boxTop + PEEK);
+      items.push(portrait); // pushed first → renders behind the box (and text)
     }
     items.push(box, t);
     const c = this.add.container(0, 0, items).setScrollFactor(0).setDepth(200);
