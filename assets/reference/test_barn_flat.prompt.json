@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "weathered red barn with solar panels on the roof and vines climbing it, post-apocalyptic solarpunk, front-facing 2D RPG building sprite, flat orthographic front elevation view like Pokemon and Stardew Valley, facade seen straight on, slight roof angle, NOT isometric, clean transparent background, soft drop shadow at base",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-25T19:21:17.804Z"
+}
