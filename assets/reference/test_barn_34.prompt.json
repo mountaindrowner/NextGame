@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "weathered red barn, solar panels on the sloped roof, vines climbing it, post-apocalyptic solarpunk, 3/4 top-down view high angle looking down from above and slightly in front, sloped roof seen from above plus the front wall below it, footprint flat on the ground grid, top-down RPG overworld building sprite like Pokemon HeartGold and Stardew Valley, NOT isometric, NOT a flat side elevation, clean transparent background, soft drop shadow",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-26T01:09:58.834Z"
+}

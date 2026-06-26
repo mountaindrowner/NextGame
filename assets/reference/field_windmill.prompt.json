@@ -2,12 +2,12 @@
   "source": "pixellab",
   "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
   "body": {
-    "description": "jury-rigged wind turbine on a rusted salvaged lattice tower, patched mismatched blades, cables, post-apocalyptic solarpunk ruin, weathered rusted and worn down, overgrown with green vines and moss, reclaimed by nature, salvaged solar panels and makeshift wind turbines bolted on, hopeful green regrowth, high 3/4 top-down view, pixel art building sprite, clean transparent background, soft drop shadow at base",
+    "description": "jury-rigged wind turbine on a rusted salvaged lattice tower, patched mismatched blades, post-apocalyptic solarpunk ruin weathered overgrown with vines, front-facing 2D RPG building sprite, flat orthographic FRONT ELEVATION view like Pokemon and Stardew Valley, facade seen straight on from the front, both side walls fully hidden, only a slight roof angle, NOT isometric, NO perspective, clean transparent background, soft drop shadow at base",
     "image_size": {
       "width": 128,
       "height": 128
     },
     "no_background": true
   },
-  "at": "2026-06-25T18:35:50.035Z"
+  "at": "2026-06-26T01:36:39.300Z"
 }

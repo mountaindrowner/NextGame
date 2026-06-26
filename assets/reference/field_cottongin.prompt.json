@@ -2,12 +2,12 @@
   "source": "pixellab",
   "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
   "body": {
-    "description": "abandoned cotton gin mill, tall corrugated-metal industrial building with a chute and cyclone separator, rusted, vines overtaking it, post-apocalyptic solarpunk ruin, weathered rusted, overgrown with vines and moss, salvaged solar panels, high 3/4 top-down view, pixel art building sprite, clean transparent background, soft drop shadow at base",
+    "description": "tall narrow abandoned grain mill building with a front loading chute, rusted corrugated metal, vines, post-apocalyptic solarpunk ruin weathered overgrown with vines, front-facing 2D RPG building sprite, perfectly flat FRONT ELEVATION straight-on view like a Stardew Valley building, viewed directly from the front, both side walls completely hidden, no depth, NOT isometric, NO perspective, clean transparent background, soft drop shadow at base",
     "image_size": {
       "width": 128,
       "height": 128
     },
     "no_background": true
   },
-  "at": "2026-06-25T19:00:48.801Z"
+  "at": "2026-06-26T01:39:40.329Z"
 }

@@ -2,12 +2,12 @@
   "source": "pixellab",
   "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
   "body": {
-    "description": "ruined ivy-covered prairie chapel, broken steeple, wildflowers reclaiming it, a salvaged solar panel leaning on the wall, post-apocalyptic solarpunk ruin, weathered rusted and worn down, overgrown with green vines and moss, reclaimed by nature, salvaged solar panels and makeshift wind turbines bolted on, hopeful green regrowth, high 3/4 top-down view, pixel art building sprite, clean transparent background, soft drop shadow at base",
+    "description": "ruined ivy-covered prairie chapel with a broken steeple, wildflowers, a salvaged solar panel, post-apocalyptic solarpunk ruin weathered and overgrown with vines, front-facing top-down RPG building sprite, flat front elevation with the sloped roof seen from above, facade straight on like Pokemon and Stardew Valley, no isometric side faces, NOT isometric, footprint flat on the grid, clean transparent background, soft drop shadow at base",
     "image_size": {
       "width": 128,
       "height": 128
     },
     "no_background": true
   },
-  "at": "2026-06-25T18:36:12.684Z"
+  "at": "2026-06-26T01:33:33.598Z"
 }
