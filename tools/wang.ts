@@ -14,6 +14,7 @@ import { PNG } from 'pngjs';
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { Sprite } from './spritekit';
+import { Rng } from '../src/core/rng';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const TILES = join(ROOT, 'assets/tiles-pixellab');
@@ -85,4 +86,44 @@ export function loadBuilding(name: string, targetH: number): Sprite | null {
     if (avgA > 0) { const k = 255 / (avgA * n); s.set(tx, ty, [Math.min(255, Math.round(pr * k)), Math.min(255, Math.round(pg * k)), Math.min(255, Math.round(pb * k)), Math.round(avgA)]); }
   }
   return s;
+}
+
+/**
+ * Soften + diversify flat grass: for each plain grass cell (MAP === 'g'), blend
+ * the pixels toward a muted sage green by a per-cell-varying amount and nudge
+ * the brightness, so a single repeated grass tile reads as natural patchy greens
+ * instead of one sharp uniform color. Cheap post-process over the composed map.
+ */
+export function varyGrass(big: Sprite, map: string[][], T: number, cols: number, rows: number, seed: number): void {
+  const rng = new Rng(seed);
+  const SAGE: [number, number, number] = [104, 138, 78];
+  // a coarse per-cell-corner noise field, bilinearly sampled so the variation
+  // flows as soft gradients across the field instead of hard square patches
+  const NW = cols + 1;
+  const noise = new Float64Array(NW * (rows + 1));
+  for (let i = 0; i < noise.length; i++) noise[i] = rng.next();
+  const sample = (cx: number, cy: number): number => {
+    const x0 = Math.max(0, Math.min(cols, Math.floor(cx))), y0 = Math.max(0, Math.min(rows, Math.floor(cy)));
+    const x1 = Math.min(cols, x0 + 1), y1 = Math.min(rows, y0 + 1);
+    const tx = cx - x0, ty = cy - y0;
+    return noise[y0 * NW + x0]! * (1 - tx) * (1 - ty) + noise[y0 * NW + x1]! * tx * (1 - ty) +
+      noise[y1 * NW + x0]! * (1 - tx) * ty + noise[y1 * NW + x1]! * tx * ty;
+  };
+  for (let r = 0; r < rows; r++)
+    for (let c = 0; c < cols; c++) {
+      if (map[r]?.[c] !== 'g') continue;
+      for (let y = 0; y < T; y++)
+        for (let x = 0; x < T; x++) {
+          const nz = sample(c + x / T, r + y / T); // smooth 0..1
+          const k = 0.93 + nz * 0.14; // brightness 0.93..1.07
+          const mute = 0.12 + nz * 0.16; // blend toward sage 0.12..0.28
+          const p = big.get(c * T + x, r * T + y);
+          big.set(c * T + x, r * T + y, [
+            Math.min(255, Math.round((p[0] * (1 - mute) + SAGE[0] * mute) * k)),
+            Math.min(255, Math.round((p[1] * (1 - mute) + SAGE[1] * mute) * k)),
+            Math.min(255, Math.round((p[2] * (1 - mute) + SAGE[2] * mute) * k)),
+            255,
+          ]);
+        }
+    }
 }

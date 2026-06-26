@@ -13,7 +13,7 @@ import { Grid } from './gridart';
 import { Sprite } from './spritekit';
 import { Rng } from '../src/core/rng';
 import { barn, watertower } from './world-builders';
-import { loadWang, layWang, loadBuilding } from './wang';
+import { loadWang, layWang, loadBuilding, varyGrass } from './wang';
 import { scatterClutter } from './scatter';
 
 const T = 32;
@@ -135,6 +135,8 @@ for (let r = 0; r < ROWS; r++)
       big.set(c * T + x, r * T + y, [Math.round(p[0] * 0.46), Math.round(p[1] * 0.52), Math.round(p[2] * 0.4), 255]);
     }
   }
+// soften + diversify the grass so it reads as natural patchy greens
+varyGrass(big, MAP, T, COLS, ROWS, 5521);
 
 const extraSolid = new Set<string>();
 for (const o of objs) {

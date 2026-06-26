@@ -14,6 +14,7 @@ import { Sprite } from './spritekit';
 import { Rng } from '../src/core/rng';
 import { barn, house, watertower, windmill } from './world-builders';
 import { cattleFence, church, coopVault, elevatorHatch, hayBale, hitchingPost, silo, siloCluster, trough } from './assets/kit-field';
+import { varyGrass } from './wang';
 import { scatterClutter } from './scatter';
 
 const T = 32;
@@ -242,6 +243,9 @@ for (let r = 0; r < ROWS; r++)
       big.set(c * T + x, r * T + y, [Math.round(p[0] * 0.62), Math.round(p[1] * 0.62), Math.round(p[2] * 0.62), 255]);
     }
   }
+// soften + diversify the grass: per-cell mute toward sage and vary brightness/hue,
+// so the field reads as natural patchy greens instead of one sharp flat color
+varyGrass(big, MAP, T, COLS, ROWS, 7331);
 
 const extraSolid = new Set<string>();
 for (const o of objs) {
