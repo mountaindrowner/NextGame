@@ -2,12 +2,12 @@
   "source": "pixellab",
   "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
   "body": {
-    "description": "rusted water tower, riveted tank on four steel legs, vines on the legs, a salvaged wind turbine on top, post-apocalyptic solarpunk ruin weathered and overgrown with vines, front-facing top-down RPG building sprite, flat front elevation with the sloped roof seen from above, facade straight on like Pokemon and Stardew Valley, no isometric side faces, NOT isometric, footprint flat on the grid, clean transparent background, soft drop shadow at base",
+    "description": "tall rusted water tower, riveted tank on four straight steel legs, vines, post-apocalyptic solarpunk ruin covered in vines with solar panels mounted on the front wall, perfectly flat front view, 2D side scrolling video game building, like Terraria or a Pokemon overworld house, viewed dead-on from the front, perfectly symmetric facade, walls completely vertical no slant no taper, NOT isometric, NOT oblique, NOT 3D, NOT 3/4, NO depth at all, pixel art, clean transparent background",
     "image_size": {
       "width": 128,
       "height": 128
     },
     "no_background": true
   },
-  "at": "2026-06-26T01:32:06.056Z"
+  "at": "2026-06-26T01:52:50.930Z"
 }

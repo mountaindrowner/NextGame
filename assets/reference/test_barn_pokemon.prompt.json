@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "post-apocalyptic solarpunk red barn covered in vines, with solar panels visible on the front-facing side, side view orthographic, perfectly flat 2D facade like a Pokemon HeartGold overworld building, viewed straight on from the side with zero camera tilt, no roof seen from above, no perspective, no depth, no isometric angle, NOT 3/4 view, NOT oblique, pixel art, clean transparent background",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-26T01:50:26.823Z"
+}

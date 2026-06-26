@@ -2,12 +2,12 @@
   "source": "pixellab",
   "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
   "body": {
-    "description": "jury-rigged wind turbine on a rusted salvaged lattice tower, patched mismatched blades, post-apocalyptic solarpunk ruin weathered overgrown with vines, front-facing 2D RPG building sprite, flat orthographic FRONT ELEVATION view like Pokemon and Stardew Valley, facade seen straight on from the front, both side walls fully hidden, only a slight roof angle, NOT isometric, NO perspective, clean transparent background, soft drop shadow at base",
+    "description": "old farm windmill, multi-blade fan on a tall straight lattice tower, post-apocalyptic solarpunk ruin covered in vines with solar panels mounted on the front wall, perfectly flat front view, 2D side scrolling video game building, like Terraria or a Pokemon overworld house, viewed dead-on from the front, perfectly symmetric facade, walls completely vertical no slant no taper, NOT isometric, NOT oblique, NOT 3D, NOT 3/4, NO depth at all, pixel art, clean transparent background",
     "image_size": {
       "width": 128,
       "height": 128
     },
     "no_background": true
   },
-  "at": "2026-06-26T01:36:39.300Z"
+  "at": "2026-06-26T01:53:17.728Z"
 }

@@ -2,12 +2,12 @@
   "source": "pixellab",
   "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
   "body": {
-    "description": "derelict wooden farmhouse, mossy sagging roof with a small rooftop greenhouse and solar panels, vines, rain barrels, boarded windows, post-apocalyptic solarpunk ruin weathered and overgrown with vines, front-facing top-down RPG building sprite, flat front elevation with the sloped roof seen from above, facade straight on like Pokemon and Stardew Valley, no isometric side faces, NOT isometric, footprint flat on the grid, clean transparent background, soft drop shadow at base",
+    "description": "weathered wooden two-story house with a front door and shuttered windows, post-apocalyptic solarpunk ruin covered in vines with solar panels mounted on the front wall, perfectly flat front view, 2D side scrolling video game building, like Terraria, viewed dead-on from the front, perfectly symmetric facade, walls completely vertical no slant no taper, NOT isometric, NOT oblique, NOT 3D, NOT 3/4, NO depth at all, pixel art, clean transparent background",
     "image_size": {
       "width": 128,
       "height": 128
     },
     "no_background": true
   },
-  "at": "2026-06-26T01:31:33.465Z"
+  "at": "2026-06-26T01:57:09.635Z"
 }
