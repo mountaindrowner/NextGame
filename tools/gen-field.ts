@@ -142,15 +142,15 @@ function bld(name: string, targetH: number): Sprite | null {
 }
 interface P { s: Sprite; col: number; row: number; solid?: number; }
 const objs: P[] = [
-  { s: bld('field_coopvault', 120) ?? coopVault(), col: 18, row: 12, solid: 3 }, // hero — the prologue Vault
-  { s: bld('field_barn', 104) ?? barn(), col: 29, row: 12, solid: 2 },
-  { s: bld('field_farmhouse', 96) ?? house(), col: 7, row: 12, solid: 2 },
-  { s: bld('field_silo', 108) ?? siloCluster(), col: 35, row: 11, solid: 2 },
-  { s: bld('field_silo', 92) ?? silo(), col: 12, row: 11, solid: 2 },
-  { s: bld('field_church', 104) ?? church(), col: 9, row: 22, solid: 3 },
-  { s: bld('field_watertower', 116) ?? watertower(), col: 25, row: 21, solid: 1 },
-  { s: bld('field_windmill', 116) ?? windmill(), col: 32, row: 22, solid: 1 },
-  { s: bld('field_farmhouse', 96) ?? house(), col: 16, row: 22, solid: 2 },
+  { s: coopVault(), col: 18, row: 12, solid: 3 }, // hero — the prologue Vault
+  { s: barn(), col: 29, row: 12, solid: 2 },
+  { s: house(), col: 7, row: 12, solid: 2 },
+  { s: siloCluster(), col: 35, row: 11, solid: 2 },
+  { s: silo(), col: 12, row: 11, solid: 2 },
+  { s: church(), col: 9, row: 22, solid: 3 },
+  { s: watertower(), col: 25, row: 21, solid: 1 },
+  { s: windmill(), col: 32, row: 22, solid: 1 },
+  { s: house(), col: 16, row: 22, solid: 2 },
   { s: elevatorHatch(), col: 20, row: 17, solid: 1 }, // spawn point
   // cattle pen (NE) + dressing
   { s: cattleFence(), col: 33, row: 24, solid: 1 },
@@ -167,24 +167,6 @@ const objs: P[] = [
   { s: crate(), col: 11, row: 23 },
 ];
 
-// solarpunk salvage props (only added if their PixelLab PNG generated) — solar
-// arrays, jury-rigged turbines, and reclaimed garden beds scattered through town
-const propSpots: Array<[string, number, number, number]> = [
-  ['field_solar', 28, 11, 46], ['field_solar', 6, 21, 44],
-  ['field_turbine', 33, 11, 58], ['field_turbine', 27, 16, 54],
-  ['field_planter', 24, 13, 38], ['field_planter', 15, 19, 38], ['field_planter', 31, 24, 36],
-];
-for (const [name, col, row, h] of propSpots) {
-  const s = bld(name, h);
-  if (s) objs.push({ s, col, row, solid: 1 });
-}
-
-// round Gen-4 Pokemon trees, baked as solid obstacles (replaces animated trees)
-const TREE_SPOTS: Array<[number, number]> = [[4, 10], [13, 5], [27, 7], [37, 16], [3, 16], [34, 16], [6, 9], [24, 4], [11, 18], [30, 25]];
-for (const [col, row] of TREE_SPOTS) {
-  const s = bld('field_tree', 40);
-  if (s && MAP[row]?.[col] === 'g') objs.push({ s, col, row, solid: 1 });
-}
 
 const big = new Sprite(W, H);
 const blit = (s: Sprite, x0: number, y0: number, over = true): void => {
@@ -294,8 +276,10 @@ for (let r = 0; r < ROWS; r++)
     grassAny.push(ch === 'T' || ch === 'g' ? 1 : 0);
     waterArr.push(ch === 'w' ? 1 : 0);
   }
-// trees are now baked Pokemon-style sprites (above) — no animated placements
+// trees as animated placements (FieldHDScene draws trunk + swaying leaves)
 const placements: Array<{ type: string; col: number; row: number }> = [];
+const treeSpots: Array<[number, number]> = [[4, 10], [13, 5], [27, 7], [37, 16], [3, 16], [34, 16], [6, 9], [24, 4], [11, 18], [30, 25]];
+for (const [c, r] of treeSpots) if (!extraSolid.has(`${c},${r}`) && MAP[r]?.[c] !== 'w' && MAP[r]?.[c] !== 'd') placements.push({ type: 'tree', col: c, row: r });
 
 writeFileSync(
   join(OUT, 'the-field.json'),

@@ -98,26 +98,12 @@ const LEDGES: Array<{ col: number; row: number; dir: 's' }> = [
 // props (baked) — the cotton gin (barn), the water-tower lookout, dressing
 interface P { s: Sprite; col: number; row: number; solid?: number; }
 const objs: P[] = [
-  { s: loadBuilding('field_cottongin', 116) ?? barn(), col: 22, row: 6, solid: 1 }, // the abandoned cotton gin
-  { s: loadBuilding('field_watertower', 116) ?? watertower(), col: 5, row: 8, solid: 1 }, // the lookout
+  { s: barn(), col: 22, row: 6, solid: 1 }, // the abandoned cotton gin
+  { s: watertower(), col: 5, row: 8, solid: 1 }, // the lookout
   { s: tumbleweed(1), col: 16, row: 26 },
   { s: tumbleweed(2), col: 23, row: 17 },
   { s: tumbleweed(3), col: 6, row: 20 },
 ];
-// solarpunk salvage dressing along the road (only if their PNGs exist)
-const propSpots: Array<[string, number, number, number]> = [
-  ['field_solar', 21, 22, 44], ['field_turbine', 6, 12, 56],
-  ['field_planter', 16, 25, 36], ['field_planter', 23, 14, 36],
-];
-for (const [name, col, row, h] of propSpots) {
-  const s = loadBuilding(name, h);
-  if (s) objs.push({ s, col, row, solid: 1 });
-}
-// round Gen-4 Pokemon trees, baked as solid obstacles (replaces animated trees)
-for (const [col, row] of [[4, 6], [23, 12], [5, 18], [22, 24], [10, 12]] as Array<[number, number]>) {
-  const s = loadBuilding('field_tree', 40);
-  if (s && MAP[row]?.[col] === 'g') objs.push({ s, col, row, solid: 1 });
-}
 
 const big = new Sprite(W, H);
 const blit = (s: Sprite, x0: number, y0: number, over = true): void => {
@@ -189,7 +175,8 @@ for (let r = 0; r < ROWS; r++)
     grass.push(ch === 'T' ? 1 : 0);
     grassAny.push(ch === 'T' || ch === 'g' ? 1 : 0);
   }
-// trees are now baked Pokemon-style sprites (above) — no animated placements
+for (const [c, r] of [[4, 6], [23, 12], [5, 18], [22, 24], [10, 12]] as Array<[number, number]>)
+  if (!extraSolid.has(`${c},${r}`) && MAP[r]?.[c] === 'g') placements.push({ type: 'tree', col: c, row: r });
 
 writeFileSync(
   join(OUT, 'farmroad.json'),
