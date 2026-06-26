@@ -2,12 +2,12 @@
   "source": "pixellab",
   "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
   "body": {
-    "description": "row of three tall rusty corrugated-metal grain silos with conical roofs, post-apocalyptic solarpunk ruin covered in vines with solar panels mounted on the front wall, perfectly flat front view, 2D side scrolling video game building, like Terraria or a Pokemon overworld house, viewed dead-on from the front, perfectly symmetric facade, walls completely vertical no slant no taper, NOT isometric, NOT oblique, NOT 3D, NOT 3/4, NO depth at all, pixel art, clean transparent background",
+    "description": "a cluster of three grain silos with conical roofs and vines, in the art style of a classic Gen-4 Pokemon Diamond Pearl Platinum overworld town building, clean simple flat cel-shaded pixel art with bold dark outlines, the roof viewed from a high top-down angle filling the upper part with a short front wall at the bottom, NO isometric side walls, bright limited palette, low detail simple shapes, post-apocalyptic solarpunk overgrown with vines, original design, top-down RPG map building, transparent background",
     "image_size": {
-      "width": 128,
-      "height": 128
+      "width": 96,
+      "height": 96
     },
     "no_background": true
   },
-  "at": "2026-06-26T01:56:12.524Z"
+  "at": "2026-06-26T04:35:38.282Z"
 }

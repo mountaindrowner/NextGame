@@ -2,12 +2,12 @@
   "source": "pixellab",
   "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
   "body": {
-    "description": "tall fortified concrete grain co-op bunker vault, heavy front blast door, rusted, post-apocalyptic solarpunk ruin covered in vines with solar panels on the roof, classic JRPG overworld building in 3/4 top-down view: looking down from above you see the angled rooftop on the top portion and the flat front wall below it, footprint sits flat on the ground tiles, both side walls hidden, symmetric, like a building in Pokemon HeartGold or RPG Maker VX, NOT isometric, NO two-sided corner, pixel art, transparent background",
+    "description": "a fortified concrete bunker building with a heavy front blast door and a rooftop solar panel, in the art style of a classic Gen-4 Pokemon Diamond Pearl Platinum overworld town building, clean simple flat cel-shaded pixel art with bold dark outlines, the roof viewed from a high top-down angle filling the upper part with a short front wall at the bottom, NO isometric side walls, bright limited palette, low detail simple shapes, post-apocalyptic solarpunk overgrown with vines, original design, top-down RPG map building, transparent background",
     "image_size": {
-      "width": 128,
-      "height": 128
+      "width": 96,
+      "height": 96
     },
     "no_background": true
   },
-  "at": "2026-06-26T04:25:34.297Z"
+  "at": "2026-06-26T04:34:50.697Z"
 }

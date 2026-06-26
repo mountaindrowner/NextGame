@@ -1,12 +1,12 @@
 {
   "source": "pixellab",
   "endpoint": "create-tileset",
-  "lower": "tall lush overgrown grass and reeds, wildflowers, dense waist-high green regrowth",
-  "upper": "overgrown reclaimed prairie, green regrowth and wildflowers mixed through dry golden grass, lush weedy patches, post-apocalyptic solarpunk nature reclaiming",
-  "transition": "grass growing taller greener and denser",
+  "lower": "clumpy darker green tall encounter grass tufts, clean simple flat Gen-4 Pokemon Diamond Pearl overworld map tile, bright bold low-detail pixel art",
+  "upper": "bright green grass, clean simple flat Gen-4 Pokemon Diamond Pearl overworld map tile, bright bold low-detail pixel art",
+  "transition": "grass getting taller and clumpy",
   "size": 32,
   "view": "high top-down",
-  "tileset_id": "14fc24e4-ac4c-4f18-a6d6-b34a4b2fd6dc",
+  "tileset_id": "9f220d58-6657-4398-9cbf-dcc24d1a3b10",
   "total": 16,
   "tiles": [
     {
@@ -656,9 +656,9 @@
       "upper"
     ],
     "terrain_prompts": {
-      "lower": "tall lush overgrown grass and reeds, wildflowers, dense waist-high green regrowth",
-      "upper": "overgrown reclaimed prairie, green regrowth and wildflowers mixed through dry golden grass, lush weedy patches, post-apocalyptic solarpunk nature reclaiming",
-      "transition": "grass growing taller greener and denser"
+      "lower": "clumpy darker green tall encounter grass tufts, clean simple flat Gen-4 Pokemon Diamond Pearl overworld map tile, bright bold low-detail pixel art",
+      "upper": "bright green grass, clean simple flat Gen-4 Pokemon Diamond Pearl overworld map tile, bright bold low-detail pixel art",
+      "transition": "grass getting taller and clumpy"
     },
     "terrain_ids": null,
     "transition_size": 0.25,
@@ -669,7 +669,7 @@
       "text_guidance_scale": 8,
       "tileset_adherence_freedom": 500
     },
-    "created_at": "2026-06-25T18:37:00.193729+00:00"
+    "created_at": "2026-06-26T04:34:10.856690+00:00"
   },
-  "at": "2026-06-25T18:37:04.483Z"
+  "at": "2026-06-26T04:34:15.820Z"
 }

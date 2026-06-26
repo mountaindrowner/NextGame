@@ -2,12 +2,12 @@
   "source": "pixellab",
   "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
   "body": {
-    "description": "small jury-rigged wind turbine on a welded scrap pole, spinning blades from old fan parts, post-apocalyptic solarpunk, weathered rusted salvaged, overgrown with vines, high 3/4 top-down view, pixel art prop sprite, clean transparent background, soft drop shadow at base",
+    "description": "a small wind turbine with spinning blades on a pole, solarpunk, in the clean simple flat Gen-4 Pokemon Diamond Pearl overworld style, bold dark outlines, bright low-detail pixel art, top-down, transparent background",
     "image_size": {
-      "width": 96,
-      "height": 96
+      "width": 72,
+      "height": 72
     },
     "no_background": true
   },
-  "at": "2026-06-25T18:34:04.293Z"
+  "at": "2026-06-26T04:32:39.192Z"
 }

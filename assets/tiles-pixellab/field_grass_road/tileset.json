@@ -1,12 +1,12 @@
 {
   "source": "pixellab",
   "endpoint": "create-tileset",
-  "lower": "cracked faded old asphalt road, weeds and wildflowers breaking through the cracks, worn",
-  "upper": "overgrown reclaimed prairie, green regrowth and wildflowers mixed through dry golden grass, lush weedy patches, post-apocalyptic solarpunk nature reclaiming",
-  "transition": "grass and weeds reclaiming the cracked road edge",
+  "lower": "tan cream diagonal brick path with a few cracks and weeds, clean simple flat Gen-4 Pokemon Diamond Pearl overworld map tile, bright bold low-detail pixel art",
+  "upper": "bright green grass with tiny wildflowers, clean simple flat Gen-4 Pokemon Diamond Pearl overworld map tile, bright bold low-detail pixel art",
+  "transition": "grass meeting the brick path edge",
   "size": 32,
   "view": "high top-down",
-  "tileset_id": "de8900f5-0b0e-4bfe-8951-13b5731d16b7",
+  "tileset_id": "4cb2eb6a-5f42-4d8e-b3e1-afbe3b1bcb15",
   "total": 16,
   "tiles": [
     {
@@ -656,9 +656,9 @@
       "upper"
     ],
     "terrain_prompts": {
-      "lower": "cracked faded old asphalt road, weeds and wildflowers breaking through the cracks, worn",
-      "upper": "overgrown reclaimed prairie, green regrowth and wildflowers mixed through dry golden grass, lush weedy patches, post-apocalyptic solarpunk nature reclaiming",
-      "transition": "grass and weeds reclaiming the cracked road edge"
+      "lower": "tan cream diagonal brick path with a few cracks and weeds, clean simple flat Gen-4 Pokemon Diamond Pearl overworld map tile, bright bold low-detail pixel art",
+      "upper": "bright green grass with tiny wildflowers, clean simple flat Gen-4 Pokemon Diamond Pearl overworld map tile, bright bold low-detail pixel art",
+      "transition": "grass meeting the brick path edge"
     },
     "terrain_ids": null,
     "transition_size": 0.25,
@@ -669,7 +669,7 @@
       "text_guidance_scale": 8,
       "tileset_adherence_freedom": 500
     },
-    "created_at": "2026-06-25T18:34:51.113181+00:00"
+    "created_at": "2026-06-26T04:32:47.671408+00:00"
   },
-  "at": "2026-06-25T18:35:07.359Z"
+  "at": "2026-06-26T04:32:51.391Z"
 }

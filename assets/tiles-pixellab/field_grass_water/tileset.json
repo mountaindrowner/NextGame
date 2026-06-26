@@ -1,12 +1,12 @@
 {
   "source": "pixellab",
   "endpoint": "create-tileset",
-  "lower": "muddy shallow creek water, murky",
-  "upper": "dry golden-brown prairie grass, sparse dead tufts, post-collapse Texas",
-  "transition": "reedy muddy creek bank",
+  "lower": "clean bright blue pond water, clean simple flat Gen-4 Pokemon Diamond Pearl overworld map tile, bright bold low-detail pixel art",
+  "upper": "bright green grass with a grassy bank, clean simple flat Gen-4 Pokemon Diamond Pearl overworld map tile, bright bold low-detail pixel art",
+  "transition": "grassy shoreline meeting the water",
   "size": 32,
   "view": "high top-down",
-  "tileset_id": "532f8618-7640-4f4f-b931-9abffd859e30",
+  "tileset_id": "204bf196-5c2f-432b-aa43-743da7b31eb1",
   "total": 16,
   "tiles": [
     {
@@ -656,9 +656,9 @@
       "upper"
     ],
     "terrain_prompts": {
-      "lower": "muddy shallow creek water, murky",
-      "upper": "dry golden-brown prairie grass, sparse dead tufts, post-collapse Texas",
-      "transition": "reedy muddy creek bank"
+      "lower": "clean bright blue pond water, clean simple flat Gen-4 Pokemon Diamond Pearl overworld map tile, bright bold low-detail pixel art",
+      "upper": "bright green grass with a grassy bank, clean simple flat Gen-4 Pokemon Diamond Pearl overworld map tile, bright bold low-detail pixel art",
+      "transition": "grassy shoreline meeting the water"
     },
     "terrain_ids": null,
     "transition_size": 0.25,
@@ -669,7 +669,7 @@
       "text_guidance_scale": 8,
       "tileset_adherence_freedom": 500
     },
-    "created_at": "2026-06-25T06:15:33.168592+00:00"
+    "created_at": "2026-06-26T04:35:55.957620+00:00"
   },
-  "at": "2026-06-25T06:15:37.661Z"
+  "at": "2026-06-26T04:35:58.363Z"
 }

@@ -179,6 +179,13 @@ for (const [name, col, row, h] of propSpots) {
   if (s) objs.push({ s, col, row, solid: 1 });
 }
 
+// round Gen-4 Pokemon trees, baked as solid obstacles (replaces animated trees)
+const TREE_SPOTS: Array<[number, number]> = [[4, 10], [13, 5], [27, 7], [37, 16], [3, 16], [34, 16], [6, 9], [24, 4], [11, 18], [30, 25]];
+for (const [col, row] of TREE_SPOTS) {
+  const s = bld('field_tree', 40);
+  if (s && MAP[row]?.[col] === 'g') objs.push({ s, col, row, solid: 1 });
+}
+
 const big = new Sprite(W, H);
 const blit = (s: Sprite, x0: number, y0: number, over = true): void => {
   for (let y = 0; y < s.h; y++)
@@ -287,12 +294,8 @@ for (let r = 0; r < ROWS; r++)
     grassAny.push(ch === 'T' || ch === 'g' ? 1 : 0);
     waterArr.push(ch === 'w' ? 1 : 0);
   }
-// trees as animated placements (FieldHDScene draws trunk + swaying leaves)
+// trees are now baked Pokemon-style sprites (above) — no animated placements
 const placements: Array<{ type: string; col: number; row: number }> = [];
-const prng = new Rng(13);
-const treeSpots: Array<[number, number]> = [[4, 10], [13, 5], [27, 7], [37, 16], [3, 16], [34, 16], [6, 9], [24, 4], [11, 18], [30, 25]];
-for (const [c, r] of treeSpots) if (!extraSolid.has(`${c},${r}`) && MAP[r]?.[c] !== 'w' && MAP[r]?.[c] !== 'd') placements.push({ type: 'tree', col: c, row: r });
-void prng;
 
 writeFileSync(
   join(OUT, 'the-field.json'),
