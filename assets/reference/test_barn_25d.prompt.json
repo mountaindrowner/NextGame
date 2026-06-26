@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "weathered red barn covered in vines with solar panels on the roof, post-apocalyptic solarpunk, 2.5D top-down view, high overhead camera looking down at a steep angle so you mostly see the roof from above with only a short front wall strip along the bottom, like a building in Zelda A Link to the Past or a classic SNES top-down RPG overworld, footprint flat on the ground tiles, no side walls visible, not isometric, pixel art, transparent background",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-26T04:17:31.080Z"
+}

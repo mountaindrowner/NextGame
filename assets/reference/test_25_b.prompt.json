@@ -1,0 +1,13 @@
+{
+  "source": "pixellab",
+  "endpoint": "https://api.pixellab.ai/v1/generate-image-pixflux",
+  "body": {
+    "description": "weathered red barn with solar panels on the roof and vines, post-apocalyptic solarpunk, EXTREME high-angle top-down view seen from almost directly overhead, the large slanted roof seen from above fills most of the sprite, only a short front-wall strip with the door at the very bottom edge, both side walls completely hidden, perfectly symmetric mirror-image left and right half, flat top-down RPG overworld building roof tile, NOT isometric, NO side walls, NO 3D corner block, pixel art, transparent background",
+    "image_size": {
+      "width": 128,
+      "height": 128
+    },
+    "no_background": true
+  },
+  "at": "2026-06-26T04:19:37.343Z"
+}
