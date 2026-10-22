@@ -13,6 +13,15 @@ Asset system implemented + HD-reconciled in `docs/asset-pipeline.md` +
 `tools/assets/`. If later chat conflicts with these files, the chat wins —
 update the files immediately.
 
+## ⚠ Branch `claude/hd2d` — NEW DIRECTION (2026-10-22, Mark)
+
+On this branch the game is being remade in **HD-2D (Octopath-inspired): a 3D
+world in Three.js with 2D pixel-art characters**, plus **Battle Network–style
+grid combat**. Every graphical asset and the combat presentation get redone;
+story, cast, Ohms, layouts and game logic stay. **Read `docs/hd2d-direction.md`
+first** — it overrides the Art, Art-method and Engine lines below on this
+branch. The pre-HD-2D game is frozen on `claude/make-this-happen-o0q20w`.
+
 ## What this is
 
 OHMFRONT: a complete, original monster-taming RPG. Gen 3 Pokémon
