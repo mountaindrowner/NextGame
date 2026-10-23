@@ -55,6 +55,21 @@ export const ENCOUNTER_ZONES: readonly EncounterZone[] = [
     ],
   },
   {
+    // the 45 Scar — the dead interstate (L7-10): vehicle Ohms nest in the wrecks. [PROPOSAL] table
+    id: 'scar-wrecks',
+    rate: 26,
+    slots: [
+      { speciesNum: 70, weight: 18, minLevel: 7, maxLevel: 10 }, // Rustbed (RIDEABLE pickup)
+      { speciesNum: 73, weight: 16, minLevel: 7, maxLevel: 9 }, // Quadlet (ATV)
+      { speciesNum: 47, weight: 14, minLevel: 7, maxLevel: 9 }, // Mowlet (RIDEABLE line)
+      { speciesNum: 76, weight: 14, minLevel: 7, maxLevel: 9 }, // Remotorist (RC car)
+      { speciesNum: 49, weight: 12, minLevel: 7, maxLevel: 10 }, // Sawlet (BREAKER)
+      { speciesNum: 46, weight: 10, minLevel: 7, maxLevel: 9 }, // Barbwyre (FRAME)
+      { speciesNum: 75, weight: 8, minLevel: 8, maxLevel: 10 }, // Kartwheel (RIDEABLE)
+      { speciesNum: 54, weight: 8, minLevel: 7, maxLevel: 9 }, // Cellet (VOLT)
+    ],
+  },
+  {
     // cistern — flooded waterworks (L8-11): COOLANT + early SONIC/OPTIC + VERDANT
     id: 'cistern-reeds',
     rate: 25,

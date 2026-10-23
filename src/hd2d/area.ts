@@ -63,6 +63,8 @@ export interface Area {
   wild?(x: number, z: number): boolean;
   /** Encounter table for the wild cells (src/data/encounters.ts id). */
   zone?: string;
+  /** Wild Ohms you can see, wandering near (x, z); touching one starts a battle. */
+  roamers?: Array<{ num: number; level: number; x: number; z: number; range: number }>;
   /** Allow the Day/Night toggle (outdoor areas). */
   sky: boolean;
   update(t: number, focus: THREE.Vector3, camTarget: THREE.Vector3): void;

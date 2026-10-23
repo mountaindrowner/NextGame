@@ -263,5 +263,5 @@ export const THEMES: Record<ThemeId, ArenaTheme> = { field, road, bunker };
 
 /** Which grid a region fights on. */
 export function themeFor(areaId: string): ThemeId {
-  return areaId === 'farmroad' || areaId === 'railhead' ? 'road' : areaId === 'ohmstead' ? 'bunker' : 'field';
+  return areaId === 'farmroad' || areaId === 'railhead' || areaId === 'scar' ? 'road' : areaId === 'ohmstead' ? 'bunker' : 'field';
 }

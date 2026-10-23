@@ -15,6 +15,7 @@ import { buildField } from './field/area';
 import { buildFarmRoad } from './farmroad/area';
 import { buildOhmstead } from './ohmstead/area';
 import { buildRailhead } from './railhead/area';
+import { buildScar } from './scar/area';
 
 /**
  * OHMFRONT HD-2D — the first map: Ohmstead → the Field → Farm Road.
@@ -25,7 +26,7 @@ import { buildRailhead } from './railhead/area';
  *      ?face=n|s|w|e · ?wide=1 overview · ?hud=0
  */
 
-const AREAS: Record<string, AreaBuilder> = { ohmstead: buildOhmstead, field: buildField, farmroad: buildFarmRoad, railhead: buildRailhead };
+const AREAS: Record<string, AreaBuilder> = { ohmstead: buildOhmstead, field: buildField, farmroad: buildFarmRoad, railhead: buildRailhead, scar: buildScar };
 
 const q = new URLSearchParams(location.search);
 const night = q.get('time') === 'night';
@@ -84,8 +85,8 @@ let arena: BattleArena | null = null;
 let stepAcc = 0;
 
 /** Fade into the grid arena, fight, fade back to the overworld. */
-async function battle(foeNum: number, foeLevel: number): Promise<void> {
-  if (arena || loading) return;
+async function battle(foeNum: number, foeLevel: number): Promise<'victory' | 'defeat' | 'fled' | 'skipped'> {
+  if (arena || loading) return 'skipped';
   loading = true;
   keys.clear();
   ui.showPrompt(null);
@@ -110,6 +111,50 @@ async function battle(foeNum: number, foeLevel: number): Promise<void> {
   loading = false;
   await ui.fade(false, 420);
   if (result.outcome === 'defeat') speak({ lines: [`${lead.name} needs a recharge. You pull back to catch your breath.`] });
+  return result.outcome;
+}
+
+// ------------------------------------------------------------- roamers
+// Visible wild Ohms (the design's mix of visible + random encounters). Beaten ones stay gone this session.
+interface Roamer { key: string; num: number; level: number; home: THREE.Vector2; range: number; root: THREE.Object3D; goal: THREE.Vector2; next: number; cool: number }
+let roamers: Roamer[] = [];
+const beatenRoamers = new Set<string>();
+async function spawnRoamers(a: Area, tint: THREE.Color): Promise<void> {
+  roamers = [];
+  await Promise.all((a.roamers ?? []).map(async (r, i) => {
+    const key = `${a.id}:${i}`;
+    if (beatenRoamers.has(key)) return;
+    const root = await stillSprite(`./sprites/ohms/${r.num}_front_hd.png`, 1.35, tint).catch(() => null);
+    if (!root) return;
+    root.position.set(r.x, a.ground(r.x, r.z), r.z);
+    scene.add(root);
+    roamers.push({ key, num: r.num, level: r.level, home: new THREE.Vector2(r.x, r.z), range: r.range, root, goal: new THREE.Vector2(r.x, r.z), next: 0, cool: 0 });
+  }));
+}
+function updateRoamers(dt: number, t: number): void {
+  const a = area!, p = player.root.position;
+  for (const r of roamers) {
+    const pos = r.root.position;
+    r.cool = Math.max(0, r.cool - dt);
+    if (t > r.next) {
+      const ang = encRng.next() * Math.PI * 2, d = encRng.next() * r.range;
+      r.goal.set(r.home.x + Math.cos(ang) * d, r.home.y + Math.sin(ang) * d);
+      r.next = t + 1.5 + encRng.next() * 2.5;
+    }
+    const dx = r.goal.x - pos.x, dz = r.goal.y - pos.z, dist = Math.hypot(dx, dz);
+    if (dist > 0.05) {
+      const k = Math.min(1, (1.3 * dt) / dist), nx = pos.x + dx * k, nz = pos.z + dz * k;
+      if (!a.blocked(nx, nz, 0.3, pos.x, pos.z)) { pos.x = nx; pos.z = nz; } else r.next = 0;
+      r.root.scale.x = dx < 0 ? -1 : 1;
+    }
+    pos.y = a.ground(pos.x, pos.z) + Math.abs(Math.sin(t * 7 + r.home.x)) * (dist > 0.05 ? 0.06 : 0.015);
+    if (r.cool <= 0 && !loading && !ui.talking && Math.hypot(p.x - pos.x, p.z - pos.z) < 0.8) {
+      r.cool = 4;
+      void battle(r.num, r.level).then((out) => {
+        if (out === 'victory') { beatenRoamers.add(r.key); scene.remove(r.root); roamers = roamers.filter((x) => x !== r); }
+      });
+    }
+  }
 }
 let hopping = false;
 let dropAcc = 0;
@@ -183,6 +228,7 @@ async function enter(id: string, spawn: string, first = false): Promise<void> {
 
   const walkers: Figure[] = await Promise.all(a.npcs.map((n) => (styledChars.has(n.char) ? RotHero.load(n.char, tint) : Walker.load(n.char, tint))));
   cast = [];
+  void spawnRoamers(a, tint);
   talk = a.things.map((t) => ({ ...t, pos: new THREE.Vector3(t.x, a.ground(t.x, t.z), t.z) }));
   a.npcs.forEach((n, i) => {
     const w = walkers[i]!;
@@ -451,6 +497,7 @@ renderer.setAnimationLoop(() => {
     arena.update(dt);
   } else if (area && !loading) {
     update(dt);
+    updateRoamers(dt, t);
     area.update(t, player.root.position, camTarget);
   }
   for (const l of lineupLabels) {
@@ -461,4 +508,4 @@ renderer.setAnimationLoop(() => {
   post.tick(t);
   post.composer.render(dt);
 });
-Object.assign(window, { __ready: true, __hd2d: { get scene() { return scene; }, get arena() { return arena; }, lead, camera, player, ohm, THREE, enter } });
+Object.assign(window, { __ready: true, __hd2d: { get scene() { return scene; }, get arena() { return arena; }, get roamers() { return roamers; }, lead, camera, player, ohm, THREE, enter } });

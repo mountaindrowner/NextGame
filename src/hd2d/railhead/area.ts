@@ -656,7 +656,8 @@ export const buildRailhead: AreaBuilder = async (scene, night) => {
     },
     triggers: [
       { x0: 20.6, z0: 27.6, x1: 24.4, z1: 30, go: { to: 'farmroad', spawn: 'north' } },
-      { x0: 20.6, z0: -2, x1: 24.4, z1: 0.5, say: { lines: ['The colony Warden holds this gate — best them first.'] } },
+      // the Warden's gate: open for now (Marrow's trial isn't built yet) — the road north runs to the 45 Scar
+      { x0: 20.6, z0: -2, x1: 24.4, z1: 0.5, go: { to: 'scar', spawn: 'south' } },
     ],
     things: [
       ...(sign ? [{ x: sign.col + 0.5, z: sign.row + 0.5, height: 1.6, label: 'Read', say: { name: 'Sign', lines: [sign.text] } }] : []),

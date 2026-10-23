@@ -21,6 +21,16 @@
   Holt), market stalls + broker desk + card table, gate arches. Farm Road's
   north end now leads here; the north gate turns you back (Warden). New text
   to flag: the relay line ("spits sparks where its feed line has been cut").
+- **The 45 Scar** built (`src/hd2d/scar/area.ts`) — **layout is [PROPOSAL]**
+  (no map existed): six-lane interstate jammed with wrecks, jersey median,
+  collapsed overpass, jackknifed "LONE STAR FREIGHT" semi, sign gantry, the
+  rental lot (one white fleet, booth, chain fence) and Mobile Ohm Park
+  (trailers, awnings, clothesline, kiddie pool). New encounter table
+  `scar-wrecks` ([PROPOSAL], vehicle-heavy, L7–10). New engine feature:
+  **visible roaming wild Ohms** (`Area.roamers`) — Rustbed, Quadlet,
+  Kartwheel wander here; touch one to fight. Railhead's north gate is OPEN to
+  the Scar for now (Marrow's trial not built). New text to flag: the rental
+  booth line, "The highway runs on north toward the Cistern."
 - **PixelLab:** ~3,880 generations left (floor 1,000).
 
 ## Session 2026-10-23 (cont.) — HD-2D first map: Ohmstead → the Field → Farm Road
