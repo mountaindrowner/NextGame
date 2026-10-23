@@ -18,6 +18,8 @@ export interface TileWorld {
   /** Painted road centre-line test (world units). */
   centerLine?(x: number, z: number): boolean;
   seed?: number;
+  /** Paint a ground glyph the shared painter doesn't know (rail ballast, gravel…); return undefined to fall through. */
+  paint?(glyph: string, x: number, z: number, fine: number): [number, number, number] | undefined;
 }
 
 const solids: Rect[] = [];

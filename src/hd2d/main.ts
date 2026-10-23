@@ -14,6 +14,7 @@ import type { Area, AreaBuilder, Line, Thing } from './area';
 import { buildField } from './field/area';
 import { buildFarmRoad } from './farmroad/area';
 import { buildOhmstead } from './ohmstead/area';
+import { buildRailhead } from './railhead/area';
 
 /**
  * OHMFRONT HD-2D — the first map: Ohmstead → the Field → Farm Road.
@@ -24,7 +25,7 @@ import { buildOhmstead } from './ohmstead/area';
  *      ?face=n|s|w|e · ?wide=1 overview · ?hud=0
  */
 
-const AREAS: Record<string, AreaBuilder> = { ohmstead: buildOhmstead, field: buildField, farmroad: buildFarmRoad };
+const AREAS: Record<string, AreaBuilder> = { ohmstead: buildOhmstead, field: buildField, farmroad: buildFarmRoad, railhead: buildRailhead };
 
 const q = new URLSearchParams(location.search);
 const night = q.get('time') === 'night';

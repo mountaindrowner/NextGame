@@ -161,7 +161,7 @@ function cottonGin(scene: THREE.Scene, cx: number, cz: number): Built {
 
 // ============================================================ rail + boxcar
 
-function railLine(scene: THREE.Scene, z: number, x0: number, x1: number): void {
+export function railLine(scene: THREE.Scene, z: number, x0: number, x1: number): void {
   const g = new THREE.Group();
   const tie = M.wood(), rail = colMat('#5a4a3c', { metalness: 0.5, roughness: 0.55 });
   const r = rng(31);
@@ -182,7 +182,7 @@ function railLine(scene: THREE.Scene, z: number, x0: number, x1: number): void {
   scene.add(g);
 }
 
-function boxcar(scene: THREE.Scene, cx: number, cz: number): void {
+export function boxcar(scene: THREE.Scene, cx: number, cz: number): void {
   const g = new THREE.Group();
   const L = 4.2, Wd = 1.5, H = 1.9;
   g.add(box(L, H, Wd, M.barn(), 0, 0.55, 0));
@@ -214,7 +214,7 @@ function boxcar(scene: THREE.Scene, cx: number, cz: number): void {
   addSolid(cx - L / 2, cz - Wd / 2, cx + L / 2, cz + Wd / 2);
 }
 
-function crossbuck(scene: THREE.Scene, x: number, z: number): void {
+export function crossbuck(scene: THREE.Scene, x: number, z: number): void {
   const g = new THREE.Group();
   g.add(box(0.1, 2.1, 0.1, M.steel(), 0, 0, 0));
   const mat = new THREE.MeshStandardMaterial({ map: textTexture('RAILROAD', { w: 64, h: 12, bg: '#e8e2d2', fg: '#1d1b19', font: 'bold 9px monospace', worn: 0.2 }), roughness: 1 });
@@ -233,7 +233,7 @@ function crossbuck(scene: THREE.Scene, x: number, z: number): void {
 // ============================================================ fences, signs
 
 /** Old barbed-wire fence: leaning cedar posts, three sagging strands. */
-function fence(scene: THREE.Scene, pts: Array<[number, number]>, seed: number): void {
+export function fence(scene: THREE.Scene, pts: Array<[number, number]>, seed: number): void {
   const g = new THREE.Group();
   const r = rng(seed);
   const wire = colMat('#6a6560', { metalness: 0.5, roughness: 0.6 });
@@ -263,7 +263,7 @@ function fence(scene: THREE.Scene, pts: Array<[number, number]>, seed: number): 
   scene.add(g);
 }
 
-function roadSign(scene: THREE.Scene, x: number, z: number, text: string): void {
+export function roadSign(scene: THREE.Scene, x: number, z: number, text: string): void {
   const g = new THREE.Group();
   for (const dx of [-0.45, 0.45]) g.add(box(0.07, 1.7, 0.07, M.steel(), dx, 0, 0));
   const face = new THREE.MeshStandardMaterial({ map: textTexture(text, { w: 64, h: 20, bg: '#2f5a3a', fg: '#e8eadc', font: 'bold 11px monospace', worn: 0.18, seed: 9 }), roughness: 0.8 });
@@ -464,7 +464,7 @@ export const buildFarmRoad: AreaBuilder = async (scene, night) => {
     },
     triggers: [
       { x0: 11.6, z0: 29.6, x1: 15.4, z1: 32, go: { to: 'field', spawn: 'north' } },
-      { x0: 7.6, z0: -2, x1: 11.4, z1: 0.3, say: { lines: ['The road runs on north to the Railhead.'] } },
+      { x0: 7.6, z0: -2, x1: 11.4, z1: 0.3, go: { to: 'railhead', spawn: 'south' } },
     ],
     things: [
       { x: 17.4, z: 26.6, height: 1.0, label: 'Rest', say: { lines: ['A field medic tops off your Ohms. Recharged. Stay current.'] } },

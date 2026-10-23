@@ -14,6 +14,13 @@
   stands at the right facing left. Mark: still "janky"/hard to read — revisit.
 - **Grid combat POC:** see docs/hd2d-direction.md (rules are [PROPOSAL]).
   Tall-grass encounters in the Field + Farm Road; `?battle=10` to test.
+- **Railhead (Colony 1)** built (`src/hd2d/railhead/area.ts`, layout 1:1 from
+  tools/gen-railhead.ts): roundhouse + dead locomotive, turntable + bay rails,
+  four yard tracks, boxcars, platforms, semaphores, signal gantry, switch
+  levers, buffer stops, coal pile, the sabotaged switch-house relay (Captain
+  Holt), market stalls + broker desk + card table, gate arches. Farm Road's
+  north end now leads here; the north gate turns you back (Warden). New text
+  to flag: the relay line ("spits sparks where its feed line has been cut").
 - **PixelLab:** ~3,880 generations left (floor 1,000).
 
 ## Session 2026-10-23 (cont.) — HD-2D first map: Ohmstead → the Field → Farm Road

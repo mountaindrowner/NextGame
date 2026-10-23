@@ -34,7 +34,10 @@ function paintGround(): THREE.CanvasTexture {
       const c = cell(Math.floor(jx), Math.floor(jz));
       const fine = r();
       let col: RGB;
-      if (c === 'd') {
+      const custom = wd.paint?.(c, x, z, fine);
+      if (custom) {
+        col = custom;
+      } else if (c === 'd') {
         const n = fbm(x * 0.6, z * 0.6, 31, 3);
         col = ASPHALT[Math.min(3, Math.floor(n * 3.2 + fine * 0.9))]!;
         // crack network = contour lines of a noise field; weeds push through them

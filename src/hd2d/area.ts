@@ -41,6 +41,8 @@ export interface NPC {
   lines?: string[];
   facing?: string;
   bark?: string;
+  /** a colony Warden (challenge bark; their trial isn't built yet) */
+  warden?: { bark?: string };
 }
 
 export interface Area {
@@ -94,7 +96,7 @@ export async function loadMap(id: string): Promise<MapData> {
 /** Trainers speak their bark (without the "Name:" prefix) until combat lands. */
 export function castOf(d: MapData): NPC[] {
   return [
-    ...(d.npcs ?? []),
+    ...(d.npcs ?? []).map((n) => ({ ...n, lines: n.lines ?? (n.warden?.bark ? [n.warden.bark.replace(/^[^:]+:\s*/, '')] : []) })),
     ...(d.trainers ?? []).map((t) => ({ ...t, lines: t.lines ?? (t.bark ? [t.bark.replace(/^[^:]+:\s*/, '')] : []) })),
   ];
 }
