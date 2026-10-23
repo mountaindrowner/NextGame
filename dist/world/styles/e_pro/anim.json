@@ -1,7 +1,20 @@
 {
   "walk": {
     "frames": 8,
-    "fps": 11
+    "fps": 11,
+    "dirs": [
+      "south",
+      "south-east",
+      "east",
+      "north-east",
+      "north",
+      "north-west",
+      "west",
+      "south-west"
+    ],
+    "sheet": true,
+    "w": 64,
+    "h": 64
   },
   "knockdown": {
     "frames": 7,
@@ -9,7 +22,10 @@
     "loop": false,
     "dirs": [
       "south"
-    ]
+    ],
+    "sheet": true,
+    "w": 64,
+    "h": 64
   },
   "idle": {
     "frames": 4,
@@ -24,7 +40,10 @@
       "south-east",
       "south-west",
       "west"
-    ]
+    ],
+    "sheet": true,
+    "w": 64,
+    "h": 64
   },
   "run": {
     "frames": 8,
@@ -39,7 +58,10 @@
       "south-east",
       "south-west",
       "west"
-    ]
+    ],
+    "sheet": true,
+    "w": 64,
+    "h": 64
   },
   "pickup": {
     "frames": 5,
@@ -54,7 +76,10 @@
       "south-east",
       "south-west",
       "west"
-    ]
+    ],
+    "sheet": true,
+    "w": 64,
+    "h": 64
   },
   "hurt": {
     "frames": 6,
@@ -69,7 +94,10 @@
       "south-east",
       "south-west",
       "west"
-    ]
+    ],
+    "sheet": true,
+    "w": 64,
+    "h": 64
   },
   "hop": {
     "frames": 9,
@@ -79,7 +107,10 @@
       "south",
       "south-east",
       "south-west"
-    ]
+    ],
+    "sheet": true,
+    "w": 80,
+    "h": 80
   },
   "throw": {
     "frames": 7,
@@ -89,7 +120,10 @@
       "east",
       "south",
       "west"
-    ]
+    ],
+    "sheet": true,
+    "w": 64,
+    "h": 64
   },
   "getup": {
     "frames": 5,
@@ -97,6 +131,9 @@
     "loop": false,
     "dirs": [
       "south"
-    ]
+    ],
+    "sheet": true,
+    "w": 64,
+    "h": 64
   }
 }

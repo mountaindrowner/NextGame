@@ -14,7 +14,32 @@ export interface SheetMeta { frameW: number; frameH: number; cols: number; rows:
 /** World units per sheet pixel: SAL's 68px of content stands ~1.65 tall. */
 export const PX = 0.0243;
 
-const loader = new THREE.TextureLoader();
+const texLoader = new THREE.TextureLoader();
+/** JSON fetches retry too (a throttled host may answer with an error page). */
+export async function fetchJson<T>(url: string, tries = 4): Promise<T> {
+  for (let i = 0; ; i++) {
+    try {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+      return (await r.json()) as T;
+    } catch (e) {
+      if (i >= tries - 1) throw e;
+      await new Promise((res) => setTimeout(res, 400 * (i + 1)));
+    }
+  }
+}
+
+/** Texture loads retry (with a short back-off) so a throttled host doesn't break a character. */
+const loader = {
+  async loadAsync(url: string, tries = 4): Promise<THREE.Texture> {
+    for (let i = 0; ; i++) {
+      try { return await texLoader.loadAsync(url); } catch (e) {
+        if (i >= tries - 1) throw e;
+        await new Promise((r) => setTimeout(r, 400 * (i + 1)));
+      }
+    }
+  },
+};
 function pixelTex(t: THREE.Texture): THREE.Texture {
   t.colorSpace = THREE.SRGBColorSpace;
   t.magFilter = THREE.NearestFilter;
@@ -76,7 +101,7 @@ export class Walker {
   static async load(id: string, tint: THREE.Color): Promise<Walker> {
     const [tex, meta] = await Promise.all([
       loader.loadAsync(`./world/char/${id}_walk.png`).then(pixelTex),
-      fetch(`./world/char/${id}_walk.meta.json`).then((r) => r.json() as Promise<SheetMeta>),
+      fetchJson<SheetMeta>(`./world/char/${id}_walk.meta.json`),
     ]);
     return new Walker(tex, meta, tint);
   }
@@ -195,8 +220,9 @@ export async function stillSprite(url: string, height: number, tint: THREE.Color
 const DIRS8 = ['south', 'south-east', 'east', 'north-east', 'north', 'north-west', 'west', 'south-west'] as const;
 export type Dir8 = (typeof DIRS8)[number];
 
-/** One animation as listed in a style's anim.json. */
-interface AnimInfo { frames: number; fps: number; loop?: boolean; dirs?: string[] }
+/** One animation as listed in a style's anim.json (sheet: rows = dirs, cols = frames). */
+interface AnimInfo { frames: number; fps: number; loop?: boolean; dirs?: string[]; sheet?: boolean; w?: number; h?: number }
+type Frame = { mat: THREE.MeshBasicMaterial; geo: THREE.PlaneGeometry };
 
 /** A hero drawn from 8 directional stills (PixelLab rotations) plus any
  *  animations its anim.json lists (walk, run, idle loops; one-shots such as
@@ -206,8 +232,8 @@ export class RotHero {
   readonly root = new THREE.Group();
   private readonly body = new THREE.Group();
   private readonly mesh: THREE.Mesh;
-  private readonly mats: Record<Dir8, THREE.MeshBasicMaterial>;
-  private readonly anims: Record<string, { info: AnimInfo; frames: Partial<Record<Dir8, THREE.MeshBasicMaterial[]>> }>;
+  private readonly still: Record<Dir8, Frame>;
+  private readonly anims: Record<string, { info: AnimInfo; frames: Partial<Record<Dir8, Frame[]>> }>;
   dir: Dir = 'S';
   facing: Dir8 = 'south';
   private t = 0;
@@ -216,34 +242,23 @@ export class RotHero {
   private moving = false;
   private oneShot: { name: string; t: number; done: () => void } | null = null;
 
-  private constructor(mats: Record<Dir8, THREE.MeshBasicMaterial>, anims: RotHero['anims'], w: number, h: number, foot: number) {
-    this.mats = mats;
+  private constructor(still: Record<Dir8, Frame>, anims: RotHero['anims']) {
+    this.still = still;
     this.anims = anims;
-    const geo = new THREE.PlaneGeometry(w, h);
-    geo.translate(0, h * (foot - 0.5), 0);
-    this.mesh = new THREE.Mesh(geo, mats.south);
+    this.mesh = new THREE.Mesh(still.south.geo, still.south.mat);
     this.mesh.castShadow = true;
     this.body.add(this.mesh);
     this.root.add(this.body, blob(0.34));
   }
 
   /** Loads ./world/styles/<id>/<dir>.png plus every animation in anim.json
-   *  (<name>/<dir>/<n>.png); scales so the figure stands `height` tall. */
+   *  (one packed <name>.png sheet each, or <name>/<dir>/<n>.png frames);
+   *  scales so the figure stands `height` tall. An animation that fails to
+   *  load is skipped rather than failing the character. */
   static async load(id: string, tint: THREE.Color, height = 1.65): Promise<RotHero> {
     const base = `./world/styles/${id}`;
     const list = (await fetch(`${base}/anim.json`).then((r) => (r.ok ? r.json() : {})).catch(() => ({}))) as Record<string, AnimInfo>;
     const texs = await Promise.all(DIRS8.map((d) => loader.loadAsync(`${base}/${d}.png`).then(pixelTex)));
-    const mat = (t: THREE.Texture): THREE.MeshBasicMaterial => new THREE.MeshBasicMaterial({ map: t, alphaTest: 0.5, side: THREE.DoubleSide, color: tint });
-    const anims: RotHero['anims'] = {};
-    await Promise.all(Object.entries(list).map(async ([name, info]) => {
-      const dirs = (info.dirs ?? DIRS8).filter((d): d is Dir8 => (DIRS8 as readonly string[]).includes(d));
-      const frames: Partial<Record<Dir8, THREE.MeshBasicMaterial[]>> = {};
-      await Promise.all(dirs.map(async (d) => {
-        const fr = await Promise.all(Array.from({ length: info.frames }, (_, i) => loader.loadAsync(`${base}/${name}/${d}/${i}.png`).then(pixelTex)));
-        frames[d] = fr.map(mat);
-      }));
-      anims[name] = { info, frames };
-    }));
     const img = texs[0]!.image as HTMLImageElement;
     // measure the south figure's drawn height to size every direction alike
     const c = document.createElement('canvas');
@@ -254,17 +269,61 @@ export class RotHero {
     const d = g.getImageData(0, 0, c.width, c.height).data;
     let top = c.height, bottom = 0;
     for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) if (d[(y * c.width + x) * 4 + 3]! > 128) { top = Math.min(top, y); bottom = Math.max(bottom, y + 1); }
-    const k = height / Math.max(1, bottom - top);
-    const mats = Object.fromEntries(DIRS8.map((dn, i) => [dn, mat(texs[i]!)])) as Record<Dir8, THREE.MeshBasicMaterial>;
-    return new RotHero(mats, anims, img.width * k, img.height * k, bottom / img.height);
+    const k = height / Math.max(1, bottom - top); // world units per source pixel
+    // the rotation canvas's centre sits here; bigger animation canvases share that centre
+    const centreY = img.height * k * (bottom / img.height - 0.5);
+    const geoFor = (pw: number, ph: number): THREE.PlaneGeometry => {
+      const geo = new THREE.PlaneGeometry(pw * k, ph * k);
+      geo.translate(0, centreY, 0);
+      return geo;
+    };
+    const mat = (t: THREE.Texture): THREE.MeshBasicMaterial => new THREE.MeshBasicMaterial({ map: t, alphaTest: 0.5, side: THREE.DoubleSide, color: tint });
+    const stillGeo = geoFor(img.width, img.height);
+    const still = Object.fromEntries(DIRS8.map((dn, i) => [dn, { mat: mat(texs[i]!), geo: stillGeo }])) as Record<Dir8, Frame>;
+
+    const anims: RotHero['anims'] = {};
+    await Promise.all(Object.entries(list).map(async ([name, info]) => {
+      try {
+        const dirs = (info.dirs ?? DIRS8).filter((x): x is Dir8 => (DIRS8 as readonly string[]).includes(x));
+        const frames: Partial<Record<Dir8, Frame[]>> = {};
+        if (info.sheet) {
+          const sheet = pixelTex(await loader.loadAsync(`${base}/${name}.png`));
+          const geo = geoFor(info.w ?? img.width, info.h ?? img.height);
+          dirs.forEach((dn, row) => {
+            frames[dn] = Array.from({ length: info.frames }, (_, i) => {
+              const t = sheet.clone(); // shares the uploaded image; only the window differs
+              t.repeat.set(1 / info.frames, 1 / dirs.length);
+              t.offset.set(i / info.frames, 1 - (row + 1) / dirs.length);
+              return { mat: mat(t), geo };
+            });
+          });
+        } else {
+          await Promise.all(dirs.map(async (dn) => {
+            const fr = await Promise.all(Array.from({ length: info.frames }, (_, i) => loader.loadAsync(`${base}/${name}/${dn}/${i}.png`).then(pixelTex)));
+            const fi = fr[0]!.image as HTMLImageElement;
+            const geo = geoFor(fi.width, fi.height);
+            frames[dn] = fr.map((t) => ({ mat: mat(t), geo }));
+          }));
+        }
+        anims[name] = { info, frames };
+      } catch {
+        // missing or blocked frames: play on without this animation
+      }
+    }));
+    return new RotHero(still, anims);
+  }
+
+  private show(f: Frame): void {
+    this.mesh.material = f.mat;
+    if (this.mesh.geometry !== f.geo) this.mesh.geometry = f.geo;
   }
 
   has(name: string): boolean { return !!this.anims[name]; }
   get busy(): boolean { return this.oneShot !== null; }
 
   setTint(c: THREE.Color): void {
-    for (const m of Object.values(this.mats)) m.color.copy(c);
-    for (const a of Object.values(this.anims)) for (const list of Object.values(a.frames)) for (const m of list ?? []) m.color.copy(c);
+    for (const f of Object.values(this.still)) f.mat.color.copy(c);
+    for (const a of Object.values(this.anims)) for (const list of Object.values(a.frames)) for (const f of list ?? []) f.mat.color.copy(c);
   }
 
   face(dx: number, dz: number): void {
@@ -274,12 +333,12 @@ export class RotHero {
     const i = ((Math.round(a / (Math.PI / 4)) % 8) + 8) % 8;
     // atan2(-dx, dz): south 0, south-west +45°, west +90° … so walk the list backwards
     this.facing = DIRS8[(8 - i) % 8]!;
-    if (!this.oneShot) this.mesh.material = this.mats[this.facing];
+    if (!this.oneShot) this.show(this.still[this.facing]);
     this.dir = Math.abs(dx) >= Math.abs(dz) * 0.9 ? (dx < 0 ? 'W' : 'E') : dz < 0 ? 'N' : 'S';
   }
 
   /** Frames of `name` for the current facing, or the nearest direction it has. */
-  private framesFor(name: string): THREE.MeshBasicMaterial[] | undefined {
+  private framesFor(name: string): Frame[] | undefined {
     const a = this.anims[name];
     if (!a) return undefined;
     const at = DIRS8.indexOf(this.facing);
@@ -310,17 +369,17 @@ export class RotHero {
       const fr = this.framesFor(o.name);
       const info = this.anims[o.name]!.info;
       const i = Math.floor(o.t * info.fps);
-      if (!fr || i >= fr.length) { this.oneShot = null; o.done(); } else { this.mesh.material = fr[i]!; return; }
+      if (!fr || i >= fr.length) { this.oneShot = null; o.done(); } else { this.show(fr[i]!); return; }
     }
     // loops: run when fast and a run exists, else walk; idle when still
     const loop = moving ? (speed > 1.2 && this.anims.run ? 'run' : 'walk') : 'idle';
     const fr = this.framesFor(loop);
     if (fr?.length) {
       const fps = this.anims[loop]!.info.fps;
-      this.mesh.material = fr[Math.floor(this.lt * fps) % fr.length]!;
+      this.show(fr[Math.floor(this.lt * fps) % fr.length]!);
       return;
     }
-    this.mesh.material = this.mats[this.facing];
+    this.show(this.still[this.facing]);
     if (moving) {
       // stand-in step: a bob, a squash, a lean into the stride
       const s = Math.sin(this.t * 14);

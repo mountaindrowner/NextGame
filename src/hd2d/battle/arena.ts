@@ -80,6 +80,7 @@ export class BattleArena {
   private foeAttackAt = 2.2;
   private foeWind: { at: number; move: MoveDef; cells: Cell[] } | null = null;
   private over: BattleResult | null = null;
+  private ready = false;
   private done!: (r: BattleResult) => void;
   private stepHold = 0;
   private readonly hud: HTMLDivElement;
@@ -150,14 +151,6 @@ export class BattleArena {
       f.root.position.copy(cellPos(f.cell));
       this.scene.add(f.root);
     }
-    // SAL stands behind his Ohm, calling the shots
-    this.sal = await RotHero.load(opts.heroId ?? 'e_pro', tint, 1.6).catch(() => null);
-    if (this.sal) {
-      this.sal.face(1, -0.4);
-      this.sal.root.position.set(-4.75, 0, -1.75);
-      this.scene.add(this.sal.root);
-    }
-
     // move chips
     const chipsEl = this.hud.querySelector('.bt-chips') as HTMLDivElement;
     this.me.b.moves.forEach((slot, i) => {
@@ -180,6 +173,14 @@ export class BattleArena {
 
     window.addEventListener('keydown', this.onKey);
     window.addEventListener('keyup', this.onKeyUp);
+    this.ready = true;
+    // SAL stands behind his Ohm, calling the shots — loaded in the background so the fight never waits on him
+    void RotHero.load(opts.heroId ?? 'e_pro', tint, 1.6).then((h) => {
+      this.sal = h;
+      h.face(1, -0.4);
+      h.root.position.set(-4.75, 0, -1.75);
+      this.scene.add(h.root);
+    }).catch(() => undefined);
     return new Promise((r) => { this.done = r; });
   }
 
@@ -462,6 +463,7 @@ export class BattleArena {
   // ------------------------------------------------------------- frame
 
   update(dt: number): void {
+    if (!this.ready) return; // still loading the stage and fighters
     this.t += dt;
     if (!this.over) {
       // held direction keys / the touch stick repeat steps

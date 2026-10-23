@@ -12,7 +12,10 @@
       "south-east",
       "south-west",
       "west"
-    ]
+    ],
+    "sheet": true,
+    "w": 76,
+    "h": 76
   },
   "walk": {
     "frames": 9,
@@ -27,6 +30,9 @@
       "south-east",
       "south-west",
       "west"
-    ]
+    ],
+    "sheet": true,
+    "w": 76,
+    "h": 76
   }
 }

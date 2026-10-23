@@ -78,7 +78,17 @@ export interface MapData {
 }
 
 export async function loadMap(id: string): Promise<MapData> {
-  return (await fetch(`./world/${id}.json`).then((r) => r.json())) as MapData;
+  // retried: a throttled host can drop a request
+  for (let i = 0; ; i++) {
+    try {
+      const r = await fetch(`./world/${id}.json`);
+      if (!r.ok) throw new Error(`${id}.json: HTTP ${r.status}`);
+      return (await r.json()) as MapData;
+    } catch (e) {
+      if (i >= 3) throw e;
+      await new Promise((res) => setTimeout(res, 500 * (i + 1)));
+    }
+  }
 }
 
 /** Trainers speak their bark (without the "Name:" prefix) until combat lands. */

@@ -12,6 +12,9 @@
       "south-east",
       "south-west",
       "west"
-    ]
+    ],
+    "sheet": true,
+    "w": 64,
+    "h": 64
   }
 }
