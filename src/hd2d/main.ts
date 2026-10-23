@@ -54,8 +54,14 @@ const ui = new UI(app);
 let area: Area | null = null;
 let lights: Lights | null = null;
 let loading = true;
-let cast: Array<{ w: Walker; pos: THREE.Vector3 }> = [];
-let talk: Array<Thing & { walker?: Walker; pos: THREE.Vector3 }> = [];
+type Figure = Walker | RotHero;
+let cast: Array<{ w: Figure; pos: THREE.Vector3 }> = [];
+let talk: Array<Thing & { walker?: Figure; pos: THREE.Vector3 }> = [];
+
+/** Characters already redrawn in SAL's locked style (public/world/styles/index.json). */
+const styled = (await fetch('./world/styles/index.json').then((r) => (r.ok ? r.json() : {})).catch(() => ({}))) as { characters?: string[]; ohms?: Record<string, string> };
+const styledChars = new Set(styled.characters ?? []);
+const FACE: Record<string, [number, number]> = { N: [0, -1], S: [0, 1], W: [-1, 0], E: [1, 0] };
 let inTrigger = false;
 const trail: THREE.Vector3[] = [];
 const camTarget = new THREE.Vector3();
@@ -65,9 +71,25 @@ let tiltFocus = 0.46;
 // SAL's locked look is the indie-action style (e_pro, Mark 2026-10-23).
 // ?hero=<style id> tries another candidate; ?hero=old plays the previous sprite.
 const heroId = q.get('hero') ?? 'e_pro';
+/** The lead Ohm: the restyled 8-direction Scraplet when present, else the old stills. */
+interface Follower { root: THREE.Group; setTint(c: THREE.Color): void; step(dt: number, dx: number, dz: number): void }
+async function loadFollower(): Promise<Follower> {
+  const id = styled.ohms?.['7'];
+  if (!id) return OhmFollower.load(7, new THREE.Color(1, 1, 1));
+  const h = await RotHero.load(id, new THREE.Color(1, 1, 1), 0.85);
+  return {
+    root: h.root,
+    setTint: (c) => h.setTint(c),
+    step(dt, dx, dz) {
+      const moving = Math.hypot(dx, dz) > 1e-4;
+      if (moving) h.face(dx, dz);
+      h.animate(dt, moving, 1.2);
+    },
+  };
+}
 const [player, ohm] = await Promise.all([
   heroId === 'old' ? Walker.load('sal', new THREE.Color(1, 1, 1)) : RotHero.load(heroId, new THREE.Color(1, 1, 1)),
-  OhmFollower.load(7, new THREE.Color(1, 1, 1)), // Scraplet — the Dog line, stand-in lead Ohm
+  loadFollower(), // Scraplet — the Dog line, stand-in lead Ohm
 ]);
 
 function dispose(s: THREE.Scene): void {
@@ -113,14 +135,15 @@ async function enter(id: string, spawn: string, first = false): Promise<void> {
   player.setTint(tint);
   ohm.setTint(tint);
 
-  const walkers = await Promise.all(a.npcs.map((n) => Walker.load(n.char, tint)));
+  const walkers: Figure[] = await Promise.all(a.npcs.map((n) => (styledChars.has(n.char) ? RotHero.load(n.char, tint) : Walker.load(n.char, tint))));
   cast = [];
   talk = a.things.map((t) => ({ ...t, pos: new THREE.Vector3(t.x, a.ground(t.x, t.z), t.z) }));
   a.npcs.forEach((n, i) => {
     const w = walkers[i]!;
     const x = n.col + 0.5, z = n.row + 0.5;
     w.root.position.set(x, a.ground(x, z), z);
-    w.dir = (n.facing ? n.facing.toUpperCase() : 'S') as Dir;
+    const f = FACE[n.facing ? n.facing.toUpperCase() : 'S'] ?? FACE.S!;
+    w.face(f[0], f[1]);
     w.animate(0, false);
     scene.add(w.root);
     cast.push({ w, pos: w.root.position });
@@ -129,8 +152,8 @@ async function enter(id: string, spawn: string, first = false): Promise<void> {
 
   const s = first && q.has('x') ? { x: Number(q.get('x')), z: Number(q.get('z')), face: (q.get('face')?.toUpperCase() ?? 'S') as Dir } : a.spawns[spawn] ?? a.spawns.start!;
   player.root.position.set(s.x, a.ground(s.x, s.z), s.z);
-  const fv = { N: [0, -1], S: [0, 1], W: [-1, 0], E: [1, 0] }[s.face ?? 'S'];
-  player.face(fv[0]!, fv[1]!);
+  const fv = FACE[s.face ?? 'S'] ?? FACE.S!;
+  player.face(fv[0], fv[1]);
   player.animate(0, false);
   // the lead Ohm arrives at your side (whichever side is clear)
   const side = a.blocked(s.x - 0.8, s.z, 0.25, s.x, s.z) ? 0.8 : -0.8;
@@ -301,12 +324,16 @@ if (hud) {
 
 // ?lineup=sal — SAL art-style candidates standing in a row, labelled
 const lineupLabels: Array<{ el: HTMLDivElement; pos: THREE.Vector3 }> = [];
-const LINEUPS: Record<string, Array<[string, string]>> = {
+const LINEUPS: Record<string, Array<[string, string, number?]>> = {
   sal: [
     ['a_chibi', 'A · Chibi adventure'], ['b_16bit', 'B · 16-bit JRPG'], ['c_handheld', 'C · Handheld tamer'], ['d_tactics', 'D · Tactics RPG'],
     ['e_indie', 'E · Indie action'], ['f_survival', 'F · Gritty survival'], ['g_cozy', 'G · Cozy life-sim'], ['h_anime', 'H · Anime action'],
   ],
   duo: [['snes8/south', 'B · 16-bit JRPG'], ['e_pro/south', 'E · Indie action']],
+  cast: [
+    ['e_pro/south', 'SAL'], ['wren/south', 'WREN'], ['mabel/south', 'Mabel'], ['boone/south', 'Boone'], ['cass/south', 'Cass'],
+    ['odessa/south', 'Odessa'], ['rook/south', 'Rook'], ['scootlet/south', 'Scootlet', 0.8], ['dronelet/south', 'Dronelet', 0.8], ['scraplet/south', 'Scraplet', 0.8],
+  ],
   snes8: ['south', 'south-east', 'east', 'north-east', 'north', 'north-west', 'west', 'south-west'].map((d) => [`snes8/${d}`, d]),
   e_pro: ['south', 'south-east', 'east', 'north-east', 'north', 'north-west', 'west', 'south-west'].map((d) => [`e_pro/${d}`, d]),
   b16: ['south', 'south-east', 'east', 'north-east', 'north', 'north-west', 'west', 'south-west'].map((d) => [`b16/${d}`, d]),
@@ -317,11 +344,11 @@ if (lineup) {
   const styles = lineup;
   const tint = new THREE.Color().setRGB(...area!.mood.sprite);
   // the row stands where the player would, centred in the focus band
-  const gap = styles.length <= 2 ? 2.2 : 1.5;
+  const gap = styles.length <= 2 ? 2.2 : styles.length > 8 ? 1.25 : 1.5;
   const x0 = player.root.position.x - ((styles.length - 1) * gap) / 2, z0 = player.root.position.z;
   player.root.visible = ohm.root.visible = false;
-  await Promise.all(styles.map(async ([file, label], i) => {
-    const s = await stillSprite(`./world/styles/${file}.png`, 1.65, tint);
+  await Promise.all(styles.map(async ([file, label, ht], i) => {
+    const s = await stillSprite(`./world/styles/${file}.png`, ht ?? 1.65, tint);
     const x = x0 + i * gap;
     s.position.set(x, area!.ground(x, z0), z0);
     scene.add(s);

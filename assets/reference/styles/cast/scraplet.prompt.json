@@ -1,0 +1,19 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "body": {
+    "description": "Scraplet, a small living machine companion: a sturdy scrap-metal puppy built from salvaged parts, grey riveted body, one glowing cyan eye, antenna tail with a little bulb, bolted legs, loyal and eager",
+    "style_description": "modern indie action-adventure pixel art: chunky stylized proportions, big bold readable silhouette, saturated colours, lineless with strong graphic light and shadow shapes, expressive and punchy",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 64,
+      "height": 64
+    },
+    "no_background": true,
+    "style_character_id": "cea31c61-3b70-4ec6-a617-413b60f80ece",
+    "template_id": "dog"
+  },
+  "character_id": "0109724d-62f3-4cfa-9286-2e1c7b0448e5",
+  "at": "2026-10-23T04:28:47.574Z"
+}

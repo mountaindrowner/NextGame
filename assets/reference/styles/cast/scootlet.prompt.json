@@ -1,0 +1,18 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "body": {
+    "description": "Scootlet, a small living machine companion: a cute kick e-scooter creature with a single headlight eye, a stubby handlebar like ears, small deck body, two little wheels, restless like a puppy on wheels, scuffed teal and cream paint, no rider",
+    "style_description": "modern indie action-adventure pixel art: chunky stylized proportions, big bold readable silhouette, saturated colours, lineless with strong graphic light and shadow shapes, expressive and punchy",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 64,
+      "height": 64
+    },
+    "no_background": true,
+    "style_character_id": "cea31c61-3b70-4ec6-a617-413b60f80ece"
+  },
+  "character_id": "42b80bd8-8969-43b5-9357-319efa2da3d7",
+  "at": "2026-10-23T04:28:35.684Z"
+}

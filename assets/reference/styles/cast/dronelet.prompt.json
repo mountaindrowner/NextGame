@@ -1,0 +1,18 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "body": {
+    "description": "Dronelet, a small living machine companion: a cute pocket quadcopter creature hovering, round body with one big camera lens eye, four small rotor arms with spinning props, antenna, scuffed white and orange paint",
+    "style_description": "modern indie action-adventure pixel art: chunky stylized proportions, big bold readable silhouette, saturated colours, lineless with strong graphic light and shadow shapes, expressive and punchy",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 64,
+      "height": 64
+    },
+    "no_background": true,
+    "style_character_id": "cea31c61-3b70-4ec6-a617-413b60f80ece"
+  },
+  "character_id": "f59f574c-76e7-4737-8961-f61edb1d96d3",
+  "at": "2026-10-23T04:30:09.607Z"
+}
