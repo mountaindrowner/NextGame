@@ -6,6 +6,7 @@ import { themeFor, type ThemeId } from './battle/themes';
 import { GAME_DATA } from '../data/dataview';
 import { ZONES_BY_ID } from '../data/encounters';
 import { makeBattler } from '../core/battle/engine';
+import type { Battler } from '../core/battle/contract';
 import { rollEncounter } from '../core/encounter';
 import { Rng } from '../core/rng';
 import { Walker, OhmFollower, RotHero, stillSprite, spriteCard, type Dir } from './sprites';
@@ -85,7 +86,12 @@ let arena: BattleArena | null = null;
 let stepAcc = 0;
 
 /** Fade into the grid arena, fight, fade back to the overworld. */
-async function battle(foeNum: number, foeLevel: number): Promise<'victory' | 'defeat' | 'fled' | 'skipped'> {
+// The party (canon: 3); further catches go to storage. Storage nodes are spent per capture attempt.
+const party: Battler[] = [lead];
+const storage: Battler[] = [];
+let nodes = Number(q.get('nodes') ?? 5);
+
+async function battle(foeNum: number, foeLevel: number): Promise<'victory' | 'defeat' | 'fled' | 'captured' | 'foeFled' | 'skipped'> {
   if (arena || loading) return 'skipped';
   loading = true;
   keys.clear();
@@ -95,7 +101,7 @@ async function battle(foeNum: number, foeLevel: number): Promise<'victory' | 'de
   ui.root.classList.add('battling');
   arena = a;
   a.resize(window.innerWidth, window.innerHeight);
-  const run = a.start({ mood: area!.mood, renderer, post, me: lead, foeNum, foeLevel, heroId: heroId === 'old' ? undefined : heroId, theme: (q.get('arena') as ThemeId | null) ?? themeFor(area!.id) });
+  const run = a.start({ mood: area!.mood, renderer, post, me: lead, foeNum, foeLevel, heroId: heroId === 'old' ? undefined : heroId, nodes: () => nodes, spendNode: () => { nodes -= 1; }, theme: (q.get('arena') as ThemeId | null) ?? themeFor(area!.id) });
   await new Promise((r) => setTimeout(r, 60));
   post.setScene(a.scene, a.camera);
   post.tiltH.uniforms.focus!.value = post.tiltV.uniforms.focus!.value = 0.42;
@@ -111,6 +117,13 @@ async function battle(foeNum: number, foeLevel: number): Promise<'victory' | 'de
   loading = false;
   await ui.fade(false, 420);
   if (result.outcome === 'defeat') speak({ lines: [`${lead.name} needs a recharge. You pull back to catch your breath.`] });
+  if (result.outcome === 'captured' && result.foe) {
+    const f = result.foe;
+    f.rage = 0;
+    f.stages = { integrity: 0, output: 0, armor: 0, surge: 0, shielding: 0, clock: 0, accuracy: 0, evasion: 0 };
+    if (party.length < 3) { party.push(f); speak({ name: f.name, lines: [`${f.name} is Freed — and joins your party. (${party.length}/3)`, 'Logged in the Manifest.'] }); }
+    else { storage.push(f); speak({ name: f.name, lines: [`${f.name} is Freed. Your party's full, so it's sent to storage over the satnet.`, 'Logged in the Manifest.'] }); }
+  }
   return result.outcome;
 }
 
@@ -151,7 +164,7 @@ function updateRoamers(dt: number, t: number): void {
     if (r.cool <= 0 && !loading && !ui.talking && Math.hypot(p.x - pos.x, p.z - pos.z) < 0.8) {
       r.cool = 4;
       void battle(r.num, r.level).then((out) => {
-        if (out === 'victory') { beatenRoamers.add(r.key); scene.remove(r.root); roamers = roamers.filter((x) => x !== r); }
+        if (out === 'victory' || out === 'captured' || out === 'foeFled') { beatenRoamers.add(r.key); scene.remove(r.root); roamers = roamers.filter((x) => x !== r); }
       });
     }
   }
@@ -508,4 +521,4 @@ renderer.setAnimationLoop(() => {
   post.tick(t);
   post.composer.render(dt);
 });
-Object.assign(window, { __ready: true, __hd2d: { get scene() { return scene; }, get arena() { return arena; }, get roamers() { return roamers; }, lead, camera, player, ohm, THREE, enter } });
+Object.assign(window, { __ready: true, __hd2d: { get scene() { return scene; }, get arena() { return arena; }, get roamers() { return roamers; }, party, storage, get nodes() { return nodes; }, lead, camera, player, ohm, THREE, enter } });

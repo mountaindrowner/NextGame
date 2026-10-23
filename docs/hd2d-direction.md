@@ -100,8 +100,15 @@ and `src/hd2d/battle/arena.ts` (HD-2D stage + UI).
   plate with hazard edges. Your panel gets a faint lantern warmth; telegraphs
   are the ground smouldering ember-orange. `src/hd2d/battle/themes.ts`;
   `?arena=field|road|bunker` to preview.
-- **Not yet:** capture (the node puzzle), switching, items, XP, trainer
-  battles, multiple foes, Ohm battle animations.
+- **Capture (IFF Recalibration, canon rules):** wild fights get a Capture chip
+  (C). Spending a storage node freezes the fight and opens the node puzzle
+  (core/puzzle.ts); timer + grid size come from core/capture.ts's Gen 3 catch
+  value, so lower HP / a status buys time and a smaller grid (HOBBLE matters).
+  Success = "Freed", joins the party (max 3; extras to storage over the
+  satnet). Failure = rage: OUTPUT +1, may tear away (engine's rule). Nodes:
+  5 to start (`?nodes=` to test). `src/hd2d/battle/capture.ts`.
+- **Not yet:** switching (captured Ohms can't be sent in yet), items, XP,
+  trainer battles, multiple foes, Ohm battle animations.
 
 ## Open items
 

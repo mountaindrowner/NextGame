@@ -7,6 +7,8 @@ import { applyMood, type Mood } from '../mood';
 import type { PostFX } from '../post';
 import { RotHero, stillSprite } from '../sprites';
 import { THEMES, type ArenaTheme, type ThemeId } from './themes';
+import { runCapturePuzzle } from './capture';
+import { puzzleBudget } from '../../core/capture';
 import { COLS, ROWS, canStand, coverage, cooldownOf, hitDamage, landsRoll, patternOf, type Cell, type Pattern, type Side } from './rules';
 
 /**
@@ -17,7 +19,7 @@ import { COLS, ROWS, canStand, coverage, cooldownOf, hitDamage, landsRoll, patte
  * can step out of the way. Numbers come from the Gen 3 core.
  */
 
-export interface BattleResult { outcome: 'victory' | 'defeat' | 'fled' }
+export interface BattleResult { outcome: 'victory' | 'defeat' | 'fled' | 'captured' | 'foeFled'; foe?: Battler }
 
 const TYPE_COLOR: Record<TypeName, string> = {
   VOLT: '#f2d64b', THERM: '#ff7a3c', COOLANT: '#5ec8f0', FRAME: '#b9b2a4', OPTIC: '#f6f0b0', SONIC: '#c78cff',
@@ -58,6 +60,10 @@ export class BattleArena {
   private foeAttackAt = 2.2;
   private foeWind: { at: number; move: MoveDef; cells: Cell[] } | null = null;
   private over: BattleResult | null = null;
+  private capturing = false;
+  private nodes: () => number = () => 0;
+  private spendNode: () => void = () => undefined;
+  private capChip: HTMLButtonElement | null = null;
   private theme: ArenaTheme = THEMES.field;
   private ready = false;
   private done!: (r: BattleResult) => void;
@@ -101,6 +107,7 @@ export class BattleArena {
         if (slot >= 0) this.fire(slot);
         if (k === ' ' || k === 'enter') this.fire(0);
         if (k === 'escape') this.flee();
+        if (k === 'c') void this.capture();
         const d = { arrowleft: [-1, 0], a: [-1, 0], arrowright: [1, 0], d: [1, 0], arrowup: [0, -1], w: [0, -1], arrowdown: [0, 1], s: [0, 1] }[k];
         if (d) { this.step(d[0]!, d[1]!); this.stepHold = 0.28; }
       }
@@ -111,7 +118,9 @@ export class BattleArena {
   }
 
   /** Build the stage and run the fight; resolves when it ends. */
-  async start(opts: { mood: Mood; renderer: THREE.WebGLRenderer; post: PostFX; me: Battler; foeNum: number; foeLevel: number; heroId?: string; theme?: ThemeId }): Promise<BattleResult> {
+  async start(opts: { mood: Mood; renderer: THREE.WebGLRenderer; post: PostFX; me: Battler; foeNum: number; foeLevel: number; heroId?: string; theme?: ThemeId; nodes?: () => number; spendNode?: () => void }): Promise<BattleResult> {
+    this.nodes = opts.nodes ?? (() => 0);
+    this.spendNode = opts.spendNode ?? (() => undefined);
     const { mood, renderer, post } = opts;
     applyMood(this.scene, renderer, post, mood).follow(new THREE.Vector3(0, 0, 0));
     this.theme = THEMES[opts.theme ?? 'field'];
@@ -119,7 +128,7 @@ export class BattleArena {
     const tint = new THREE.Color().setRGB(...mood.sprite);
 
     // your lead Ohm (the restyled 8-direction Scraplet when present), facing the foe
-    const meHero = await RotHero.load('scraplet', tint, 1.05).catch(() => null);
+    const meHero = opts.me.speciesNum === 7 ? await RotHero.load('scraplet', tint, 1.05).catch(() => null) : null;
     const meRoot = meHero?.root ?? (await stillSprite(`./sprites/ohms/${opts.me.speciesNum}_back_hd.png`, 1.05, tint));
     meHero?.face(1, 0);
     this.me = { side: 'player', b: opts.me, cell: { col: 1, row: 1 }, root: meRoot, hero: meHero ?? undefined, iframes: 0, flash: 0, lunge: 0 };
@@ -144,6 +153,14 @@ export class BattleArena {
       this.chips.push(b);
       this.cooldowns.push(0.4 + i * 0.15);
     });
+    // the capture chip: spend a storage node to start the recalibration
+    const cap = document.createElement('button');
+    cap.className = 'bt-chip bt-cap';
+    cap.style.setProperty('--tc', '#7fe0c8');
+    cap.innerHTML = `<kbd>C</kbd><b>Capture</b><small>Node ×<span class="n">${this.nodes()}</span></small><div class="bt-cd"></div>`;
+    cap.addEventListener('pointerdown', (e) => { e.preventDefault(); void this.capture(); });
+    chipsEl.appendChild(cap);
+    this.capChip = cap;
     (this.hud.querySelector('.bt-me b') as HTMLElement).textContent = this.me.b.name;
     (this.hud.querySelector('.bt-me i') as HTMLElement).textContent = `Lv${this.me.b.level}`;
     (this.hud.querySelector('.bt-foe b') as HTMLElement).textContent = `Wild ${foeB.name}`;
@@ -206,6 +223,37 @@ export class BattleArena {
     const c = { col: this.me.cell.col + dx, row: this.me.cell.row + dz };
     if (!canStand('player', c)) return;
     this.me.cell = c;
+  }
+
+  /** IFF Recalibration: spend a node, freeze the fight, run the timed puzzle. */
+  private async capture(): Promise<void> {
+    if (this.over || this.capturing || this.t < 0.6) return;
+    if (this.nodes() <= 0) { this.say('No storage nodes left.', 1.2); return; }
+    this.spendNode();
+    (this.capChip!.querySelector('.n') as HTMLElement).textContent = String(this.nodes());
+    this.capturing = true;
+    this.telegraph = [];
+    this.foeWind = null;
+    this.pending = [];
+    const f = this.foe.b;
+    const budget = puzzleBudget(this.data.species(f.speciesNum), f.stats.integrity, f.integrity, f.status);
+    this.say('Node deployed. Clearing the static…', 1.2);
+    const ok = await runCapturePuzzle(this.hud, this.rng, { size: budget.gridSize, seconds: budget.timerSeconds, name: f.name });
+    this.capturing = false;
+    if (ok) {
+      this.finish({ outcome: 'captured', foe: f }, `${f.name} is Freed! The static clears.`);
+      return;
+    }
+    // the hack failed: it rages (OUTPUT up) and may tear away
+    f.rage += 1;
+    f.stages.output = Math.min(6, f.stages.output + 1);
+    this.float(this.foe, 'OUTPUT ▲', '#ff8a7a');
+    if (f.rage >= 3 || this.rng.chance(f.rage * 35)) {
+      this.finish({ outcome: 'foeFled' }, `${f.name} tore away into the ruins!`);
+      return;
+    }
+    this.say(`${f.name} rages against the hack!`, 1.4);
+    this.foeAttackAt = this.t + 0.8;
   }
 
   private flee(): void {
@@ -405,7 +453,7 @@ export class BattleArena {
   // ------------------------------------------------------------- frame
 
   update(dt: number): void {
-    if (!this.ready) return; // still loading the stage and fighters
+    if (!this.ready || this.capturing) return; // loading, or frozen while the node puzzle runs
     this.t += dt;
     if (!this.over) {
       // held direction keys / the touch stick repeat steps
