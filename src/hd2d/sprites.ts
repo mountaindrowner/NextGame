@@ -196,12 +196,17 @@ export class RotHero {
   private readonly body = new THREE.Group();
   private readonly mesh: THREE.Mesh;
   private readonly mats: Record<Dir8, THREE.MeshBasicMaterial>;
+  /** Walk cycle per direction (empty → the stand-in bob). */
+  private readonly walk: Partial<Record<Dir8, THREE.MeshBasicMaterial[]>>;
+  private readonly fps: number;
   dir: Dir = 'S';
   facing: Dir8 = 'south';
   private t = 0;
 
-  private constructor(mats: Record<Dir8, THREE.MeshBasicMaterial>, w: number, h: number, foot: number) {
+  private constructor(mats: Record<Dir8, THREE.MeshBasicMaterial>, walk: Partial<Record<Dir8, THREE.MeshBasicMaterial[]>>, fps: number, w: number, h: number, foot: number) {
     this.mats = mats;
+    this.walk = walk;
+    this.fps = fps;
     const geo = new THREE.PlaneGeometry(w, h);
     geo.translate(0, h * (foot - 0.5), 0);
     this.mesh = new THREE.Mesh(geo, mats.south);
@@ -210,9 +215,21 @@ export class RotHero {
     this.root.add(this.body, blob(0.34));
   }
 
-  /** Loads ./world/styles/<id>/<dir>.png; scales so the figure stands `height` tall. */
+  /** Loads ./world/styles/<id>/<dir>.png (+ walk/<dir>/<n>.png when
+   *  anim.json lists a walk); scales so the figure stands `height` tall. */
   static async load(id: string, tint: THREE.Color, height = 1.65): Promise<RotHero> {
-    const texs = await Promise.all(DIRS8.map((d) => loader.loadAsync(`./world/styles/${id}/${d}.png`).then(pixelTex)));
+    const base = `./world/styles/${id}`;
+    const anim = (await fetch(`${base}/anim.json`).then((r) => (r.ok ? r.json() : {})).catch(() => ({}))) as { walk?: { frames: number; fps: number } };
+    const texs = await Promise.all(DIRS8.map((d) => loader.loadAsync(`${base}/${d}.png`).then(pixelTex)));
+    const mat = (t: THREE.Texture): THREE.MeshBasicMaterial => new THREE.MeshBasicMaterial({ map: t, alphaTest: 0.5, side: THREE.DoubleSide, color: tint });
+    const walk: Partial<Record<Dir8, THREE.MeshBasicMaterial[]>> = {};
+    if (anim.walk) {
+      const n = anim.walk.frames;
+      await Promise.all(DIRS8.map(async (d) => {
+        const fr = await Promise.all(Array.from({ length: n }, (_, i) => loader.loadAsync(`${base}/walk/${d}/${i}.png`).then(pixelTex)));
+        walk[d] = fr.map(mat);
+      }));
+    }
     const img = texs[0]!.image as HTMLImageElement;
     // measure the south figure's drawn height to size every direction alike
     const c = document.createElement('canvas');
@@ -224,11 +241,14 @@ export class RotHero {
     let top = c.height, bottom = 0;
     for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) if (d[(y * c.width + x) * 4 + 3]! > 128) { top = Math.min(top, y); bottom = Math.max(bottom, y + 1); }
     const k = height / Math.max(1, bottom - top);
-    const mats = Object.fromEntries(DIRS8.map((dn, i) => [dn, new THREE.MeshBasicMaterial({ map: texs[i]!, alphaTest: 0.5, side: THREE.DoubleSide, color: tint })])) as Record<Dir8, THREE.MeshBasicMaterial>;
-    return new RotHero(mats, img.width * k, img.height * k, bottom / img.height);
+    const mats = Object.fromEntries(DIRS8.map((dn, i) => [dn, mat(texs[i]!)])) as Record<Dir8, THREE.MeshBasicMaterial>;
+    return new RotHero(mats, walk, anim.walk?.fps ?? 10, img.width * k, img.height * k, bottom / img.height);
   }
 
-  setTint(c: THREE.Color): void { for (const m of Object.values(this.mats)) m.color.copy(c); }
+  setTint(c: THREE.Color): void {
+    for (const m of Object.values(this.mats)) m.color.copy(c);
+    for (const list of Object.values(this.walk)) for (const m of list ?? []) m.color.copy(c);
+  }
 
   face(dx: number, dz: number): void {
     if (Math.abs(dx) < 1e-4 && Math.abs(dz) < 1e-4) return;
@@ -243,6 +263,15 @@ export class RotHero {
 
   animate(dt: number, moving: boolean, speed = 1): void {
     this.t += dt * speed;
+    const cycle = this.walk[this.facing];
+    if (cycle?.length) {
+      // a real walk cycle: step through the frames; stand on the rotation when still
+      this.mesh.material = moving ? cycle[Math.floor(this.t * this.fps) % cycle.length]! : this.mats[this.facing];
+      this.body.position.y = 0;
+      this.body.rotation.z = 0;
+      this.body.scale.set(1, moving ? 1 : 1 + Math.sin(this.t * 2.2) * 0.012, 1);
+      return;
+    }
     if (moving) {
       // a stepping bob: two hops per stride, a little lean into the step
       const s = Math.sin(this.t * 14);

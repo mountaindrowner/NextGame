@@ -62,10 +62,11 @@ const camTarget = new THREE.Vector3();
 const desired = new THREE.Vector3();
 let tiltFocus = 0.46;
 
-// ?hero=snes8|e_pro — try an art-style candidate as the playable SAL
-const heroId = q.get('hero');
+// SAL's locked look is the indie-action style (e_pro, Mark 2026-10-23).
+// ?hero=<style id> tries another candidate; ?hero=old plays the previous sprite.
+const heroId = q.get('hero') ?? 'e_pro';
 const [player, ohm] = await Promise.all([
-  heroId ? RotHero.load(heroId, new THREE.Color(1, 1, 1)) : Walker.load('sal', new THREE.Color(1, 1, 1)),
+  heroId === 'old' ? Walker.load('sal', new THREE.Color(1, 1, 1)) : RotHero.load(heroId, new THREE.Color(1, 1, 1)),
   OhmFollower.load(7, new THREE.Color(1, 1, 1)), // Scraplet — the Dog line, stand-in lead Ohm
 ]);
 
@@ -128,7 +129,8 @@ async function enter(id: string, spawn: string, first = false): Promise<void> {
 
   const s = first && q.has('x') ? { x: Number(q.get('x')), z: Number(q.get('z')), face: (q.get('face')?.toUpperCase() ?? 'S') as Dir } : a.spawns[spawn] ?? a.spawns.start!;
   player.root.position.set(s.x, a.ground(s.x, s.z), s.z);
-  player.dir = s.face ?? 'S';
+  const fv = { N: [0, -1], S: [0, 1], W: [-1, 0], E: [1, 0] }[s.face ?? 'S'];
+  player.face(fv[0]!, fv[1]!);
   player.animate(0, false);
   // the lead Ohm arrives at your side (whichever side is clear)
   const side = a.blocked(s.x - 0.8, s.z, 0.25, s.x, s.z) ? 0.8 : -0.8;

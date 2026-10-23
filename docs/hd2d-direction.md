@@ -57,6 +57,19 @@ as the reference build.*
 - **Build order: B first** (fully custom designs and detail), then A (modular
   block kits) to compare.
 
+## Character art style (2026-10-23)
+
+- **Locked: "Indie action-adventure"** for SAL — chunky stylized
+  proportions, bold readable silhouette, lineless with strong graphic light
+  and shadow, 64 px, low top-down, 8 directions. Source: PixelLab Pro
+  character `cea31c61-3b70-4ec6-a617-413b60f80ece` (prompt in
+  `assets/reference/styles/sal_indie.prompt.json`); in-game files in
+  `public/world/styles/e_pro/`. The wider cast, WREN and portraits follow
+  this style. Rejected: the big-head chibi variant of the same genre.
+- Explored and passed over: chibi adventure, 16-bit console JRPG (runner-up),
+  handheld monster-tamer, tactics RPG, gritty survival, cozy life-sim, anime
+  action (boards in `assets/reference/styles/`).
+
 ## Open items
 
 - Grid combat rules (grid size, movement, how Ohm attacks map to grid patterns,
