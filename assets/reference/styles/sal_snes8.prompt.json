@@ -1,0 +1,17 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "body": {
+    "description": "SAL, a teenage boy scavenger hero: messy brown hair, worn leather cap with brass goggles pushed up, red bandana, tan work jacket with shearling collar, patched denim trousers, worn boots, tool pouch on belt",
+    "method": "rotate_character",
+    "view": "low top-down",
+    "image_size": {
+      "width": 48,
+      "height": 48
+    },
+    "no_background": true
+  },
+  "reference": "public/world/styles/b_16bit.png",
+  "character_id": "6bf4cb3d-1097-48aa-8883-5d5e220aed93",
+  "at": "2026-10-23T03:53:34.004Z"
+}

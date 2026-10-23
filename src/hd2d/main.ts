@@ -62,7 +62,7 @@ const camTarget = new THREE.Vector3();
 const desired = new THREE.Vector3();
 let tiltFocus = 0.46;
 
-// ?hero=b16|indie8 — try an art-style candidate as the playable SAL
+// ?hero=snes8|e_pro — try an art-style candidate as the playable SAL
 const heroId = q.get('hero');
 const [player, ohm] = await Promise.all([
   heroId ? RotHero.load(heroId, new THREE.Color(1, 1, 1)) : Walker.load('sal', new THREE.Color(1, 1, 1)),
@@ -304,7 +304,9 @@ const LINEUPS: Record<string, Array<[string, string]>> = {
     ['a_chibi', 'A · Chibi adventure'], ['b_16bit', 'B · 16-bit JRPG'], ['c_handheld', 'C · Handheld tamer'], ['d_tactics', 'D · Tactics RPG'],
     ['e_indie', 'E · Indie action'], ['f_survival', 'F · Gritty survival'], ['g_cozy', 'G · Cozy life-sim'], ['h_anime', 'H · Anime action'],
   ],
-  duo: [['b16/south', '16-bit JRPG'], ['indie8/south', 'Indie action']],
+  duo: [['snes8/south', 'B · 16-bit JRPG'], ['e_pro/south', 'E · Indie action']],
+  snes8: ['south', 'south-east', 'east', 'north-east', 'north', 'north-west', 'west', 'south-west'].map((d) => [`snes8/${d}`, d]),
+  e_pro: ['south', 'south-east', 'east', 'north-east', 'north', 'north-west', 'west', 'south-west'].map((d) => [`e_pro/${d}`, d]),
   b16: ['south', 'south-east', 'east', 'north-east', 'north', 'north-west', 'west', 'south-west'].map((d) => [`b16/${d}`, d]),
   indie8: ['south', 'south-east', 'east', 'north-east', 'north', 'north-west', 'west', 'south-west'].map((d) => [`indie8/${d}`, d]),
 };
