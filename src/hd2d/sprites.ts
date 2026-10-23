@@ -185,3 +185,74 @@ export async function stillSprite(url: string, height: number, tint: THREE.Color
   root.add(spriteMesh(tex, img.width * k, img.height * k, bottom / img.height, tint), blob(0.34));
   return root;
 }
+
+const DIRS8 = ['south', 'south-east', 'east', 'north-east', 'north', 'north-west', 'west', 'south-west'] as const;
+export type Dir8 = (typeof DIRS8)[number];
+
+/** A hero drawn from 8 directional stills (PixelLab rotations): turns to
+ *  face any of 8 ways, and steps with a bob until walk cycles exist. */
+export class RotHero {
+  readonly root = new THREE.Group();
+  private readonly body = new THREE.Group();
+  private readonly mesh: THREE.Mesh;
+  private readonly mats: Record<Dir8, THREE.MeshBasicMaterial>;
+  dir: Dir = 'S';
+  facing: Dir8 = 'south';
+  private t = 0;
+
+  private constructor(mats: Record<Dir8, THREE.MeshBasicMaterial>, w: number, h: number, foot: number) {
+    this.mats = mats;
+    const geo = new THREE.PlaneGeometry(w, h);
+    geo.translate(0, h * (foot - 0.5), 0);
+    this.mesh = new THREE.Mesh(geo, mats.south);
+    this.mesh.castShadow = true;
+    this.body.add(this.mesh);
+    this.root.add(this.body, blob(0.34));
+  }
+
+  /** Loads ./world/styles/<id>/<dir>.png; scales so the figure stands `height` tall. */
+  static async load(id: string, tint: THREE.Color, height = 1.65): Promise<RotHero> {
+    const texs = await Promise.all(DIRS8.map((d) => loader.loadAsync(`./world/styles/${id}/${d}.png`).then(pixelTex)));
+    const img = texs[0]!.image as HTMLImageElement;
+    // measure the south figure's drawn height to size every direction alike
+    const c = document.createElement('canvas');
+    c.width = img.width;
+    c.height = img.height;
+    const g = c.getContext('2d')!;
+    g.drawImage(img, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height).data;
+    let top = c.height, bottom = 0;
+    for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) if (d[(y * c.width + x) * 4 + 3]! > 128) { top = Math.min(top, y); bottom = Math.max(bottom, y + 1); }
+    const k = height / Math.max(1, bottom - top);
+    const mats = Object.fromEntries(DIRS8.map((dn, i) => [dn, new THREE.MeshBasicMaterial({ map: texs[i]!, alphaTest: 0.5, side: THREE.DoubleSide, color: tint })])) as Record<Dir8, THREE.MeshBasicMaterial>;
+    return new RotHero(mats, img.width * k, img.height * k, bottom / img.height);
+  }
+
+  setTint(c: THREE.Color): void { for (const m of Object.values(this.mats)) m.color.copy(c); }
+
+  face(dx: number, dz: number): void {
+    if (Math.abs(dx) < 1e-4 && Math.abs(dz) < 1e-4) return;
+    // screen-space angle: 0 = south (toward camera), clockwise toward west
+    const a = Math.atan2(-dx, dz);
+    const i = ((Math.round(a / (Math.PI / 4)) % 8) + 8) % 8;
+    // atan2(-dx, dz): south 0, south-west +45°, west +90° … so walk the list backwards
+    this.facing = DIRS8[(8 - i) % 8]!;
+    this.mesh.material = this.mats[this.facing];
+    this.dir = Math.abs(dx) >= Math.abs(dz) * 0.9 ? (dx < 0 ? 'W' : 'E') : dz < 0 ? 'N' : 'S';
+  }
+
+  animate(dt: number, moving: boolean, speed = 1): void {
+    this.t += dt * speed;
+    if (moving) {
+      // a stepping bob: two hops per stride, a little lean into the step
+      const s = Math.sin(this.t * 14);
+      this.body.position.y = Math.abs(s) * 0.07;
+      this.body.scale.set(1 + Math.abs(s) * 0.02, 1 - Math.abs(s) * 0.03, 1);
+      this.body.rotation.z = s * 0.035;
+    } else {
+      this.body.position.y = 0;
+      this.body.rotation.z = 0;
+      this.body.scale.set(1, 1 + Math.sin(this.t * 2.2) * 0.012, 1);
+    }
+  }
+}

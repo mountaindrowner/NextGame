@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createPost } from './post';
 import { applyMood, type Lights } from './mood';
-import { Walker, OhmFollower, stillSprite, type Dir } from './sprites';
+import { Walker, OhmFollower, RotHero, stillSprite, type Dir } from './sprites';
 import { UI } from './ui';
 import type { Area, AreaBuilder, Line, Thing } from './area';
 import { buildField } from './field/area';
@@ -62,8 +62,10 @@ const camTarget = new THREE.Vector3();
 const desired = new THREE.Vector3();
 let tiltFocus = 0.46;
 
+// ?hero=b16|indie8 — try an art-style candidate as the playable SAL
+const heroId = q.get('hero');
 const [player, ohm] = await Promise.all([
-  Walker.load('sal', new THREE.Color(1, 1, 1)),
+  heroId ? RotHero.load(heroId, new THREE.Color(1, 1, 1)) : Walker.load('sal', new THREE.Color(1, 1, 1)),
   OhmFollower.load(7, new THREE.Color(1, 1, 1)), // Scraplet — the Dog line, stand-in lead Ohm
 ]);
 
@@ -297,18 +299,26 @@ if (hud) {
 
 // ?lineup=sal — SAL art-style candidates standing in a row, labelled
 const lineupLabels: Array<{ el: HTMLDivElement; pos: THREE.Vector3 }> = [];
-if (q.get('lineup') === 'sal') {
-  const styles: Array<[string, string]> = [
+const LINEUPS: Record<string, Array<[string, string]>> = {
+  sal: [
     ['a_chibi', 'A · Chibi adventure'], ['b_16bit', 'B · 16-bit JRPG'], ['c_handheld', 'C · Handheld tamer'], ['d_tactics', 'D · Tactics RPG'],
     ['e_indie', 'E · Indie action'], ['f_survival', 'F · Gritty survival'], ['g_cozy', 'G · Cozy life-sim'], ['h_anime', 'H · Anime action'],
-  ];
+  ],
+  duo: [['b16/south', '16-bit JRPG'], ['indie8/south', 'Indie action']],
+  b16: ['south', 'south-east', 'east', 'north-east', 'north', 'north-west', 'west', 'south-west'].map((d) => [`b16/${d}`, d]),
+  indie8: ['south', 'south-east', 'east', 'north-east', 'north', 'north-west', 'west', 'south-west'].map((d) => [`indie8/${d}`, d]),
+};
+const lineup = LINEUPS[q.get('lineup') ?? ''];
+if (lineup) {
+  const styles = lineup;
   const tint = new THREE.Color().setRGB(...area!.mood.sprite);
   // the row stands where the player would, centred in the focus band
-  const x0 = player.root.position.x - 5.25, z0 = player.root.position.z;
+  const gap = styles.length <= 2 ? 2.2 : 1.5;
+  const x0 = player.root.position.x - ((styles.length - 1) * gap) / 2, z0 = player.root.position.z;
   player.root.visible = ohm.root.visible = false;
   await Promise.all(styles.map(async ([file, label], i) => {
     const s = await stillSprite(`./world/styles/${file}.png`, 1.65, tint);
-    const x = x0 + i * 1.5;
+    const x = x0 + i * gap;
     s.position.set(x, area!.ground(x, z0), z0);
     scene.add(s);
     const el = document.createElement('div');
