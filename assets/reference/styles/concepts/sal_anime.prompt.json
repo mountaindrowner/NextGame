@@ -1,0 +1,14 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/generate-image-v2",
+  "body": {
+    "description": "SAL, a teenage boy scavenger hero of post-collapse Texas: messy brown hair, worn leather cap with brass goggles pushed up, red bandana, tan work jacket with shearling collar, patched denim trousers, worn boots, tool pouch on belt. high-resolution anime action RPG sprite, expressive large eyes, dynamic hair, clean anime cel shading with sharp highlights, vivid colours, crisp outline. single character, full body, standing, facing the viewer, game sprite, transparent background",
+    "image_size": {
+      "width": 96,
+      "height": 96
+    },
+    "no_background": true
+  },
+  "count": 4,
+  "at": "2026-10-23T03:05:07.424Z"
+}

@@ -1,0 +1,14 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/generate-image-v2",
+  "body": {
+    "description": "SAL, a teenage boy scavenger hero of post-collapse Texas: messy brown hair, worn leather cap with brass goggles pushed up, red bandana, tan work jacket with shearling collar, patched denim trousers, worn boots, tool pouch on belt. early 2000s handheld monster-catching RPG overworld sprite, tiny chibi 2 heads tall, thick black outline, bright clean saturated colours, very simple shapes. single character, full body, standing, facing the viewer, game sprite, transparent background",
+    "image_size": {
+      "width": 32,
+      "height": 32
+    },
+    "no_background": true
+  },
+  "count": 64,
+  "at": "2026-10-23T03:06:59.718Z"
+}

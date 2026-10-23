@@ -1,0 +1,14 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/generate-image-v2",
+  "body": {
+    "description": "SAL, a teenage boy scavenger hero of post-collapse Texas: messy brown hair, worn leather cap with brass goggles pushed up, red bandana, tan work jacket with shearling collar, patched denim trousers, worn boots, tool pouch on belt. modern indie action-adventure pixel art, chunky stylized proportions, bold graphic shapes, saturated colours, lineless, strong flat light and shadow shapes. single character, full body, standing, facing the viewer, game sprite, transparent background",
+    "image_size": {
+      "width": 64,
+      "height": 64
+    },
+    "no_background": true
+  },
+  "count": 16,
+  "at": "2026-10-23T03:05:51.009Z"
+}

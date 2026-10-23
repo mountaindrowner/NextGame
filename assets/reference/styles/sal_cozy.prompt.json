@@ -1,0 +1,28 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "label": "Cozy life-sim",
+  "body": {
+    "description": "SAL, a teenage boy, young scavenger hero of a post-collapse Texas: messy brown hair under a worn leather cap with brass goggles pushed up on the brow, red bandana at the neck, scuffed tan work jacket with a shearling collar, denim trousers with patched knee pads, worn brown boots, a small tool pouch on the belt, determined hopeful face",
+    "style_description": "cozy farming life-sim sprite: round soft shapes, 2.5 heads tall, warm gentle pastel-leaning palette, soft dark outline, gentle simple shading, friendly and charming",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 48,
+      "height": 48
+    },
+    "no_background": true
+  },
+  "character_id": "fcdd4ca4-b85f-4962-8977-7d8c22814fb3",
+  "directions": [
+    "east",
+    "north-east",
+    "north-west",
+    "north",
+    "south-east",
+    "south-west",
+    "south",
+    "west"
+  ],
+  "at": "2026-10-23T02:57:56.262Z"
+}

@@ -1,0 +1,28 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "label": "Gritty survival",
+  "body": {
+    "description": "SAL, a teenage boy, young scavenger hero of a post-collapse Texas: messy brown hair under a worn leather cap with brass goggles pushed up on the brow, red bandana at the neck, scuffed tan work jacket with a shearling collar, denim trousers with patched knee pads, worn brown boots, a small tool pouch on the belt, determined hopeful face",
+    "style_description": "gritty post-apocalyptic survival game sprite: realistic proportions, heavy grime, dust and wear, desaturated rust-and-dust palette, harsh top light, detailed fabric folds, dark selective outline",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 80,
+      "height": 80
+    },
+    "no_background": true
+  },
+  "character_id": "5264831a-442f-4603-b5d5-e5e17747dd0f",
+  "directions": [
+    "east",
+    "north-east",
+    "north-west",
+    "north",
+    "south-east",
+    "south-west",
+    "south",
+    "west"
+  ],
+  "at": "2026-10-23T02:57:50.825Z"
+}

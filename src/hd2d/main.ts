@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createPost } from './post';
 import { applyMood, type Lights } from './mood';
-import { Walker, OhmFollower, type Dir } from './sprites';
+import { Walker, OhmFollower, stillSprite, type Dir } from './sprites';
 import { UI } from './ui';
 import type { Area, AreaBuilder, Line, Thing } from './area';
 import { buildField } from './field/area';
@@ -295,6 +295,30 @@ if (hud) {
     : '<kbd>WASD</kbd>/<kbd>←↑→↓</kbd> move · <kbd>Shift</kbd> run · <kbd>E</kbd> talk');
 }
 
+// ?lineup=sal — SAL art-style candidates standing in a row, labelled
+const lineupLabels: Array<{ el: HTMLDivElement; pos: THREE.Vector3 }> = [];
+if (q.get('lineup') === 'sal') {
+  const styles: Array<[string, string]> = [
+    ['a_chibi', 'A · Chibi adventure'], ['b_16bit', 'B · 16-bit JRPG'], ['c_handheld', 'C · Handheld tamer'], ['d_tactics', 'D · Tactics RPG'],
+    ['e_indie', 'E · Indie action'], ['f_survival', 'F · Gritty survival'], ['g_cozy', 'G · Cozy life-sim'], ['h_anime', 'H · Anime action'],
+  ];
+  const tint = new THREE.Color().setRGB(...area!.mood.sprite);
+  // the row stands where the player would, centred in the focus band
+  const x0 = player.root.position.x - 5.25, z0 = player.root.position.z;
+  player.root.visible = ohm.root.visible = false;
+  await Promise.all(styles.map(async ([file, label], i) => {
+    const s = await stillSprite(`./world/styles/${file}.png`, 1.65, tint);
+    const x = x0 + i * 1.5;
+    s.position.set(x, area!.ground(x, z0), z0);
+    scene.add(s);
+    const el = document.createElement('div');
+    el.textContent = label;
+    el.style.cssText = 'position:absolute;left:0;top:0;transform:translate(-50%,0);font:600 13px "Alegreya Sans",sans-serif;color:#f1dfb1;background:rgba(14,15,18,.82);border:1px solid rgba(201,164,92,.6);padding:2px 8px;border-radius:999px;white-space:nowrap;pointer-events:none';
+    app.appendChild(el);
+    lineupLabels.push({ el, pos: s.position });
+  }));
+}
+
 const clock = new THREE.Clock();
 let t = 0;
 renderer.setAnimationLoop(() => {
@@ -303,6 +327,11 @@ renderer.setAnimationLoop(() => {
   if (area && !loading) {
     update(dt);
     area.update(t, player.root.position, camTarget);
+  }
+  for (const l of lineupLabels) {
+    const p = l.pos.clone().project(camera);
+    l.el.style.left = `${(p.x + 1) / 2 * window.innerWidth}px`;
+    l.el.style.top = `${(1 - p.y) / 2 * window.innerHeight + 8}px`;
   }
   post.tick(t);
   post.composer.render(dt);

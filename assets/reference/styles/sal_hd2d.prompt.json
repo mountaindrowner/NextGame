@@ -1,0 +1,19 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "label": "HD-2D diorama RPG",
+  "body": {
+    "description": "SAL, a teenage boy, young scavenger hero of a post-collapse Texas: messy brown hair under a worn leather cap with brass goggles pushed up on the brow, red bandana at the neck, scuffed tan work jacket with a shearling collar, denim trousers with patched knee pads, worn brown boots, a small tool pouch on the belt, determined hopeful face",
+    "style_description": "modern HD-2D diorama JRPG sprite: about 3.5 heads tall, rich hue-shifted shading with soft warm rim light, selective dark outline, painterly pixel clusters, grounded earthy palette with warm highlights, tasteful detail",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 64,
+      "height": 64
+    },
+    "no_background": true
+  },
+  "character_id": "6d0b17f2-7bfc-4e80-9ce3-68020110ea6a",
+  "directions": [],
+  "at": "2026-10-23T02:52:25.466Z"
+}

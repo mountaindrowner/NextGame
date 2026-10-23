@@ -1,0 +1,31 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "label": "16-bit console JRPG",
+  "body": {
+    "description": "SAL, a teenage boy, young scavenger hero of a post-collapse Texas: messy brown hair under a worn leather cap with brass goggles pushed up on the brow, red bandana at the neck, scuffed tan work jacket with a shearling collar, denim trousers with patched knee pads, worn brown boots, a small tool pouch on the belt, determined hopeful face",
+    "style_description": "classic 1990s 16-bit console RPG overworld sprite: compact 2.5-heads-tall chibi, clean black outline, limited 16-colour palette, crisp cel shading, bright readable colours, iconic simple shapes",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 48,
+      "height": 48
+    },
+    "no_background": true,
+    "target_palette": {
+      "max_colors": 16
+    }
+  },
+  "character_id": "81cb38b8-ee5c-46fc-8fb8-59fdbfe66187",
+  "directions": [
+    "east",
+    "north-east",
+    "north-west",
+    "north",
+    "south-east",
+    "south-west",
+    "south",
+    "west"
+  ],
+  "at": "2026-10-23T02:57:49.615Z"
+}

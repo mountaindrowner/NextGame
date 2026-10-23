@@ -1,0 +1,14 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/generate-image-v2",
+  "body": {
+    "description": "SAL, a teenage boy scavenger hero of post-collapse Texas: messy brown hair, worn leather cap with brass goggles pushed up, red bandana, tan work jacket with shearling collar, patched denim trousers, worn boots, tool pouch on belt. classic tactics RPG unit sprite, slender realistic 6 heads tall, muted watercolour earth tones, soft dithered shading, thin brown outline, serious mature tone. single character, full body, standing, facing the viewer, game sprite, transparent background",
+    "image_size": {
+      "width": 80,
+      "height": 80
+    },
+    "no_background": true
+  },
+  "count": 9,
+  "at": "2026-10-23T03:05:31.322Z"
+}

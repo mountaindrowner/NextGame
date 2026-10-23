@@ -1,0 +1,28 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "label": "Tactics RPG",
+  "body": {
+    "description": "SAL, a teenage boy, young scavenger hero of a post-collapse Texas: messy brown hair under a worn leather cap with brass goggles pushed up on the brow, red bandana at the neck, scuffed tan work jacket with a shearling collar, denim trousers with patched knee pads, worn brown boots, a small tool pouch on the belt, determined hopeful face",
+    "style_description": "classic tactics RPG unit sprite: slender realistic proportions about 6 heads tall, muted watercolour-like earth palette, soft dithered shading, thin dark brown outline, mature serious tone, delicate detail",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 80,
+      "height": 80
+    },
+    "no_background": true
+  },
+  "character_id": "3e6990c5-2dcd-4896-b58f-377fbdb46e04",
+  "directions": [
+    "east",
+    "north-east",
+    "north-west",
+    "north",
+    "south-east",
+    "south-west",
+    "south",
+    "west"
+  ],
+  "at": "2026-10-23T02:58:38.863Z"
+}

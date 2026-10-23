@@ -166,3 +166,22 @@ function lowestOpaqueRow(img: HTMLImageElement): number {
   for (let y = c.height - 1; y >= 0; y--) for (let x = 0; x < c.width; x++) if (d[(y * c.width + x) * 4 + 3]! > 128) return y + 1;
   return c.height;
 }
+
+/** A single still sprite scaled so its drawn content stands `height` units
+ *  tall (feet on the ground) — used to compare art styles side by side. */
+export async function stillSprite(url: string, height: number, tint: THREE.Color): Promise<THREE.Group> {
+  const tex = pixelTex(await loader.loadAsync(url));
+  const img = tex.image as HTMLImageElement;
+  const c = document.createElement('canvas');
+  c.width = img.width;
+  c.height = img.height;
+  const g = c.getContext('2d')!;
+  g.drawImage(img, 0, 0);
+  const d = g.getImageData(0, 0, c.width, c.height).data;
+  let top = c.height, bottom = 0;
+  for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) if (d[(y * c.width + x) * 4 + 3]! > 128) { top = Math.min(top, y); bottom = Math.max(bottom, y + 1); }
+  const k = height / Math.max(1, bottom - top);
+  const root = new THREE.Group();
+  root.add(spriteMesh(tex, img.width * k, img.height * k, bottom / img.height, tint), blob(0.34));
+  return root;
+}

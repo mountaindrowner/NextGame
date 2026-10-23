@@ -1,0 +1,33 @@
+{
+  "keys": [
+    "seed",
+    "type",
+    "view",
+    "action",
+    "images",
+    "status",
+    "progress",
+    "canvas_size",
+    "character_id",
+    "n_directions",
+    "billing_usage",
+    "character_name",
+    "queue_position",
+    "billing_charged",
+    "directions_type",
+    "generation_mode",
+    "style_reference",
+    "style_selection",
+    "directions_count",
+    "quantized_images",
+    "saved_to_storage",
+    "uploaded_directions",
+    "style_reference_path",
+    "character_description",
+    "generation_started_at",
+    "estimated_wait_seconds",
+    "original_image_n_colors",
+    "quantized_image_n_colors"
+  ],
+  "character_id": "3e6990c5-2dcd-4896-b58f-377fbdb46e04"
+}
