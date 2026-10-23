@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { createPost } from './post';
 import { applyMood, moodPost, DAY, type Lights } from './mood';
 import { BattleArena } from './battle/arena';
+import { themeFor, type ThemeId } from './battle/themes';
 import { GAME_DATA } from '../data/dataview';
 import { ZONES_BY_ID } from '../data/encounters';
 import { makeBattler } from '../core/battle/engine';
@@ -92,7 +93,7 @@ async function battle(foeNum: number, foeLevel: number): Promise<void> {
   ui.root.classList.add('battling');
   arena = a;
   a.resize(window.innerWidth, window.innerHeight);
-  const run = a.start({ mood: area!.sky ? area!.mood : DAY, renderer, post, me: lead, foeNum, foeLevel, heroId: heroId === 'old' ? undefined : heroId });
+  const run = a.start({ mood: area!.mood, renderer, post, me: lead, foeNum, foeLevel, heroId: heroId === 'old' ? undefined : heroId, theme: (q.get('arena') as ThemeId | null) ?? themeFor(area!.id) });
   await new Promise((r) => setTimeout(r, 60));
   post.setScene(a.scene, a.camera);
   post.tiltH.uniforms.focus!.value = post.tiltV.uniforms.focus!.value = 0.42;

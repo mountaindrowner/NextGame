@@ -6,8 +6,7 @@ import type { MoveDef, TypeName } from '../../core/defs';
 import { applyMood, type Mood } from '../mood';
 import type { PostFX } from '../post';
 import { RotHero, stillSprite } from '../sprites';
-import { cottonwood, bush } from '../field/props';
-import { colMat } from '../geo';
+import { THEMES, type ArenaTheme, type ThemeId } from './themes';
 import { COLS, ROWS, canStand, coverage, cooldownOf, hitDamage, landsRoll, patternOf, type Cell, type Pattern, type Side } from './rules';
 
 /**
@@ -41,27 +40,6 @@ interface Fighter {
 
 interface Pending { at: number; cells: Cell[]; from: Fighter; move: MoveDef; target: Fighter }
 
-function panelTex(side: Side): THREE.CanvasTexture {
-  const c = document.createElement('canvas');
-  c.width = c.height = 32;
-  const g = c.getContext('2d')!;
-  const base = side === 'player' ? '#1c3b4a' : '#4a1f22';
-  const edge = side === 'player' ? '#58d6ff' : '#ff6a5a';
-  g.fillStyle = base;
-  g.fillRect(0, 0, 32, 32);
-  g.fillStyle = 'rgba(255,255,255,0.05)';
-  for (let i = 4; i < 32; i += 6) g.fillRect(i, 3, 1, 26);
-  g.strokeStyle = edge;
-  g.lineWidth = 2;
-  g.strokeRect(2, 2, 28, 28);
-  g.fillStyle = edge;
-  for (const [x, y] of [[4, 4], [26, 4], [4, 26], [26, 26]]) g.fillRect(x!, y!, 2, 2);
-  const t = new THREE.CanvasTexture(c);
-  t.magFilter = THREE.NearestFilter;
-  t.colorSpace = THREE.SRGBColorSpace;
-  return t;
-}
-
 export class BattleArena {
   readonly scene = new THREE.Scene();
   readonly camera: THREE.PerspectiveCamera;
@@ -80,6 +58,7 @@ export class BattleArena {
   private foeAttackAt = 2.2;
   private foeWind: { at: number; move: MoveDef; cells: Cell[] } | null = null;
   private over: BattleResult | null = null;
+  private theme: ArenaTheme = THEMES.field;
   private ready = false;
   private done!: (r: BattleResult) => void;
   private stepHold = 0;
@@ -105,7 +84,7 @@ export class BattleArena {
       <div class="bt-plate bt-foe"><b></b><i></i><div class="bt-bar"><div></div></div><span></span></div>
       <div class="bt-banner"></div>
       <div class="bt-chips"></div>
-      <div class="bt-help">Move <kbd>WASD</kbd>/<kbd>←↑→↓</kbd> · Fire <kbd>J</kbd><kbd>K</kbd><kbd>L</kbd><kbd>;</kbd> · Run <kbd>Esc</kbd> · dodge the red panels</div>`;
+      <div class="bt-help">Move <kbd>WASD</kbd>/<kbd>←↑→↓</kbd> · Fire <kbd>J</kbd><kbd>K</kbd><kbd>L</kbd><kbd>;</kbd> · Run <kbd>Esc</kbd> · step off glowing ground</div>`;
     host.appendChild(this.hud);
     const plate = (cls: string): { fill: HTMLDivElement; text: HTMLSpanElement } => ({
       fill: this.hud.querySelector(`.${cls} .bt-bar div`) as HTMLDivElement,
@@ -132,9 +111,10 @@ export class BattleArena {
   }
 
   /** Build the stage and run the fight; resolves when it ends. */
-  async start(opts: { mood: Mood; renderer: THREE.WebGLRenderer; post: PostFX; me: Battler; foeNum: number; foeLevel: number; heroId?: string }): Promise<BattleResult> {
+  async start(opts: { mood: Mood; renderer: THREE.WebGLRenderer; post: PostFX; me: Battler; foeNum: number; foeLevel: number; heroId?: string; theme?: ThemeId }): Promise<BattleResult> {
     const { mood, renderer, post } = opts;
     applyMood(this.scene, renderer, post, mood).follow(new THREE.Vector3(0, 0, 0));
+    this.theme = THEMES[opts.theme ?? 'field'];
     this.buildStage(mood);
     const tint = new THREE.Color().setRGB(...mood.sprite);
 
@@ -199,62 +179,24 @@ export class BattleArena {
   // ------------------------------------------------------------- stage
 
   private buildStage(mood: Mood): void {
-    // the ground: a grassy clearing on the prairie, darker toward the edges
-    const c = document.createElement('canvas');
-    c.width = c.height = 128;
-    const g = c.getContext('2d')!;
-    const grd = g.createRadialGradient(64, 64, 10, 64, 64, 64);
-    grd.addColorStop(0, mood.night ? '#2c3a26' : '#5b7f34');
-    grd.addColorStop(1, mood.night ? '#141c14' : '#34501f');
-    g.fillStyle = grd;
-    g.fillRect(0, 0, 128, 128);
-    for (let i = 0; i < 900; i++) {
-      g.fillStyle = ['#6f9a3c', '#4f7a2c', '#8a8a4a', '#3d5e24'][i % 4]!;
-      g.globalAlpha = 0.35;
-      g.fillRect(Math.random() * 128, Math.random() * 128, 1, 1);
-    }
-    const tex = new THREE.CanvasTexture(c);
-    tex.magFilter = THREE.NearestFilter;
-    tex.colorSpace = THREE.SRGBColorSpace;
-    const ground = new THREE.Mesh(new THREE.CircleGeometry(16, 48), new THREE.MeshStandardMaterial({ map: tex, roughness: 1 }));
-    ground.rotation.x = -Math.PI / 2;
-    ground.receiveShadow = true;
-    this.scene.add(ground);
-    // the panel field
+    const th = this.theme;
+    this.scene.add(th.ground(mood));
+    // the panel field — made of this region's ground
     for (let col = 0; col < COLS; col++) {
       this.panels[col] = [];
       this.panelMats[col] = [];
       for (let row = 0; row < ROWS; row++) {
         const side: Side = col < 3 ? 'player' : 'foe';
-        const mat = new THREE.MeshStandardMaterial({ map: panelTex(side), emissive: side === 'player' ? '#1a6b8a' : '#8a2a22', emissiveIntensity: 0.35, roughness: 0.6, metalness: 0.3 });
-        const p = new THREE.Mesh(new THREE.BoxGeometry(PW - 0.08, 0.16, PD - 0.08), mat);
-        p.position.copy(cellPos({ col, row })).setY(0.08);
+        const mat = new THREE.MeshStandardMaterial({ map: th.paintPanel(side, 300 + col * 7 + row * 31, mood.night), emissive: '#000000', emissiveIntensity: 0, roughness: th.roughness, metalness: th.metalness });
+        const p = new THREE.Mesh(new THREE.BoxGeometry(PW - 0.1, th.panelH, PD - 0.1), mat);
+        p.position.copy(cellPos({ col, row })).setY(th.panelH / 2);
         p.receiveShadow = true;
         this.scene.add(p);
         this.panels[col]![row] = p;
         this.panelMats[col]![row] = mat;
       }
     }
-    // a frame of life around the clearing
-    let seed = 7100;
-    for (const [x, z, s] of [[-9, -5.5, 1.3], [-6.2, -6.4, 1.1], [-2, -7.2, 1.25], [2.6, -7.0, 1.2], [6.4, -6.2, 1.15], [9.4, -5.2, 1.3], [-10.5, -1.5, 1.1], [10.8, -1.0, 1.2]] as Array<[number, number, number]>) {
-      const tree = cottonwood(x, z, s, seed++);
-      tree.position.y = 0;
-      this.scene.add(tree);
-    }
-    for (const [x, z] of [[-7.5, 3.5], [7.8, 3.2], [-4.6, -4.4], [4.4, -4.6], [0.3, -5.1], [-8.6, 0.8], [8.8, 0.4]] as Array<[number, number]>) {
-      const b = bush(x, z, 0.9, seed++);
-      b.position.y = 0;
-      this.scene.add(b);
-    }
-    // a dead fence post line behind the field
-    for (let x = -6; x <= 6; x += 1.5) {
-      const post = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.9, 0.1), colMat('#5a4a3a'));
-      post.position.set(x, 0.45, -3.4);
-      post.rotation.z = (Math.sin(x * 3) * 0.08);
-      post.castShadow = true;
-      this.scene.add(post);
-    }
+    th.dress(this.scene, mood, (col, row) => cellPos({ col, row }), PW, PD);
   }
 
   // ------------------------------------------------------------- input
@@ -428,7 +370,7 @@ export class BattleArena {
     const m = this.panelMats[c.col]?.[c.row];
     if (!m) return;
     m.emissive.set(color);
-    m.emissiveIntensity = 1.6;
+    m.emissiveIntensity = 0.9;
   }
 
   private float(f: Fighter, text: string, color: string): void {
@@ -489,13 +431,14 @@ export class BattleArena {
     for (let col = 0; col < COLS; col++) for (let row = 0; row < ROWS; row++) {
       const m = this.panelMats[col]![row]!;
       const warn = this.telegraph.some((c) => c.col === col && c.row === row);
-      const home = col < 3 ? new THREE.Color('#1a6b8a') : new THREE.Color('#8a2a22');
+      const standing = col < 3 && this.me.cell.col === col && this.me.cell.row === row;
       if (warn) {
-        m.emissive.set('#ff3a2a');
-        m.emissiveIntensity = 0.9 + Math.sin(this.t * 22) * 0.6;
+        // the ground smoulders where the hit will land
+        m.emissive.set(this.theme.warnGlow);
+        m.emissiveIntensity = 0.32 + Math.sin(this.t * 18) * 0.2;
       } else {
-        m.emissive.lerp(home, Math.min(1, dt * 6));
-        m.emissiveIntensity += (((col < 3 && this.me.cell.col === col && this.me.cell.row === row) ? 0.75 : 0.35) - m.emissiveIntensity) * Math.min(1, dt * 6);
+        m.emissive.lerp(new THREE.Color(standing ? this.theme.standGlow : '#000000'), Math.min(1, dt * 6));
+        m.emissiveIntensity += ((standing ? 0.09 : 0) - m.emissiveIntensity) * Math.min(1, dt * 6);
       }
     }
     // fighters glide to their panels; lunges, flashes, i-frame blink

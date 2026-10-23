@@ -93,6 +93,13 @@ and `src/hd2d/battle/arena.ts` (HD-2D stage + UI).
 - **Flow:** tall grass rolls the area's encounter table (Gen 3 rate per tile);
   win, lose or run (Esc), then back to the overworld. Lead Ohm HP persists;
   recharge points refill it. Debug: `?battle=<species>&lv=<n>`.
+- **Region grids (Mark: "too much like Battle Network"):** the panels are the
+  local ground, not neon tiles — Field = earth plots (your dark loam vs their
+  cracked clay, grass in the gaps, a stone line down the middle), Farm Road =
+  blacktop slabs (patched vs bleached, faded centre line), underground = deck
+  plate with hazard edges. Your panel gets a faint lantern warmth; telegraphs
+  are the ground smouldering ember-orange. `src/hd2d/battle/themes.ts`;
+  `?arena=field|road|bunker` to preview.
 - **Not yet:** capture (the node puzzle), switching, items, XP, trainer
   battles, multiple foes, Ohm battle animations.
 
