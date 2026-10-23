@@ -60,6 +60,20 @@ export interface Lights {
   follow(target: THREE.Vector3): void;
 }
 
+/** Exposure, bloom and grade for a mood — re-applied when returning from a battle stage. */
+export function moodPost(renderer: THREE.WebGLRenderer, post: PostFX, m: Mood): void {
+  renderer.toneMappingExposure = m.exposure;
+  post.bloom.strength = m.bloom.strength;
+  post.bloom.radius = m.bloom.radius;
+  post.bloom.threshold = m.bloom.threshold;
+  const g = post.grade.uniforms;
+  g.dull!.value = m.grade.dull;
+  g.lush!.value = m.grade.lush;
+  g.vignette!.value = m.grade.vignette;
+  (g.shadowTint!.value as THREE.Color).setRGB(...m.grade.shadowTint);
+  (g.highTint!.value as THREE.Color).setRGB(...m.grade.highTint);
+}
+
 export function applyMood(scene: THREE.Scene, renderer: THREE.WebGLRenderer, post: PostFX, m: Mood): Lights {
   scene.background = new THREE.Color(m.fog.color);
   scene.fog = new THREE.FogExp2(m.fog.color, m.fog.density);
@@ -77,15 +91,7 @@ export function applyMood(scene: THREE.Scene, renderer: THREE.WebGLRenderer, pos
   sun.shadow.normalBias = 0.025;
   scene.add(sun, sun.target);
 
-  post.bloom.strength = m.bloom.strength;
-  post.bloom.radius = m.bloom.radius;
-  post.bloom.threshold = m.bloom.threshold;
-  const g = post.grade.uniforms;
-  g.dull!.value = m.grade.dull;
-  g.lush!.value = m.grade.lush;
-  g.vignette!.value = m.grade.vignette;
-  (g.shadowTint!.value as THREE.Color).setRGB(...m.grade.shadowTint);
-  (g.highTint!.value as THREE.Color).setRGB(...m.grade.highTint);
+  moodPost(renderer, post, m);
 
   const texel = (S * 2) / 2048;
   return {

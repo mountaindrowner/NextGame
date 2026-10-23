@@ -1,5 +1,21 @@
 # HANDOVER
 
+## Session 2026-10-23 (cont.) — art style locked, cast, animations, grid-combat POC
+
+- **SAL's style locked:** "Indie action" (PixelLab Pro, character
+  `cea31c61…`); default hero is `public/world/styles/e_pro/` with 8-dir
+  rotations + walk, idle, run, pickup, hurt, hop, throw, knockdown, getup
+  (`anim.json`). Tools: `tools/animate-sal.mjs`, `tools/gen-cast-style.mjs`,
+  `tools/animate-cast.mjs`.
+- **Cast in the style:** WREN, Mabel, Boone, Cass, Odessa, Rook, Scootlet,
+  Dronelet, Scraplet (8-dir + idle; WREN/Scraplet also walk). Restyled NPCs and
+  the follower load via `public/world/styles/index.json`.
+- **Dialogue:** portraits dropped (Mark); the speaker's own sprite, upscaled,
+  stands at the right facing left. Mark: still "janky"/hard to read — revisit.
+- **Grid combat POC:** see docs/hd2d-direction.md (rules are [PROPOSAL]).
+  Tall-grass encounters in the Field + Farm Road; `?battle=10` to test.
+- **PixelLab:** ~3,880 generations left (floor 1,000).
+
 ## Session 2026-10-23 (cont.) — HD-2D first map: Ohmstead → the Field → Farm Road
 
 - **Done:** `hd2d.html` is now a three-area game (default start: Ohmstead at

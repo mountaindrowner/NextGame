@@ -104,7 +104,7 @@ export class Walker {
   /** Dialogue card: this sheet's west-facing (left) standing frame. */
   card(): Promise<string> {
     const { frameW, frameH } = this.meta;
-    return spriteCard(this.tex.image as HTMLImageElement, 220, { x: 0, y: frameH * 2, w: frameW, h: frameH });
+    return spriteCard(this.tex.image as HTMLImageElement, 220, { x: 0, y: frameH * 2, w: frameW, h: frameH }, true);
   }
 
   face(dx: number, dz: number): void {
@@ -336,7 +336,7 @@ export class RotHero {
 /** The dialogue "portrait": the speaker's own sprite, trimmed to its figure
  *  and upscaled by a whole number for crisp pixels (Mark, 2026-10-23 — no
  *  separate portraits). `rect` picks a frame out of a sheet. */
-export async function spriteCard(src: string | HTMLImageElement, targetH = 220, rect?: { x: number; y: number; w: number; h: number }): Promise<string> {
+export async function spriteCard(src: string | HTMLImageElement, targetH = 220, rect?: { x: number; y: number; w: number; h: number }, mirror = false): Promise<string> {
   const img = typeof src === 'string' ? await new Promise<HTMLImageElement>((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }) : src;
   const r = rect ?? { x: 0, y: 0, w: img.width, h: img.height };
   const c = document.createElement('canvas');
@@ -354,6 +354,7 @@ export async function spriteCard(src: string | HTMLImageElement, targetH = 220, 
   out.height = h * k;
   const o = out.getContext('2d')!;
   o.imageSmoothingEnabled = false;
+  if (mirror) { o.translate(w * k, 0); o.scale(-1, 1); }
   o.drawImage(c, x0, y0, w, h, 0, 0, w * k, h * k);
   return out.toDataURL();
 }

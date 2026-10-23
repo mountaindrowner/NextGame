@@ -112,7 +112,7 @@ export interface PostFX {
   resize(w: number, h: number): void;
   tick(t: number): void;
   /** Point the render pass at a new area's scene. */
-  setScene(s: THREE.Scene): void;
+  setScene(s: THREE.Scene, cam?: THREE.Camera): void;
 }
 
 export function createPost(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera): PostFX {
@@ -146,6 +146,6 @@ export function createPost(renderer: THREE.WebGLRenderer, scene: THREE.Scene, ca
   return {
     composer, bloom, grade, tiltH, tiltV, resize,
     tick: (t) => { grade.uniforms.time!.value = t; },
-    setScene: (s) => { renderPass.scene = s; },
+    setScene: (s, cam) => { renderPass.scene = s; if (cam) renderPass.camera = cam; },
   };
 }

@@ -59,6 +59,8 @@ export interface Area {
   npcs: NPC[];
   /** True where wild Ohms hide (tall grass). */
   wild?(x: number, z: number): boolean;
+  /** Encounter table for the wild cells (src/data/encounters.ts id). */
+  zone?: string;
   /** Allow the Day/Night toggle (outdoor areas). */
   sky: boolean;
   update(t: number, focus: THREE.Vector3, camTarget: THREE.Vector3): void;

@@ -70,6 +70,32 @@ as the reference build.*
   handheld monster-tamer, tactics RPG, gritty survival, cozy life-sim, anime
   action (boards in `assets/reference/styles/`).
 
+## Grid combat — proof of concept (2026-10-23) · [PROPOSAL] rules
+
+Built to test the feel; **nothing here is canon until Mark approves**.
+Code: `src/hd2d/battle/rules.ts` (pure, unit-tested in `tests/gridrules.test.ts`)
+and `src/hd2d/battle/arena.ts` (HD-2D stage + UI).
+
+- **Field:** 6×3 panels — your 3×3 (blue) on the left, the foe's (red) on the
+  right. Each Ohm stands on one panel of its side and moves in real time.
+- **Moves fire, no menu:** each of the Ohm's moves is a chip (J/K/L/;) with a
+  **pattern** and a **recharge** (0.6 s + power/55; status moves 2.6 s).
+- **Patterns:** Shot (first Ohm down your row) · Dash (lunge down the row) ·
+  Close (the panel in front — only from your front column) · Wave (their
+  front column) · Surge (their whole row) · Lob (three panels ahead, or the
+  aimed panel) · Burst (a five-panel plus). Signature moves are mapped by
+  hand (POUNCE = Dash, MARK STRIKE = Lob, Heat Tick = Burst…); the rest by type.
+- **Foe telegraphs** every attack in pulsing red (~0.85 s); aimed shapes lock
+  onto where you stood when it wound up. Dodging is your evasion: only moves
+  under 100 accuracy can miss on their own.
+- **Numbers:** the unchanged Gen 3 formula on canon stats, STAB, crits and the
+  11-type chart; stat stages apply; HOBBLE never downs; −CLOCK slows the foe.
+- **Flow:** tall grass rolls the area's encounter table (Gen 3 rate per tile);
+  win, lose or run (Esc), then back to the overworld. Lead Ohm HP persists;
+  recharge points refill it. Debug: `?battle=<species>&lv=<n>`.
+- **Not yet:** capture (the node puzzle), switching, items, XP, trainer
+  battles, multiple foes, Ohm battle animations.
+
 ## Open items
 
 - Grid combat rules (grid size, movement, how Ohm attacks map to grid patterns,

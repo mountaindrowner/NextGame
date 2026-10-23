@@ -1,6 +1,12 @@
 import * as THREE from 'three';
 import { createPost } from './post';
-import { applyMood, type Lights } from './mood';
+import { applyMood, moodPost, DAY, type Lights } from './mood';
+import { BattleArena } from './battle/arena';
+import { GAME_DATA } from '../data/dataview';
+import { ZONES_BY_ID } from '../data/encounters';
+import { makeBattler } from '../core/battle/engine';
+import { rollEncounter } from '../core/encounter';
+import { Rng } from '../core/rng';
 import { Walker, OhmFollower, RotHero, stillSprite, spriteCard, type Dir } from './sprites';
 import { UI } from './ui';
 import type { Area, AreaBuilder, Line, Thing } from './area';
@@ -67,6 +73,42 @@ const trail: THREE.Vector3[] = [];
 const camTarget = new THREE.Vector3();
 const desired = new THREE.Vector3();
 let tiltFocus = 0.46;
+
+// --------------------------------------------------------------- battle
+// The lead Ohm: Scraplet (the Dog line), Lv5, HP carried between fights.
+const lead = makeBattler(GAME_DATA.species(7), 5, GAME_DATA);
+const encRng = new Rng(Date.now() >>> 0);
+let arena: BattleArena | null = null;
+let stepAcc = 0;
+
+/** Fade into the grid arena, fight, fade back to the overworld. */
+async function battle(foeNum: number, foeLevel: number): Promise<void> {
+  if (arena || loading) return;
+  loading = true;
+  keys.clear();
+  ui.showPrompt(null);
+  await ui.fade(true, 380);
+  const a = new BattleArena(app, GAME_DATA, encRng.int(1, 1e9));
+  ui.root.classList.add('battling');
+  arena = a;
+  a.resize(window.innerWidth, window.innerHeight);
+  const run = a.start({ mood: area!.sky ? area!.mood : DAY, renderer, post, me: lead, foeNum, foeLevel, heroId: heroId === 'old' ? undefined : heroId });
+  await new Promise((r) => setTimeout(r, 60));
+  post.setScene(a.scene, a.camera);
+  post.tiltH.uniforms.focus!.value = post.tiltV.uniforms.focus!.value = 0.42;
+  await ui.fade(false, 380);
+  const result = await run;
+  await ui.fade(true, 420);
+  a.dispose();
+  ui.root.classList.remove('battling');
+  arena = null;
+  post.setScene(scene, camera);
+  moodPost(renderer, post, area!.mood);
+  if (result.outcome === 'defeat') lead.integrity = lead.stats.integrity; // limps home recharged — the proof has no whiteout yet
+  loading = false;
+  await ui.fade(false, 420);
+  if (result.outcome === 'defeat') speak({ lines: [`${lead.name} needs a recharge. You pull back to catch your breath.`] });
+}
 let hopping = false;
 let dropAcc = 0;
 
@@ -153,6 +195,7 @@ async function enter(id: string, spawn: string, first = false): Promise<void> {
       // the speaker's own sprite, facing left, stands at the right of the dialogue box
       const entry: (typeof talk)[number] = { x, z, height: 2.0, label: n.name, walker: w, pos: w.root.position, say: { name: n.name, lines: n.lines } };
       talk.push(entry);
+      // new-style sprites use their left-facing three-quarter pose; old sheets' side row faces right, so card() mirrors it
       const card = w instanceof RotHero ? spriteCard(`./world/styles/${n.char}/south-west.png`) : w.card();
       void card.then((url) => { entry.say!.portrait = url; }).catch(() => undefined);
     }
@@ -207,6 +250,7 @@ function act(): void {
   const go = t.go;
   const travel = go ? (): void => { void enter(go.to, go.spawn); } : undefined;
   const run = (): void => { if (t.say) speak(t.say, travel); else travel?.(); };
+  if (/recharge|rest|bench/i.test(t.label)) lead.integrity = lead.stats.integrity; // a top-up for the lead Ohm
   // reach for objects (not people, not signs) before the line comes up
   if (!t.walker && t.label !== 'Read' && player instanceof RotHero && player.has('pickup')) {
     player.face(t.pos.x - player.root.position.x, t.pos.z - player.root.position.z);
@@ -271,6 +315,17 @@ function update(dt: number): void {
   }
   player.animate(dt, moved, run ? 1.5 : 1);
 
+  // tall grass: Gen 3 encounter roll per tile walked (rate/255 per step)
+  if (moved && a.wild?.(p.x, p.z) && a.zone && !loading) {
+    stepAcc += speed * dt;
+    if (stepAcc >= 1) {
+      stepAcc -= 1;
+      const z = ZONES_BY_ID.get(a.zone);
+      const spawn = z ? rollEncounter(z, encRng) : undefined;
+      if (spawn) void battle(spawn.speciesNum, spawn.level);
+    }
+  }
+
   // triggers: walk off an edge to travel, or get turned back with a word
   if (!loading) {
     const hit = a.triggers.find((t) => p.x > t.x0 && p.x < t.x1 && p.z > t.z0 && p.z < t.z1);
@@ -331,12 +386,15 @@ function resize(): void {
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   post.resize(w, h);
+  arena?.resize(w, h);
 }
 window.addEventListener('resize', resize);
 resize();
 
 const startArea = AREAS[q.get('area') ?? ''] ? q.get('area')! : 'ohmstead';
 await enter(startArea, 'start', true);
+// ?battle=<species>[&lv=] — jump straight into a grid battle (proof of concept)
+if (q.has('battle')) setTimeout(() => void battle(Number(q.get('battle')) || 10, Number(q.get('lv') ?? 3)), 600);
 if (hud) {
   ui.hint(matchMedia('(pointer: coarse)').matches
     ? 'Stick to move · A to talk'
@@ -386,7 +444,10 @@ let t = 0;
 renderer.setAnimationLoop(() => {
   const dt = Math.min(clock.getDelta(), 0.05);
   t += dt;
-  if (area && !loading) {
+  if (arena) {
+    arena.stick = ui.stick;
+    arena.update(dt);
+  } else if (area && !loading) {
     update(dt);
     area.update(t, player.root.position, camTarget);
   }
@@ -398,4 +459,4 @@ renderer.setAnimationLoop(() => {
   post.tick(t);
   post.composer.render(dt);
 });
-Object.assign(window, { __ready: true, __hd2d: { get scene() { return scene; }, camera, player, ohm, THREE, enter } });
+Object.assign(window, { __ready: true, __hd2d: { get scene() { return scene; }, get arena() { return arena; }, lead, camera, player, ohm, THREE, enter } });

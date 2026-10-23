@@ -456,6 +456,7 @@ export const buildFarmRoad: AreaBuilder = async (scene, night) => {
     blocked,
     ground: (x, z) => heightAt(x, z),
     wild: (x, z) => cell(Math.floor(x), Math.floor(z)) === 'T',
+    zone: 'farmroad-fence',
     spawns: {
       start: { x: 13.5, z: 28.4, face: 'N' },
       south: { x: 13.5, z: 28.9, face: 'N' },

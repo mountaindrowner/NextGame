@@ -50,6 +50,7 @@ export const buildField: AreaBuilder = async (scene, night) => {
     blocked: (x, z, r) => fieldBlocked(x, z, r),
     ground: (x, z) => Math.max(heightAt(x, z), -0.1),
     wild: (x, z) => cell(Math.floor(x), Math.floor(z)) === 'T',
+    zone: 'field-grass',
     spawns: {
       start: { x: data.spawn.x + 0.5, z: data.spawn.y + 0.3, face: 'S' },
       lift: { x: 20.5, z: 18.3, face: 'S' },
