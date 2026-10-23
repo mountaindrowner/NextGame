@@ -56,11 +56,13 @@
     "pixellab:tiles": "tsx tools/pixellab-tiles.ts"
   },
   "dependencies": {
-    "phaser": "^3.85.2"
+    "phaser": "^3.85.2",
+    "three": "^0.170.0"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
     "@types/pngjs": "^6.0.5",
+    "@types/three": "^0.170.0",
     "happy-dom": "^20.10.6",
     "phaser3spectorjs": "^0.0.8",
     "playwright": "^1.61.0",

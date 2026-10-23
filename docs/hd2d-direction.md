@@ -48,10 +48,17 @@ as the reference build.*
   replaced** — rules are to be decided. The canon clause "battle system behind
   a clean interface" is the seam the new combat plugs into.
 
+## Follow-ups (2026-10-23)
+
+- **Characters + portraits:** keep the current sprites/portraits as placeholders
+  for now; remake them later.
+- **First proof = the Field** (the ruined cattle town above Ohmstead).
+- **Tilt-shift blur is essential** — always on, a defining part of the look.
+- **Build order: B first** (fully custom designs and detail), then A (modular
+  block kits) to compare.
+
 ## Open items
 
-- Tilt-shift depth-of-field blur (Octopath's signature look): assumed **on,
-  subtle**, until Mark says otherwise.
 - Grid combat rules (grid size, movement, how Ohm attacks map to grid patterns,
   how capture fits).
 - Native render resolution and pixel scale for sprites.

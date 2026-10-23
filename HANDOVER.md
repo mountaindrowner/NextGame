@@ -1,5 +1,38 @@
 # HANDOVER
 
+## Session 2026-10-23 — HD-2D proof: the Field, version B (branch `claude/hd2d`)
+
+- **Done:** a playable HD-2D Field at `hd2d.html` (Three.js; Vite page
+  `hd2d`). Source in `src/hd2d/`:
+  - `main.ts` — renderer (ACES, PCF soft shadows), the one fixed camera (yaw
+    locked, ~41° down, fov 30, smooth follow, clamped to the diorama), input
+    (WASD/arrows, Shift run, E/Space/Enter/Z talk; touch stick + A button),
+    lead-Ohm breadcrumb follower, NPC talk, title card, Day/Night toggle.
+    URL: `?time=night` · `?x=&z=` start · `?face=n|s|w|e` · `?wide=1`
+    overview · `?hud=0`.
+  - `post.ts` — bloom → mood grade → **tilt-shift (always on; band rides the
+    player's screen height)** → output. `mood.ts` — fixed DAY (late golden
+    sun from WSW over the viewer's shoulder) / NIGHT presets.
+  - `textures.ts` (procedural pixel-art materials at 16 texels/unit),
+    `geo.ts` (world-UV boxes/cylinders/prisms), `noise.ts`.
+  - `field/` — `layout.ts` (the original 40×28 Field map, collision,
+    heights), `terrain.ts` (painted ground, apron, shader creek, instanced
+    swaying grass + wildflowers), `buildings.ts` (bespoke: barn, 2 farmhouses,
+    chapel, water tower, windmill, CO-OP vault hero, silo, bins, lift hatch,
+    cattle pen, culvert), `props.ts` (trees, power lines, truck, crates, sign,
+    churchyard, reeds, tumbleweeds, pollen/fireflies), `scene.ts` (placement).
+  - `sprites.ts` — billboards from the existing walk sheets (placeholders, per
+    Mark) + Scraplet follower; `ui.ts`/`ui.css` — clean dark dialogue panel,
+    gold rule, name plate, portrait smaller and behind the text.
+- **Next:** Mark reviews B → build **version A** (modular block kits with
+  pixel textures) on the same layout for the A/B comparison; then grid-combat
+  rules, 8-direction sprites, new portraits.
+- **Known issues:** characters are flat-lit (MeshBasic, tinted per mood — no
+  lamp light on them); Scraplet uses front/back stills; trees are blobby
+  low-poly; tall-grass encounters not wired; the `__hd2d` window hook is a
+  debug aid. Headless screenshots need swiftshader and run ~1 fps (see
+  `/opt/pw-browsers/chromium_headless_shell-1194`).
+
 ## Session 2026-06-23 (cont.) — PixelLab NPC cast (Ohmstead→Railhead)
 
 - **Mark's call: NPC art is made with PixelLab** (not the grid method). The grid

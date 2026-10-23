@@ -43,6 +43,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         editor: resolve(__dirname, 'editor.html'),
         slicer: resolve(__dirname, 'slicer.html'),
+        hd2d: resolve(__dirname, 'hd2d.html'),
       },
     },
   },
