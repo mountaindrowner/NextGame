@@ -1,0 +1,33 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/animate-character",
+  "character_id": "f59f574c-76e7-4737-8961-f61edb1d96d3",
+  "plan": [
+    {
+      "name": "idle",
+      "mode": "v3",
+      "action": "idle: hovering in place, bobbing up and down, rotors spinning",
+      "frames": 4,
+      "fps": 6,
+      "loop": true
+    }
+  ],
+  "staged": {
+    "idle": {
+      "frames": 5,
+      "fps": 6,
+      "loop": true,
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    }
+  },
+  "at": "2026-10-23T07:48:10.087Z"
+}

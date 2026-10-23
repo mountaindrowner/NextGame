@@ -1,0 +1,33 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/animate-character",
+  "character_id": "42b80bd8-8969-43b5-9357-319efa2da3d7",
+  "plan": [
+    {
+      "name": "idle",
+      "mode": "v3",
+      "action": "idle: rocking gently on its wheels, headlight eye blinking",
+      "frames": 4,
+      "fps": 6,
+      "loop": true
+    }
+  ],
+  "staged": {
+    "idle": {
+      "frames": 5,
+      "fps": 6,
+      "loop": true,
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    }
+  },
+  "at": "2026-10-23T07:48:06.181Z"
+}

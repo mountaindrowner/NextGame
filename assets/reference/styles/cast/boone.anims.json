@@ -1,0 +1,32 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/animate-character",
+  "character_id": "80739b5b-d555-42a5-9586-74543e3e37f6",
+  "plan": [
+    {
+      "name": "idle",
+      "mode": "template",
+      "template": "breathing-idle",
+      "fps": 5,
+      "loop": true
+    }
+  ],
+  "staged": {
+    "idle": {
+      "frames": 4,
+      "fps": 5,
+      "loop": true,
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    }
+  },
+  "at": "2026-10-23T07:47:36.363Z"
+}

@@ -1,0 +1,54 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/animate-character",
+  "character_id": "05fa17e6-e9d3-4607-aa3b-df6d6fc2df78",
+  "plan": [
+    {
+      "name": "idle",
+      "mode": "template",
+      "template": "breathing-idle",
+      "fps": 5,
+      "loop": true
+    },
+    {
+      "name": "walk",
+      "mode": "template",
+      "template": "walking-8-frames",
+      "fps": 11,
+      "loop": true
+    }
+  ],
+  "staged": {
+    "idle": {
+      "frames": 4,
+      "fps": 5,
+      "loop": true,
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    },
+    "walk": {
+      "frames": 8,
+      "fps": 11,
+      "loop": true,
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    }
+  },
+  "at": "2026-10-23T07:47:56.222Z"
+}
