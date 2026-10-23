@@ -19,6 +19,8 @@ import { buildOhmstead } from './ohmstead/area';
 import { buildRailhead } from './railhead/area';
 import { buildScar } from './scar/area';
 import { buildCistern } from './cistern/area';
+import { buildOverworld, OVERWORLD_IDS, overworldOffset } from './overworld/area';
+import { beginArea } from './world';
 import { partyHasFieldAbility, HOVER_GIFT_SPECIES } from '../data/field-abilities';
 
 /**
@@ -30,7 +32,7 @@ import { partyHasFieldAbility, HOVER_GIFT_SPECIES } from '../data/field-abilitie
  *      ?face=n|s|w|e · ?wide=1 overview · ?hud=0
  */
 
-const AREAS: Record<string, AreaBuilder> = { ohmstead: buildOhmstead, field: buildField, farmroad: buildFarmRoad, railhead: buildRailhead, scar: buildScar, cistern: buildCistern };
+const AREAS: Record<string, AreaBuilder> = { ohmstead: buildOhmstead, field: buildField, farmroad: buildFarmRoad, railhead: buildRailhead, scar: buildScar, cistern: buildCistern, overworld: buildOverworld };
 
 const q = new URLSearchParams(location.search);
 const night = q.get('time') === 'night';
@@ -119,7 +121,7 @@ async function battle(foeNum: number, foeLevel: number): Promise<'victory' | 'de
   ui.root.classList.add('battling');
   arena = a;
   a.resize(window.innerWidth, window.innerHeight);
-  const run = a.start({ mood: area!.mood, renderer, post, me: lead, foeNum, foeLevel, heroId: heroId === 'old' ? undefined : heroId, nodes: () => nodes, spendNode: () => { nodes -= 1; }, theme: (q.get('arena') as ThemeId | null) ?? themeFor(area!.id) });
+  const run = a.start({ mood: area!.mood, renderer, post, me: lead, foeNum, foeLevel, heroId: heroId === 'old' ? undefined : heroId, nodes: () => nodes, spendNode: () => { nodes -= 1; }, theme: (q.get('arena') as ThemeId | null) ?? themeFor(area!.region ?? area!.id) });
   await new Promise((r) => setTimeout(r, 60));
   post.setScene(a.scene, a.camera);
   post.tiltH.uniforms.focus!.value = post.tiltV.uniforms.focus!.value = 0.42;
@@ -243,6 +245,9 @@ function badge(): void {
 
 /** Travel: fade out, tear down, build the next area, place everyone, fade in. */
 async function enter(id: string, spawn: string, first = false): Promise<void> {
+  // the surface maps live inside the one continuous overworld (?seams=1 keeps them separate, for comparison)
+  let off = { ox: 0, oz: 0 };
+  if (OVERWORLD_IDS.has(id) && q.get('seams') !== '1') { off = overworldOffset(id)!; spawn = `${id}:${spawn}`; id = 'overworld'; }
   loading = true;
   if (!first) await ui.fade(true);
   const old = scene;
@@ -252,8 +257,10 @@ async function enter(id: string, spawn: string, first = false): Promise<void> {
   scene = new THREE.Scene();
   if (hoverRig) { hoverRig.root.visible = false; scene.add(hoverRig.root); }
   post.setScene(scene);
+  beginArea();
   const a = await AREAS[id]!(scene, night);
   area = a;
+  a.onRegion = (title, sub) => { if (hud) ui.titleCard(title, sub); badge(); };
   lights = applyMood(scene, renderer, post, a.mood);
   const tint = new THREE.Color().setRGB(...a.mood.sprite);
   player.setTint(tint);
@@ -285,7 +292,7 @@ async function enter(id: string, spawn: string, first = false): Promise<void> {
     }
   });
 
-  const s = first && q.has('x') ? { x: Number(q.get('x')), z: Number(q.get('z')), face: (q.get('face')?.toUpperCase() ?? 'S') as Dir } : a.spawns[spawn] ?? a.spawns.start!;
+  const s = first && q.has('x') ? { x: Number(q.get('x')) + off.ox, z: Number(q.get('z')) + off.oz, face: (q.get('face')?.toUpperCase() ?? 'S') as Dir } : a.spawns[spawn] ?? a.spawns.start!;
   player.root.position.set(s.x, a.ground(s.x, s.z), s.z);
   const fv = FACE[s.face ?? 'S'] ?? FACE.S!;
   player.face(fv[0], fv[1]);
@@ -540,13 +547,17 @@ let t = 0;
 // ?topdown=1 — a straight-down orthographic shot of the whole area (for the world map)
 const topdown = q.get('topdown') === '1';
 const topCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.5, 200);
+const topFocus = new THREE.Vector3();
 if (topdown) {
-  const w = world();
+  // ?tdbox=x0,x1,z0,z1 shoots one part of a big area (the overworld map is taken in pieces)
+  const box = q.get('tdbox')?.split(',').map(Number);
+  const b = box && box.length === 4 ? { x0: box[0]!, x1: box[1]!, z0: box[2]!, z1: box[3]! } : area!.bounds ?? { x0: 0, x1: world().cols, z0: 0, z1: world().rows };
+  const w = { cols: b.x1 - b.x0, rows: b.z1 - b.z0, cx: (b.x0 + b.x1) / 2, cz: (b.z0 + b.z1) / 2 };
   const pad = 0.5;
   topCam.left = -w.cols / 2 - pad; topCam.right = w.cols / 2 + pad;
   topCam.top = w.rows / 2 + pad; topCam.bottom = -w.rows / 2 - pad;
-  topCam.position.set(w.cols / 2, 80, w.rows / 2 + 0.001);
-  topCam.lookAt(w.cols / 2, 0, w.rows / 2);
+  topCam.position.set(w.cx, 80, w.cz + 0.001);
+  topCam.lookAt(w.cx, 0, w.cz);
   topCam.updateProjectionMatrix();
   scene.fog = null;
   post.setScene(scene, topCam);
@@ -559,7 +570,8 @@ if (topdown) {
   sun.shadow.map?.dispose();
   sun.shadow.map = null as unknown as THREE.WebGLRenderTarget;
   sun.shadow.camera.updateProjectionMatrix();
-  lights!.follow(new THREE.Vector3(w.cols / 2, 0, w.rows / 2));
+  lights!.follow(new THREE.Vector3(w.cx, 0, w.cz));
+  topFocus.set(w.cx, 999, w.cz);
   lights = { sun, follow: () => undefined };
   player.root.visible = ohm.root.visible = false;
   ui.root.style.display = 'none';
@@ -574,7 +586,7 @@ renderer.setAnimationLoop(() => {
   } else if (area && !loading) {
     update(dt);
     updateRoamers(dt, t);
-    area.update(t, topdown ? new THREE.Vector3(world().cols / 2, 0, -50) : player.root.position, topdown ? new THREE.Vector3(world().cols / 2, 0, world().rows / 2) : camTarget);
+    area.update(t, topdown ? topFocus : player.root.position, topdown ? topFocus : camTarget);
   }
   for (const l of lineupLabels) {
     const p = l.pos.clone().project(camera);

@@ -72,6 +72,12 @@ export interface Area {
   /** Allow the Day/Night toggle (outdoor areas). */
   sky: boolean;
   update(t: number, focus: THREE.Vector3, camTarget: THREE.Vector3): void;
+  /** The region you're in (the overworld spans several): picks the battle grid. */
+  region?: string;
+  /** World-space extent (for the top-down map). */
+  bounds?: { x0: number; x1: number; z0: number; z1: number };
+  /** Set by the overworld loop: called when you walk into a new named region. */
+  onRegion?: (title: string, sub: string) => void;
 }
 
 export type AreaBuilder = (scene: THREE.Scene, night: boolean) => Promise<Area>;

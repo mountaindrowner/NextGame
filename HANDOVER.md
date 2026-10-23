@@ -42,6 +42,12 @@
   gate turns you back (Warden). New text to flag: the cradle + seed-vault
   lines. Placeholder NPC sheets (npc_kid/npc_rancher) now load (inferred meta);
   any NPC that can't load is skipped instead of breaking the area.
+- **Continuous overworld** (`src/hd2d/overworld/area.ts` + `transition.ts`):
+  Field → homestead stretch → Farm Road → grain line → Railhead → interstate
+  approach → 45 Scar, seamless, no fades; ~3 s to load. world.ts is now
+  chunked (setWorld/useChunk/beginArea). Map: assets/reference/hd2d_overworld_map.png
+  (`?topdown=1&tdbox=x0,x1,z0,z1` to shoot pieces). Transition content and
+  their working names are [PROPOSAL].
 - **PixelLab:** ~3,880 generations left (floor 1,000).
 
 ## Session 2026-10-23 (cont.) — HD-2D first map: Ohmstead → the Field → Farm Road

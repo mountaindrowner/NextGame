@@ -110,6 +110,22 @@ and `src/hd2d/battle/arena.ts` (HD-2D stage + UI).
 - **Not yet:** switching (captured Ohms can't be sent in yet), items, XP,
   trainer battles, multiple foes, Ohm battle animations.
 
+## One continuous overworld (2026-10-23)
+
+Mark: the surface should be one seamless world, with real distance crossed
+between places. `src/hd2d/overworld/` places the Field, Farm Road, Railhead
+and the 45 Scar in one coordinate space (north = −z), each keeping its own
+layout and code, with a **transition stretch** between neighbours — open
+country a few screens long ([PROPOSAL] content: a road winding from one exit
+to the next entrance, tall grass, groves, telephone poles, fences and one
+landmark each: an abandoned homestead, a grain elevator on the old main line,
+the interstate approach with a billboard and dead trucks). Ground blends
+into each neighbour at the seams; collision samples each point in its own
+chunk so you walk straight across; only nearby chunks are drawn. Region
+title cards appear as you walk into each named place. Interiors (Ohmstead,
+the Cistern) stay separate, reached by the lift and the culvert.
+`?seams=1` loads the old separate maps for comparison.
+
 ## Open items
 
 - Grid combat rules (grid size, movement, how Ohm attacks map to grid patterns,

@@ -83,9 +83,13 @@ function paintGround(): THREE.CanvasTexture {
   return t;
 }
 
+/** Maps built into the overworld skip their own edge aprons. */
+let aprons = true;
+export function setAprons(on: boolean): void { aprons = on; }
+
 /** Overgrown scrub for the land beyond the map edge. */
 let scrubCache: THREE.Texture | null = null;
-function scrubTex(): THREE.Texture {
+export function scrubTex(): THREE.Texture {
   if (scrubCache) return scrubCache;
   const S = 64, p = new Pix(S, S), r = rng(99);
   for (let y = 0; y < S; y++)
@@ -109,6 +113,7 @@ export function buildGround(scene: THREE.Scene): void {
   const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ map: paintGround(), roughness: 1, metalness: 0 }));
   m.receiveShadow = true;
   scene.add(m);
+  if (!aprons) return; // the overworld frames all its chunks at once
 
   // a frame of scrubland beyond the map edge (level with the berm top), so
   // the diorama never shows a void at the edges of the camera
