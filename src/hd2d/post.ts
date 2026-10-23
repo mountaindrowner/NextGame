@@ -111,13 +111,16 @@ export interface PostFX {
   tiltV: ShaderPass;
   resize(w: number, h: number): void;
   tick(t: number): void;
+  /** Point the render pass at a new area's scene. */
+  setScene(s: THREE.Scene): void;
 }
 
 export function createPost(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera): PostFX {
   const size = renderer.getDrawingBufferSize(new THREE.Vector2());
   const rt = new THREE.WebGLRenderTarget(size.x, size.y, { type: THREE.HalfFloatType, samples: 4 });
   const composer = new EffectComposer(renderer, rt);
-  composer.addPass(new RenderPass(scene, camera));
+  const renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
   const bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.45, 0.55, 0.82);
   composer.addPass(bloom);
   const grade = new ShaderPass(Grade);
@@ -143,5 +146,6 @@ export function createPost(renderer: THREE.WebGLRenderer, scene: THREE.Scene, ca
   return {
     composer, bloom, grade, tiltH, tiltV, resize,
     tick: (t) => { grade.uniforms.time!.value = t; },
+    setScene: (s) => { renderPass.scene = s; },
   };
 }

@@ -99,6 +99,8 @@ export class Walker {
     this.mesh.scale.y = moving ? 1 : 1 + Math.sin(this.t * 2.2) * 0.012;
   }
 
+  setTint(c: THREE.Color): void { (this.mesh.material as THREE.MeshBasicMaterial).color.copy(c); }
+
   face(dx: number, dz: number): void {
     if (Math.abs(dx) < 1e-4 && Math.abs(dz) < 1e-4) return;
     this.dir = Math.abs(dx) >= Math.abs(dz) * 0.9 ? (dx < 0 ? 'W' : 'E') : dz < 0 ? 'N' : 'S';
@@ -131,6 +133,10 @@ export class OhmFollower {
     };
     const [f, b] = await Promise.all([make(`./sprites/ohms/${num}_front_hd.png`), make(`./sprites/ohms/${num}_back_hd.png`)]);
     return new OhmFollower(f, b);
+  }
+
+  setTint(c: THREE.Color): void {
+    for (const m of [this.front, this.back]) (m.material as THREE.MeshBasicMaterial).color.copy(c);
   }
 
   /** dx/dz: this frame's motion. Faces the way it moves; hops while moving. */

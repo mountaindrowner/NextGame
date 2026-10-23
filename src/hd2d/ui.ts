@@ -4,7 +4,7 @@
  * note). Plus the area title card, the interact prompt, and touch controls.
  */
 
-export interface Speech { name: string; portrait?: string; lines: string[] }
+export interface Speech { name?: string; portrait?: string; lines: string[] }
 
 const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls: string, parent: HTMLElement): HTMLElementTagNameMap[K] => {
   const e = document.createElement(tag);
@@ -54,6 +54,7 @@ export class UI {
   }
 
   titleCard(title: string, sub: string): void {
+    this.root.querySelectorAll('.title-card').forEach((e) => e.remove());
     const c = el('div', 'title-card', this.root);
     el('div', 'tc-rule', c);
     el('div', 'tc-title', c).textContent = title;
@@ -69,10 +70,21 @@ export class UI {
     setTimeout(() => h.classList.add('out'), 9000);
   }
 
-  badge(html: string): HTMLDivElement {
-    const b = el('div', 'badge', this.root);
-    b.innerHTML = html;
-    return b;
+  private badgeEl: HTMLDivElement | null = null;
+  badge(html: string): void {
+    this.badgeEl ??= el('div', 'badge', this.root);
+    this.badgeEl.innerHTML = html;
+  }
+
+  private fadeEl: HTMLDivElement | null = null;
+  /** Fade the screen to black (true) or back in (false); resolves when done. */
+  fade(on: boolean, ms = 450): Promise<void> {
+    this.fadeEl ??= el('div', 'fade', this.root);
+    const f = this.fadeEl;
+    f.style.transitionDuration = `${ms}ms`;
+    void f.offsetWidth;
+    f.classList.toggle('on', on);
+    return new Promise((r) => setTimeout(r, ms));
   }
 
   /** The floating "talk" prompt, placed at a screen point (px) or hidden. */
@@ -87,7 +99,8 @@ export class UI {
     this.speech = s;
     this.line = 0;
     this.onClose = onClose ?? null;
-    this.plate.textContent = s.name;
+    this.plate.textContent = s.name ?? '';
+    this.box.classList.toggle('no-name', !s.name);
     this.box.classList.toggle('has-portrait', !!s.portrait);
     if (s.portrait) this.portrait.src = s.portrait;
     this.box.classList.add('on');

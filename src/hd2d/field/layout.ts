@@ -1,4 +1,5 @@
 import { fbm } from '../noise';
+import { cell, hitsSolid, type TileWorld } from '../world';
 
 /**
  * The Field's layout, carried over 1:1 from tools/gen-field.ts (Mark: keep
@@ -9,7 +10,7 @@ import { fbm } from '../noise';
 export const COLS = 40;
 export const ROWS = 28;
 
-export const MAP: string[][] = Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => 'g'));
+const MAP: string[][] = Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => 'g'));
 const inb = (x: number, z: number): boolean => x >= 0 && z >= 0 && x < COLS && z < ROWS;
 const rect = (x0: number, z0: number, w: number, h: number, c: string): void => {
   for (let z = z0; z < z0 + h; z++) for (let x = x0; x < x0 + w; x++) if (inb(x, z)) MAP[z]![x] = c;
@@ -25,50 +26,34 @@ rect(30, 4, 7, 6, 'T');
 rect(4, 18, 7, 4, 'T');
 rect(29, 18, 8, 4, 'T');
 
-export const cell = (x: number, z: number): string => (inb(x, z) ? MAP[z]![x]! : '#');
-
-/** Solid footprints (world-space AABBs) registered by the scene builders. */
-export interface Rect { x0: number; z0: number; x1: number; z1: number }
-const solids: Rect[] = [];
-export function addSolid(x0: number, z0: number, x1: number, z1: number): void {
-  solids.push({ x0: Math.min(x0, x1), z0: Math.min(z0, z1), x1: Math.max(x0, x1), z1: Math.max(z0, z1) });
-}
-export function solidRects(): readonly Rect[] { return solids; }
-
 /** True where nothing may stand: border scrub, water, any registered solid. */
-export function blocked(x: number, z: number, r = 0): boolean {
+export function fieldBlocked(x: number, z: number, r = 0): boolean {
   if (x - r < 0.15 || x + r > COLS - 0.15 || z + r > ROWS - 0.15) return true;
   if (z - r < 0.05) return !(x > 19.2 && x < 21.8); // north edge opens only on the road
   for (const [dx, dz] of [[-r, -r], [r, -r], [-r, r], [r, r], [0, 0]] as Array<[number, number]>) {
     const c = cell(Math.floor(x + dx), Math.floor(z + dz));
     if (c === '#' || c === 'w') return true;
   }
-  for (const s of solids) if (x + r > s.x0 && x - r < s.x1 && z + r > s.z0 && z - r < s.z1) return true;
-  return false;
+  return hitsSolid(x, z, r);
 }
 
 // ---------------------------------------------------------------- terrain
 
-/** Smoothed water mask in [0,1] (bilinear over cell centres). */
-function waterAt(x: number, z: number): number {
+/** Smoothed glyph mask in [0,1] (bilinear over cell centres). */
+export function maskAt(get: (x: number, z: number) => string, glyph: string, x: number, z: number): number {
   const fx = x - 0.5, fz = z - 0.5;
   const x0 = Math.floor(fx), z0 = Math.floor(fz), tx = fx - x0, tz = fz - z0;
-  const w = (cx: number, cz: number): number => (cell(cx, cz) === 'w' ? 1 : 0);
+  const w = (cx: number, cz: number): number => (get(cx, cz) === glyph ? 1 : 0);
   return w(x0, z0) * (1 - tx) * (1 - tz) + w(x0 + 1, z0) * tx * (1 - tz) + w(x0, z0 + 1) * (1 - tx) * tz + w(x0 + 1, z0 + 1) * tx * tz;
 }
-function roadAt(x: number, z: number): number {
-  const fx = x - 0.5, fz = z - 0.5;
-  const x0 = Math.floor(fx), z0 = Math.floor(fz), tx = fx - x0, tz = fz - z0;
-  const w = (cx: number, cz: number): number => (cell(cx, cz) === 'd' ? 1 : 0);
-  return w(x0, z0) * (1 - tx) * (1 - tz) + w(x0 + 1, z0) * tx * (1 - tz) + w(x0, z0 + 1) * (1 - tx) * tz + w(x0 + 1, z0 + 1) * tx * tz;
-}
+const get = (x: number, z: number): string => (inb(x, z) ? MAP[z]![x]! : '#');
 
 /** Ground height: gentle prairie roll, flat roads, a sunken creek bed, a
  *  raised scrub berm round the edge that frames the diorama. */
-export function heightAt(x: number, z: number): number {
+function fieldHeight(x: number, z: number): number {
   let h = (fbm(x * 0.09, z * 0.09, 5, 3) - 0.5) * 0.45;
-  h *= 1 - roadAt(x, z) * 0.9;
-  h -= waterAt(x, z) * 0.55;
+  h *= 1 - maskAt(get, 'd', x, z) * 0.9;
+  h -= maskAt(get, 'w', x, z) * 0.55;
   const edge = Math.min(x, z, COLS - x, ROWS - z);
   if (edge < 1.6) h += (1.6 - edge) * 0.55;
   if (z < 1.6 && x > 18.6 && x < 22.4) h = Math.min(h, 0.05); // the road out stays level
@@ -76,3 +61,13 @@ export function heightAt(x: number, z: number): number {
 }
 
 export const WATER_Y = -0.3;
+
+export const FIELD_WORLD: TileWorld = {
+  cols: COLS,
+  rows: ROWS,
+  cell: get,
+  height: fieldHeight,
+  openings: [{ side: 'n', x0: 18.6, x1: 22.4 }],
+  centerLine: (x, z) => Math.abs(z - 14.5) < 0.06 && Math.floor(x * 1.2) % 3 !== 0 && fbm(x * 0.5, 2, 36, 2) > 0.38,
+  seed: 2026,
+};

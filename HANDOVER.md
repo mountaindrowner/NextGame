@@ -1,5 +1,45 @@
 # HANDOVER
 
+## Session 2026-10-23 (cont.) — HD-2D first map: Ohmstead → the Field → Farm Road
+
+- **Done:** `hd2d.html` is now a three-area game (default start: Ohmstead at
+  the Bench). Travel: Ohmstead's freight lift ↔ the Field's lift hatch (press
+  A); walk off the Field's north road ↔ Farm Road's south end; Farm Road's
+  north end turns you back ("The road runs on north to the Railhead.").
+  Fade-to-black transitions + per-area title cards; the Day/Night toggle only
+  shows outdoors.
+- **Engine refactor:** `src/hd2d/world.ts` (active area's ground/cells/solids
+  — builders are now area-agnostic), `area.ts` (Area interface: spawns,
+  triggers, things, NPCs from the old map JSON), `terrain.ts` (generic
+  outdoor ground/grass/water, edge aprons auto-levelled per side),
+  `main.ts` (`enter(area, spawn)` rebuilds the scene; player/Ohm persist).
+- **Ohmstead** (`src/hd2d/ohmstead/`): layout read straight from
+  `public/world/ohmstead.json` (walls = blocked runs > 6 cells; small blocked
+  clusters were old baked props). Instanced steel walls with world-space UVs;
+  **cutaway**: wall rows south of the player sink to a low cut with black
+  tops. Per-room floors (plates · plank bunks · checker mess · paver commons ·
+  dirt yard), hazard chevrons at thresholds, a 12-light pool moved to the
+  nearest of ~45 lamps each frame. Rooms furnished: Bench + Banjo (#94 sprite,
+  humming notes) + Eli's photo/logbook, bunks, infirmary + recharge pod,
+  command map table, mess kitchen, Commons with the glowing Lantern crystal,
+  grow beds and the lift, comms/archive, the Works (tanks, pumps, generator,
+  floor fan), Stores + Rationer's cage, the Yard dig face (crystals, rails, cart).
+- **Farm Road** (`src/hd2d/farmroad/`): layout 1:1 from tools/gen-farmroad.ts;
+  cotton gin (tin gin-house, press tower, cyclones, suction arm, cotton
+  trailer), water-tower lookout, rail line + boxcar + crossbuck, barbed-wire
+  fences, the one-way ledge (stone lip; hop down on the road only), Sully's
+  covered-wagon camp with the recharge cot and a campfire, tree-line walls.
+- **New/placeholder text (flag to Mark):** lift lines ("The cage rattles shut.
+  Up to the Field." / "…Down to Ohmstead."), the lookout line, the Farm
+  Road north turn-back line, the Infirmary pod reuses the old Garage recharge
+  line. Ohmstead's lift moved from mid-Commons to the Commons' back wall (faces
+  the camera); room furniture positions are new (layout/walls unchanged).
+- **Next:** Mark's review of the three areas; then version A (modular kits)
+  for the A/B, tall-grass encounters, grid combat.
+- **Known issues:** characters are flat-lit (no lamp light on them); some
+  free-standing tall furniture south of the player isn't cut away; no static
+  batching yet (draw calls are high — watch iPhone frame rate).
+
 ## Session 2026-10-23 — HD-2D proof: the Field, version B (branch `claude/hd2d`)
 
 - **Done:** a playable HD-2D Field at `hd2d.html` (Three.js; Vite page

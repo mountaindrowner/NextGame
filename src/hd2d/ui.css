@@ -141,6 +141,7 @@ html, body {
   color: #f1dfb1;
 }
 .dlg:not(.has-portrait) .dlg-name { left: 24px; }
+.dlg.no-name .dlg-name { display: none; }
 .dlg-text {
   font-size: clamp(17px, 2.1vw, 21px);
   line-height: 1.45;
@@ -227,3 +228,17 @@ html, body {
   touch-action: none;
 }
 .dlg.on ~ .stick, .dlg.on ~ .btn-a { opacity: 0.35; }
+
+/* ------------------------------------------------------------- fade */
+.fade {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition-property: opacity;
+  transition-timing-function: ease;
+  z-index: 40;
+}
+.fade.on { opacity: 1; }
+.title-card { z-index: 41; }

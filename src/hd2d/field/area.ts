@@ -1,7 +1,10 @@
-import * as THREE from 'three';
 import { barn, farmhouse, chapel, waterTower, windmill, coopVault, concreteSilo, binCluster, liftHatch, cattlePen, culvertCrossing, type Built } from './buildings';
 import { buildProps } from './props';
-import { buildGround, buildWater, buildGrass } from './terrain';
+import { buildGround, buildWater, buildGrass } from '../terrain';
+import { FIELD_WORLD, fieldBlocked, COLS, ROWS, WATER_Y } from './layout';
+import { setWorld, heightAt, cell } from '../world';
+import { DAY, NIGHT } from '../mood';
+import { castOf, loadMap, type AreaBuilder } from '../area';
 
 /**
  * The Field, version B: every structure hand-modeled. Placement keeps the
@@ -11,11 +14,9 @@ import { buildGround, buildWater, buildGrass } from './terrain';
  * Order matters: buildings + props register their footprints first, so the
  * ground can paint contact shadows under them and grass/flowers skip them.
  */
-export interface FieldScene {
-  update(t: number, focus: THREE.Vector3): void;
-}
-
-export function buildField(scene: THREE.Scene, night: boolean): FieldScene {
+export const buildField: AreaBuilder = async (scene, night) => {
+  setWorld(FIELD_WORLD);
+  const data = await loadMap('the-field');
   const built: Built[] = [
     // north of main street: the vault the story turns on, its silo, a homestead, the barn, grain bins
     coopVault(scene, 16.4, 10.8, night),
@@ -35,10 +36,32 @@ export function buildField(scene: THREE.Scene, night: boolean): FieldScene {
   ];
   const props = buildProps(scene, night);
   buildGround(scene);
-  const water = buildWater(scene, night);
+  const water = buildWater(scene, night, 0.6, 23.7, 19.2, 27.3, WATER_Y);
   const grass = buildGrass(scene);
 
+  const sign = data.signs?.[0];
   return {
+    id: 'field',
+    title: 'THE FIELD',
+    sub: night ? 'Ohmstead surface · after dark' : 'Ohmstead surface',
+    mood: night ? NIGHT : DAY,
+    sky: true,
+    cam: { x0: 8.2, x1: COLS - 8.2, z0: 4.2, z1: ROWS - 4.6 },
+    blocked: (x, z, r) => fieldBlocked(x, z, r),
+    ground: (x, z) => Math.max(heightAt(x, z), -0.1),
+    wild: (x, z) => cell(Math.floor(x), Math.floor(z)) === 'T',
+    spawns: {
+      start: { x: data.spawn.x + 0.5, z: data.spawn.y + 0.3, face: 'S' },
+      lift: { x: 20.5, z: 18.3, face: 'S' },
+      north: { x: 20.5, z: 1.1, face: 'S' },
+    },
+    triggers: [{ x0: 18.6, z0: -2, x1: 22.4, z1: 0.3, go: { to: 'farmroad', spawn: 'south' } }],
+    things: [
+      // the sign post stands a touch east of its old tile (props.ts)
+      ...(sign ? [{ x: 22.7, z: 16.7, height: 1.5, label: 'Read', say: { name: 'Sign', lines: [sign.text] } }] : []),
+      { x: 20.5, z: 17.1, height: 2.6, label: 'Ride down', reach: 1.3, say: { lines: ['The cage rattles shut. Down to Ohmstead.'] }, go: { to: 'ohmstead', spawn: 'lift' } },
+    ],
+    npcs: castOf(data),
     update(t, focus) {
       water(t);
       grass(t);
@@ -47,4 +70,4 @@ export function buildField(scene: THREE.Scene, night: boolean): FieldScene {
       props.motes(t, focus);
     },
   };
-}
+};

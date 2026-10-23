@@ -1,7 +1,8 @@
 import * as THREE from 'three';
-import { fbm, rng, vnoise } from '../noise';
-import { Pix, TEXEL_PER_UNIT } from '../textures';
-import { COLS, ROWS, cell, heightAt, WATER_Y, solidRects } from './layout';
+import { fbm, rng, vnoise } from './noise';
+import { Pix, TEXEL_PER_UNIT } from './textures';
+import { cell, heightAt, solidRects, insideSolid, world } from './world';
+import { planeGeo } from './geo';
 
 type RGB = [number, number, number];
 const H = (h: string): RGB => {
@@ -17,11 +18,13 @@ const SCRUB = ['#2f3a1d', '#3d4a25', '#4a5530', '#5a5a35'].map(H);
 const MUD = ['#3f3527', '#4a3f2e', '#55493a'].map(H);
 const FLOWERS = ['#e3c34a', '#ece6d6', '#5e6fd0', '#c4473a', '#b07ad0'].map(H);
 
-/** Paint the whole Field floor as one pixel-art texture, 16px per tile. */
+/** Paint the whole outdoor floor as one pixel-art texture, 16px per tile. */
 function paintGround(): THREE.CanvasTexture {
+  const wd = world();
+  const COLS = wd.cols, ROWS = wd.rows;
   const W = COLS * TEXEL_PER_UNIT, Hh = ROWS * TEXEL_PER_UNIT;
   const p = new Pix(W, Hh);
-  const r = rng(2026);
+  const r = rng(wd.seed ?? 2026);
   for (let py = 0; py < Hh; py++)
     for (let px = 0; px < W; px++) {
       const x = (px + 0.5) / TEXEL_PER_UNIT, z = (py + 0.5) / TEXEL_PER_UNIT;
@@ -38,8 +41,8 @@ function paintGround(): THREE.CanvasTexture {
         const cr = fbm(x * 0.55, z * 0.55, 33, 3);
         const crack = Math.abs(cr - 0.5) < 0.012 || Math.abs(fbm(x * 1.3, z * 1.3, 34, 2) - 0.5) < 0.008;
         if (crack) col = vnoise(x * 3, z * 3, 35) > 0.55 ? GRASS_LUSH[1 + Math.floor(fine * 3)]! : H('#3a3733');
-        // faded center line on main street
-        if (Math.abs(z - 14.5) < 0.06 && Math.floor(x * 1.2) % 3 !== 0 && fbm(x * 0.5, 2, 36, 2) > 0.38) col = H('#b49a52');
+        // faded center line
+        if (wd.centerLine?.(x, z)) col = H('#b49a52');
         // weathered potholes and gravel
         if (fbm(x * 0.35, z * 0.35, 37, 2) > 0.74) col = fine > 0.5 ? H('#7d6a4c') : H('#6a5a40');
       } else if (c === 'T') {
@@ -77,7 +80,23 @@ function paintGround(): THREE.CanvasTexture {
   return t;
 }
 
+/** Overgrown scrub for the land beyond the map edge. */
+let scrubCache: THREE.Texture | null = null;
+function scrubTex(): THREE.Texture {
+  if (scrubCache) return scrubCache;
+  const S = 64, p = new Pix(S, S), r = rng(99);
+  for (let y = 0; y < S; y++)
+    for (let x = 0; x < S; x++) {
+      const n = fbm(x * 0.09, y * 0.09, 98, 3);
+      const pal = n > 0.5 ? GRASS_LUSH : SCRUB;
+      p.set(x, y, pal[Math.min(pal.length - 1, Math.floor(r() * 1.3 + n * pal.length * 0.8))]!);
+    }
+  scrubCache = p.texture();
+  return scrubCache;
+}
+
 export function buildGround(scene: THREE.Scene): void {
+  const { cols: COLS, rows: ROWS, openings = [] } = world();
   const g = new THREE.PlaneGeometry(COLS, ROWS, COLS * 4, ROWS * 4);
   g.rotateX(-Math.PI / 2);
   g.translate(COLS / 2, 0, ROWS / 2);
@@ -90,37 +109,66 @@ export function buildGround(scene: THREE.Scene): void {
 
   // a frame of scrubland beyond the map edge (level with the berm top), so
   // the diorama never shows a void at the edges of the camera
-  const apronMat = new THREE.MeshStandardMaterial({ color: '#34401f', roughness: 1 });
+  const apronMat = new THREE.MeshStandardMaterial({ map: scrubTex(), roughness: 1 });
+  const bankMat = new THREE.MeshStandardMaterial({ color: '#2b2419', roughness: 1, side: THREE.DoubleSide });
+  const roadMat = new THREE.MeshStandardMaterial({ color: '#5f5c57', roughness: 1 });
   const E = 40;
-  // the road cut through the north berm gets its own banks
-  for (const x of [18.6, 22.4]) {
-    const bank = new THREE.Mesh(new THREE.PlaneGeometry(E, 0.85), new THREE.MeshStandardMaterial({ color: '#2b2419', roughness: 1, side: THREE.DoubleSide }));
-    bank.rotation.y = Math.PI / 2;
-    bank.position.set(x, 0.45, -E / 2);
-    scene.add(bank);
+  // each side's apron sits level with that edge's berm top
+  const edgeY = (side: 'n' | 's' | 'w' | 'e'): number => {
+    let sum = 0, n = 0;
+    for (let t = 0.5; t < (side === 'n' || side === 's' ? COLS : ROWS); t += 1) {
+      const [x, z] = side === 'n' ? [t, 0] : side === 's' ? [t, ROWS] : side === 'w' ? [0, t] : [COLS, t];
+      sum += heightAt(x, z);
+      n++;
+    }
+    return sum / n;
+  };
+  const rects: Array<[number, number, number, number, number]> = [[-E, 0, 0, ROWS, edgeY('w')], [COLS, 0, COLS + E, ROWS, edgeY('e')]];
+  for (const side of ['n', 's'] as const) {
+    const z0 = side === 'n' ? -E : ROWS, z1 = side === 'n' ? 0 : ROWS + E;
+    const ay = edgeY(side);
+    let x = -E;
+    for (const o of openings.filter((q) => q.side === side).sort((a, b) => a.x0 - b.x0)) {
+      rects.push([x, z0, o.x0, z1, ay]);
+      x = o.x1;
+      const ry = heightAt((o.x0 + o.x1) / 2, side === 'n' ? 0.01 : ROWS - 0.01);
+      // the road cut through the berm gets its own banks, and runs on out of frame
+      for (const bx of [o.x0, o.x1]) {
+        const bank = new THREE.Mesh(new THREE.PlaneGeometry(E, Math.max(0.1, ay - ry + 0.05)), bankMat);
+        bank.rotation.y = Math.PI / 2;
+        bank.position.set(bx, (ay + ry) / 2, (z0 + z1) / 2);
+        scene.add(bank);
+      }
+      const out = new THREE.Mesh(new THREE.PlaneGeometry(o.x1 - o.x0, E), roadMat);
+      out.rotation.x = -Math.PI / 2;
+      out.position.set((o.x0 + o.x1) / 2, ry + 0.01, (z0 + z1) / 2);
+      out.receiveShadow = true;
+      scene.add(out);
+    }
+    rects.push([x, z0, COLS + E, z1, ay]);
   }
-  for (const [x0, z0, x1, z1] of [[-E, -E, 18.6, 0], [22.4, -E, COLS + E, 0], [-E, ROWS, COLS + E, ROWS + E], [-E, 0, 0, ROWS], [COLS, 0, COLS + E, ROWS]] as Array<[number, number, number, number]>) {
-    const a = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, z1 - z0), apronMat);
+  for (const [ax0, az0, ax1, az1, y] of rects) {
+    // tuck each apron half a unit under the map edge so no seam shows the sky
+    const x0 = ax0 === COLS ? COLS - 0.5 : ax0, x1 = ax1 === 0 ? 0.5 : ax1;
+    const z0 = az0 === ROWS ? ROWS - 0.5 : az0, z1 = az1 === 0 ? 0.5 : az1;
+    const a = new THREE.Mesh(planeGeo(x1 - x0, z1 - z0), apronMat);
     a.rotation.x = -Math.PI / 2;
-    a.position.set((x0 + x1) / 2, 0.86, (z0 + z1) / 2);
+    a.position.set((x0 + x1) / 2, y - 0.02, (z0 + z1) / 2);
     a.receiveShadow = true;
     scene.add(a);
   }
-  // the road out to the Farm Road continues north past the edge
-  const out = new THREE.Mesh(new THREE.PlaneGeometry(3, E), new THREE.MeshStandardMaterial({ color: '#5f5c57', roughness: 1 }));
-  out.rotation.x = -Math.PI / 2;
-  out.position.set(20.5, 0.06, -E / 2);
-  out.receiveShadow = true;
-  scene.add(out);
 }
 
 // ------------------------------------------------------------------ water
 
-export function buildWater(scene: THREE.Scene, night: boolean): (t: number) => void {
+/** A shader creek over the rect x0..x1, z0..z1 (banks shallow, centre deep). */
+export function buildWater(scene: THREE.Scene, night: boolean, x0: number, z0: number, x1: number, z1: number, y: number): (t: number) => void {
   const mat = new THREE.ShaderMaterial({
     transparent: true,
     uniforms: {
       uTime: { value: 0 },
+      bankA: { value: z0 + 0.4 },
+      bankB: { value: z1 - 0.6 },
       deep: { value: new THREE.Color(night ? '#0b1a24' : '#1d3a38') },
       shallow: { value: new THREE.Color(night ? '#1d3346' : '#4f7a6a') },
       sky: { value: new THREE.Color(night ? '#5f7fb0' : '#e8d6b0') },
@@ -137,7 +185,7 @@ export function buildWater(scene: THREE.Scene, night: boolean): (t: number) => v
         gl_Position = projectionMatrix * mv;
       }`,
     fragmentShader: /* glsl */ `
-      uniform float uTime, fogDensity; uniform vec3 deep, shallow, sky, fogColor;
+      uniform float uTime, fogDensity, bankA, bankB; uniform vec3 deep, shallow, sky, fogColor;
       varying vec3 vW; varying float vFog;
       float h(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
       void main() {
@@ -145,7 +193,7 @@ export function buildWater(scene: THREE.Scene, night: boolean): (t: number) => v
         float rip = sin(p.x * 3.1 + uTime * 1.3 + sin(p.y * 2.0)) * 0.5 + sin(p.y * 4.3 - uTime * 0.9 + p.x) * 0.5;
         float band = smoothstep(0.78, 1.0, rip) * (0.5 + 0.5 * sin(p.x * 0.73 + p.y * 1.9 + uTime * 0.35));
         // depth: shallower near the banks (z 24 / 27)
-        float edge = min(abs(p.y - 24.0), abs(p.y - 27.0));
+        float edge = min(abs(p.y - bankA), abs(p.y - bankB));
         vec3 col = mix(shallow, deep, smoothstep(0.1, 1.2, edge));
         col = mix(col, sky, band * 0.1);
         // pixel-snapped sun glints
@@ -157,10 +205,10 @@ export function buildWater(scene: THREE.Scene, night: boolean): (t: number) => v
         gl_FragColor = vec4(col, 0.88);
       }`,
   });
-  const g = new THREE.PlaneGeometry(18.6, 3.6, 1, 1);
+  const g = new THREE.PlaneGeometry(x1 - x0, z1 - z0, 1, 1);
   g.rotateX(-Math.PI / 2);
   const m = new THREE.Mesh(g, mat);
-  m.position.set(0.6 + 18.6 / 2, WATER_Y, 25.5);
+  m.position.set((x0 + x1) / 2, y, (z0 + z1) / 2);
   scene.add(m);
   return (t) => {
     mat.uniforms.uTime!.value = t;
@@ -219,10 +267,6 @@ function swayMaterial(uTime: { value: number }, amount: number): THREE.MeshLambe
   return m;
 }
 
-function insideSolid(x: number, z: number, pad = 0.1): boolean {
-  for (const s of solidRects()) if (x > s.x0 - pad && x < s.x1 + pad && z > s.z0 - pad && z < s.z1 + pad) return true;
-  return false;
-}
 
 export function buildGrass(scene: THREE.Scene): (t: number) => void {
   const uTime = { value: 0 };
@@ -230,6 +274,7 @@ export function buildGrass(scene: THREE.Scene): (t: number) => void {
   const clump = clumpGeometry();
   type Spot = { x: number; z: number; s: number; c: THREE.Color };
   const spots: Spot[] = [];
+  const { cols: COLS, rows: ROWS } = world();
   const tallTints = ['#cfe8a0', '#e8f0b8', '#b8d890', '#f0e8a8'];
   const shortTints = ['#d8e0a0', '#c8d890', '#e8d898', '#b0c880'];
   for (let z = 0; z < ROWS; z++)

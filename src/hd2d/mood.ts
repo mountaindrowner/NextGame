@@ -14,6 +14,8 @@ export interface Mood {
   exposure: number;
   bloom: { strength: number; radius: number; threshold: number };
   grade: { dull: number; lush: number; vignette: number; shadowTint: [number, number, number]; highTint: [number, number, number] };
+  /** Flat-lit sprite brightness (the frame is tonemapped as a whole). */
+  sprite: [number, number, number];
 }
 
 export const DAY: Mood = {
@@ -25,6 +27,7 @@ export const DAY: Mood = {
   exposure: 1.05,
   bloom: { strength: 0.42, radius: 0.55, threshold: 0.85 },
   grade: { dull: 1.35, lush: 1.2, vignette: 0.42, shadowTint: [0.9, 0.97, 1.08], highTint: [1.07, 1.0, 0.9] },
+  sprite: [1.1, 1.05, 0.98],
 };
 
 export const NIGHT: Mood = {
@@ -35,6 +38,21 @@ export const NIGHT: Mood = {
   exposure: 1.15,
   bloom: { strength: 0.9, radius: 0.6, threshold: 0.6 },
   grade: { dull: 1.25, lush: 1.1, vignette: 0.55, shadowTint: [0.85, 0.95, 1.18], highTint: [1.12, 1.0, 0.86] },
+  sprite: [0.6, 0.68, 0.95],
+};
+
+/** Underground: no sky. A faint cool wash from the vent shafts for shadow
+ *  shape; the real light is the colony's own lamps (a pooled set of point
+ *  lights the area moves to whichever lamps are near the camera). */
+export const UNDER: Mood = {
+  night: true,
+  sun: { color: '#a8b8d0', intensity: 0.5, from: new THREE.Vector3(-5, 14, 7) },
+  hemi: { sky: '#5a6070', ground: '#2a231b', intensity: 1.35 },
+  fog: { color: '#07080b', density: 0.014 },
+  exposure: 1.25,
+  bloom: { strength: 0.7, radius: 0.6, threshold: 0.7 },
+  grade: { dull: 1.25, lush: 1.2, vignette: 0.58, shadowTint: [0.86, 0.94, 1.12], highTint: [1.12, 1.0, 0.86] },
+  sprite: [0.9, 0.84, 0.8],
 };
 
 export interface Lights {

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { T, Pix, textTexture } from '../textures';
 import { box, cyl, beam, boxGeo, cylGeo, planeGeo, texMat, colMat, shade, prism } from '../geo';
-import { addSolid, heightAt } from './layout';
+import { addSolid, heightAt } from '../world';
 import { rng } from '../noise';
 
 /**
@@ -14,7 +14,7 @@ import { rng } from '../noise';
 export interface Built { update?: (t: number) => void }
 
 // ------------------------------------------------------------- materials
-const M = {
+export const M = {
   barn: () => texMat('barnRed', T.barnRed()),
   grey: () => texMat('greyBoards', T.greyBoards()),
   white: () => texMat('whiteSiding', T.whiteSiding()),
@@ -37,7 +37,7 @@ const M = {
 };
 
 let cageTex: THREE.Texture | null = null;
-function cageMat(): THREE.MeshStandardMaterial {
+export function cageMat(): THREE.MeshStandardMaterial {
   if (!cageTex) {
     const p = new Pix(16, 16);
     for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
@@ -52,17 +52,17 @@ function cageMat(): THREE.MeshStandardMaterial {
 // --------------------------------------------------------------- helpers
 
 /** Ground level for a footprint (its average), so a foundation skirt can hide any roll. */
-function baseY(cx: number, cz: number, w: number, d: number): number {
+export function baseY(cx: number, cz: number, w: number, d: number): number {
   const pts: Array<[number, number]> = [[0, 0], [-w / 2, -d / 2], [w / 2, -d / 2], [-w / 2, d / 2], [w / 2, d / 2]];
   return pts.reduce((s, [dx, dz]) => s + heightAt(cx + dx, cz + dz), 0) / pts.length;
 }
 
-function foundation(g: THREE.Group, w: number, d: number, mat: THREE.Material = M.concrete()): void {
+export function foundation(g: THREE.Group, w: number, d: number, mat: THREE.Material = M.concrete()): void {
   g.add(box(w + 0.12, 0.7, d + 0.12, mat, 0, -0.62, 0));
 }
 
 /** A roof skin segment in the XY profile plane, extruded along Z. */
-function slab(ax: number, ay: number, bx: number, by: number, depth: number, mat: THREE.Material, thick = 0.09): THREE.Mesh {
+export function slab(ax: number, ay: number, bx: number, by: number, depth: number, mat: THREE.Material, thick = 0.09): THREE.Mesh {
   const len = Math.hypot(bx - ax, by - ay), ang = Math.atan2(by - ay, bx - ax);
   const m = new THREE.Mesh(boxGeo(len + 0.14, thick, depth), mat);
   m.position.set((ax + bx) / 2 - Math.sin(ang) * thick * 0.6, (ay + by) / 2 + Math.cos(ang) * thick * 0.6, 0);
@@ -70,7 +70,7 @@ function slab(ax: number, ay: number, bx: number, by: number, depth: number, mat
   return shade(m);
 }
 
-function shapeOf(pts: Array<[number, number]>): THREE.Shape {
+export function shapeOf(pts: Array<[number, number]>): THREE.Shape {
   const s = new THREE.Shape();
   pts.forEach(([x, y], i) => (i ? s.lineTo(x, y) : s.moveTo(x, y)));
   s.closePath();
@@ -78,7 +78,7 @@ function shapeOf(pts: Array<[number, number]>): THREE.Shape {
 }
 
 /** A window: glass (or boarded planks) in a trim frame, on a +z-facing wall. */
-function windowAt(g: THREE.Object3D, x: number, y: number, z: number, w: number, h: number, rotY = 0, kind: 'glass' | 'boarded' = 'glass'): THREE.Mesh {
+export function windowAt(g: THREE.Object3D, x: number, y: number, z: number, w: number, h: number, rotY = 0, kind: 'glass' | 'boarded' = 'glass'): THREE.Mesh {
   const pane = new THREE.Mesh(new THREE.PlaneGeometry(w, h), kind === 'glass' ? M.glass().clone() : M.boarded());
   const holder = new THREE.Group();
   holder.position.set(x, y, z);
@@ -93,7 +93,7 @@ function windowAt(g: THREE.Object3D, x: number, y: number, z: number, w: number,
 }
 
 /** Vines climbing a wall: a cut-out decal hugging a +z face. */
-function vines(g: THREE.Object3D, x: number, y: number, z: number, w: number, h: number, rotY = 0): void {
+export function vines(g: THREE.Object3D, x: number, y: number, z: number, w: number, h: number, rotY = 0): void {
   const m = new THREE.Mesh(planeGeo(w, h), M.vine());
   m.position.set(x, y + h / 2, z);
   m.rotation.y = rotY;
@@ -102,7 +102,7 @@ function vines(g: THREE.Object3D, x: number, y: number, z: number, w: number, h:
   g.add(m);
 }
 
-function put(g: THREE.Group, cx: number, cz: number, w: number, d: number, scene: THREE.Scene): THREE.Group {
+export function put(g: THREE.Group, cx: number, cz: number, w: number, d: number, scene: THREE.Scene): THREE.Group {
   g.position.set(cx, baseY(cx, cz, w, d), cz);
   scene.add(g);
   return g;

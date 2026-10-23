@@ -1,22 +1,28 @@
 import * as THREE from 'three';
 import { createPost } from './post';
-import { applyMood, DAY, NIGHT } from './mood';
-import { buildField } from './field/scene';
-import { blocked, heightAt, COLS, ROWS } from './field/layout';
-import { Walker, OhmFollower, spriteTint, type Dir } from './sprites';
-import { UI, type Speech } from './ui';
+import { applyMood, type Lights } from './mood';
+import { Walker, OhmFollower, type Dir } from './sprites';
+import { UI } from './ui';
+import type { Area, AreaBuilder, Line, Thing } from './area';
+import { buildField } from './field/area';
+import { buildFarmRoad } from './farmroad/area';
+import { buildOhmstead } from './ohmstead/area';
 
 /**
- * OHMFRONT HD-2D proof — the Field (version B, bespoke geometry).
- * A fixed, tilted perspective camera over a 3D diorama; 2D pixel-art
- * characters standing in it; tilt-shift always on.
+ * OHMFRONT HD-2D — the first map: Ohmstead → the Field → Farm Road.
+ * A fixed, tilted perspective camera over 3D dioramas; 2D pixel-art
+ * characters standing in them; tilt-shift always on.
  *
- * URL: ?time=night · ?x=&z= start position · ?wide=1 overview · ?hud=0
+ * URL: ?area=ohmstead|field|farmroad · ?time=night · ?x=&z= start ·
+ *      ?face=n|s|w|e · ?wide=1 overview · ?hud=0
  */
+
+const AREAS: Record<string, AreaBuilder> = { ohmstead: buildOhmstead, field: buildField, farmroad: buildFarmRoad };
 
 const q = new URLSearchParams(location.search);
 const night = q.get('time') === 'night';
-const mood = night ? NIGHT : DAY;
+const hud = q.get('hud') !== '0';
+const wide = q.get('wide') === '1';
 
 const app = document.getElementById('app')!;
 window.addEventListener('error', (e) => {
@@ -36,57 +42,110 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 app.appendChild(renderer.domElement);
 
-const scene = new THREE.Scene();
 // One fixed angle: yaw locked, ~41° down, long lens for the miniature read.
-const wide = q.get('wide') === '1';
 const camera = new THREE.PerspectiveCamera(wide ? 34 : 30, window.innerWidth / window.innerHeight, 0.5, 220);
 const CAM_OFFSET = wide ? new THREE.Vector3(0, 27, 31) : new THREE.Vector3(0, 12.5, 14.5);
 
+let scene = new THREE.Scene();
 const post = createPost(renderer, scene, camera);
-const lights = applyMood(scene, renderer, post, mood);
-const field = buildField(scene, night);
 const ui = new UI(app);
 
-// --------------------------------------------------------------- the cast
-interface NPCData { char: string; col: number; row: number; name: string; lines?: string[]; facing?: string; bark?: string; shop?: string }
-interface FieldData { spawn: { x: number; y: number }; npcs: NPCData[]; trainers: NPCData[]; signs: Array<{ col: number; row: number; text: string }> }
-interface Talkable { pos: THREE.Vector3; height: number; label: string; speech: Speech; walker?: Walker }
+// ----------------------------------------------------------------- state
+let area: Area | null = null;
+let lights: Lights | null = null;
+let loading = true;
+let cast: Array<{ w: Walker; pos: THREE.Vector3 }> = [];
+let talk: Array<Thing & { walker?: Walker; pos: THREE.Vector3 }> = [];
+let inTrigger = false;
+const trail: THREE.Vector3[] = [];
+const camTarget = new THREE.Vector3();
+const desired = new THREE.Vector3();
+let tiltFocus = 0.46;
 
-const tint = spriteTint(night);
-const data = (await fetch('./world/the-field.json').then((r) => r.json())) as FieldData;
-const [player, ohm, ...npcWalkers] = await Promise.all([
-  Walker.load('sal', tint),
-  OhmFollower.load(7, tint), // Scraplet — the Dog line, stand-in lead Ohm
-  ...data.npcs.map((n) => Walker.load(n.char, tint)),
-  ...data.trainers.map((n) => Walker.load(n.char, tint)),
+const [player, ohm] = await Promise.all([
+  Walker.load('sal', new THREE.Color(1, 1, 1)),
+  OhmFollower.load(7, new THREE.Color(1, 1, 1)), // Scraplet — the Dog line, stand-in lead Ohm
 ]);
 
-const ground = (x: number, z: number): number => Math.max(heightAt(x, z), -0.1);
-const talkables: Talkable[] = [];
-const npcSpots: THREE.Vector3[] = [];
-[...data.npcs, ...data.trainers].forEach((n, i) => {
-  const w = npcWalkers[i]!;
-  const x = n.col + 0.5, z = n.row + 0.5;
-  w.root.position.set(x, ground(x, z), z);
-  w.dir = (n.facing ? n.facing.toUpperCase() : 'S') as Dir;
-  w.animate(0, false);
-  scene.add(w.root);
-  npcSpots.push(w.root.position);
-  const lines = n.lines ?? (n.bark ? [n.bark.replace(/^[^:]+:\s*/, '')] : ['…']);
-  talkables.push({ pos: w.root.position, height: 2.0, label: n.name, walker: w, speech: { name: n.name, portrait: `./world/char/${n.char}_96.png`, lines } });
-});
-for (const s of data.signs) {
-  // the sign post itself stands a touch east of its old tile (props.ts)
-  const p = new THREE.Vector3(22.7, ground(22.7, 16.7), 16.7);
-  talkables.push({ pos: p, height: 1.5, label: 'Read', speech: { name: 'Sign', lines: [s.text] } });
+function dispose(s: THREE.Scene): void {
+  s.traverse((o) => {
+    if (o === player.root || o === ohm.root || player.root.children.includes(o) || ohm.root.children.includes(o)) return;
+    const m = o as THREE.Mesh;
+    m.geometry?.dispose();
+  });
 }
 
-const start = new THREE.Vector3(Number(q.get('x') ?? data.spawn.x + 0.5), 0, Number(q.get('z') ?? data.spawn.y + 0.3));
-player.root.position.set(start.x, ground(start.x, start.z), start.z);
-player.dir = (q.get('face')?.toUpperCase() as Dir) ?? 'S';
-scene.add(player.root);
-ohm.root.position.set(start.x - 0.9, ground(start.x - 0.9, start.z + 0.4), start.z + 0.4);
-scene.add(ohm.root);
+function clampCam(v: THREE.Vector3): THREE.Vector3 {
+  const a = area!;
+  if (wide) return v.set((a.cam.x0 + a.cam.x1) / 2, 0, (a.cam.z0 + a.cam.z1) / 2 + 1);
+  v.x = THREE.MathUtils.clamp(v.x, a.cam.x0, a.cam.x1);
+  v.z = THREE.MathUtils.clamp(v.z, a.cam.z0, a.cam.z1);
+  return v;
+}
+
+function badge(): void {
+  if (!hud || !area) return;
+  const link = (n: boolean): string => {
+    const u = new URLSearchParams(location.search);
+    if (n) u.set('time', 'night'); else u.delete('time');
+    return `?${u}`;
+  };
+  ui.badge(`<span>HD-2D · ${area.title.replace(/^THE /, '')}</span>` +
+    (area.sky ? `<a href="${link(false)}" class="${night ? '' : 'on'}">Day</a><a href="${link(true)}" class="${night ? 'on' : ''}">Night</a>` : ''));
+}
+
+/** Travel: fade out, tear down, build the next area, place everyone, fade in. */
+async function enter(id: string, spawn: string, first = false): Promise<void> {
+  loading = true;
+  if (!first) await ui.fade(true);
+  const old = scene;
+  old.remove(player.root, ohm.root);
+  dispose(old);
+  scene = new THREE.Scene();
+  post.setScene(scene);
+  const a = await AREAS[id]!(scene, night);
+  area = a;
+  lights = applyMood(scene, renderer, post, a.mood);
+  const tint = new THREE.Color().setRGB(...a.mood.sprite);
+  player.setTint(tint);
+  ohm.setTint(tint);
+
+  const walkers = await Promise.all(a.npcs.map((n) => Walker.load(n.char, tint)));
+  cast = [];
+  talk = a.things.map((t) => ({ ...t, pos: new THREE.Vector3(t.x, a.ground(t.x, t.z), t.z) }));
+  a.npcs.forEach((n, i) => {
+    const w = walkers[i]!;
+    const x = n.col + 0.5, z = n.row + 0.5;
+    w.root.position.set(x, a.ground(x, z), z);
+    w.dir = (n.facing ? n.facing.toUpperCase() : 'S') as Dir;
+    w.animate(0, false);
+    scene.add(w.root);
+    cast.push({ w, pos: w.root.position });
+    if (n.lines?.length) talk.push({ x, z, height: 2.0, label: n.name, walker: w, pos: w.root.position, say: { name: n.name, portrait: `./world/char/${n.char}_96.png`, lines: n.lines } });
+  });
+
+  const s = first && q.has('x') ? { x: Number(q.get('x')), z: Number(q.get('z')), face: (q.get('face')?.toUpperCase() ?? 'S') as Dir } : a.spawns[spawn] ?? a.spawns.start!;
+  player.root.position.set(s.x, a.ground(s.x, s.z), s.z);
+  player.dir = s.face ?? 'S';
+  player.animate(0, false);
+  // the lead Ohm arrives at your side (whichever side is clear)
+  const side = a.blocked(s.x - 0.8, s.z, 0.25, s.x, s.z) ? 0.8 : -0.8;
+  ohm.root.position.set(s.x + side, a.ground(s.x + side, s.z), s.z);
+  scene.add(player.root, ohm.root);
+  trail.length = 0;
+  trail.push(ohm.root.position.clone(), player.root.position.clone());
+  inTrigger = true; // arriving on a trigger edge must not bounce you straight back
+  clampCam(camTarget.copy(player.root.position).setY(0.8));
+
+  const u = new URLSearchParams(location.search);
+  u.set('area', id);
+  for (const k of ['x', 'z', 'face']) u.delete(k);
+  history.replaceState(null, '', `?${u}`);
+  badge();
+  loading = false;
+  if (!first) await ui.fade(false);
+  if (hud) ui.titleCard(a.title, a.sub);
+}
 
 // ---------------------------------------------------------------- input
 const keys = new Set<string>();
@@ -100,23 +159,30 @@ window.addEventListener('keydown', (e) => {
 window.addEventListener('keyup', (e) => keys.delete(e.key.toLowerCase()));
 window.addEventListener('blur', () => keys.clear());
 
-let focusTarget: Talkable | null = null;
+let focusTarget: (typeof talk)[number] | null = null;
+function speak(line: Line, then?: () => void): void {
+  ui.say({ name: line.name, portrait: line.portrait, lines: line.lines }, then);
+}
 function act(): void {
+  if (loading) return;
   if (ui.talking) { ui.advance(); return; }
   const t = focusTarget;
   if (!t) return;
   if (t.walker) t.walker.face(player.root.position.x - t.pos.x, player.root.position.z - t.pos.z);
-  ui.say(t.speech);
+  const go = t.go;
+  const travel = go ? (): void => { void enter(go.to, go.spawn); } : undefined;
+  if (t.say) speak(t.say, travel);
+  else travel?.();
 }
 
-function nearestTalkable(): Talkable | null {
+function nearestTalkable(): (typeof talk)[number] | null {
   const p = player.root.position;
   const fx = player.dir === 'W' ? -1 : player.dir === 'E' ? 1 : 0;
   const fz = player.dir === 'N' ? -1 : player.dir === 'S' ? 1 : 0;
-  let best: Talkable | null = null, bestD = Infinity;
-  for (const t of talkables) {
+  let best: (typeof talk)[number] | null = null, bestD = Infinity;
+  for (const t of talk) {
     const dx = t.pos.x - p.x, dz = t.pos.z - p.z, d = Math.hypot(dx, dz);
-    if (d > 1.6) continue;
+    if (d > (t.reach ?? 1.6)) continue;
     const ahead = (dx * fx + dz * fz) / (d || 1);
     if (d > 0.95 && ahead < 0.3) continue;
     if (d < bestD) { bestD = d; best = t; }
@@ -126,28 +192,16 @@ function nearestTalkable(): Talkable | null {
 
 // ------------------------------------------------------------- movement
 const R = 0.28;
-const free = (x: number, z: number): boolean => {
-  if (blocked(x, z, R)) return false;
-  for (const s of npcSpots) if (Math.hypot(s.x - x, s.z - z) < 0.55) return false;
+function free(x: number, z: number, fx: number, fz: number): boolean {
+  if (area!.blocked(x, z, R, fx, fz)) return false;
+  for (const c of cast) if (Math.hypot(c.pos.x - x, c.pos.z - z) < 0.55) return false;
   return true;
-};
-const trail: THREE.Vector3[] = [player.root.position.clone()];
-const camTarget = new THREE.Vector3();
-const desired = new THREE.Vector3();
-let tiltFocus = 0.46;
-
-function clampCam(v: THREE.Vector3): THREE.Vector3 {
-  if (wide) return v.set(COLS / 2, 0, ROWS / 2 + 1);
-  v.x = THREE.MathUtils.clamp(v.x, 8.2, COLS - 8.2);
-  v.z = THREE.MathUtils.clamp(v.z, 4.2, ROWS - 4.6);
-  return v;
 }
-clampCam(camTarget.copy(player.root.position).setY(0.8));
 
 function update(dt: number): void {
-  // read input (keyboard or touch stick)
+  const a = area!;
   let ix = 0, iz = 0;
-  if (!ui.talking) {
+  if (!ui.talking && !loading) {
     if (keys.has('arrowleft') || keys.has('a')) ix -= 1;
     if (keys.has('arrowright') || keys.has('d')) ix += 1;
     if (keys.has('arrowup') || keys.has('w')) iz -= 1;
@@ -163,11 +217,21 @@ function update(dt: number): void {
   if (mag > 0.12) {
     const nx = (ix / Math.hypot(ix, iz)) * speed * dt, nz = (iz / Math.hypot(ix, iz)) * speed * dt;
     player.face(ix, iz);
-    if (free(p.x + nx, p.z)) { p.x += nx; moved = true; }
-    if (free(p.x, p.z + nz)) { p.z += nz; moved = true; }
-    p.y = ground(p.x, p.z);
+    if (free(p.x + nx, p.z, p.x, p.z)) { p.x += nx; moved = true; }
+    if (free(p.x, p.z + nz, p.x, p.z)) { p.z += nz; moved = true; }
+    p.y = a.ground(p.x, p.z);
   }
   player.animate(dt, moved, run ? 1.5 : 1);
+
+  // triggers: walk off an edge to travel, or get turned back with a word
+  if (!loading) {
+    const hit = a.triggers.find((t) => p.x > t.x0 && p.x < t.x1 && p.z > t.z0 && p.z < t.z1);
+    if (hit && !inTrigger) {
+      inTrigger = true;
+      if (hit.go) void enter(hit.go.to, hit.go.spawn);
+      else if (hit.say) speak(hit.say);
+    } else if (!hit) inTrigger = false;
+  }
 
   // the lead Ohm trots along the breadcrumb trail, ~1.1 units back
   const last = trail[trail.length - 1]!;
@@ -186,17 +250,17 @@ function update(dt: number): void {
     o.x += (goal.x - o.x) * k;
     o.z += (goal.z - o.z) * k;
   }
-  o.y = ground(o.x, o.z);
+  o.y = a.ground(o.x, o.z);
   ohm.step(dt, o.x - ox, o.z - oz);
 
-  for (const w of npcWalkers) w.animate(dt, false);
+  for (const c of cast) c.w.animate(dt, false);
 
   // camera: smooth follow, clamped to the diorama
   clampCam(desired.copy(p).setY(0.8));
   camTarget.lerp(desired, 1 - Math.exp(-dt * 4.5));
   camera.position.copy(camTarget).add(CAM_OFFSET);
   camera.lookAt(camTarget);
-  lights.follow(wide ? camTarget : p);
+  lights!.follow(wide ? camTarget : p);
 
   // tilt-shift focus band rides the player's screen height (sharp even where the camera clamps)
   const sp = p.clone().setY(p.y + 0.8).project(camera);
@@ -204,7 +268,7 @@ function update(dt: number): void {
   post.tiltH.uniforms.focus!.value = post.tiltV.uniforms.focus!.value = wide ? 0.45 : tiltFocus;
 
   // interact prompt
-  focusTarget = ui.talking ? null : nearestTalkable();
+  focusTarget = ui.talking || loading ? null : nearestTalkable();
   if (focusTarget) {
     const s = focusTarget.pos.clone().setY(focusTarget.pos.y + focusTarget.height).project(camera);
     ui.showPrompt(focusTarget.label, (s.x + 1) / 2 * window.innerWidth, (1 - s.y) / 2 * window.innerHeight);
@@ -223,13 +287,12 @@ function resize(): void {
 window.addEventListener('resize', resize);
 resize();
 
-if (q.get('hud') !== '0') {
-  ui.titleCard('THE FIELD', night ? 'Ohmstead surface · after dark' : 'Ohmstead surface');
+const startArea = AREAS[q.get('area') ?? ''] ? q.get('area')! : 'ohmstead';
+await enter(startArea, 'start', true);
+if (hud) {
   ui.hint(matchMedia('(pointer: coarse)').matches
     ? 'Stick to move · A to talk'
     : '<kbd>WASD</kbd>/<kbd>←↑→↓</kbd> move · <kbd>Shift</kbd> run · <kbd>E</kbd> talk');
-  const here = (n: boolean): string => { const u = new URLSearchParams(location.search); if (n) u.set('time', 'night'); else u.delete('time'); return `?${u}`; };
-  ui.badge(`<span>HD-2D · B</span><a href="${here(false)}" class="${night ? '' : 'on'}">Day</a><a href="${here(true)}" class="${night ? 'on' : ''}">Night</a>`);
 }
 
 const clock = new THREE.Clock();
@@ -237,9 +300,11 @@ let t = 0;
 renderer.setAnimationLoop(() => {
   const dt = Math.min(clock.getDelta(), 0.05);
   t += dt;
-  update(dt);
-  field.update(t, player.root.position);
+  if (area && !loading) {
+    update(dt);
+    area.update(t, player.root.position, camTarget);
+  }
   post.tick(t);
   post.composer.render(dt);
 });
-Object.assign(window, { __ready: true, __hd2d: { scene, camera, player, ohm, THREE } });
+Object.assign(window, { __ready: true, __hd2d: { get scene() { return scene; }, camera, player, ohm, THREE, enter } });

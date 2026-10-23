@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { T, textTexture } from '../textures';
 import { box, cyl, beam, boxGeo, cylGeo, texMat, colMat, shade } from '../geo';
-import { addSolid, heightAt, COLS, ROWS, cell } from './layout';
+import { addSolid, heightAt, cell, onWorldReset } from '../world';
+import { COLS, ROWS } from './layout';
 import { rng, vnoise } from '../noise';
 import type { Built } from './buildings';
 
@@ -19,7 +20,7 @@ const M = {
 
 /** An irregular foliage blob: displaced icosahedron, flat-shaded facets,
  *  leaf texture tiled at world density. */
-function blobGeo(r: number, seed: number): THREE.BufferGeometry {
+export function blobGeo(r: number, seed: number): THREE.BufferGeometry {
   const g = new THREE.IcosahedronGeometry(r, 1);
   const pos = g.attributes.position as THREE.BufferAttribute;
   const v = new THREE.Vector3();
@@ -37,7 +38,7 @@ function blobGeo(r: number, seed: number): THREE.BufferGeometry {
 }
 
 const leafMats = new Map<string, THREE.MeshStandardMaterial>();
-function leafMat(tint: string, olive = false): THREE.MeshStandardMaterial {
+export function leafMat(tint: string, olive = false): THREE.MeshStandardMaterial {
   const k = tint + olive;
   let m = leafMats.get(k);
   if (!m) {
@@ -49,8 +50,13 @@ function leafMat(tint: string, olive = false): THREE.MeshStandardMaterial {
 
 type Sway = { obj: THREE.Object3D; phase: number; amp: number };
 const sways: Sway[] = [];
+onWorldReset(() => { sways.length = 0; });
+/** Sway every tree/bush crown built for the current area. */
+export function swayTrees(t: number): void {
+  for (const s of sways) s.obj.rotation.z = Math.sin(t * 0.9 + s.phase) * s.amp;
+}
 
-function cottonwood(x: number, z: number, s: number, seed: number): THREE.Group {
+export function cottonwood(x: number, z: number, s: number, seed: number): THREE.Group {
   const g = new THREE.Group();
   const r = rng(seed);
   const trunkH = 1.7 * s;
@@ -72,7 +78,7 @@ function cottonwood(x: number, z: number, s: number, seed: number): THREE.Group 
   return g;
 }
 
-function mesquite(x: number, z: number, s: number, seed: number): THREE.Group {
+export function mesquite(x: number, z: number, s: number, seed: number): THREE.Group {
   const g = new THREE.Group();
   const r = rng(seed);
   const crown = new THREE.Group();
@@ -92,7 +98,7 @@ function mesquite(x: number, z: number, s: number, seed: number): THREE.Group {
 }
 
 /** A dead tree — the bleak part — with green life already climbing it. */
-function deadTree(x: number, z: number, s: number, seed: number): THREE.Group {
+export function deadTree(x: number, z: number, s: number, seed: number): THREE.Group {
   const g = new THREE.Group();
   const r = rng(seed);
   const grow = (from: THREE.Vector3, dir: THREE.Vector3, len: number, th: number, depth: number): void => {
@@ -117,7 +123,7 @@ function deadTree(x: number, z: number, s: number, seed: number): THREE.Group {
   return g;
 }
 
-function bush(x: number, z: number, s: number, seed: number, olive = false): THREE.Group {
+export function bush(x: number, z: number, s: number, seed: number, olive = false): THREE.Group {
   const g = new THREE.Group();
   const r = rng(seed);
   for (let i = 0; i < 3; i++) {
@@ -131,7 +137,7 @@ function bush(x: number, z: number, s: number, seed: number, olive = false): THR
 
 // ---------------------------------------------------------- power lines
 
-function powerLine(scene: THREE.Scene, poles: Array<[number, number, number]>, links: Array<[number, number]>): void {
+export function powerLine(scene: THREE.Scene, poles: Array<[number, number, number]>, links: Array<[number, number]>): void {
   const r = rng(515);
   const tips: THREE.Vector3[][] = [];
   for (const [x, z, lean] of poles) {
@@ -163,7 +169,7 @@ function powerLine(scene: THREE.Scene, poles: Array<[number, number, number]>, l
 
 // ---------------------------------------------------------- set dressing
 
-function truck(scene: THREE.Scene, x: number, z: number): void {
+export function truck(scene: THREE.Scene, x: number, z: number): void {
   const g = new THREE.Group();
   const paint = colMat('#4f6a78', { roughness: 0.85, metalness: 0.2 });
   g.add(box(1.0, 0.55, 1.3, M.rust(), -0.55, 0.32, 0));
@@ -193,7 +199,7 @@ function truck(scene: THREE.Scene, x: number, z: number): void {
   addSolid(x - 1.2, z - 0.75, x + 1.0, z + 0.75);
 }
 
-function crates(scene: THREE.Scene, x: number, z: number): void {
+export function crates(scene: THREE.Scene, x: number, z: number): void {
   const g = new THREE.Group();
   g.add(box(0.6, 0.6, 0.6, M.wood(), 0, 0, 0));
   g.add(box(0.5, 0.5, 0.5, M.wood(), 0.62, 0, 0.05));
@@ -251,7 +257,7 @@ function churchyard(scene: THREE.Scene): void {
   scene.add(cross);
 }
 
-function tumbleweed(scene: THREE.Scene, x: number, z: number, seed: number): void {
+export function tumbleweed(scene: THREE.Scene, x: number, z: number, seed: number): void {
   const m = new THREE.Mesh(new THREE.IcosahedronGeometry(0.3, 1), new THREE.MeshStandardMaterial({ color: '#8a7246', wireframe: true }));
   const r = rng(seed);
   m.rotation.set(r() * 3, r() * 3, r() * 3);
@@ -292,7 +298,7 @@ function reeds(scene: THREE.Scene): void {
 
 // ---------------------------------------------------------------- motes
 
-function motes(scene: THREE.Scene, night: boolean): (t: number, focus: THREE.Vector3) => void {
+export function motes(scene: THREE.Scene, night: boolean): (t: number, focus: THREE.Vector3) => void {
   const N = night ? 140 : 220;
   const g = new THREE.BufferGeometry();
   const base = new Float32Array(N * 3), pos = new Float32Array(N * 3);
@@ -382,7 +388,7 @@ export function buildProps(scene: THREE.Scene, night: boolean): Built & { motes:
 
   return {
     update(t) {
-      for (const s of sways) s.obj.rotation.z = Math.sin(t * 0.9 + s.phase) * s.amp;
+      swayTrees(t);
     },
     motes: motes(scene, night),
   };
