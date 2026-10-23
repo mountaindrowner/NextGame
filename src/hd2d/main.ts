@@ -10,6 +10,7 @@ import type { Battler } from '../core/battle/contract';
 import { rollEncounter } from '../core/encounter';
 import { Rng } from '../core/rng';
 import { Walker, OhmFollower, RotHero, stillSprite, spriteCard, type Dir } from './sprites';
+import { world } from './world';
 import { UI } from './ui';
 import type { Area, AreaBuilder, Line, Thing } from './area';
 import { buildField } from './field/area';
@@ -536,6 +537,34 @@ if (lineup) {
 
 const clock = new THREE.Clock();
 let t = 0;
+// ?topdown=1 — a straight-down orthographic shot of the whole area (for the world map)
+const topdown = q.get('topdown') === '1';
+const topCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.5, 200);
+if (topdown) {
+  const w = world();
+  const pad = 0.5;
+  topCam.left = -w.cols / 2 - pad; topCam.right = w.cols / 2 + pad;
+  topCam.top = w.rows / 2 + pad; topCam.bottom = -w.rows / 2 - pad;
+  topCam.position.set(w.cols / 2, 80, w.rows / 2 + 0.001);
+  topCam.lookAt(w.cols / 2, 0, w.rows / 2);
+  topCam.updateProjectionMatrix();
+  scene.fog = null;
+  post.setScene(scene, topCam);
+  post.tiltH.uniforms.maxBlur!.value = post.tiltV.uniforms.maxBlur!.value = 0;
+  post.grade.uniforms.vignette!.value = 0;
+  // one shadow map over the whole area, the sun parked over its centre
+  const sun = lights!.sun, S = Math.max(w.cols, w.rows) * 0.75;
+  Object.assign(sun.shadow.camera, { left: -S, right: S, top: S, bottom: -S, far: 140 });
+  sun.shadow.mapSize.set(4096, 4096);
+  sun.shadow.map?.dispose();
+  sun.shadow.map = null as unknown as THREE.WebGLRenderTarget;
+  sun.shadow.camera.updateProjectionMatrix();
+  lights!.follow(new THREE.Vector3(w.cols / 2, 0, w.rows / 2));
+  lights = { sun, follow: () => undefined };
+  player.root.visible = ohm.root.visible = false;
+  ui.root.style.display = 'none';
+}
+
 renderer.setAnimationLoop(() => {
   const dt = Math.min(clock.getDelta(), 0.05);
   t += dt;
@@ -545,7 +574,7 @@ renderer.setAnimationLoop(() => {
   } else if (area && !loading) {
     update(dt);
     updateRoamers(dt, t);
-    area.update(t, player.root.position, camTarget);
+    area.update(t, topdown ? new THREE.Vector3(world().cols / 2, 0, -50) : player.root.position, topdown ? new THREE.Vector3(world().cols / 2, 0, world().rows / 2) : camTarget);
   }
   for (const l of lineupLabels) {
     const p = l.pos.clone().project(camera);
