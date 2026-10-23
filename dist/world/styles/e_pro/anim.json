@@ -1,1 +1,102 @@
-{"walk":{"frames":8,"fps":11}}
+{
+  "walk": {
+    "frames": 8,
+    "fps": 11
+  },
+  "knockdown": {
+    "frames": 7,
+    "fps": 9,
+    "loop": false,
+    "dirs": [
+      "south"
+    ]
+  },
+  "idle": {
+    "frames": 4,
+    "fps": 5,
+    "loop": true,
+    "dirs": [
+      "east",
+      "north",
+      "north-east",
+      "north-west",
+      "south",
+      "south-east",
+      "south-west",
+      "west"
+    ]
+  },
+  "run": {
+    "frames": 8,
+    "fps": 13,
+    "loop": true,
+    "dirs": [
+      "east",
+      "north",
+      "north-east",
+      "north-west",
+      "south",
+      "south-east",
+      "south-west",
+      "west"
+    ]
+  },
+  "pickup": {
+    "frames": 5,
+    "fps": 9,
+    "loop": false,
+    "dirs": [
+      "east",
+      "north",
+      "north-east",
+      "north-west",
+      "south",
+      "south-east",
+      "south-west",
+      "west"
+    ]
+  },
+  "hurt": {
+    "frames": 6,
+    "fps": 12,
+    "loop": false,
+    "dirs": [
+      "east",
+      "north",
+      "north-east",
+      "north-west",
+      "south",
+      "south-east",
+      "south-west",
+      "west"
+    ]
+  },
+  "hop": {
+    "frames": 9,
+    "fps": 12,
+    "loop": false,
+    "dirs": [
+      "south",
+      "south-east",
+      "south-west"
+    ]
+  },
+  "throw": {
+    "frames": 7,
+    "fps": 12,
+    "loop": false,
+    "dirs": [
+      "east",
+      "south",
+      "west"
+    ]
+  },
+  "getup": {
+    "frames": 5,
+    "fps": 9,
+    "loop": false,
+    "dirs": [
+      "south"
+    ]
+  }
+}

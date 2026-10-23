@@ -67,6 +67,8 @@ const trail: THREE.Vector3[] = [];
 const camTarget = new THREE.Vector3();
 const desired = new THREE.Vector3();
 let tiltFocus = 0.46;
+let hopping = false;
+let dropAcc = 0;
 
 // SAL's locked look is the indie-action style (e_pro, Mark 2026-10-23).
 // ?hero=<style id> tries another candidate; ?hero=old plays the previous sprite.
@@ -198,8 +200,12 @@ function act(): void {
   if (t.walker) t.walker.face(player.root.position.x - t.pos.x, player.root.position.z - t.pos.z);
   const go = t.go;
   const travel = go ? (): void => { void enter(go.to, go.spawn); } : undefined;
-  if (t.say) speak(t.say, travel);
-  else travel?.();
+  const run = (): void => { if (t.say) speak(t.say, travel); else travel?.(); };
+  // reach for objects (not people, not signs) before the line comes up
+  if (!t.walker && t.label !== 'Read' && player instanceof RotHero && player.has('pickup')) {
+    player.face(t.pos.x - player.root.position.x, t.pos.z - player.root.position.z);
+    void player.play('pickup').then(run);
+  } else run();
 }
 
 function nearestTalkable(): (typeof talk)[number] | null {
@@ -228,7 +234,8 @@ function free(x: number, z: number, fx: number, fz: number): boolean {
 function update(dt: number): void {
   const a = area!;
   let ix = 0, iz = 0;
-  if (!ui.talking && !loading) {
+  const busy = player instanceof RotHero && player.busy && !hopping;
+  if (!ui.talking && !loading && !busy) {
     if (keys.has('arrowleft') || keys.has('a')) ix -= 1;
     if (keys.has('arrowright') || keys.has('d')) ix += 1;
     if (keys.has('arrowup') || keys.has('w')) iz -= 1;
@@ -246,7 +253,15 @@ function update(dt: number): void {
     player.face(ix, iz);
     if (free(p.x + nx, p.z, p.x, p.z)) { p.x += nx; moved = true; }
     if (free(p.x, p.z + nz, p.x, p.z)) { p.z += nz; moved = true; }
+    const was = p.y;
     p.y = a.ground(p.x, p.z);
+    // a sudden drop (a ledge): hop down it. Drops are summed over a few
+    // frames so the trigger doesn't depend on frame rate; gentle slopes never add up.
+    dropAcc = dropAcc * 0.75 + Math.max(0, was - p.y);
+    if (dropAcc > 0.22 && player instanceof RotHero && player.has('hop') && !hopping) {
+      hopping = true;
+      void player.play('hop').then(() => { hopping = false; });
+    }
   }
   player.animate(dt, moved, run ? 1.5 : 1);
 

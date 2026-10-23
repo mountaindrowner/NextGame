@@ -1,0 +1,97 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/animate-character",
+  "character_id": "cea31c61-3b70-4ec6-a617-413b60f80ece",
+  "mode": "template",
+  "set": {
+    "idle": {
+      "template": "breathing-idle",
+      "animation_group_id": "f6024254-8985-4e86-9eaa-499d806eff36",
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    },
+    "run": {
+      "template": "running-8-frames",
+      "animation_group_id": "efb2424b-2def-4c00-be5c-528b3a72f8ea",
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    },
+    "pickup": {
+      "template": "picking-up",
+      "animation_group_id": "461b9d91-3571-4b75-86db-7b19cf5e7061",
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    },
+    "hurt": {
+      "template": "taking-punch",
+      "animation_group_id": "c013fac3-4ef0-4638-b960-4602f30f8470",
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    },
+    "hop": {
+      "template": "jumping-1",
+      "animation_group_id": "bf721e75-0cbc-4608-a8fa-195ea499a469",
+      "dirs": [
+        "south",
+        "south-east",
+        "south-west"
+      ]
+    },
+    "throw": {
+      "template": "throw-object",
+      "animation_group_id": "7c97dedd-6a7f-42eb-8372-7b0319dc3029",
+      "dirs": [
+        "east",
+        "south",
+        "west"
+      ]
+    },
+    "knockdown": {
+      "template": "falling-back-death",
+      "animation_group_id": "f7becbf7-a32b-4a70-8329-a971513d1bac",
+      "dirs": [
+        "south"
+      ]
+    },
+    "getup": {
+      "template": "getting-up",
+      "animation_group_id": "fe60015a-76a8-47e0-b1c0-b02c9b222c1a",
+      "dirs": [
+        "south"
+      ]
+    }
+  },
+  "at": "2026-10-23T06:58:58.477Z"
+}
