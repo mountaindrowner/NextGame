@@ -1,7 +1,8 @@
 /**
  * The HD-2D overworld UI: a clean dark panel with a thin gold rule, a name
- * plate, and the speaker's portrait set smaller and BEHIND the text (Mark's
- * note). Plus the area title card, the interact prompt, and touch controls.
+ * plate, and the speaker's own sprite (upscaled, facing left) standing at the
+ * right of the box, tucked behind the panel (Mark's notes). Plus the area
+ * title card, the interact prompt, and touch controls.
  */
 
 export interface Speech { name?: string; portrait?: string; lines: string[] }

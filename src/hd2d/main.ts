@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createPost } from './post';
 import { applyMood, type Lights } from './mood';
-import { Walker, OhmFollower, RotHero, stillSprite, type Dir } from './sprites';
+import { Walker, OhmFollower, RotHero, stillSprite, spriteCard, type Dir } from './sprites';
 import { UI } from './ui';
 import type { Area, AreaBuilder, Line, Thing } from './area';
 import { buildField } from './field/area';
@@ -149,7 +149,13 @@ async function enter(id: string, spawn: string, first = false): Promise<void> {
     w.animate(0, false);
     scene.add(w.root);
     cast.push({ w, pos: w.root.position });
-    if (n.lines?.length) talk.push({ x, z, height: 2.0, label: n.name, walker: w, pos: w.root.position, say: { name: n.name, portrait: `./world/char/${n.char}_96.png`, lines: n.lines } });
+    if (n.lines?.length) {
+      // the speaker's own sprite, facing left, stands at the right of the dialogue box
+      const entry: (typeof talk)[number] = { x, z, height: 2.0, label: n.name, walker: w, pos: w.root.position, say: { name: n.name, lines: n.lines } };
+      talk.push(entry);
+      const card = w instanceof RotHero ? spriteCard(`./world/styles/${n.char}/south-west.png`) : w.card();
+      void card.then((url) => { entry.say!.portrait = url; }).catch(() => undefined);
+    }
   });
 
   const s = first && q.has('x') ? { x: Number(q.get('x')), z: Number(q.get('z')), face: (q.get('face')?.toUpperCase() ?? 'S') as Dir } : a.spawns[spawn] ?? a.spawns.start!;

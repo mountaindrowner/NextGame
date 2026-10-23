@@ -102,16 +102,19 @@ html, body {
 }
 .dlg.on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
 .dlg-portrait {
-  /* smaller, and behind the text panel — it peeks over the top edge */
+  /* the speaker's own sprite, upscaled, standing at the RIGHT of the box
+     facing left toward the text; its feet tuck behind the panel's top edge */
   position: absolute;
-  left: 18px;
-  bottom: calc(100% - 46px);
-  width: 112px;
-  height: 112px;
+  right: 28px;
+  bottom: calc(100% - 34px);
+  width: auto;
+  height: auto;
+  max-height: 46vh;
   image-rendering: pixelated;
   z-index: 0;
   display: none;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.55));
+  pointer-events: none;
 }
 .dlg.has-portrait .dlg-portrait { display: block; }
 .dlg-panel {
@@ -126,11 +129,11 @@ html, body {
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
 }
-.dlg.has-portrait .dlg-panel { padding-left: 30px; }
+.dlg.has-portrait .dlg-panel { padding-right: 30px; }
 .dlg-name {
   position: absolute;
   top: -15px;
-  left: 150px;
+  left: 24px;
   padding: 3px 16px 4px;
   font-family: 'Cormorant SC', serif;
   font-weight: 700;
@@ -140,7 +143,6 @@ html, body {
   border: 1px solid var(--gold);
   color: #f1dfb1;
 }
-.dlg:not(.has-portrait) .dlg-name { left: 24px; }
 .dlg.no-name .dlg-name { display: none; }
 .dlg-text {
   font-size: clamp(17px, 2.1vw, 21px);

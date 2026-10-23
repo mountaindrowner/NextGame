@@ -101,6 +101,12 @@ export class Walker {
 
   setTint(c: THREE.Color): void { (this.mesh.material as THREE.MeshBasicMaterial).color.copy(c); }
 
+  /** Dialogue card: this sheet's west-facing (left) standing frame. */
+  card(): Promise<string> {
+    const { frameW, frameH } = this.meta;
+    return spriteCard(this.tex.image as HTMLImageElement, 220, { x: 0, y: frameH * 2, w: frameW, h: frameH });
+  }
+
   face(dx: number, dz: number): void {
     if (Math.abs(dx) < 1e-4 && Math.abs(dz) < 1e-4) return;
     this.dir = Math.abs(dx) >= Math.abs(dz) * 0.9 ? (dx < 0 ? 'W' : 'E') : dz < 0 ? 'N' : 'S';
@@ -325,4 +331,29 @@ export class RotHero {
       this.body.scale.set(1, 1 + Math.sin(this.t * 2.2) * 0.012, 1);
     }
   }
+}
+
+/** The dialogue "portrait": the speaker's own sprite, trimmed to its figure
+ *  and upscaled by a whole number for crisp pixels (Mark, 2026-10-23 — no
+ *  separate portraits). `rect` picks a frame out of a sheet. */
+export async function spriteCard(src: string | HTMLImageElement, targetH = 220, rect?: { x: number; y: number; w: number; h: number }): Promise<string> {
+  const img = typeof src === 'string' ? await new Promise<HTMLImageElement>((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }) : src;
+  const r = rect ?? { x: 0, y: 0, w: img.width, h: img.height };
+  const c = document.createElement('canvas');
+  c.width = r.w;
+  c.height = r.h;
+  const g = c.getContext('2d')!;
+  g.drawImage(img, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
+  const d = g.getImageData(0, 0, r.w, r.h).data;
+  let x0 = r.w, y0 = r.h, x1 = 0, y1 = 0;
+  for (let y = 0; y < r.h; y++) for (let x = 0; x < r.w; x++) if (d[(y * r.w + x) * 4 + 3]! > 40) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x + 1); y1 = Math.max(y1, y + 1); }
+  if (x1 <= x0) return c.toDataURL();
+  const w = x1 - x0, h = y1 - y0, k = Math.max(1, Math.floor(targetH / h));
+  const out = document.createElement('canvas');
+  out.width = w * k;
+  out.height = h * k;
+  const o = out.getContext('2d')!;
+  o.imageSmoothingEnabled = false;
+  o.drawImage(c, x0, y0, w, h, 0, 0, w * k, h * k);
+  return out.toDataURL();
 }
