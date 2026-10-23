@@ -9,7 +9,7 @@ import * as THREE from 'three';
  */
 
 export type Dir = 'S' | 'N' | 'W' | 'E';
-export interface SheetMeta { frameW: number; frameH: number; cols: number; rows: number; fps: number; originY: number; contentH: number }
+export interface SheetMeta { frameW: number; frameH: number; cols: number; rows: number; fps: number; originY: number; contentH: number; scale?: number }
 
 /** World units per sheet pixel: SAL's 68px of content stands ~1.65 tall. */
 export const PX = 0.0243;
@@ -93,7 +93,8 @@ export class Walker {
   private constructor(tex: THREE.Texture, readonly meta: SheetMeta, tint: THREE.Color) {
     this.tex = tex;
     tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
-    this.mesh = spriteMesh(tex, meta.frameW * PX, meta.frameH * PX, meta.originY, tint);
+    const k = PX * (meta.scale ?? 1);
+    this.mesh = spriteMesh(tex, meta.frameW * k, meta.frameH * k, meta.originY, tint);
     this.root.add(this.mesh, blob(0.34));
     this.setFrame('S', 0);
   }
@@ -101,9 +102,12 @@ export class Walker {
   static async load(id: string, tint: THREE.Color): Promise<Walker> {
     const [tex, meta] = await Promise.all([
       loader.loadAsync(`./world/char/${id}_walk.png`).then(pixelTex),
-      fetchJson<SheetMeta>(`./world/char/${id}_walk.meta.json`),
+      fetchJson<SheetMeta>(`./world/char/${id}_walk.meta.json`, 1).catch(() => null),
     ]);
-    return new Walker(tex, meta, tint);
+    // the old generic NPC sheets (npc_kid, npc_rancher, npc_elder) have no meta: 3×3 frames of 20×32
+    const img = tex.image as HTMLImageElement;
+    const m: SheetMeta = meta ?? { frameW: img.width / 3, frameH: img.height / 3, cols: 3, rows: 3, fps: 6, originY: 0.94, contentH: img.height / 3 - 2, scale: 2.1 };
+    return new Walker(tex, m, tint);
   }
 
   private setFrame(dir: Dir, frame: number): void {

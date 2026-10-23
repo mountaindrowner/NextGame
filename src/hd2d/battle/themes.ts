@@ -13,7 +13,7 @@ import type { Side } from './rules';
  * your side is worn and familiar, theirs is foreign ground.
  */
 
-export type ThemeId = 'field' | 'road' | 'bunker';
+export type ThemeId = 'field' | 'road' | 'bunker' | 'cistern';
 
 export interface ArenaTheme {
   id: ThemeId;
@@ -259,9 +259,64 @@ const bunker: ArenaTheme = {
   warnGlow: '#ff6a1a',
 };
 
-export const THEMES: Record<ThemeId, ArenaTheme> = { field, road, bunker };
+// ------------------------------------------------------------- the Cistern
+
+const cistern: ArenaTheme = {
+  id: 'cistern',
+  panelH: 0.1,
+  roughness: 0.5,
+  metalness: 0.05,
+  // wet channel concrete: yours scrubbed and drained, theirs slick with algae and standing water
+  paintPanel(side, seed) {
+    const base = side === 'player' ? hex('#6e7068') : hex('#4e5a52');
+    const dark = hex('#2e3430');
+    return paint((x, y, r) => {
+      let c = mix(base, dark, r() * 0.25);
+      if (side === 'foe' && Math.hypot(x - 16, y - 16) < 6 + r() * 2) c = mix(c, hex('#2e4a48'), 0.6); // a standing puddle
+      if (r() < (side === 'foe' ? 0.12 : 0.04)) c = mix(c, hex('#4f7a2c'), 0.7); // algae
+      if (x <= 0 || y <= 0) c = mix(c, hex('#9a9c90'), 0.4);
+      if (x >= 31 || y >= 31) c = mix(c, dark, 0.6);
+      return c;
+    }, seed);
+  },
+  ground: () => {
+    const m = new THREE.Mesh(new THREE.CircleGeometry(16, 48), new THREE.MeshStandardMaterial({ color: '#1e2a26', roughness: 0.3, metalness: 0.2 }));
+    m.rotation.x = -Math.PI / 2;
+    m.receiveShadow = true;
+    return m;
+  },
+  dress(scene) {
+    const wall = colMat('#5e5f58', { roughness: 0.9 });
+    scene.add(box(22, 3.4, 0.5, wall, 0, 0, -4.3));
+    const moss = colMat('#3d5e24', { roughness: 1 });
+    for (const x of [-8, -3, 2, 7]) scene.add(box(1.6, 0.9 + (x % 3) * 0.2, 0.08, moss, x, 0, -4.0));
+    for (const y of [1.8, 2.2]) {
+      const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 22, 8), colMat('#7c4424', { metalness: 0.3 }));
+      pipe.rotation.z = Math.PI / 2;
+      pipe.position.set(0, y, -3.95);
+      scene.add(pipe);
+    }
+    // a strip of open channel water behind the field, and lamps over it
+    const water = new THREE.Mesh(new THREE.PlaneGeometry(22, 1.6), new THREE.MeshStandardMaterial({ color: '#1d3a38', roughness: 0.1, metalness: 0.3 }));
+    water.rotation.x = -Math.PI / 2;
+    water.position.set(0, 0.02, -3.0);
+    scene.add(water);
+    for (const x of [-6, 0, 6]) {
+      const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 6), colMat('#ffcf7a', { emissive: '#ffcf7a', emissiveIntensity: 4 }));
+      bulb.position.set(x, 2.6, -3.8);
+      scene.add(bulb);
+      const l = new THREE.PointLight('#ffb35c', 6, 7, 1.6);
+      l.position.set(x, 2.4, -3.2);
+      scene.add(l);
+    }
+  },
+  standGlow: '#9fe8ff',
+  warnGlow: '#ff6a1a',
+};
+
+export const THEMES: Record<ThemeId, ArenaTheme> = { field, road, bunker, cistern };
 
 /** Which grid a region fights on. */
 export function themeFor(areaId: string): ThemeId {
-  return areaId === 'farmroad' || areaId === 'railhead' || areaId === 'scar' ? 'road' : areaId === 'ohmstead' ? 'bunker' : 'field';
+  return areaId === 'farmroad' || areaId === 'railhead' || areaId === 'scar' ? 'road' : areaId === 'ohmstead' ? 'bunker' : areaId === 'cistern' ? 'cistern' : 'field';
 }

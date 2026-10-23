@@ -24,6 +24,8 @@ export interface Thing {
   say?: Line;
   /** Travel after the speech (or at once if there is none). */
   go?: { to: string; spawn: string };
+  /** A scripted action the overworld runs (heal the party, take a gift Ohm…). */
+  action?: 'heal' | 'hovergift';
 }
 
 /** Walking into this box travels (or, with only `say`, turns you back). */
@@ -52,8 +54,10 @@ export interface Area {
   mood: Mood;
   /** Camera look-target clamp (world units). */
   cam: { x0: number; x1: number; z0: number; z1: number };
-  /** May a body of radius r stand here, coming from (fx, fz)? */
-  blocked(x: number, z: number, r: number, fx: number, fz: number): boolean;
+  /** May a body of radius r stand here, coming from (fx, fz)? `hover`: the party can HOVER over open water. */
+  blocked(x: number, z: number, r: number, fx: number, fz: number, hover?: boolean): boolean;
+  /** Open water here (for the HOVER ride visuals). */
+  water?(x: number, z: number): boolean;
   ground(x: number, z: number): number;
   spawns: Record<string, Spot>;
   triggers: Trigger[];

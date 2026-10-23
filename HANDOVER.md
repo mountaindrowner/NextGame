@@ -31,6 +31,17 @@
   Kartwheel wander here; touch one to fight. Railhead's north gate is OPEN to
   the Scar for now (Marrow's trial not built). New text to flag: the rental
   booth line, "The highway runs on north toward the Cistern."
+- **Capture** in grid battles (canon IFF Recalibration; see hd2d-direction.md).
+  Party of 3 + storage, 5 storage nodes (session only — no save yet).
+- **The Cistern (Colony 2)** built (`src/hd2d/cistern/area.ts`, layout 1:1 from
+  tools/gen-cistern.ts): four mossy chambers (Nursery with Ohm cradles + grow
+  beds, Grange + seed-vault, pump room, reeds/machinery) round a catwalk-crossed
+  basin; the **HOVER gate** (flood band) works — blocked without a hover Ohm;
+  the dock cradle gives a survey Dronelet (canon text); with it SAL rides the
+  drone over open water. 45 Scar's north edge leads here; the Cistern's north
+  gate turns you back (Warden). New text to flag: the cradle + seed-vault
+  lines. Placeholder NPC sheets (npc_kid/npc_rancher) now load (inferred meta);
+  any NPC that can't load is skipped instead of breaking the area.
 - **PixelLab:** ~3,880 generations left (floor 1,000).
 
 ## Session 2026-10-23 (cont.) — HD-2D first map: Ohmstead → the Field → Farm Road

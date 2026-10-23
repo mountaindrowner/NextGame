@@ -105,7 +105,7 @@ function rockTex(): THREE.Texture {
 
 /** World-space UVs (triplanar by face normal): instanced walls of any height
  *  keep the same texel density, so a wall can drop low without its panels squashing. */
-function worldUV(m: THREE.MeshStandardMaterial): THREE.MeshStandardMaterial {
+export function worldUV(m: THREE.MeshStandardMaterial): THREE.MeshStandardMaterial {
   m.onBeforeCompile = (sh) => {
     sh.vertexShader = sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
       #ifdef USE_MAP

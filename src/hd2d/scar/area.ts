@@ -516,7 +516,7 @@ export const buildScar: AreaBuilder = async (scene, night) => {
     },
     triggers: [
       { x0: 16.6, z0: 33.4, x1: 35.4, z1: 36, go: { to: 'railhead', spawn: 'north' } },
-      { x0: 16.6, z0: -2, x1: 35.4, z1: 0.4, say: { lines: ['The highway runs on north toward the Cistern.'] } },
+      { x0: 16.6, z0: -2, x1: 35.4, z1: 0.4, go: { to: 'cistern', spawn: 'south' } },
     ],
     things: [
       { x: 12.8, z: 27.5, height: 2.4, label: 'Look', say: { lines: ['A rental booth, its key-drop still full. Every car in the lot is the same make, the same faded white.'] } },

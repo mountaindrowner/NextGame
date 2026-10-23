@@ -55,6 +55,19 @@ export const UNDER: Mood = {
   sprite: [0.9, 0.84, 0.8],
 };
 
+/** The Cistern: cool green-blue water light under the vaults, warm lamps
+ *  and the nursery's soft glow doing the real work. */
+export const CISTERN: Mood = {
+  night: true,
+  sun: { color: '#9fd0c8', intensity: 0.55, from: new THREE.Vector3(-4, 14, 6) },
+  hemi: { sky: '#6a8a84', ground: '#2a3a32', intensity: 2.1 },
+  fog: { color: '#06100f', density: 0.012 },
+  exposure: 1.45,
+  bloom: { strength: 0.75, radius: 0.6, threshold: 0.68 },
+  grade: { dull: 1.2, lush: 1.25, vignette: 0.56, shadowTint: [0.84, 0.98, 1.06], highTint: [1.1, 1.02, 0.88] },
+  sprite: [0.86, 0.9, 0.86],
+};
+
 export interface Lights {
   sun: THREE.DirectionalLight;
   follow(target: THREE.Vector3): void;

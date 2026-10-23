@@ -165,7 +165,7 @@ export function buildGround(scene: THREE.Scene): void {
 // ------------------------------------------------------------------ water
 
 /** A shader creek over the rect x0..x1, z0..z1 (banks shallow, centre deep). */
-export function buildWater(scene: THREE.Scene, night: boolean, x0: number, z0: number, x1: number, z1: number, y: number): (t: number) => void {
+export function buildWater(scene: THREE.Scene, night: boolean, x0: number, z0: number, x1: number, z1: number, y: number, cells?: Array<[number, number]>): (t: number) => void {
   const mat = new THREE.ShaderMaterial({
     transparent: true,
     uniforms: {
@@ -208,10 +208,21 @@ export function buildWater(scene: THREE.Scene, night: boolean, x0: number, z0: n
         gl_FragColor = vec4(col, 0.88);
       }`,
   });
-  const g = new THREE.PlaneGeometry(x1 - x0, z1 - z0, 1, 1);
-  g.rotateX(-Math.PI / 2);
-  const m = new THREE.Mesh(g, mat);
-  m.position.set((x0 + x1) / 2, y, (z0 + z1) / 2);
+  let m: THREE.Mesh;
+  if (cells) {
+    // one quad per water cell (any shape of pool); world-space positions
+    const pos: number[] = [];
+    for (const [cx, cz] of cells) pos.push(cx, 0, cz, cx, 0, cz + 1, cx + 1, 0, cz, cx + 1, 0, cz, cx, 0, cz + 1, cx + 1, 0, cz + 1);
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    m = new THREE.Mesh(g, mat);
+    m.position.y = y;
+  } else {
+    const g = new THREE.PlaneGeometry(x1 - x0, z1 - z0, 1, 1);
+    g.rotateX(-Math.PI / 2);
+    m = new THREE.Mesh(g, mat);
+    m.position.set((x0 + x1) / 2, y, (z0 + z1) / 2);
+  }
   scene.add(m);
   return (t) => {
     mat.uniforms.uTime!.value = t;

@@ -17,6 +17,8 @@ import { buildFarmRoad } from './farmroad/area';
 import { buildOhmstead } from './ohmstead/area';
 import { buildRailhead } from './railhead/area';
 import { buildScar } from './scar/area';
+import { buildCistern } from './cistern/area';
+import { partyHasFieldAbility, HOVER_GIFT_SPECIES } from '../data/field-abilities';
 
 /**
  * OHMFRONT HD-2D — the first map: Ohmstead → the Field → Farm Road.
@@ -27,7 +29,7 @@ import { buildScar } from './scar/area';
  *      ?face=n|s|w|e · ?wide=1 overview · ?hud=0
  */
 
-const AREAS: Record<string, AreaBuilder> = { ohmstead: buildOhmstead, field: buildField, farmroad: buildFarmRoad, railhead: buildRailhead, scar: buildScar };
+const AREAS: Record<string, AreaBuilder> = { ohmstead: buildOhmstead, field: buildField, farmroad: buildFarmRoad, railhead: buildRailhead, scar: buildScar, cistern: buildCistern };
 
 const q = new URLSearchParams(location.search);
 const night = q.get('time') === 'night';
@@ -77,6 +79,21 @@ const trail: THREE.Vector3[] = [];
 const camTarget = new THREE.Vector3();
 const desired = new THREE.Vector3();
 let tiltFocus = 0.46;
+let gotHover = false;
+// The HOVER ride: over open water SAL rises onto the drone and glides.
+let hoverLift = 0;
+let hoverRig: RotHero | null = null;
+void RotHero.load('dronelet', new THREE.Color(1, 1, 1), 0.78).then((h) => { hoverRig = h; h.root.visible = false; scene.add(h.root); }).catch(() => undefined);
+
+/** The Cistern lends a survey Dronelet so any party can cross the flood (canon text from the old scene). */
+function takeHoverDrone(): void {
+  if (partyHasFieldAbility(party, 'HOVER')) { speak({ lines: ['The survey drone bobs in its cradle. One of yours already hovers — leave this for the next crew.'] }); return; }
+  if (gotHover) { speak({ lines: ['The cradle is empty. You already took the survey drone.'] }); return; }
+  const ohm = makeBattler(GAME_DATA.species(HOVER_GIFT_SPECIES), 10, GAME_DATA);
+  if (party.length < 3) party.push(ohm); else storage.push(ohm);
+  gotHover = true;
+  speak({ lines: ['You lift a battered survey Dronelet from its cradle. It hums, rises, and tucks in beside you. It can HOVER you across the flood.'] });
+}
 
 // --------------------------------------------------------------- battle
 // The lead Ohm: Scraplet (the Dog line), Lv5, HP carried between fights.
@@ -229,8 +246,10 @@ async function enter(id: string, spawn: string, first = false): Promise<void> {
   if (!first) await ui.fade(true);
   const old = scene;
   old.remove(player.root, ohm.root);
+  if (hoverRig) old.remove(hoverRig.root);
   dispose(old);
   scene = new THREE.Scene();
+  if (hoverRig) { hoverRig.root.visible = false; scene.add(hoverRig.root); }
   post.setScene(scene);
   const a = await AREAS[id]!(scene, night);
   area = a;
@@ -239,11 +258,14 @@ async function enter(id: string, spawn: string, first = false): Promise<void> {
   player.setTint(tint);
   ohm.setTint(tint);
 
-  const walkers: Figure[] = await Promise.all(a.npcs.map((n) => (styledChars.has(n.char) ? RotHero.load(n.char, tint) : Walker.load(n.char, tint))));
+  // a character that can't load is left out rather than failing the whole area
+  const loaded = await Promise.all(a.npcs.map((n) => (styledChars.has(n.char) ? RotHero.load(n.char, tint) : Walker.load(n.char, tint)).catch((e: unknown) => { console.warn(`skipped ${n.char}:`, e); return null; })));
+  const npcs = a.npcs.filter((_, i) => loaded[i]);
+  const walkers = loaded.filter((w): w is Figure => !!w);
   cast = [];
   void spawnRoamers(a, tint);
   talk = a.things.map((t) => ({ ...t, pos: new THREE.Vector3(t.x, a.ground(t.x, t.z), t.z) }));
-  a.npcs.forEach((n, i) => {
+  npcs.forEach((n, i) => {
     const w = walkers[i]!;
     const x = n.col + 0.5, z = n.row + 0.5;
     w.root.position.set(x, a.ground(x, z), z);
@@ -311,7 +333,8 @@ function act(): void {
   const go = t.go;
   const travel = go ? (): void => { void enter(go.to, go.spawn); } : undefined;
   const run = (): void => { if (t.say) speak(t.say, travel); else travel?.(); };
-  if (/recharge|rest|bench/i.test(t.label)) lead.integrity = lead.stats.integrity; // a top-up for the lead Ohm
+  if (t.action === 'heal' || /recharge|rest|bench/i.test(t.label)) for (const m of party) m.integrity = m.stats.integrity; // a top-up for the party
+  if (t.action === 'hovergift') { takeHoverDrone(); return; }
   // reach for objects (not people, not signs) before the line comes up
   if (!t.walker && t.label !== 'Read' && player instanceof RotHero && player.has('pickup')) {
     player.face(t.pos.x - player.root.position.x, t.pos.z - player.root.position.z);
@@ -337,7 +360,7 @@ function nearestTalkable(): (typeof talk)[number] | null {
 // ------------------------------------------------------------- movement
 const R = 0.28;
 function free(x: number, z: number, fx: number, fz: number): boolean {
-  if (area!.blocked(x, z, R, fx, fz)) return false;
+  if (area!.blocked(x, z, R, fx, fz, partyHasFieldAbility(party, 'HOVER'))) return false;
   for (const c of cast) if (Math.hypot(c.pos.x - x, c.pos.z - z) < 0.55) return false;
   return true;
 }
@@ -414,7 +437,18 @@ function update(dt: number): void {
     o.x += (goal.x - o.x) * k;
     o.z += (goal.z - o.z) * k;
   }
-  o.y = a.ground(o.x, o.z);
+  o.y = a.ground(o.x, o.z) + (a.water?.(o.x, o.z) ? 0.3 : 0);
+
+  // ride the drone across open water
+  const onWater = !!a.water?.(p.x, p.z);
+  hoverLift += ((onWater ? 0.42 : 0) - hoverLift) * Math.min(1, dt * 8);
+  p.y = a.ground(p.x, p.z) + hoverLift + (onWater ? Math.sin(t * 3.2) * 0.04 : 0);
+  if (hoverRig) {
+    hoverRig.root.visible = hoverLift > 0.05;
+    hoverRig.root.position.set(p.x, p.y - hoverLift + 0.02 + Math.sin(t * 3.2) * 0.04, p.z + 0.06);
+    hoverRig.face(1, 0.3);
+    hoverRig.animate(dt, false);
+  }
   ohm.step(dt, o.x - ox, o.z - oz);
 
   for (const c of cast) c.w.animate(dt, false);
