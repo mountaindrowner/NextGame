@@ -100,7 +100,7 @@ triangle, approved spirit preserved.
 - **Currency (lore lock):** **Credits** — value backed only by global mutual
   trust.
 - **Regional styles:** Ohms vary by region; regional variants are
-  **Ohmgrown**. Region 1 is plains cattle country.
+  **Ohmgrown**. Region 1 is **Tallgrass**.
 
 -----
 

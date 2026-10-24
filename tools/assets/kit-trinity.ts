@@ -1,5 +1,5 @@
 /**
- * The Trinity Bottoms — sec.trinity secondary art (npm run assets:trinity).
+ * The Drowned Woods — sec.trinity (internal id) secondary art (npm run assets:trinity).
  * The drowned bottomland forest (Asset Bible Part 6 + Critical Path §10): a
  * flooded forest of cypress and dead trees, murky deep water (HOVER), SHEAR
  * overgrowth, reeds, hanging moss/vines, sunken cars, fallen-log bridges, the

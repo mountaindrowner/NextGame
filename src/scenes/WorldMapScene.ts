@@ -7,7 +7,7 @@ import { getGameState } from '../game/state';
 import { BIOME_COLORS, RIDEABLES, WORLD_LINKS, WORLD_MAP } from '../data/region';
 
 /**
- * The Blackland world-map (Town-Map screen): a schematic of every built map,
+ * The Tallgrass world-map (Town-Map screen): a schematic of every built map,
  * marking where you've been and where you stand. On a rideable Ohm you can
  * fast-travel to any visited recharge-garage hub. Launched as a pause overlay
  * from the field menu.
@@ -112,7 +112,7 @@ export class WorldMapScene extends Phaser.Scene {
   private redraw(): void {
     this.clearDynamic();
     this.dynamic.push(this.add.rectangle(120, 80, 232, 152, 0x141a1c).setStrokeStyle(2, UI.frame));
-    this.dynamic.push(this.add.text(12, 8, 'THE BLACKLAND', { fontFamily: 'monospace', fontSize: '9px', color: '#d8e0e0', fontStyle: 'bold' }));
+    this.dynamic.push(this.add.text(12, 8, 'TALLGRASS', { fontFamily: 'monospace', fontSize: '9px', color: '#d8e0e0', fontStyle: 'bold' }));
 
     // links first (under the nodes)
     for (const [a, b] of WORLD_LINKS) {

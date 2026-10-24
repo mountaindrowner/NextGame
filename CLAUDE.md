@@ -64,8 +64,10 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   never a real state, city or landmark (no Texas, Texan, Dallas, Reunion
   Tower, bluebonnet). Names come from what a place does, what it did to
   people, or who took it, and must read well in plain text (no voice actor
-  to sell them). World + map: `docs/design/world-gazetteer.md` (proposals
-  except New Central). Texas, South Texas above all, belongs to Mark's
+  to sell them). World + map: `docs/design/world-gazetteer.md`. **Locked:**
+  New Central · Tallgrass (Region 1) · Sundog · the Jawbone · the Wildwoods
+  (+ wildwire) · the Drowned Woods · Foundry Row · the Ohm slurs (appliance,
+  junk, factory, statics, rattler, plug-lover). The rest there is proposal. Texas, South Texas above all, belongs to Mark's
   separate game THE LONG NOON; the two stay separate. `npm run lint`
   enforces the no-real-places rule on game content.
 - **Locked phrases:** stay current · recharged · clear the static · factory

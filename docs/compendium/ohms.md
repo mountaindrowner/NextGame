@@ -9,7 +9,7 @@ Pokémon roster's shape. Single types throughout (v1). Every evolution is
 level + item: **Resonance Core** into stage 2, **Prime Core** into stage 3.
 
 **Legend:** `[SHEAR]`-style tags = field-ability learners. `RIDE` = vehicle
-Ohm, grants traversal on evolution. `OG` = Ohmgrown note (Region 1 plains
+Ohm, grants traversal on evolution. `OG` = Ohmgrown note (Region 1 Tallgrass
 variant; other regions see a different form of the same line).
 
 -----
@@ -49,7 +49,7 @@ Lv16 + Resonance Core, finals at Lv36 + Prime Core. Names [PROPOSAL].
 | 037 | **Flashbat** | flashlight | OPTIC | Beam jabs, strobe GLITCH. `[LUMEN]`. Lore: roosts lens-down in culverts. |
 | 038–039 | **Spoutlet → Hydrantler** (Lv21) | fire hydrant | COOLANT | Mains-pressure blasts, stand-your-ground bulk. Lore: plants itself and dares the street. |
 | 040 | **Suppressure** | fire extinguisher | COOLANT | Foam bursts, OVERHEAT cures. Lore: throws itself at every fire, glad to be needed. |
-| 041–042 | **Tumblet → Thistlebale** (Lv19) | tumbleweed (virus-taken) | VERDANT | Rolling tackles, burr spreads. Rare. **OG:** plains baling-wire skeleton. Lore: drifts the fence lines looking for a field that remembers it. |
+| 041–042 | **Tumblet → Thistlebale** (Lv19) | tumbleweed (virus-taken) | VERDANT | Rolling tackles, burr spreads. Rare. **OG:** Tallgrass baling-wire skeleton. Lore: drifts the fence lines looking for a field that remembers it. |
 | 043–044 | **Pricklet → Cactacomb** (Lv24) | cactus (virus-taken) | VERDANT | Spine volleys, water hoarding. Rare. Lore: machines that sheltered in its shade grew into its arms. |
 | 045 | **Bonnetbloom** | lupine patch (virus-taken) | VERDANT | Pollen statics, lull spores. Very rare. Lore: blooms over buried cable; the Attuned leave it offerings. |
 | 046 | **Barbwyre** | barbed-wire spool | FRAME | Coil lashes, snare fields. Lore: unspools at night to fence in what it loves. |
@@ -89,7 +89,7 @@ Lv16 + Resonance Core, finals at Lv36 + Prime Core. Names [PROPOSAL].
 | 093–094 | **Jukelet → Jukeboxer** (Lv24) | jukebox | SONIC | Record hooks, one-credit haymakers. Lore: Grandpa's partner Banjo is the oldest known Jukeboxer. |
 | 095 | **Karaokeen** | karaoke machine | SONIC | Borrowed-voice mimics (copies last move). Lore: sings crowds that left long ago. |
 | 096 | **Spoolturn** | reel-to-reel deck | SONIC | Tape lashes, rewind counters. Lore: archives every confession the Downtowns whisper. |
-| 097 | **Sirenado** | tornado siren | SONIC | County-wide wails, flinch storms. **OG:** plains icon. Lore: still takes its Wednesday-noon test seriously. |
+| 097 | **Sirenado** | tornado siren | SONIC | County-wide wails, flinch storms. **OG:** Tallgrass icon. Lore: still takes its Wednesday-noon test seriously. |
 | 098–099 | **Glowtube → Marqueen** (Lv25) | neon sign → theater marquee | OPTIC | Neon lashes, dazzle reigns. Lore: spells out the name of whoever beats her. |
 | 100 | **Tallylight** | stadium scoreboard | OPTIC | Countdown pressure, spotlight calls. Lore: keeps score of battles nobody sanctioned. |
 | 101 | **Snapshutter** | instant camera | OPTIC | Flash freezes, develops grudges. Lore: shakes its prints like a tail. |

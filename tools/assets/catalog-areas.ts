@@ -138,7 +138,7 @@ const add = (records: AssetRecord[]): void => { all.push(...records); };
   k.anim('sec.redoubt.emergency_light', 'Flickering emergency light (fx)', { plane: 'fx', pal: 8 });
   add(k.R);
 }
-// ---- TRINITY BOTTOMS (forest/flooded) ------------------------------------
+// ---- THE DROWNED WOODS (forest/flooded; id sec.trinity) ------------------------------------
 {
   const k = kitOf('sec.trinity', 'forest', 'act2');
   k.ground('sec.trinity.flooded_floor', 'Flooded forest floor (water+roots)', { collision: 'water', pal: 6 });

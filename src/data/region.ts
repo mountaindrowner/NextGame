@@ -1,5 +1,5 @@
 /**
- * The Blackland — region graph (docs/world-structure.md). Each playable map is
+ * Tallgrass — region graph (docs/world-structure.md). Each playable map is
  * a node with up to four edge neighbours (N/S/E/W) plus a biome + hive tier.
  * The overworld walker reads this to cross map edges seamlessly (edge-warps),
  * turning the linear chain into a connected, expansive region. Portal warps
@@ -59,7 +59,7 @@ export const WORLD_MAP: Record<string, MapMeta> = {
   cistern: { label: 'Cistern', col: 1, row: 1, biome: 'flooded', garage: false },
   bastion: { label: 'Bastion', col: 2, row: 1, biome: 'quarry', garage: true },
   redoubt: { label: 'Redoubt', col: 3, row: 1, biome: 'military', garage: true },
-  trinity: { label: 'Trinity', col: 3, row: 2, biome: 'flooded', garage: false },
+  trinity: { label: 'Drowned Woods', col: 3, row: 2, biome: 'flooded', garage: false },
   chancel: { label: 'Chancel', col: 4, row: 2, biome: 'sacred', garage: true },
 };
 

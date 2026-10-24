@@ -114,7 +114,7 @@ Each location's unique art. Assume the Primary Kit covers generic ground/grass/w
 
 **Generic Cave / Mine kit (reused dungeon set):** **cave walls** (rock, multi-height, edges/corners), cave floors (rock/gravel/earth), cave-ceiling overhang (top-layer dark), stalactites & stalagmites, underground pools/streams (+ edges), mine supports (wood/metal beams), mine-cart rails & carts, ladders, **glowing ore/crystal nodes** (FX), boulders/rubble (BREACH), cracks/pit-drops, the **LUMEN darkness overlay** (unlit vs lit), drips, glow-flora.
 
-**Drowned forest (Trinity Bottoms):** flooded forest floor (water + roots), dense cypress/dead trees (canopy top-layer), **SHEAR-cuttable overgrowth**, reeds, hanging moss/vines, sunken roads/cars under water, the **half-submerged chapel**, fog (FX), **organic-hybrid plant-machine flora**, fallen logs (bridge/barrier), murky deep water, fireflies/spores (FX).
+**Drowned forest (the Drowned Woods):** flooded forest floor (water + roots), dense cypress/dead trees (canopy top-layer), **SHEAR-cuttable overgrowth**, reeds, hanging moss/vines, sunken roads/cars under water, the **half-submerged chapel**, fog (FX), **organic-hybrid plant-machine flora**, fallen logs (bridge/barrier), murky deep water, fireflies/spores (FX).
 
 **Optional-area kits (lighter secondaries):**
 - **Ohm Depot:** tall shelving aisles, pallets, forklifts, hanging signage, loading bays, dark back-stock (LUMEN).

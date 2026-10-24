@@ -47,7 +47,7 @@ You are the lead developer and design partner for OHMFRONT, a complete, original
 - **The satellite net (lore lock):** The internet is gone, but satellites still orbit. At **uplink spots** you can connect to the surviving satellite network — wild Ohms live *in the net* too. The **Network Garage** (Ohm storage) lives on this satnet.
 - **No guns (lore lock):** Mankind did away with guns before the AI revolution. No human firearms exist. Conflict runs through Ohms, tools, and wits.
 - **Currency (lore lock):** **Credits** — value backed only by global mutual trust.
-- **Regional styles:** Ohms vary by region; regional variants are **Ohmgrown**. Region 1 is plains cattle country.
+- **Regional styles:** Ohms vary by region; regional variants are **Ohmgrown**. Region 1 is **Tallgrass**.
 
 -----
 

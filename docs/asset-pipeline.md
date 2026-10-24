@@ -63,7 +63,7 @@ base maps. Integrated into the system:
 2. **Hive Overlay** (needed from Bastion onward).
 3. **Cave/Mine + Building/Interior** kits (reused everywhere) — *records done.*
 4. **Per-area secondaries, critical-path order:** Ohmstead → the Field →
-   Railhead → the Cistern → Bastion → Redoubt → Trinity → the Chancel → Redbed
+   Railhead → the Cistern → Bastion → Redoubt → the Drowned Woods → the Chancel → Redbed
    → the Array → the Verge → New Central. *(Ohmstead + Field records done; Ohmstead
    art exists via `tools/gen-underground.ts`.)*
 5. **Optional-area kits** (Depot, Drive-In, Boneyard, Silo, Bog Shrine,

@@ -2,7 +2,7 @@
 
 *The plan to grow OHMFRONT from a linear chain of 6 colony maps into a
 **connected region graph** with the depth of Hoenn (`docs/design/hoenn-map-study.md`).
-Binds how every map from here is built and stitched. The Blackland is the
+Binds how every map from here is built and stitched. Tallgrass is the
 region.*
 
 ## 0. The problem with what we have
@@ -37,13 +37,13 @@ walker can cross edges. Maps lose their **solid border on edges that connect**
   → the Field (prologue overld)  ◆ the Bunker / Site B (Redoubt)
   → Farm Road                    ◆ the Catacombs (Chancel)
 ● Railhead (C1)                  ◆ the Vein (under Bastion, opt)
-  → the 45 Scar (1st vehicle)    → the Trinity Bottoms (route-dungeon)
+  → the 45 Scar (1st vehicle)    → the Drowned Woods (route-dungeon)
 ● the Cistern (C2 · HOVER)       → the Red Flats
   → the Furrows                  ● Redbed (C6 · siege)
 ● Bastion (C3)                   → the Tollway Ruins
   → the Military Road            ● the Array (C7)
 ● Redoubt (C4 · reveal)          → the Stack (5-level interchange)
-  → (Trinity Bottoms)            ● the Verge (C8)
+  → (the Drowned Woods)            ● the Verge (C8)
 ● the Chancel (C5)               → the Outer Ring → the Canyon → the Underground
                                  ◆ the Spire (finale)
                                  ● Ohmcoming (epilogue)
@@ -52,7 +52,7 @@ walker can cross edges. Maps lose their **solid border on edges that connect**
 **Optional spurs woven off junctions** (the wider-world doc): Ohm Depot (off
 Field), the Stockyards (Ohmstead surface), the Drive-In (off Railhead), the
 Aquifer Deeps (under Cistern), the Vein (under Bastion), Site C/the Silo (off
-Redoubt), the Bog Shrine (Trinity), the Boneyard (off Redbed), Cold Storage
+Redoubt), the Bog Shrine (the Drowned Woods), the Boneyard (off Redbed), Cold Storage
 (under Array), the Stadium (near Verge) + facilities (the Open Range, the Pit
 wager-hall, the Gauntlet, uplink dives).
 
@@ -67,7 +67,7 @@ saturation** north toward New Central:
 | Rail & flats | Railhead, 45 Scar | industrial | none |
 | Waterworks | Cistern, Furrows | flooded / prairie | none |
 | Cement lands | Bastion, Military Road | quarry / military | light→med |
-| Drowned + sacred | Trinity, Chancel | forest / sacred | light→med |
+| Drowned + sacred | Drowned Woods, Chancel | forest / sacred | light→med |
 | Hardpan | Red Flats, Redbed | red_hardpan | heavy |
 | Data corridor | Tollway, Array, Stack | data / urban | med→heavy |
 | The city | Verge, Outer Ring, Canyon, Underground, Spire | urban ruins | max |
@@ -131,4 +131,4 @@ Every route/area map must include (extends `docs/style-guide.md`):
 From **6 maps → ~40+**: 9 settlements + ~12 routes + ~10 dungeons + ~10 optional
 spurs/facilities, each screen-to-few-screens, stitched into one expansive,
 branching, biome-banded, ability-gated region with a stacked net layer — the
-Blackland as a place, not a tube.
+Tallgrass as a place, not a tube.

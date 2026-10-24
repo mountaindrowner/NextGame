@@ -1,5 +1,5 @@
 /**
- * The Trinity Bottoms — map composition (npm run gen:trinity). The drowned
+ * The Drowned Woods (internal id `trinity`) — map composition (npm run gen:trinity). The drowned
  * bottomland forest (Critical Path §10, Act II): a winding muck path through
  * murky deep water (the HOVER stretches, blocked), past drowned cypress, reed-
  * bed encounters (organic-hybrid Ohms), glowing hybrid flora, a sunken car,
@@ -158,7 +158,7 @@ writeFileSync(
     ],
     interacts: [{ x: 6, y: 11, kind: 'heal' }], // Sorrel's cot by the chapel — she tends weary Ohms
     signs: [
-      { col: 14, row: 30, text: 'A leaning marker: THE TRINITY BOTTOMS. The road drowns here. Keep to the muck and the logs.' },
+      { col: 14, row: 30, text: 'A hand-painted marker: THE DROWNED WOODS. The road drowns here. Keep to the muck and the logs.' },
       { col: 14, row: 3, text: 'Half-sunk milepost: …THE CHANCEL, ahead. Bells carry over the water — someone still rings them.' },
     ],
     npcs: [{ char: 'npc_elder', col: 5, row: 10, name: 'Net-Medium Sorrel', lines: [

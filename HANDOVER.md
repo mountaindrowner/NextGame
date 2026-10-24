@@ -45,13 +45,15 @@ Stored generation prompts under `assets/reference/` were left as the historical
 record. **The world, reimagined** (Mark: far enough in the future that nothing
 resembles itself): `docs/design/world-gazetteer.md` + map
 `assets/reference/world_gazetteer_map.png` (source `tools/worldmap/`). Mark's
-favourites, pending lock: Sundog, the Jawbone, the Wildwoods (+ wildwire), the
-Drowned Woods (replaces the Trinity Bottoms). He rejected: the Wide, the
+**LOCKED** (same day): Tallgrass (Region 1, was "the Blackland"), Sundog, the
+Jawbone, the Wildwoods (+ wildwire), the Drowned Woods (was the Trinity
+Bottoms; applied to docs + game text, internal ids `trinity`/`sec.trinity`
+unchanged), Foundry Row (the north), and the Ohm slurs. He rejected: the Wide, the
 Upstairs, Blackland, Dead Air, the Merge, Cinder, the Haze, the Slow (too
 try-hard; names must read well without voice acting). **Open for Mark:** the
-gazetteer's "Open for Mark" list (Region 1 name, north/south, the Parking Lot,
-Paygate, Brownwater, the Ditch, the Shallows, Talking Mountain, the Ohm slurs,
-the Spire's silhouette). Don't apply renames in docs/maps until he locks them.
+gazetteer's "Open for Mark" list (the south's name; yes/no on the Parking Lot,
+Paygate, Brownwater, the Ditch, the Shallows, Talking Mountain; whether Rook
+uses the slurs; the Spire's silhouette). Don't apply renames in docs/maps until he locks them.
 Name collisions with THE LONG NOON (Cistern, Nursery, Warden, Keeper, Hale)
 are parked.
 

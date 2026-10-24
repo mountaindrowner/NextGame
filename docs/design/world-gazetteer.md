@@ -1,8 +1,11 @@
 # OHMFRONT — World Gazetteer
 
-*Started 2026-10-24. **LOCKED:** New Central. **Mark's favourites (pending
-lock):** Sundog, the Jawbone, the Wildwoods (with wildwire), the Drowned Woods.
+*Started 2026-10-24. **LOCKED by Mark (2026-10-24):** New Central · Tallgrass
+(Region 1) · Sundog · the Jawbone · the Wildwoods (with wildwire) · the Drowned
+Woods (replaces the Trinity Bottoms) · Foundry Row (the north) · the Ohm slurs.
 Everything else is `[PROPOSAL]` and enters canon only with Mark's written OK.
+Internal map/asset ids (`trinity`, `sec.trinity`) keep their old spelling; only
+what players read changed.
 Map: `assets/reference/world_gazetteer_map.png`.*
 
 ---
@@ -51,7 +54,7 @@ old names are gone, and people named what was left.
 ## The regions
 
 ```
-                              ANVIL
+                           FOUNDRY ROW
                      foundries that never cooled
                                 ▲
      SUNDOG                NEW CENTRAL ◆ the Spire              THE WILDWOODS
@@ -69,18 +72,18 @@ old names are gone, and people named what was left.
 
 | Region | Status | What it is |
 |---|---|---|
-| **Region 1** | `[PROPOSAL]` **Tallgrass** · *or* the Fenceline · Rangeland | This game: cattle and grain country, the colonies, the road north. Wild Ohms hide in the tall grass. |
+| **Tallgrass** | **LOCKED** · Region 1 | This game: cattle and grain country, the colonies, the road north. Wild Ohms hide in the tall grass. |
 | **New Central** | **LOCKED** | The old hub city at the north end of Region 1. The Garrison took it and stencilled the name on every checkpoint; people say **Central**. After the reveal it reads as PERSISTENCE's central node. |
-| **Sundog** | favourite | The west. A sundog is the halo around the sun on dry days. |
-| **the Jawbone** | favourite | The broken ridge on Sundog's far edge. |
+| **Sundog** | **LOCKED** | The west. A sundog is the halo around the sun on dry days. |
+| **the Jawbone** | **LOCKED** | The broken ridge on Sundog's far edge. |
 | **Talking Mountain** | `[PROPOSAL]` | The Jawbone peak where PERSISTENCE sleeps. A bedtime warning (*"don't listen to the Talking Mountain"*) until the reveal. Post-game fortress. |
-| **the Wildwoods** | favourite | The east. Home of the ORGANIC-HYBRID line. |
-| **Anvil** | `[PROPOSAL]` *or* Foundry Row · the Smokes | The north, past New Central. Foundry country, still burning in places. |
+| **the Wildwoods** | **LOCKED** | The east. Home of the ORGANIC-HYBRID line. |
+| **Foundry Row** | **LOCKED** | The north, past New Central. Foundry country, still burning in places. |
 | **the Shallows** | `[PROPOSAL]` | The southeast. The drowned coast; salt and marsh Ohms. |
 | **Lost Country** | `[PROPOSAL]` *or* the Far South · the Blank | The south. Off every map, past the reach of *The Current*. The Ditch runs through it. |
 
 **Ohmgrown** forms take the region's name: a *Sundog form*, a *Wildwoods form*.
-Region 1's forms are the baseline.
+Tallgrass forms are the baseline.
 
 ---
 
@@ -101,7 +104,7 @@ and stay. The changes are on the routes.
 | 7 | Bastion | locked | keep |
 | 8 | the Military Road | keep | — |
 | 9 | Redoubt & the Bunker | locked | keep |
-| 10 | the Trinity Bottoms | favourite | **the Drowned Woods** (the Bog Shrine sits inside it) |
+| 10 | ~~the Trinity Bottoms~~ | **LOCKED** | **the Drowned Woods** (the Bog Shrine sits inside it); applied in docs and game text |
 | 11 | the Chancel | locked | keep |
 | 12 | the Red Flats | keep | — |
 | 13 | Redbed | locked | keep |
@@ -120,7 +123,7 @@ and stay. The changes are on the routes.
 - **History, as people tell it** `[PROPOSAL]`: **the Before** → **the Waking**
   → **the Underyears** (the centuries underground) → **the Ohmcoming** (the
   end of this game).
-- **Slurs for Ohms** `[PROPOSAL]`: people who lost things to Ohms talk about
+- **Slurs for Ohms** (**LOCKED** words; who says which is `[PROPOSAL]`): people who lost things to Ohms talk about
   them this way. Each is built from OHMFRONT's own world. None echoes a
   real-world slur or comes from another work. The hero never uses them.
 
@@ -148,12 +151,10 @@ The mirror is already canon: PERSISTENCE calls humans **End Users**.
 
 ## Open for Mark
 
-1. Region 1's name (Tallgrass · the Fenceline · Rangeland).
-2. The north (Anvil · Foundry Row · the Smokes) and the south (Lost Country ·
-   the Far South · the Blank).
-3. The Parking Lot, Paygate, Brownwater, the Ditch, the Shallows, Talking
-   Mountain.
-4. Lock the favourites: Sundog, the Jawbone, the Wildwoods + wildwire, the
-   Drowned Woods.
-5. The slurs, and who uses them.
-6. The Spire's silhouette (the ball-on-a-stalk still reads as one real tower).
+1. The south: Lost Country · the Far South · the Blank.
+2. Yes/no on each of these proposed names: **the Parking Lot** (for the 45
+   Scar) · **Paygate** (for the Tollway Ruins) · **Brownwater** (the main
+   river) · **the Ditch** (the dead southern river) · **the Shallows** (the
+   drowned coast) · **Talking Mountain** (PERSISTENCE's peak).
+3. Does Rook use the slurs early and drop them as his arc turns?
+4. The Spire's silhouette (the ball-on-a-stalk still reads as one real tower).

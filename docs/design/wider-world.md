@@ -6,7 +6,7 @@
 
 ---
 
-## 1. OPTIONAL SIDE-AREAS (branching off the Blackland critical path)
+## 1. OPTIONAL SIDE-AREAS (branching off the Tallgrass critical path)
 
 These hang off the routes and colonies and exist to reward exploration. This is where the **optional** field abilities finally earn their keep — SHEAR (cut), BREACH (rock), HAUL (haul debris), LUMEN (light) — none of them gate the main road.
 
@@ -16,7 +16,7 @@ These hang off the routes and colonies and exist to reward exploration. This is 
 - **The Aquifer Deeps** *(below the Cistern)* — deeper flooded caverns past HOVER water and LUMEN dark; rare net/water Ohms and a quiet legendary spring.
 - **The Vein** *(below Bastion's Pit)* — BREACH-gated deep quarry; fossil-like relic Ohms and an **ANCIENT-class** lair; a light mining-route puzzle.
 - **Site C — the Silo** *(off Redoubt)* — a second buried military site; HAUL and LUMEN; dangerous, and the richest **origin lore** on PERSISTENCE and the old weapons program; a PROTOTYPE-tier reward.
-- **The Bog Shrine** *(in the Trinity Bottoms)* — a SHEAR-gated drowned grove; the **ORGANIC-HYBRID legendary's** deeper lair; eerie and beautiful.
+- **The Bog Shrine** *(in the Drowned Woods)* — a SHEAR-gated drowned grove; the **ORGANIC-HYBRID legendary's** deeper lair; eerie and beautiful.
 - **The Reliquary Deeps** *(below the Chancel)* — extended catacombs holding the cult's buried history and the "saint" Ohm side-quest.
 - **The Boneyard** *(off Redbed)* — an aircraft-and-vehicle graveyard; BREACH in; vehicle-Ohm rares, raider spawns, and the first tease of a **flight-capable Ohm** (FLIGHT comes later).
 - **Cold Storage** *(below the Array)* — a deep server vault; **PROTOTYPE** Ohms, the uplink-diving hub, and sealed pre-collapse data that seeds the origin mystery.
@@ -65,8 +65,8 @@ The three legendary classes, expanded into findable encounters (a trio structure
 
 - **ANCIENT** — relics of the deep machine age: one in **the Vein**, one sealed in **Site C**, and one guarded by the Keepers at **the Verge**.
 - **PROTOTYPE** — never-released experiments: one in the Array's experimental wing, one in **Cold Storage**, and **the Monad** itself — catchable only **post-game** once severed.
-- **ORGANIC-HYBRID** — the virus crossed into living things: the **Bog Shrine** tree, plus hidden groves in the Trinity Bottoms and a Stadium-overgrowth specimen.
-- **Roaming rares** — two or three legendary-tier Ohms wander the Blackland on the move, requiring tracking via the map and *The Current*.
+- **ORGANIC-HYBRID** — the virus crossed into living things: the **Bog Shrine** tree, plus hidden groves in the Drowned Woods and a Stadium-overgrowth specimen.
+- **Roaming rares** — two or three legendary-tier Ohms wander Tallgrass on the move, requiring tracking via the map and *The Current*.
 
 ---
 

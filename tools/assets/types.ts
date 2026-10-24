@@ -129,7 +129,7 @@ export const AREAS: AreaDef[] = [
   { area: 'cistern', display: 'The Cistern — Colony 2', biome: 'flooded', secondary: 'sec.cistern', building: true, dungeon: 'none', saturation: 'none', phase: 'act1' },
   { area: 'bastion', display: 'Bastion — Colony 3', biome: 'quarry', secondary: 'sec.bastion', building: true, dungeon: 'cave', saturation: 'light', phase: 'act1' },
   { area: 'redoubt', display: 'Redoubt + the Bunker — Colony 4', biome: 'military', secondary: 'sec.redoubt', building: true, dungeon: 'mine', saturation: 'med', phase: 'act1' },
-  { area: 'trinity', display: 'Trinity Bottoms', biome: 'forest', secondary: 'sec.trinity', building: false, dungeon: 'none', saturation: 'light', phase: 'act2' },
+  { area: 'trinity', display: 'the Drowned Woods', biome: 'forest', secondary: 'sec.trinity', building: false, dungeon: 'none', saturation: 'light', phase: 'act2' },
   { area: 'chancel', display: 'The Chancel — Colony 5', biome: 'sacred', secondary: 'sec.chancel', building: true, dungeon: 'cave', saturation: 'med', phase: 'act2' },
   { area: 'redbed', display: 'Redbed — Colony 6', biome: 'red_hardpan', secondary: 'sec.redbed', building: true, dungeon: 'none', saturation: 'heavy', phase: 'act2' },
   { area: 'array', display: 'The Array — Colony 7', biome: 'data', secondary: 'sec.array', building: true, dungeon: 'none', saturation: 'med', phase: 'act2' },

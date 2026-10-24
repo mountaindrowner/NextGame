@@ -71,7 +71,7 @@ marked ⟦…⟧.*
     PERSISTENCE broadcasts in the clear: **"Of course they are alive. That is
     why they must be One."** All pre-reveal dialogue now re-reads. **Marshal
     Iver Drake**'s wire traffic turns purge-doctrinal.
-12. **The Trinity Bottoms (hrs 16–17).** A drowned bottomland forest ⟦HOVER
+12. **The Drowned Woods (hrs 16–17).** A drowned bottomland forest ⟦HOVER
     reused; optional **SHEAR** shortcuts⟧. New **organic-hybrid** Ohms appear
     only here; the **ORGANIC-HYBRID legendary** (a virus-touched tree) waits off
     the main line. The world turns strange and grieving.
@@ -151,7 +151,7 @@ marked ⟦…⟧.*
 - **Ohmsick pattern (3):** walk a freed Ohm home, defend the visit, scene,
   keepsake reward — e.g. the Sirenado that asks to sound one last noon test over
   its empty county; every freed Ohm in the convoy answers.
-- **Legendary placement:** ORGANIC-HYBRID (the Trinity Drowned Forest, off-line)
+- **Legendary placement:** ORGANIC-HYBRID (the Drowned Woods, off-line)
   · PROTOTYPE (the Array, experimental wing) · ANCIENT (the Verge archive; far
   groves post-game via the Attuned) · TELEGRAPHEME (rail depots, roaming) ·
   LOCOMOTIVA (buried roundhouse, HAUL + BREACH) · EXEMPLAR / the Monad (story,

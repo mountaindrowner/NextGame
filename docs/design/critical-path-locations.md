@@ -2,9 +2,9 @@
 
 *The required journey from point A to point Z, fitted to the plot — every town, colony, road, cave, dungeon, and building of note the player must pass to beat the game, in order. The wider optional world comes later; this is the spine.*
 
-**Region name (working):** **the Blackland** — a ruined black-soil prairie, arcing north into the dead sprawl of **New Central**. *(Distinct from the colony-network name, still open. New Central is the region's dark pole. Since 2026-10-24 no real place is named: the country is Texas-adjacent in feel, never Texas.)*
+**Region name:** **Tallgrass** *(locked 2026-10-24)* — cattle-and-grain prairie, arcing north into the dead sprawl of **New Central**. The wider world: `docs/design/world-gazetteer.md`. *(Distinct from the colony-network name, still open. New Central is the region's dark pole. Since 2026-10-24 no real place is named: the country is Texas-adjacent in feel, never Texas.)*
 
-**Geography:** The journey runs roughly south-to-north. It opens in cattle-and-grain country, climbs through prairie and quarry land, crosses the drowned Trinity bottoms, threads the ruined sprawl, and ends in the downtown canyon at the tower. Each colony sits where its real-world kind would: traders on a rail junction, quarry-folk in the cement lands, scholars in the northern data corridor, the last holdout at the city's edge.
+**Geography:** The journey runs roughly south-to-north. It opens in cattle-and-grain country, climbs through prairie and quarry land, crosses the Drowned Woods, threads the ruined sprawl, and ends in the downtown canyon at the tower. Each colony sits where its real-world kind would: traders on a rail junction, quarry-folk in the cement lands, scholars in the northern data corridor, the last holdout at the city's edge.
 
 **Gating philosophy (per canon):** Progress is gated mostly by **story** (clear a colony's trial → the road onward opens) and a few **key items**. **Exactly one field ability hard-gates the path — HOVER** (crossing water on a vehicle Ohm). The others (SHEAR, BREACH, HAUL, LUMEN) exist for **optional** shortcuts, side-caches, and rare-Ohm nooks, never the main road. **Vehicle Ohms** are the big traversal unlock and power fast travel once cleared.
 
@@ -22,7 +22,7 @@
 - **Plot beat:** Coming of age → build and name your first Ohm → the supply-run tutorial → the night signal → the scout fight → **the Breaker bonds** → exile.
 - **Leads to:** The Field.
 
-### 1. THE FIELD — prologue overworld *(ruined cattle town on open blackland prairie)*
+### 1. THE FIELD — prologue overworld *(ruined cattle town on open tallgrass prairie)*
 - **Type:** Tutorial route + first dungeon.
 - **Terrain:** Tall prairie grass, debris piles, EM shimmer zones in the dead houses; invisible random encounters of low-tier prairie Ohms.
 - **Places of note:** the cattle town's dead main street; **the Co-op Vault** (the safe that holds the Breaker, broken open in the prologue fight); **Ohm Depot** (the orange hardware-warehouse mega-dungeon full of tool Ohms — optional but iconic, introduced here).
@@ -62,7 +62,7 @@
 - **Plot beat:** Clue that the Militarists are fractured, some acting against their own will. **Token 2.** The Nursery-Matron gifts you an Ohm.
 - **Leads to:** The Furrows.
 
-### 6. THE FURROWS — route *(open blackland prairie, old cotton country)*
+### 6. THE FURROWS — route *(open tallgrass prairie, old cotton country)*
 - **Type:** Route.
 - **Terrain:** Tall grass, furrowed fields; Field-hand and Wrangler encounters.
 - **Places of note:** a crashed **crop-duster**; long fence-lines; a lone silo.
@@ -92,16 +92,16 @@
 - **Places of note:** **the Bunker / Site B** (the dungeon: blast doors, dark halls best lit with optional LUMEN, Militant patrols, and the **command center** where you find Commander Reyes, the audio logs, PERSISTENCE's first direct words, and the first trace of **Eli Vane**). This is plausibly the very kind of bunker where the Militarists first dug PERSISTENCE up.
 - **Gate in:** Story.
 - **Plot beat:** **THE REVEAL** — the Militarists are puppets; PERSISTENCE is real; Reyes is freed and joins; a photograph and a logbook name hint at Grandpa. **Token 4.**
-- **Leads to:** The Trinity Bottoms.
+- **Leads to:** The Drowned Woods.
 
 ---
 
 # ACT II — THE HUNTED
 
-### 10. THE TRINITY BOTTOMS — route/dungeon *(a drowned bottomland forest)*
+### 10. THE DROWNED WOODS — route/dungeon *(a drowned bottomland forest)*
 - **Type:** Route-dungeon · **HOVER reused.**
 - **Terrain:** Flooded forest, overgrowth (optional SHEAR shortcuts), eerie and beautiful; new **organic-hybrid** Ohms appear only here.
-- **Places of note:** the **Drowned Forest** (where the **ORGANIC-HYBRID legendary** — a virus-touched tree — can be found, off the main line); sunken roads; a half-submerged chapel.
+- **Places of note:** the **Bog Shrine** grove (where the **ORGANIC-HYBRID legendary** — a virus-touched tree — can be found, off the main line); sunken roads; a half-submerged chapel.
 - **Gate in:** Story → HOVER across the flooded stretches.
 - **Plot beat:** The world turns strange and grieving; the journey's tone deepens after the reveal.
 - **Leads to:** The Chancel.
@@ -208,7 +208,7 @@
 
 ## CRITICAL-PATH AT A GLANCE
 
-Ohmstead → the Field → Farm Road → **Railhead (T1)** → the 45 Scar *(first vehicle Ohm)* → **the Cistern (T2 · HOVER gate)** → the Furrows → **Bastion (T3)** → Military Road → **Redoubt + the Bunker (T4 · REVEAL)** → the Trinity Bottoms → **the Chancel (T5)** → the Red Flats → **Redbed (T6 · siege)** → Tollway Ruins → **the Array (T7 · the plan)** → the Stack → **the Verge (T8 · Grandpa confirmed)** → the Outer Ring → the Canyon *(skyscraper)* → the Underground *(tunnels)* → **the Spire (FINALE)** → Ohmcoming.
+Ohmstead → the Field → Farm Road → **Railhead (T1)** → the 45 Scar *(first vehicle Ohm)* → **the Cistern (T2 · HOVER gate)** → the Furrows → **Bastion (T3)** → Military Road → **Redoubt + the Bunker (T4 · REVEAL)** → the Drowned Woods → **the Chancel (T5)** → the Red Flats → **Redbed (T6 · siege)** → Tollway Ruins → **the Array (T7 · the plan)** → the Stack → **the Verge (T8 · Grandpa confirmed)** → the Outer Ring → the Canyon *(skyscraper)* → the Underground *(tunnels)* → **the Spire (FINALE)** → Ohmcoming.
 
 ---
 
@@ -216,7 +216,7 @@ Ohmstead → the Field → Farm Road → **Railhead (T1)** → the 45 Scar *(fir
 
 - **8 trials, 9 settlements, ~6 routes, ~7 dungeons** on the required path — a clean ~30-hour spine before optional content.
 - **One hard field-ability gate (HOVER)**; everything else on the main road is story or key-item gated, per canon.
-- **Legendary placement** is woven in but optional: ORGANIC-HYBRID in the Trinity Bottoms, PROTOTYPE at the Array, ANCIENT at the Verge, and the Monad (Prototype-class) as the final boss.
+- **Legendary placement** is woven in but optional: ORGANIC-HYBRID in the Drowned Woods, PROTOTYPE at the Array, ANCIENT at the Verge, and the Monad (Prototype-class) as the final boss.
 - **The Spire** is the finale landmark — a fictional tower (Reunion Tower retired 2026-10-24; its silhouette is still open).
 - **Real-world parody** only — invent trade dress for the warehouse, rental lot, data center, and tower; no real logos or signage.
-- Next pass, on your call: **fill in the wider world** — optional towns, side-dungeons, post-game zones, and the regions beyond the Blackland that the endgame hooks open.
+- Next pass, on your call: **fill in the wider world** — optional towns, side-dungeons, post-game zones, and the regions beyond Tallgrass that the endgame hooks open.

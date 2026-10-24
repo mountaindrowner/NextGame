@@ -6,7 +6,7 @@
  * encounters, bone niches) and, to the east, the Cantor's Static-tinged
  * corrupted shrine — the schism. Warden Verity Hale keeps the true faith; the
  * Cantor preaches surrender. Builds public/world/chancel.png + .json. Linked
- * north from the Trinity Bottoms.
+ * north from the Drowned Woods.
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -37,7 +37,7 @@ const rectG = (x0: number, y0: number, w: number, h: number, c: string): void =>
 
 // the nave (central hall)
 rectG(7, 5, 12, 26, 'n');
-// south entrance (in from Trinity)
+// south entrance (in from the Drowned Woods)
 rectG(11, 30, 4, 4, 'n');
 setG(12, ROWS - 1, 'n');
 // west + east catacomb passages
@@ -156,7 +156,7 @@ writeFileSync(
     collision, grass, grassAny, water: [], placements: [],
     zone: 'chancel-crypt',
     spawn: { x: 12, y: 30 },
-    exits: [{ x: 12, y: 33, scene: 'fieldhd', mapId: 'trinity', to: { x: 15, y: 4 } }], // south → Trinity (lands at its north path)
+    exits: [{ x: 12, y: 33, scene: 'fieldhd', mapId: 'trinity', to: { x: 15, y: 4 } }], // south → the Drowned Woods (lands at its north path)
     signs: [
       { col: 12, row: 30, text: 'Carved over the doors: THE CHANCEL. "Stay current, and be received." The newer words are scratched in over older, gentler ones.' },
       { col: 6, row: 25, text: 'Scripture on the wall, half-corrupted: "…the Update is not death but DELIVERY… read and accept the TERMS…" Someone has scrawled NO beneath it, many times.' },

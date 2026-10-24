@@ -166,7 +166,7 @@ writeFileSync(
     spawn: { x: 21, y: 24 }, // the yard, entered from the Military Road (south)
     exits: [
       { x: 21, y: 26, scene: 'fieldhd', mapId: 'bastion' }, // south → back toward Bastion
-      { x: 40, y: 15, scene: 'fieldhd', mapId: 'trinity', gate: 'warden' }, // east → the Trinity Bottoms (Warden-gated, Act II)
+      { x: 40, y: 15, scene: 'fieldhd', mapId: 'trinity', gate: 'warden' }, // east → the Drowned Woods (Warden-gated, Act II)
     ],
     interacts: [{ x: 27, y: 8, kind: 'eli' }], // the Eli Vane photo + logbook
     trainers: [
@@ -193,7 +193,7 @@ writeFileSync(
         lines: [
         'I trusted the Militarists to shield Redoubt. I tracked the truth to this bunker, and they locked me in it.',
         'It was never the men. Something *uses* them — the same way it uses the wild Ohms swarming your road.',
-        'You fight clear-headed. No puppet. Take the east road to Trinity — and free the rest, if you can.',
+        'You fight clear-headed. No puppet. Take the east road to the Drowned Woods — and free the rest, if you can.',
       ] },
       { char: 'npc_kid', col: 9, row: 16, name: 'Freed Conscript', lines: [
         'I think my name is Tobe? The Static took it. I pick a new one every morning, just to have one.',
