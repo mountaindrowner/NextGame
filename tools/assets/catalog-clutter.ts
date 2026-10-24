@@ -154,7 +154,7 @@ dressing('verge', 'urban', [
   ['relics', 'Old-world relics on shelves'], ['memorial_candles', 'Memorial candles'], ['siege_scorch', 'Siege scorch & breaches', 'floor'],
   ['packed_belongings', 'Packed-up belongings'], ['bunting', 'Festival bunting half-hung', 'occluder'], ['keepsake', "A child's keepsake"],
 ]);
-dressing('dallas', 'urban', [
+dressing('city', 'urban', [
   ['debris_field', 'Mass debris field', 'floor'], ['dead_cars', 'Dead cars'], ['ash_drift', 'Ash drifts', 'floor'],
   ['fallen_sign', 'Fallen signage'], ['glass', 'Glass everywhere', 'floor'], ['choking_dust', 'Choking dust', 'fx'],
   ['torn_billboard', 'Torn billboard', 'occluder'], ['hive_detritus', 'Hive-growth detritus (shed flesh-metal)'], ['pulsing_spores', 'Pulsing spores', 'fx'],

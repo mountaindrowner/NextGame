@@ -6,6 +6,10 @@
  *    maps, or assets.
  * 3. The electrical unit never appears in game-facing strings (heuristic:
  *    the word as a standalone lowercase unit usage is disallowed in src).
+ * 4. Setting (Mark, 2026-10-24): the world is an unnamed plains country,
+ *    never Texas. No real state, city or landmark in game content or the
+ *    art generators (src, public/world, tools). Stored generation prompts
+ *    under assets/reference stay as the historical record.
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -72,8 +76,25 @@ for (const d of scanDirs) {
   }
 }
 
+// --- 4. setting: never Texas ---------------------------------------------
+const realPlaces = /\btexa(s|n)\b|\bdallas\b|reunion tower|bluebonnet|metroplex|laredo|san antonio|houston/i;
+for (const d of ['src', 'public/world', 'tools']) {
+  let files: string[] = [];
+  try {
+    files = walk(join(ROOT, d));
+  } catch {
+    continue;
+  }
+  for (const file of files) {
+    if (file === join(ROOT, 'tools/check-canon.ts')) continue;
+    if (!/\.(ts|mjs|json|tmj|txt|html)$/.test(file)) continue;
+    const hit = readFileSync(file, 'utf8').match(realPlaces);
+    if (hit) fail(`real place "${hit[0]}" in ${relative(ROOT, file)} — OHMFRONT is not set in Texas`);
+  }
+}
+
 if (failures > 0) {
   console.error(`\n${failures} canon failure(s).`);
   process.exit(1);
 }
-console.log('canon checks passed: core boundary clean, no dead names.');
+console.log('canon checks passed: core boundary clean, no dead names, no real places.');

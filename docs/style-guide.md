@@ -109,7 +109,7 @@ approach when building the next area.
 Exactly golden-era Gen 3 GBA, every part. 240×160 native, integer-scaled,
 landscape. Battle sprites 64×64, ≤16 colors including transparency, entry
 animation only. Overworld 16×16 tiles, Gen 3 proportions. Hoenn-grade craft
-translated to sun-bleached Texas ruin.
+translated to sun-bleached plains ruin.
 
 ## Palettes
 

@@ -25,8 +25,8 @@ import { join } from 'node:path';
 const ROOT = new URL('..', import.meta.url).pathname;
 const REF = join(ROOT, 'assets/reference');
 const KEY = process.env.PIXELLAB_API_KEY ?? '';
-const CHAR_STYLE = 'top-down JRPG overworld character sprite, post-apocalyptic rural Texas, pixel art';
-const BUST_STYLE = 'JRPG dialogue portrait bust, front facing, pixel art, post-apocalyptic rural Texas';
+const CHAR_STYLE = 'top-down JRPG overworld character sprite, post-apocalyptic rural plains cattle country, pixel art';
+const BUST_STYLE = 'JRPG dialogue portrait bust, front facing, pixel art, post-apocalyptic rural plains cattle country';
 const FLOOR = 1000; // never let the balance drop to/under this without flagging
 
 interface Npc { id: string; look: string }

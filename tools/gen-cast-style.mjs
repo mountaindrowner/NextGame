@@ -18,7 +18,7 @@ const SAL_ID = 'cea31c61-3b70-4ec6-a617-413b60f80ece';
 const STYLE = 'modern indie action-adventure pixel art: chunky stylized proportions, big bold readable silhouette, saturated colours, lineless with strong graphic light and shadow shapes, expressive and punchy';
 
 const CAST = {
-  wren: { size: 64, desc: 'WREN, a teenage girl, young scavenger hero of post-collapse Texas: blonde hair in a low ponytail under a worn leather cap with brass goggles pushed up, red bandana at the neck, scuffed tan work jacket with a salvaged metal shoulder pad, patched denim trousers with knee pads, worn brown boots, tool pouch on belt, determined hopeful face' },
+  wren: { size: 64, desc: 'WREN, a teenage girl, young scavenger hero of post-collapse plains cattle country: blonde hair in a low ponytail under a worn leather cap with brass goggles pushed up, red bandana at the neck, scuffed tan work jacket with a salvaged metal shoulder pad, patched denim trousers with knee pads, worn brown boots, tool pouch on belt, determined hopeful face' },
   mabel: { size: 64, desc: "Grandma Mabel Vane, a warm elderly woman, silver hair in a neat bun, round wire glasses, cardigan over a work dress, canvas apron with a pocket of tools, kind steady face, the keeper of her late husband's workshop" },
   boone: { size: 64, desc: "Warden Hollis Boone, gruff broad-shouldered colony chief in his fifties, salt-and-pepper beard, sun-faded cattleman's hat, long weathered duster coat over a work vest, heavy boots, arms ready, stern but fair" },
   cass: { size: 64, desc: "Cass, the hero's best friend, a younger teen with short scruffy brown hair, oversized mustard-yellow jacket with rolled sleeves, a homemade badge pin, cargo shorts, scuffed sneakers, eager restless grin" },

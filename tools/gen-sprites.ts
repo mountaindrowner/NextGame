@@ -941,7 +941,7 @@ function bonnetbloom(): Sprite {
   const stem = ramp('4e7038');
   s.contactShadow(32, 57, 15, 4, SHADOW);
   s.roundedRect(28, 30, 8, 18, 3, stem, { dither: true }); // stem base
-  // bluebonnet cluster
+  // lupine cluster
   for (let i = 0; i < 7; i++) {
     const x = 22 + (i % 4) * 6;
     const y = 16 + Math.floor(i / 4) * 7;
@@ -1079,7 +1079,7 @@ add(41, 'front', tumblet(), 'Tumblet, virus-taken tumbleweed (VERDANT)');
 add(42, 'front', thistlebale(), 'Thistlebale, baling-wire tumbleweed with barbs');
 add(43, 'front', pricklet(), 'Pricklet, cactus pad (VERDANT)');
 add(44, 'front', cactacomb(), 'Cactacomb, saguaro arms sheltering machines');
-add(45, 'front', bonnetbloom(), 'Bonnetbloom, bluebonnet patch (VERDANT)');
+add(45, 'front', bonnetbloom(), 'Bonnetbloom, lupine patch (VERDANT)');
 add(46, 'front', barbwyre(), 'Barbwyre, barbed-wire spool');
 add(47, 'front', mowlet(), 'Mowlet, push mower');
 add(48, 'front', mowrauder(), 'Mowrauder, riding mower with blade weapons');

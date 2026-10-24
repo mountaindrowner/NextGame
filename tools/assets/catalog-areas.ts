@@ -223,22 +223,22 @@ const add = (records: AssetRecord[]): void => { all.push(...records); };
   k.obj('sec.verge.makeshift_gate', 'Makeshift gate', { pal: 7 });
   add(k.R);
 }
-// ---- DALLAS (urban ruins, Act III) ---------------------------------------
+// ---- THE OLD CITY (urban ruins, Act III) ---------------------------------------
 {
-  const k = kitOf('sec.dallas', 'urban', 'act3');
-  k.wall('sec.dallas.skyscraper', 'Skyscraper facade (backdrop)', { pal: 6, prompt: `${HD}; towering ruined skyscraper facade, shattered glass curtain-wall` });
-  k.single('sec.dallas.glass_curtain', 'Shattered glass curtain-wall', { collision: 'solid', pal: 7 });
-  k.single('sec.dallas.broken_floor', 'Broken climb floor', { collision: 'pass', pal: 6 });
-  k.single('sec.dallas.exposed_girder', 'Exposed girder', { plane: 'occluder', pal: 7 });
-  k.obj('sec.dallas.elevator_shaft', 'Elevator shaft / hazard gap', { collision: 'solid', pal: 7 });
-  k.prop('sec.dallas.overpass_tangle', 'Collapsed overpass tangle (the Stack)', { footprint: [4, 3], pal: 7 });
-  k.wall('sec.dallas.tunnel_wall', 'Pedestrian tunnel wall', { pal: 6 });
-  k.ground('sec.dallas.tunnel_floor', 'Tunnel/concourse floor (flooded)', { collision: 'pass', pal: 6 });
-  k.obj('sec.dallas.sealed_blastdoor', 'Sealed blast door', { pal: 7 });
-  k.prop('sec.dallas.dead_vehicle', 'Dead-vehicle field', { footprint: [3, 2], pal: 7 });
-  k.single('sec.dallas.plaza', 'Open plaza ground', { collision: 'pass', pal: 6 });
-  k.prop('sec.dallas.spire', 'The Spire (Reunion Tower exterior)', { footprint: [4, 6], hero: true, pal: 8, prompt: `${HD}; the ball-on-stalk tower, old steel fused with hive-flesh, storm sky` });
-  k.prop('sec.dallas.crown', 'The Crown (antenna chamber)', { footprint: [3, 3], hero: true, pal: 8 });
+  const k = kitOf('sec.city', 'urban', 'act3');
+  k.wall('sec.city.skyscraper', 'Skyscraper facade (backdrop)', { pal: 6, prompt: `${HD}; towering ruined skyscraper facade, shattered glass curtain-wall` });
+  k.single('sec.city.glass_curtain', 'Shattered glass curtain-wall', { collision: 'solid', pal: 7 });
+  k.single('sec.city.broken_floor', 'Broken climb floor', { collision: 'pass', pal: 6 });
+  k.single('sec.city.exposed_girder', 'Exposed girder', { plane: 'occluder', pal: 7 });
+  k.obj('sec.city.elevator_shaft', 'Elevator shaft / hazard gap', { collision: 'solid', pal: 7 });
+  k.prop('sec.city.overpass_tangle', 'Collapsed overpass tangle (the Stack)', { footprint: [4, 3], pal: 7 });
+  k.wall('sec.city.tunnel_wall', 'Pedestrian tunnel wall', { pal: 6 });
+  k.ground('sec.city.tunnel_floor', 'Tunnel/concourse floor (flooded)', { collision: 'pass', pal: 6 });
+  k.obj('sec.city.sealed_blastdoor', 'Sealed blast door', { pal: 7 });
+  k.prop('sec.city.dead_vehicle', 'Dead-vehicle field', { footprint: [3, 2], pal: 7 });
+  k.single('sec.city.plaza', 'Open plaza ground', { collision: 'pass', pal: 6 });
+  k.prop('sec.city.spire', 'The Spire (tower exterior)', { footprint: [4, 6], hero: true, pal: 8, prompt: `${HD}; the ball-on-stalk tower, old steel fused with hive-flesh, storm sky` });
+  k.prop('sec.city.crown', 'The Crown (antenna chamber)', { footprint: [3, 3], hero: true, pal: 8 });
   add(k.R);
 }
 // ---- MOUNTAIN FORTRESS (post-game) ---------------------------------------

@@ -61,7 +61,7 @@ export const ROSTER: readonly RosterRow[] = [
   [42, 'Thistlebale', 'VERDANT', 'T2', 'tumbleweed (virus-taken)'],
   [43, 'Pricklet', 'VERDANT', 'T1', 'cactus (virus-taken)', 44, 24],
   [44, 'Cactacomb', 'VERDANT', 'T2', 'cactus (virus-taken)'],
-  [45, 'Bonnetbloom', 'VERDANT', 'X', 'bluebonnet patch (virus-taken)'],
+  [45, 'Bonnetbloom', 'VERDANT', 'X', 'lupine patch (virus-taken)'],
   [46, 'Barbwyre', 'FRAME', 'X', 'barbed-wire spool'],
   [47, 'Mowlet', 'MOTOR', 'T1', 'push mower', 48, 22],
   [48, 'Mowrauder', 'MOTOR', 'T2', 'riding mower'],

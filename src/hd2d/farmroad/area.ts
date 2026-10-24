@@ -202,7 +202,7 @@ export function boxcar(scene: THREE.Scene, cx: number, cz: number): void {
     g.add(shade(w));
   }
   const st = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.4), new THREE.MeshStandardMaterial({
-    map: textTexture('TEXAS & PACIFIC', { w: 96, h: 16, fg: '#e8dcc0', font: 'bold 10px monospace', worn: 0.35, seed: 5 }), transparent: true, alphaTest: 0.4, roughness: 1,
+    map: textTexture('PLAINS & PACIFIC', { w: 96, h: 16, fg: '#e8dcc0', font: 'bold 10px monospace', worn: 0.35, seed: 5 }), transparent: true, alphaTest: 0.4, roughness: 1,
   }));
   st.position.set(-1.1, 1.95, Wd / 2 + 0.02);
   g.add(st);

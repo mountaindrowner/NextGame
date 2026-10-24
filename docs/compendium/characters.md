@@ -88,7 +88,7 @@
   - **The Chancel** — Warden **Verity Hale** (the true-faith Attuned)
   - **Redbed** — Warden **Sol** (the Red Hand's roost; Rook's home)
   - **The Array** — Warden **Tobias Frost** (the data-center lattice)
-  - **The Verge** — Warden **Ruth Amos** (the last holdout before Dallas)
+  - **The Verge** — Warden **Ruth Amos** (the last holdout before the Old City)
 - Ohmstead itself is home, kept by **Warden Hollis Boone** (quest-giver, not a
   trial). Full battle teams + per-Warden dialogue land with each area script.
 
@@ -109,7 +109,7 @@
   losses. Calls Ohms "units." Calls the protagonist "civilian" until the
   Spire, where he finally uses their name.
 - **Arc:** Containment → purge doctrine post-reveal → races to demolish
-  Reunion Tower in Act III → his final order is the player's last clock.
+  the Spire in Act III → his final order is the player's last clock.
 
 ## FARADAY — speaker of the Attuned
 

@@ -42,7 +42,7 @@
 
 ## PART 3 — THE EIGHT COLONIES
 
-*(the trial gates, in travel order, Ohmstead → Dallas)*
+*(the trial gates, in travel order, Ohmstead → the Old City)*
 
 ### Colony 1 — RAILHEAD · *the crossroads*
 
@@ -92,15 +92,15 @@ Built on the bone-dry caliche hardpan; an aggressive Raider colony that takes wh
 
 Built in an old data and communications center; engineers and scholars who understand the satnet and the towers better than anyone alive.
 
-- **Warden Tobias Frost.** A brilliant, anxious mind who finally lays out the whole machine of the threat — PERSISTENCE’s tower network, the Dallas antenna, the satnet upload, the days-left clock.
+- **Warden Tobias Frost.** A brilliant, anxious mind who finally lays out the whole machine of the threat — PERSISTENCE’s tower network, the Old City antenna, the satnet upload, the days-left clock.
 - **Mag.** A comms-tech who works out the other half of the answer: the Breaker, broadcast through the tower into the satnet, could free every Ohm at once. The endgame plan is born here.
 
 ### Colony 8 — THE VERGE · *the last holdout*
 
-The oldest colony, closest to Dallas; memory-keepers under direct siege as the hive masses for its final push.
+The oldest colony, closest to the Old City; memory-keepers under direct siege as the hive masses for its final push.
 
 - **Warden Ruth Amos.** The eldest Warden, ancient and clear-eyed, who knew Eli Vane in life. She gives the boy the truth he’s been circling: his grandfather uploaded himself into the net to fight from within, and may be holding the line still. `[SPOILER payoff — Grandpa confirmed]`
-- **Cass** *(returns)*. His Ohmstead friend, arrived with the gathering colonies — the home thread paying off as the convoy forms for Dallas.
+- **Cass** *(returns)*. His Ohmstead friend, arrived with the gathering colonies — the home thread paying off as the convoy forms for the Old City.
 
 -----
 
@@ -141,7 +141,7 @@ The oldest colony, closest to Dallas; memory-keepers under direct siege as the h
 |Warden Tobias Frost     |C7 The Array              |Names the threat          |Ally                     |
 |Mag                     |C7 The Array              |Reveals the plan          |Ally                     |
 |Warden Ruth Amos        |C8 The Verge              |Grandpa reveal            |Eldest                   |
-|Marshal Iver Drake      |Dallas                    |Final human foe           |Reyes’s foil             |
+|Marshal Iver Drake      |the Old City              |Final human foe           |Reyes’s foil             |
 
 -----
 

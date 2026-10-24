@@ -4,6 +4,8 @@
 Everything unmarked is locked canon. Anything tagged `[PROPOSAL]` awaits the
 creator's written approval and is in canon nowhere else.*
 
+> **Setting amendment (Mark, 2026-10-24):** OHMFRONT is no longer set in Texas. The world is an unnamed plains country — Texas-adjacent in feel (cattle towns, prairie, interstates, caliche), never Texas by name. No real state, city or landmark is named: Dallas is now **the Old City** *(working)* and Reunion Tower is now **the Spire**, a fictional broadcast tower. Texas, and South Texas above all, belongs to THE LONG NOON. Older text below is amended in place.
+
 -----
 
 ## 1. PHASE 0 RESOLUTIONS
@@ -22,7 +24,7 @@ creator's written approval and is in canon nowhere else.*
 | Rival colony | **Redbed** |
 | Scrapper guild | **the Yard** |
 | Coexistence cult | **the Attuned** |
-| Dallas finale landmark | **Reunion Tower**, named as itself |
+| Finale landmark | **the Spire**, a fictional broadcast tower in the Old City *(amended 2026-10-24; was Reunion Tower, named as itself)* |
 | Protagonist presets | **2** — one boy, one girl, both fully written |
 | Bench part set | **Locomotion + Core (type) + Plating (stat lean)** |
 | Status names | OVERHEAT · SHORT · CORRUPTED · STANDBY · LOCKED · GLITCHED |
@@ -43,7 +45,7 @@ creator's written approval and is in canon nowhere else.*
 | Salvage / cores | **Scrap < Alloy < Relic**; **Resonance Core / Prime Core** (§10.7) |
 | Region 1 gate | **SHEAR** (§9) |
 | Starter species | each Core builds a distinct line — a classic trio (§8.2) |
-| Colony naming | the Downtowns sit under **real North Texas sites, parodied** |
+| Colony naming | the Downtowns sit under **real-world kinds of site, parodied** — no real place named *(amended 2026-10-24; was "real North Texas sites")* |
 
 *Erratum, same date:* the type chart as first drafted referenced a GLITCH
 type that does not exist (GLITCHED is a status) and two cells failed to
@@ -98,7 +100,7 @@ triangle, approved spirit preserved.
 - **Currency (lore lock):** **Credits** — value backed only by global mutual
   trust.
 - **Regional styles:** Ohms vary by region; regional variants are
-  **Ohmgrown**. Region 1 is Texan.
+  **Ohmgrown**. Region 1 is plains cattle country.
 
 -----
 
@@ -191,11 +193,11 @@ Full character sheets in `docs/compendium/characters.md` (Phase 2).
    by the hive, allies with the player. The Garrison chooses total purge —
    every Ohm, freed or not. Three-way board.
 
-### ACT III — TOWARD DALLAS (hrs 22–30)
+### ACT III — TOWARD THE OLD CITY (hrs 22–30)
 
-10. **The Convoy.** United colonies push down the old highways toward Dallas.
+10. **The Convoy.** United colonies push down the old highways toward the Old City.
     Vehicle Ohms shine; final field ability; last Patches.
-11. **The Spire.** Reunion Tower is PERSISTENCE's antenna driving the Static
+11. **The Spire.** The Spire is PERSISTENCE's antenna driving the Static
     continent-wide. Gauntlet of Ohmega-class hive champions — while the
     Garrison races to destroy the tower in a way that would kill every Ohm
     mind with it. The player must beat both clocks.
@@ -218,7 +220,7 @@ Full character sheets in `docs/compendium/characters.md` (Phase 2).
 - **Region 1 geography (locked):** The home colony, **Ohmstead**, sits
   underground; an elevator rises to **the Field**, a large surface zone on the
   ruins of an old cattle town, homes still standing. The region arcs outward
-  through the other Downtowns, then toward Dallas for the final chapters.
+  through the other Downtowns, then toward the Old City for the final chapters.
 - **Badge analog:** The player connects surface Raiders and underground
   colonies; **8 Patches**, one per colony, template per §5.5.
 - **Garages:** Heal/respawn points. "You're all **recharged** — **stay
@@ -509,7 +511,7 @@ part.**
   with sel-out, Gen 3 static standard — entry animation only, no idle loops.
   This is the locked asset budget.
 - **Overworld:** 16×16 tiles; Gen 3-proportioned character sprites;
-  Hoenn-grade craft translated to sun-bleached Texas ruin — caliche whites,
+  Hoenn-grade craft translated to sun-bleached plains ruin — caliche whites,
   rust oranges, faded signage, heat-haze skies.
 - **UI:** Gen 3 textboxes, menus, fonts, battle HUD.
 - **Pipeline (updated 2026-06-13):** the artist **Chajipudi** produces the

@@ -14,7 +14,7 @@ const OUT = join(ROOT, 'assets/reference/styles/concepts');
 const API = 'https://api.pixellab.ai/v2';
 const H = { Authorization: `Bearer ${process.env.PIXELLAB_API_KEY}`, 'Content-Type': 'application/json' };
 
-const SAL = 'SAL, a teenage boy scavenger hero of post-collapse Texas: messy brown hair, worn leather cap with brass goggles pushed up, red bandana, tan work jacket with shearling collar, patched denim trousers, worn boots, tool pouch on belt';
+const SAL = 'SAL, a teenage boy scavenger hero of post-collapse plains cattle country: messy brown hair, worn leather cap with brass goggles pushed up, red bandana, tan work jacket with shearling collar, patched denim trousers, worn boots, tool pouch on belt';
 const TAIL = 'single character, full body, standing, facing the viewer, game sprite, transparent background';
 
 const STYLES = {

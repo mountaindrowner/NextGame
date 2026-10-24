@@ -8071,9 +8071,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.dallas.skyscraper",
+    "id": "sec.city.skyscraper",
     "display_name": "Skyscraper facade (backdrop)",
-    "kit": "sec.dallas",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "autotile",
     "layer": "bottom",
@@ -8086,9 +8086,9 @@
     "blocks": 3
   },
   {
-    "id": "sec.dallas.glass_curtain",
+    "id": "sec.city.glass_curtain",
     "display_name": "Shattered glass curtain-wall",
-    "kit": "sec.dallas",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "single",
     "layer": "bottom",
@@ -8100,9 +8100,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.dallas.broken_floor",
+    "id": "sec.city.broken_floor",
     "display_name": "Broken climb floor",
-    "kit": "sec.dallas",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "single",
     "layer": "bottom",
@@ -8114,9 +8114,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.dallas.exposed_girder",
+    "id": "sec.city.exposed_girder",
     "display_name": "Exposed girder",
-    "kit": "sec.dallas",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "single",
     "layer": "top",
@@ -8129,9 +8129,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.dallas.elevator_shaft",
+    "id": "sec.city.elevator_shaft",
     "display_name": "Elevator shaft / hazard gap",
-    "kit": "sec.dallas",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "object",
     "layer": "object",
@@ -8143,9 +8143,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.dallas.overpass_tangle",
+    "id": "sec.city.overpass_tangle",
     "display_name": "Collapsed overpass tangle (the Stack)",
-    "kit": "sec.dallas",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "prop",
     "layer": "bottom",
@@ -8194,9 +8194,9 @@
     "blocks": 12
   },
   {
-    "id": "sec.dallas.tunnel_wall",
+    "id": "sec.city.tunnel_wall",
     "display_name": "Pedestrian tunnel wall",
-    "kit": "sec.dallas",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "autotile",
     "layer": "bottom",
@@ -8209,9 +8209,9 @@
     "blocks": 3
   },
   {
-    "id": "sec.dallas.tunnel_floor",
+    "id": "sec.city.tunnel_floor",
     "display_name": "Tunnel/concourse floor (flooded)",
-    "kit": "sec.dallas",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "autotile",
     "layer": "bottom",
@@ -8224,9 +8224,9 @@
     "blocks": 4
   },
   {
-    "id": "sec.dallas.sealed_blastdoor",
+    "id": "sec.city.sealed_blastdoor",
     "display_name": "Sealed blast door",
-    "kit": "sec.dallas",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "object",
     "layer": "object",
@@ -8238,9 +8238,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.dallas.dead_vehicle",
+    "id": "sec.city.dead_vehicle",
     "display_name": "Dead-vehicle field",
-    "kit": "sec.dallas",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "prop",
     "layer": "bottom",
@@ -8280,9 +8280,9 @@
     "blocks": 6
   },
   {
-    "id": "sec.dallas.plaza",
+    "id": "sec.city.plaza",
     "display_name": "Open plaza ground",
-    "kit": "sec.dallas",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "single",
     "layer": "bottom",
@@ -8294,9 +8294,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.dallas.spire",
-    "display_name": "The Spire (Reunion Tower exterior)",
-    "kit": "sec.dallas",
+    "id": "sec.city.spire",
+    "display_name": "The Spire (tower exterior)",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "prop",
     "layer": "bottom",
@@ -8367,9 +8367,9 @@
     "blocks": 24
   },
   {
-    "id": "sec.dallas.crown",
+    "id": "sec.city.crown",
     "display_name": "The Crown (antenna chamber)",
-    "kit": "sec.dallas",
+    "kit": "sec.city",
     "biome": "urban",
     "type": "prop",
     "layer": "bottom",
@@ -13862,9 +13862,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.dallas.debris_field",
+    "id": "dressing.city.debris_field",
     "display_name": "Mass debris field",
-    "kit": "dressing.dallas",
+    "kit": "dressing.city",
     "biome": "urban",
     "type": "single",
     "layer": "bottom",
@@ -13883,9 +13883,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.dallas.dead_cars",
+    "id": "dressing.city.dead_cars",
     "display_name": "Dead cars",
-    "kit": "dressing.dallas",
+    "kit": "dressing.city",
     "biome": "urban",
     "type": "object",
     "layer": "object",
@@ -13904,9 +13904,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.dallas.ash_drift",
+    "id": "dressing.city.ash_drift",
     "display_name": "Ash drifts",
-    "kit": "dressing.dallas",
+    "kit": "dressing.city",
     "biome": "urban",
     "type": "single",
     "layer": "bottom",
@@ -13925,9 +13925,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.dallas.fallen_sign",
+    "id": "dressing.city.fallen_sign",
     "display_name": "Fallen signage",
-    "kit": "dressing.dallas",
+    "kit": "dressing.city",
     "biome": "urban",
     "type": "object",
     "layer": "object",
@@ -13946,9 +13946,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.dallas.glass",
+    "id": "dressing.city.glass",
     "display_name": "Glass everywhere",
-    "kit": "dressing.dallas",
+    "kit": "dressing.city",
     "biome": "urban",
     "type": "single",
     "layer": "bottom",
@@ -13967,9 +13967,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.dallas.choking_dust",
+    "id": "dressing.city.choking_dust",
     "display_name": "Choking dust",
-    "kit": "dressing.dallas",
+    "kit": "dressing.city",
     "biome": "urban",
     "type": "single",
     "layer": "top",
@@ -13988,9 +13988,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.dallas.torn_billboard",
+    "id": "dressing.city.torn_billboard",
     "display_name": "Torn billboard",
-    "kit": "dressing.dallas",
+    "kit": "dressing.city",
     "biome": "urban",
     "type": "single",
     "layer": "top",
@@ -14009,9 +14009,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.dallas.hive_detritus",
+    "id": "dressing.city.hive_detritus",
     "display_name": "Hive-growth detritus (shed flesh-metal)",
-    "kit": "dressing.dallas",
+    "kit": "dressing.city",
     "biome": "urban",
     "type": "object",
     "layer": "object",
@@ -14030,9 +14030,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.dallas.pulsing_spores",
+    "id": "dressing.city.pulsing_spores",
     "display_name": "Pulsing spores",
-    "kit": "dressing.dallas",
+    "kit": "dressing.city",
     "biome": "urban",
     "type": "single",
     "layer": "top",

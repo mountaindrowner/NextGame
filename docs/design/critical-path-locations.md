@@ -2,7 +2,7 @@
 
 *The required journey from point A to point Z, fitted to the plot — every town, colony, road, cave, dungeon, and building of note the player must pass to beat the game, in order. The wider optional world comes later; this is the spine.*
 
-**Region name (working):** **the Blackland** — the ruined Blackland Prairie south of Dallas, arcing north into the dead metroplex. *(Distinct from the colony-network name, still open. Dallas is the region's dark pole.)*
+**Region name (working):** **the Blackland** — a ruined black-soil prairie, arcing north into the dead sprawl of **the Old City** *(working)*. *(Distinct from the colony-network name, still open. The Old City is the region's dark pole. Since 2026-10-24 no real place is named: the country is Texas-adjacent in feel, never Texas.)*
 
 **Geography:** The journey runs roughly south-to-north. It opens in cattle-and-grain country, climbs through prairie and quarry land, crosses the drowned Trinity bottoms, threads the ruined sprawl, and ends in the downtown canyon at the tower. Each colony sits where its real-world kind would: traders on a rail junction, quarry-folk in the cement lands, scholars in the northern data corridor, the last holdout at the city's edge.
 
@@ -135,7 +135,7 @@
 - **Terrain:** The first true urban sprawl — overpasses, on-ramps, dead toll plazas; Merc and Drifter encounters.
 - **Places of note:** stacked **overpass ramps**; a toppled toll gantry.
 - **Gate in:** Story.
-- **Plot beat:** The ruins of the old metroplex begin; the air hums louder.
+- **Plot beat:** The ruins of the old sprawl begin; the air hums louder.
 - **Leads to:** The Array.
 
 ### 15. THE ARRAY — Colony 7 *(scholar-engineers in a northern data-center campus)*
@@ -143,7 +143,7 @@
 - **Terrain:** Server halls, cooling towers, an antenna farm.
 - **Places of note:** **the Server Halls** (the trial — the Lattice, Warden Tobias Frost, the most tactical fight pre-finale; a **PROTOTYPE** legendary can lurk in the experimental wing); **the Uplink Chamber** (net encounters); the antenna farm where the tower plan is laid bare.
 - **Gate in:** Story.
-- **Plot beat:** The **full threat** is explained — towers → the Dallas antenna → the satnet upload; **Mag works out the Breaker can broadcast through the tower.** The endgame plan is born. **Token 7.**
+- **Plot beat:** The **full threat** is explained — towers → the Old City antenna → the satnet upload; **Mag works out the Breaker can broadcast through the tower.** The endgame plan is born. **Token 7.**
 - **Leads to:** The Stack.
 
 ### 16. THE STACK — route-dungeon *(a colossal ruined highway interchange)*
@@ -154,19 +154,19 @@
 - **Plot beat:** The united convoy pushes toward the city; the Pull is now a visible storm of wild Ohms trailing the column.
 - **Leads to:** The Verge.
 
-### 17. THE VERGE — Colony 8 *(the oldest colony, fortified at Dallas's edge, under siege)*
+### 17. THE VERGE — Colony 8 *(the oldest colony, fortified at the Old City's edge, under siege)*
 - **Type:** Colony + Trial 8.
 - **Terrain:** Old walls around a fortified rail terminal at the city's southern lip.
 - **Places of note:** **the Walls** and **the Beacon** (that calls the colonies to gather); the **Convoy Staging Ground**; the Lorekeeper's archive (Warden Ruth Amos; an **ANCIENT** legendary may be kept/guarded here).
 - **Gate in:** Story.
 - **Plot beat:** **Grandpa confirmed** — Eli uploaded himself into the net and may be holding the line still; the convoy assembles for the final push. **Token 8.**
-- **Leads to:** Dallas — the Outer Ring.
+- **Leads to:** the Old City — the Outer Ring.
 
 ---
 
 # ACT III — TOWARD THE TOWER (DALLAS)
 
-### 18. THE OUTER RING — dungeon-zone *(Dallas's hive-saturated outskirts)*
+### 18. THE OUTER RING — dungeon-zone *(the Old City's hive-saturated outskirts)*
 - **Type:** Hostile wild zone.
 - **Terrain:** Ruined neighborhoods drowning in Static; **feral, near-unhackable Ohms** everywhere — the most dangerous wilds in the game; the skyline of dead towers ahead.
 - **Places of note:** burned suburbs; the first fallen skyscrapers; hive relay-towers humming.
@@ -174,7 +174,7 @@
 - **Plot beat:** Fight through the worst of the Static toward downtown.
 - **Leads to:** The Canyon.
 
-### 19. THE CANYON — dungeon *(downtown Dallas, the skyscraper ruins)*
+### 19. THE CANYON — dungeon *(the Old City downtown, the skyscraper ruins)*
 - **Type:** Urban dungeon — **a skyscraper climb.**
 - **Terrain:** The dead financial district; a chosen **collapsed skyscraper** the player ascends (and partly descends through its broken floors) to cross the impassable street-level wreckage.
 - **Places of note:** the **leaning tower** (the skyscraper dungeon — vertical, hazardous, hive champions on the upper floors); an open **plaza** below; the dead West End.
@@ -190,7 +190,7 @@
 - **Plot beat:** Drake's remnant defends the tower from below; the convoy fights through to the spire's foundation.
 - **Leads to:** The Spire.
 
-### 21. THE SPIRE — final dungeon *(Reunion Tower, retrofitted as PERSISTENCE's antenna)*
+### 21. THE SPIRE — final dungeon *(the old broadcast tower, retrofitted as PERSISTENCE's antenna)*
 - **Type:** Final dungeon + final boss.
 - **Terrain:** The iconic ball-on-a-stalk tower, old steel fused with hive-grown flesh; an ascent through a **gauntlet of Ohmega-class hive champions** to the antenna chamber at the crown.
 - **Places of note:** the **stalk** (the climb); **the Crown** (the antenna chamber — the final arena).
@@ -208,7 +208,7 @@
 
 ## CRITICAL-PATH AT A GLANCE
 
-Ohmstead → the Field → Farm Road → **Railhead (T1)** → the 45 Scar *(first vehicle Ohm)* → **the Cistern (T2 · HOVER gate)** → the Furrows → **Bastion (T3)** → Military Road → **Redoubt + the Bunker (T4 · REVEAL)** → the Trinity Bottoms → **the Chancel (T5)** → the Red Flats → **Redbed (T6 · siege)** → Tollway Ruins → **the Array (T7 · the plan)** → the Stack → **the Verge (T8 · Grandpa confirmed)** → the Outer Ring → the Canyon *(skyscraper)* → the Underground *(tunnels)* → **the Spire / Reunion Tower (FINALE)** → Ohmcoming.
+Ohmstead → the Field → Farm Road → **Railhead (T1)** → the 45 Scar *(first vehicle Ohm)* → **the Cistern (T2 · HOVER gate)** → the Furrows → **Bastion (T3)** → Military Road → **Redoubt + the Bunker (T4 · REVEAL)** → the Trinity Bottoms → **the Chancel (T5)** → the Red Flats → **Redbed (T6 · siege)** → Tollway Ruins → **the Array (T7 · the plan)** → the Stack → **the Verge (T8 · Grandpa confirmed)** → the Outer Ring → the Canyon *(skyscraper)* → the Underground *(tunnels)* → **the Spire (FINALE)** → Ohmcoming.
 
 ---
 
@@ -217,6 +217,6 @@ Ohmstead → the Field → Farm Road → **Railhead (T1)** → the 45 Scar *(fir
 - **8 trials, 9 settlements, ~6 routes, ~7 dungeons** on the required path — a clean ~30-hour spine before optional content.
 - **One hard field-ability gate (HOVER)**; everything else on the main road is story or key-item gated, per canon.
 - **Legendary placement** is woven in but optional: ORGANIC-HYBRID in the Trinity Bottoms, PROTOTYPE at the Array, ANCIENT at the Verge, and the Monad (Prototype-class) as the final boss.
-- **Reunion Tower** is the working finale landmark (confirm to lock; v5 17.8).
+- **The Spire** is the finale landmark — a fictional tower (Reunion Tower retired 2026-10-24; its silhouette is still open).
 - **Real-world parody** only — invent trade dress for the warehouse, rental lot, data center, and tower; no real logos or signage.
 - Next pass, on your call: **fill in the wider world** — optional towns, side-dungeons, post-game zones, and the regions beyond the Blackland that the endgame hooks open.

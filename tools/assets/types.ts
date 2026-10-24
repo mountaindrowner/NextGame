@@ -134,7 +134,7 @@ export const AREAS: AreaDef[] = [
   { area: 'redbed', display: 'Redbed — Colony 6', biome: 'red_hardpan', secondary: 'sec.redbed', building: true, dungeon: 'none', saturation: 'heavy', phase: 'act2' },
   { area: 'array', display: 'The Array — Colony 7', biome: 'data', secondary: 'sec.array', building: true, dungeon: 'none', saturation: 'med', phase: 'act2' },
   { area: 'verge', display: 'The Verge — Colony 8', biome: 'urban', secondary: 'sec.verge', building: true, dungeon: 'none', saturation: 'heavy', phase: 'act2' },
-  { area: 'dallas', display: 'Dallas — Act III', biome: 'urban', secondary: 'sec.dallas', building: true, dungeon: 'mine', saturation: 'max', phase: 'act3' },
+  { area: 'city', display: 'the Old City — Act III', biome: 'urban', secondary: 'sec.city', building: true, dungeon: 'mine', saturation: 'max', phase: 'act3' },
   { area: 'fortress', display: 'Mountain Fortress (post-game)', biome: 'military', secondary: 'sec.fortress', building: true, dungeon: 'cave', saturation: 'max', phase: 'postgame', optional: true },
   // optional-area lighter secondaries
   { area: 'depot', display: 'Ohm Depot', biome: 'industrial', secondary: 'sec.depot', building: true, dungeon: 'none', saturation: 'none', phase: 'optional', optional: true },

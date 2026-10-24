@@ -89,7 +89,7 @@ capture → save → load.**
 | M8 | **Style guide gate (art)** | Palettes, outline/lighting rules, 3 reference Ohms at both scales, 1 tileset strip — **creator approval required before mass asset production.** |
 | M9 | **Vertical Slice = Phase 4 gate** | Bench opening → elevator → the Field → wild encounter → battle → node capture → one evolution → garage recharge → save/load. Tag `slice-v0` on creator approval. |
 | M10 | **Act I content** | The Field complete: maps, trainers, SQ1–2, grain-elevator dungeon, Ohmega Combinator, Hearth Patch, Manifest UI. |
-| M11 | **Acts II–III content** | Eight colonies, beats 8–23, reveal echo pass on all pre-reveal dialogue, side quests 3–6, Ohmsick ×3, legendaries, Reunion Tower gauntlet, EXEMPLAR, ending. |
+| M11 | **Acts II–III content** | Eight colonies, beats 8–23, reveal echo pass on all pre-reveal dialogue, side quests 3–6, Ohmsick ×3, legendaries, Spire gauntlet, EXEMPLAR, ending. |
 | M12 | **Audio** | 15 tracks + 5 fanfares integrated per GDD §13; SFX families; per-species cries. |
 | M13 | **Balance & polish** | Patch-ladder curve tuned (Hearth ~12 → Spire ~55); economy weights derived from Pokémon curves; PP generosity pass; full settings menu. |
 | M14 | **Release v1.0** | ~30hr single run completable; PC + iPhone verified; zero blocker bugs; weekly off-site zips current. |
@@ -106,7 +106,7 @@ on green smoke test. Tags at gates: `phase3-contract`, `slice-v0`, `act1`,
 | Battle backs | 45 | player-side species realistically fielded early QA → full 156 by M11; same spec |
 | Trainer battle sprites | 33 | 2 player backs (SAL/WREN), 13 named fronts (8 Wardens, Rook, Drake, Reyes, Faraday, Grandpa Eli), 18 class fronts |
 | Overworld character sheets | 46 | 2 player (walk/run/ride), ~32 NPC types, 12 story/ride Ohm forms; 16×16 grid, Gen 3 proportions |
-| Tilesets | 11 | Ohmstead under, the Field, ranchland/routes, lake & dam, the Bakerhouse, speedway, stockyards, stadium, airfield, Dallas/Reunion Tower, caves/EM zones |
+| Tilesets | 11 | Ohmstead under, the Field, ranchland/routes, lake & dam, the Bakerhouse, speedway, stockyards, stadium, airfield, the Old City/the Spire, caves/EM zones |
 | Maps (Tiled) | ~48 | 8 colonies, 9 dungeons, ~14 routes/surface zones, ~17 interiors |
 | UI sheets | 6 | textbox, menus, battle HUD, Manifest, capture puzzle, fonts |
 | Music | 15 + 5 | GDD §13 track list + fanfares; GBA chiptune exactly |

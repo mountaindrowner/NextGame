@@ -32,7 +32,7 @@ in `assets/styleguide/` — read those first. Questions route through Mark.*
 1. **Tier 1 — the slice set** (ship first): 001–009 + starter variants,
    010, 011, 012, 015, 018, 019, 021, 024, 029, 030, 032, 036, 041, 046.
 2. **Tier 2 — rest of the Field & Act I** (017–048 remainder).
-3. **Tier 3 — the road to Dallas** (049–143).
+3. **Tier 3 — the road to the Old City** (049–143).
 4. **Tier 4 — legendaries** (144–150; concept pass to Mark before final).
 
 -----
@@ -69,7 +69,7 @@ sprite each.
 | 017 | Chandelux | chandelier | OPTIC | 58px | crystal regalia, every candle-socket alight | ✓ |
 | 018 | Beeplet | smoke detector | SONIC | 26px | ceiling disc, one blinking LED, test button | ✓ |
 | 019 | Vacuette | vacuum cleaner | UTILITY | 32px | upright bag body, hose tail | ✓ |
-| 020 | Dustdevil | vacuum, Texan | UTILITY | 46px | spins inside its own dust spiral (Ohmgrown) | ✓ |
+| 020 | Dustdevil | vacuum, plains | UTILITY | 46px | spins inside its own dust spiral (Ohmgrown) | ✓ |
 | 021 | Fanlet | ceiling fan | UTILITY | 30px | blade skirt, pull-chain tassel | ✓ |
 | 022 | Oscillord | ceiling fan, lordly | UTILITY | 46px | five-blade crown, porch-king posture | ✓ |
 | 023 | Percolatte | coffee maker | THERM | 36px | carafe belly, steam wisp, dawn-shift eyes | ✓ |
@@ -94,7 +94,7 @@ sprite each.
 | 042 | Thistlebale | tumbleweed bale | VERDANT | 46px | baling-wire skeleton, drifting menace | ✓ |
 | 043 | Pricklet | cactus (virus-taken) | VERDANT | 32px | pad with cable veins, flower of glass | ✓ |
 | 044 | Cactacomb | cactus colony | VERDANT | 50px | saguaro arms sheltering small machines | ✓ |
-| 045 | Bonnetbloom | bluebonnet patch | VERDANT | 34px | flower cluster over buried cable roots | ✓ |
+| 045 | Bonnetbloom | lupine patch | VERDANT | 34px | flower cluster over buried cable roots | ✓ |
 | 046 | Barbwyre | barbed-wire spool | FRAME | 34px | coiled spool, one strand raised like a head | ✓ |
 | 047 | Mowlet | push mower | MOTOR | 32px | blade grin under the deck | ✓ |
 | 048 | Mowrauder | riding mower | MOTOR | 50px | rideable; headlight eyes, **overworld form** | ✓ |

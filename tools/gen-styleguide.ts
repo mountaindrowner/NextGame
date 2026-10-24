@@ -22,7 +22,7 @@ const hex = (h: string, a = 255): [number, number, number, number] => [
   a,
 ];
 
-/** Master OHMFRONT ramps — sun-bleached Texas on GBA limits. */
+/** Master OHMFRONT ramps — sun-bleached plains on GBA limits. */
 export const RAMPS: Record<string, string[]> = {
   caliche: ['f8f0dc', 'e0d0b0', 'c0a880', '907850', '584830'],
   rust: ['f0b070', 'd08040', 'a85828', '703818', '401c10'],

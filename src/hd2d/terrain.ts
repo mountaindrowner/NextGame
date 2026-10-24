@@ -335,7 +335,7 @@ export function buildGrass(scene: THREE.Scene): (t: number) => void {
   mesh.receiveShadow = true;
   scene.add(mesh);
 
-  // wildflowers: bluebonnets, Indian paintbrush, yellow coneflower, white yarrow
+  // wildflowers: lupines, Indian paintbrush, yellow coneflower, white yarrow
   const fl: Spot[] = [];
   const FL = ['#5a6ee0', '#d8483a', '#f0c63a', '#f2ece0', '#b97ae0'];
   for (let k = 0; k < 900; k++) {

@@ -17,7 +17,7 @@ const KEY = process.env.PIXELLAB_API_KEY;
 if (!KEY) throw new Error('PIXELLAB_API_KEY not set');
 const H = { Authorization: `Bearer ${KEY}`, 'Content-Type': 'application/json' };
 
-const SAL = 'SAL, a teenage boy, young scavenger hero of a post-collapse Texas: messy brown hair under a worn leather cap with brass goggles pushed up on the brow, red bandana at the neck, scuffed tan work jacket with a shearling collar, denim trousers with patched knee pads, worn brown boots, a small tool pouch on the belt, determined hopeful face';
+const SAL = 'SAL, a teenage boy, young scavenger hero of post-collapse plains cattle country: messy brown hair under a worn leather cap with brass goggles pushed up on the brow, red bandana at the neck, scuffed tan work jacket with a shearling collar, denim trousers with patched knee pads, worn brown boots, a small tool pouch on the belt, determined hopeful face';
 
 export const STYLES = {
   hd2d: { size: 64, label: 'HD-2D diorama RPG', style: 'modern HD-2D diorama JRPG sprite: about 3.5 heads tall, rich hue-shifted shading with soft warm rim light, selective dark outline, painterly pixel clusters, grounded earthy palette with warm highlights, tasteful detail' },

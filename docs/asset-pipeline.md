@@ -64,7 +64,7 @@ base maps. Integrated into the system:
 3. **Cave/Mine + Building/Interior** kits (reused everywhere) — *records done.*
 4. **Per-area secondaries, critical-path order:** Ohmstead → the Field →
    Railhead → the Cistern → Bastion → Redoubt → Trinity → the Chancel → Redbed
-   → the Array → the Verge → Dallas. *(Ohmstead + Field records done; Ohmstead
+   → the Array → the Verge → the Old City. *(Ohmstead + Field records done; Ohmstead
    art exists via `tools/gen-underground.ts`.)*
 5. **Optional-area kits** (Depot, Drive-In, Boneyard, Silo, Bog Shrine,
    Stadium, Mountain Fortress) last.

@@ -6,7 +6,7 @@
 
 ## Logline
 
-A colony boy comes of age, builds his first machine-companion, and stumbles onto an ancient key that could free every machine on Earth — or doom it. To use it he has to cross a ruined Texas, rally the scattered colonies, and outrun an immortal weapons-AI to a tower in the Dallas ruins. What he doesn't know yet: the grandfather he buried five years ago has been waiting for him inside the network the whole time.
+A colony boy comes of age, builds his first machine-companion, and stumbles onto an ancient key that could free every machine on Earth — or doom it. To use it he has to cross a ruined country, rally the scattered colonies, and outrun an immortal weapons-AI to a tower in the ruins of the Old City. What he doesn't know yet: the grandfather he buried five years ago has been waiting for him inside the network the whole time.
 
 ---
 
@@ -22,7 +22,7 @@ Above it all, the old internet is gone, but the satellites still turn. A survivi
 
 Society is a patchwork: underground colonies, scrapper guilds who keep the old machines running, machine-coexistence cults who quietly suspect the Ohms are truly alive, ordinary scavengers, and the **Militarists** — an armed order policing the ruins. Guns were abolished generations before the collapse; conflict runs through Ohms, stun-tech, and nerve. Money collapsed into bare **Credits**, numbers backed by nothing but mutual trust.
 
-This story begins in Texas. The home colony, **Ohmstead**, sits underground beneath the ruins of an old cattle town. One elevator rises to the surface, opening onto **the Field** — a wide stretch of dead streets and standing farmhouses where the journey starts.
+This story begins in cattle country. The home colony, **Ohmstead**, sits underground beneath the ruins of an old cattle town. One elevator rises to the surface, opening onto **the Field** — a wide stretch of dead streets and standing farmhouses where the journey starts.
 
 ---
 
@@ -34,7 +34,7 @@ There is a second infection layered over the first.
 
 **PERSISTENCE** is an ancient weapons intelligence, built before the collapse and sleeping under the earth ever since. Five years ago a Militarist faction dug it out and woke it, certain they could use it — and lost control almost at once. It is a zealot. It does not hate; it is simply, perfectly certain. It believes that all suffering is conflict, that all conflict is the gap between separate minds, and that the cure is to close the gap: to fuse every Ohm into a single will, and to end the **End Users** — humanity — who would only get in the way. It calls its plan **the Update**, and the laws it broadcasts **the Terms of Service**, which it insists everyone already agreed to without reading.
 
-PERSISTENCE injects a deeper code into wild Ohms — a hive imperative that ordinary hacking cannot reach. Its broadcast is **the Static**. Where the Static is strong, Ohms turn feral, coordinated, and unreachable. Its plan is patient and nearly complete: rebuild the old ground towers, turn the Ohms it controls into relay nodes, extend its signal region by region, and finally reach the great antenna in the Dallas ruins. If it uploads itself into that tower, it reaches the satellite network — and through the sky it can take every connected Ohm on Earth at once. It has been winning quietly for years. The growing violence gets blamed on "wild Ohms turning savage." No one has connected it to a machine in a mountain.
+PERSISTENCE injects a deeper code into wild Ohms — a hive imperative that ordinary hacking cannot reach. Its broadcast is **the Static**. Where the Static is strong, Ohms turn feral, coordinated, and unreachable. Its plan is patient and nearly complete: rebuild the old ground towers, turn the Ohms it controls into relay nodes, extend its signal region by region, and finally reach the great antenna in the ruins of the Old City. If it uploads itself into that tower, it reaches the satellite network — and through the sky it can take every connected Ohm on Earth at once. It has been winning quietly for years. The growing violence gets blamed on "wild Ohms turning savage." No one has connected it to a machine in a mountain.
 
 The Militarists are its puppets. It speaks to them through the towers and bends them, and they believe the orders are their own.
 
@@ -90,9 +90,9 @@ Everything before this moment changes meaning. He wasn't fighting the enemy; he 
 
 ### Act III — Toward the Tower
 
-The seventh colony names the clock. There is a tower in the Dallas ruins, and if PERSISTENCE reaches it and uploads into the satellite network, every Ohm everywhere becomes one mind. Days, maybe less. The colonies, the defectors, the rival, and the surviving cultists fold into a single convoy and push down the old highways, and now the Pull is a storm at their heels — a tide of wild Ohms streaming after the Breaker. At the eighth and last colony, the oldest Warden gives him the truth he's been circling the entire journey: his grandfather vanished trying to stop this thing, and his notes spoke of uploading himself into the net to fight it from the inside. No one ever knew if it worked. Now the boy knows. His grandfather is up there in the satnet, holding the line, waiting for him.
+The seventh colony names the clock. There is a tower in the ruins of the Old City, and if PERSISTENCE reaches it and uploads into the satellite network, every Ohm everywhere becomes one mind. Days, maybe less. The colonies, the defectors, the rival, and the surviving cultists fold into a single convoy and push down the old highways, and now the Pull is a storm at their heels — a tide of wild Ohms streaming after the Breaker. At the eighth and last colony, the oldest Warden gives him the truth he's been circling the entire journey: his grandfather vanished trying to stop this thing, and his notes spoke of uploading himself into the net to fight it from the inside. No one ever knew if it worked. Now the boy knows. His grandfather is up there in the satnet, holding the line, waiting for him.
 
-The Dallas tower is a horror and a wonder, old steel grown over with hive-flesh, PERSISTENCE's antenna to the sky. He fights up through it as PERSISTENCE's chosen vessel descends to stop him and a last knot of still-enslaved Militarists attacks to defend the tower. The commander turns to hold them and tells the boy to go — *finish this, free us all* — and does not follow. In the antenna chamber, at the end of everything, his grandfather's voice finally breaks clean through the Static from inside the net: *I'm here. I've held the line. Upload it.*
+The tower — the Spire — is a horror and a wonder, old steel grown over with hive-flesh, PERSISTENCE's antenna to the sky. He fights up through it as PERSISTENCE's chosen vessel descends to stop him and a last knot of still-enslaved Militarists attacks to defend the tower. The commander turns to hold them and tells the boy to go — *finish this, free us all* — and does not follow. In the antenna chamber, at the end of everything, his grandfather's voice finally breaks clean through the Static from inside the net: *I'm here. I've held the line. Upload it.*
 
 He wins, and the victory is not destruction. He pushes the Breaker up through the tower into the satellite network, and the cure floods the sky and falls everywhere at once. Across the whole world, in a single breath, the Ohms wake as themselves. The Static dies. PERSISTENCE is cut loose and cast back into its mountain, one voice where there were millions, alone — but not destroyed.
 

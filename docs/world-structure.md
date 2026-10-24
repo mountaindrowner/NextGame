@@ -45,7 +45,7 @@ walker can cross edges. Maps lose their **solid border on edges that connect**
 ● Redoubt (C4 · reveal)          → the Stack (5-level interchange)
   → (Trinity Bottoms)            ● the Verge (C8)
 ● the Chancel (C5)               → the Outer Ring → the Canyon → the Underground
-                                 ◆ the Spire / Reunion Tower (finale)
+                                 ◆ the Spire (finale)
                                  ● Ohmcoming (epilogue)
 ```
 
@@ -59,7 +59,7 @@ wager-hall, the Gauntlet, uplink dives).
 ## 3. Biome BANDS (south → north), blended at seams
 
 A gradient like Hoenn's, each band several maps wide, with a rising **hive
-saturation** north toward Dallas:
+saturation** north toward the Old City:
 
 | Band | Maps | Biome | Hive |
 |---|---|---|---|

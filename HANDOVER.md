@@ -33,6 +33,21 @@ like the region's ground (not neon); one continuous seamless overworld with
 long transition stretches; build order = critical path; he approved the
 approach and all proposals so far ("I like everything you're proposing").
 
+**Setting changed (Mark, 2026-10-24): OHMFRONT is not Texas.** An unnamed
+plains country, Texas-adjacent in feel, never named. Mark's other story, THE
+LONG NOON (South Texas, Laredo → Houston, sun-killed sky), keeps Texas, and the
+two stay **separate** games. Done: every Texas/Dallas/Reunion Tower/bluebonnet
+reference is out of docs, code and art generators. Dallas → **the Old City**
+*(working)*, Reunion Tower → **the Spire**, asset ids `sec.dallas` →
+`sec.city`, Bonnetbloom = a lupine patch, boxcar = "PLAINS & PACIFIC".
+`npm run lint` now fails on real place names in src/public/world/tools.
+Stored generation prompts under `assets/reference/` were left as the historical
+record. **Open for Mark:** a real name for the Old City; the Spire's silhouette
+(ball-on-stalk reads as Dallas); whether to keep "the Blackland", "the Trinity
+Bottoms", "the 45" and Caliche-style terms (plains-generic, but North Texas in
+origin); the name collisions with THE LONG NOON (Cistern, Nursery, Warden,
+Keeper, Hale).
+
 **Still [PROPOSAL] / to flag:** grid-combat rules; the 45 Scar layout +
 `scar-wrecks` table; transition stretches (content, working names "old
 homestead / grain line / interstate approach", signs incl. "NEXT EXIT · FUEL ·
@@ -216,7 +231,7 @@ with the Co-Authored-By + Claude-Session lines (see earlier commits).
 - **PixelLab credits = "generations".** Started 2000; **1912 remain** (~88 used:
   barrel probe, Mabel, the 20). Check balance: GET `api.pixellab.ai/v2/balance`
   → `subscription.generations`. ~4 generations per NPC (1 portrait + 1 char +
-  2 walk). The full remaining cast (Cistern→Dallas, ~28 more) ≈ 110 generations.
+  2 walk). The full remaining cast (Cistern→the Old City, ~28 more) ≈ 110 generations.
 - **API shapes learned (live-verified):** v1 `generate-image-pixflux` (sync,
   `{image:{base64}}`); v2 `create-character-with-4-directions` (async job →
   `last_response.images.{south,east,north,west}` as **rgba_bytes**, ~1 gen);
@@ -618,7 +633,7 @@ Furrows, Military Road, Red Flats, Tollway, the Stack) with open edges; add
 line-of-sight trainers + ledges + hidden-item systems; a branch/loop + a hub at
 Railhead; vehicle-Ohm fast travel + world-map UI; multi-floor dungeon loader +
 the net layer; then Act II colonies (Trinity → Chancel → Redbed → Array → Verge
-→ Dallas) and the optional spurs.
+→ the Old City) and the optional spurs.
 
 ## Session 2026-06-14 (cont.) — Clutter layer + EVERY asset enumerated
 
@@ -628,7 +643,7 @@ and directed: make every discussed asset + organize for later map-building. Done
   via a `plane` label, the `clutter.universal|wall|fx` + `dressing.<area>` kits,
   and the D1 (dressing area-lock) + D4 (plane→layer) rules in the validator.
 - **Full enumeration:** `catalog-areas.ts` (ALL 19 per-area secondaries,
-  Railhead→Dallas + fortress + 6 optional) + `catalog-clutter.ts` (universal
+  Railhead→the Old City + fortress + 6 optional) + `catalog-clutter.ts` (universal
   libraries + 12 dressing sets). Manifest **643 records, 0 violations**;
   **59 tests** (added D1/D4 + "every area kit enumerated"). Nothing pending in
   the inventory — every asset we've discussed has a labeled, organized record.
@@ -648,7 +663,7 @@ Bunker/command-center with the **Eli Vane photo/logbook** interact + MEDIUM hive
 sprites:** grid pipeline (`char.ts`) + slice cast, **player walks in 4
 directions** in-world. **Title screen** = creator art + animated intro. Maps
 warp via `exits[].mapId`. Next colonies up the critical path: **Bastion**
-(Colony 3, quarry, cave dungeon + light hive overlay) → Redoubt → … → Dallas;
+(Colony 3, quarry, cave dungeon + light hive overlay) → Redoubt → … → the Old City;
 plus optional `dressing.<area>` ART, the routes (Farm Road / 45 Scar / Furrows)
 between colonies, and a real HOVER vehicle-Ohm mechanic for the deep-water gate.
 
@@ -657,7 +672,7 @@ between colonies, and a real HOVER vehicle-Ohm mechanic for the deep-water gate.
 Mark delivered five design bibles (story, critical-path locations, wider world,
 level-building assets, the governing asset bible) → committed to `docs/design/`
 as canon-of-record. The full game scope is now explicit: the ~30h spine
-(Ohmstead → Field → 8 colonies → Dallas/Spire → Ohmcoming) + the wider optional
+(Ohmstead → Field → 8 colonies → the Old City/Spire → Ohmcoming) + the wider optional
 world, built from a shared Primary Kit + ~18 per-area Secondary Kits + a Hive
 Overlay (a few thousand labeled tiles).
 
@@ -695,7 +710,7 @@ each with a `_contact*.png` review sheet + an `npm run assets:*` script:
 
 **Next phase:** per-area SECONDARY kits in critical-path order — `sec.railhead`
 first (rails, roundhouse/turntable, boxcars, switch levers, market sprawl,
-broker offices), then Cistern → … → Dallas. Then compose each area's map
+broker offices), then Cistern → … → the Old City. Then compose each area's map
 pulling only matrix-allowed kits. The Field also gets its `sec.field` art +
 depth/density upgrade. Ohms still pending grid-method retool.
 

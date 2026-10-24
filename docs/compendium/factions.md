@@ -9,7 +9,7 @@ Crown / Cray Wells / … — now corrected to the locked names).*
 ## The Downtowns — the eight colony trials
 
 The colony network: linked by *The Current* and the satellite net, divided by
-philosophy. The journey runs roughly **south-to-north into Dallas**; each colony
+philosophy. The journey runs roughly **south-to-north into the Old City**; each colony
 sits where its real-world kind would, under invented trade dress (no real logos
 or signage). Home base is **Ohmstead** (an underground bunker beneath a dead
 cattle town), kept by **Warden Hollis Boone** — a quest-giver, not a trial. The
@@ -70,7 +70,7 @@ eight **trial** colonies, each held by a Warden you best for its **Patch**:
   experimental wing). The antenna farm where the tower plan is laid bare.
 - **Patch:** the **Lattice Patch**.
 
-### 8. THE VERGE — Colony 8 *(the oldest colony, fortified at Dallas's edge, under siege)*
+### 8. THE VERGE — Colony 8 *(the oldest colony, fortified at the Old City's edge, under siege)*
 
 - **Creed:** *Hold the line; light the Beacon.*
 - **Warden:** **Ruth Amos**, the Lorekeeper (mixed). The Walls, the **Beacon**
@@ -97,8 +97,8 @@ eight **trial** colonies, each held by a Warden you best for its **Patch**:
 - **Methods:** Patrols, checkpoints, "decommissions." No guns exist; they field
   shock-poles, net-rigs, and conscripted dumb machines — never freed Ohms, a
   line they're proud of and hobbled by.
-- **Arc:** Act I menace → Act II doctrine → Act III race to destroy Reunion
-  Tower in a way that would kill every Ohm mind on the continent.
+- **Arc:** Act I menace → Act II doctrine → Act III race to destroy the
+  Spire in a way that would kill every Ohm mind on the continent.
 - **Trainer classes:** Garrison Trooper, Net Sergeant, Marshal's Guard.
 - **Commanders:** **Marshal Iver Drake** (hive-loyal, the final foil) and
   **Commander Tomas Reyes** (the freed-puppet ally, revealed at Redoubt) — see
@@ -125,7 +125,7 @@ eight **trial** colonies, each held by a Warden you best for its **Patch**:
 
 ## PERSISTENCE — the hive
 
-- **Who:** The AI Core under Reunion Tower; one node of something larger.
+- **Who:** The AI Core under the Spire; one node of something larger.
 - **Scripture:** humans are **End Users**; its plan is **the Update**; its
   commandments are **the Terms of Service**; its broadcast is **the Static**.
 - **Forces:** Hive-held wild Ohms moving with coordination; Ohmega-class

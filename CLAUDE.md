@@ -4,7 +4,7 @@ Read this first, every session. Then read HANDOVER.md. Source of record:
 `docs/master-prompt-v4.md` (creator canon) and `docs/GDD.md` (Phase 1, locked
 2026-06-12). **World/story/asset bibles (2026-06-14, canon-of-record):**
 `docs/design/` — story-bible, critical-path-locations (the A→Z spine: Ohmstead
-→ Field → 8 colonies → Dallas/Spire → Ohmcoming), wider-world (optional
+→ Field → 8 colonies → the Old City/Spire → Ohmcoming), wider-world (optional
 content), level-building-assets + asset-bible (the governing asset system),
 clutter-detail-layer (the lived-in set-dressing layer), principal-cast +
 colony-npc-casts + variable-npcs (the character casts — names are proposals
@@ -25,7 +25,8 @@ branch. The pre-HD-2D game is frozen on `claude/make-this-happen-o0q20w`.
 ## What this is
 
 OHMFRONT: a complete, original monster-taming RPG. Gen 3 Pokémon
-(Ruby/Sapphire) is the body. Post-collapse Texas surface, humanity underground,
+(Ruby/Sapphire) is the body. Post-collapse surface of an unnamed plains country
+(Texas-adjacent in feel, **never Texas** — see Setting below), humanity underground,
 machine companions called **Ohms**. Single-player, one ending, ~30 hours, free,
 English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
 240×160 native, landscape, integer-scaled.
@@ -54,8 +55,15 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   **Patches** (so the TM analog is **mod chips**) · AI Core = **PERSISTENCE** ·
   collapse = **the Waking** · colony network = **the Downtowns** · Militarists
   = **the Garrison** · rival colony = **Redbed** · scrapper guild = **the
-  Yard** · cult = **the Attuned** · Dallas finale landmark = **Reunion Tower**
-  (named as itself).
+  Yard** · cult = **the Attuned** · finale landmark = **the Spire** (a fictional
+  broadcast tower in **the Old City** *(working name)*; was Reunion Tower/Dallas
+  until 2026-10-24).
+- **Setting (CHANGED 2026-10-24, Mark):** OHMFRONT is not Texas. An unnamed
+  plains country, Texas-adjacent in feel (cattle towns, prairie, rail, caliche,
+  dead interstates); never name a real state, city or landmark (no Texas,
+  Texan, Dallas, Reunion Tower, bluebonnet). Texas — South Texas above all —
+  belongs to Mark's separate game THE LONG NOON; the two stay separate.
+  `npm run lint` enforces it on game content.
 - **Locked phrases:** stay current · recharged · clear the static · factory
   settings · End Users · the Update · the Terms of Service · *Ohm's Law* ·
   the Resistance · Ohmgrown · Ohmsick · Ohmcoming · Ohm Runs · The Current ·
@@ -147,7 +155,8 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   SAL+WREN, stat names INTEGRITY/OUTPUT/ARMOR/SURGE/SHIELDING/CLOCK, 11-type
   chart with rare VERDANT, Expansion Board −10% OUTPUT/SURGE, nine Bench
   parts, Scrap/Alloy/Relic + Resonance/Prime Cores, SHEAR gates Region 1,
-  starter trio by Core, colonies under parodied real North Texas sites).
+  starter trio by Core, colonies under parodied real-world kinds of site —
+  originally "North Texas sites"; no real place named since 2026-10-24).
   Tag `phase1-gdd` → commit 282ea9f (remote refuses tag pushes; apply on
   merge).
 - **Phase 2 — World & Ohm Compendium** — **approved as canon 2026-06-12**:
@@ -174,4 +183,4 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   violations**, gated in CI. **Shared foundation ART done** (Primary, Hive
   Overlay, Building/Interior, Cave/Mine, universal Clutter; each `npm run
   assets:*` + a `_contact*.png`). Next: per-area secondary ART + dressing in
-  critical-path order (Railhead → … → Dallas), then compose maps.
+  critical-path order (Railhead → … → the Old City), then compose maps.

@@ -16,7 +16,7 @@ In Pokémon, every generic person you fight belongs to a **trainer class** — a
 
 The same class is reused everywhere, scaled up by region (a Route 2 Hiker is weak; a Victory Road Hiker is brutal), and individuated only by a first name stamped on the class (“Hiker Russell”). Faceless villain-team members get no name at all (“Team Rocket Grunt”). A few special variants exist: **doubles** (Twins), **big-money** (Gentleman), **rematchable** (recruited/registered trainers), and **creepy obsessive “Maniac”** types (Hex Maniac, Ruin Maniac) used for flavor and theme.
 
-**We copy all of it**, retheming the classes to a post-collapse Texas of scrappers, colonists, Raiders, Militants, and cultists, and mapping team archetypes onto our four types — **HACK, BRUTE, ARSENAL, INFO.**
+**We copy all of it**, retheming the classes to a post-collapse plains country of scrappers, colonists, Raiders, Militants, and cultists, and mapping team archetypes onto our four types — **HACK, BRUTE, ARSENAL, INFO.**
 
 -----
 
@@ -48,7 +48,7 @@ Every class below follows it. The builder authors the template once; level-bandi
 
 **Field-hand.** Colonists who raise Ohms gently like a herd. *Look:* sun hat, irrigation muck. *Team:* nurturing INFO/organic-leaning. *Habitat:* fields, the Cistern. *Tier:* low-mid. *Reward:* healing items. *Barks:* “Raised mine from a flicker.” / “Go on, she forgives you.”
 
-**Wrangler.** Texan cattle-drivers who herd the big BRUTE Ohms (our Cowboy). *Look:* worn hat, lasso of cabling. *Team:* heavy BRUTE. *Habitat:* open range, Caliche outskirts. *Tier:* mid. *Reward:* credits. *Barks:* “Yeehp. Get along.” / “Spooked the whole herd, ya did.”
+**Wrangler.** Plains cattle-drivers who herd the big BRUTE Ohms (our Cowboy). *Look:* worn hat, lasso of cabling. *Team:* heavy BRUTE. *Habitat:* open range, Caliche outskirts. *Tier:* mid. *Reward:* credits. *Barks:* “Yeehp. Get along.” / “Spooked the whole herd, ya did.”
 
 ### Colony defense (Bastion and every colony gate)
 
@@ -56,7 +56,7 @@ Every class below follows it. The builder authors the template once; level-bandi
 
 ### Militarists (the villain-grunt layer — and a foreshadowing tool)
 
-**Militant** *(faceless — “Militant A / B”)*. The Team-Rocket-Grunt analog, fought in packs. *Look:* matte-grey kit, full visor. *Team:* mixed ARSENAL/HACK. *Habitat:* patrols, Redoubt, the Dallas tower. *Tier:* low-to-high by act. *Reward:* credits. **Design hook:** their barks land a half-beat *off* and repeat oddly — “We. Serve. The order.” — seeding the puppet reveal long before the midpoint. Unnamed by design. *Barks:* “Orders are… orders.” / “…why did I… stop?”
+**Militant** *(faceless — “Militant A / B”)*. The Team-Rocket-Grunt analog, fought in packs. *Look:* matte-grey kit, full visor. *Team:* mixed ARSENAL/HACK. *Habitat:* patrols, Redoubt, the Spire. *Tier:* low-to-high by act. *Reward:* credits. **Design hook:** their barks land a half-beat *off* and repeat oddly — “We. Serve. The order.” — seeding the puppet reveal long before the midpoint. Unnamed by design. *Barks:* “Orders are… orders.” / “…why did I… stop?”
 
 **Enforcer.** Elite Militants with stun-tech (no guns exist). *Look:* heavier plate, telescoping baton. *Team:* tougher ARSENAL. *Habitat:* patrol leaders, mini-bosses. *Tier:* high. *Reward:* good credits. *Barks:* “Stand down.” / “Malfunction… acknowledged.”
 

@@ -101,11 +101,11 @@ marked ⟦…⟧.*
     data-center campus. Trial: the Server Halls, the Lattice, **Warden Tobias
     Frost** — the most tactical fight pre-finale (a **PROTOTYPE legendary** can
     lurk in the experimental wing). The antenna farm lays the tower plan bare:
-    towers → the Dallas antenna → the satnet upload, and the **Breaker can
+    towers → the Old City antenna → the satnet upload, and the **Breaker can
     broadcast the recalibration through the tower**. The endgame plan is born.
     **Lattice Patch (7/8).** **Ohmsick #3** (the Sirenado's last noon test).
 18. **THE VERGE — Colony 8 (hrs 24–26).** The oldest colony, fortified at
-    Dallas's edge, under siege. The Walls, the **Beacon** that gathers the
+    the Old City's edge, under siege. The Walls, the **Beacon** that gathers the
     colonies, the Convoy Staging Ground; the Lorekeeper **Warden Ruth Amos** (an
     **ANCIENT legendary** may be guarded in her archive). **Grandpa confirmed —
     Eli uploaded himself into the net and may be holding the line still.**
@@ -113,10 +113,10 @@ marked ⟦…⟧.*
 19. **The Convoy & Two Clocks (hr 26).** United colonies push down the old
     highways — Longhaulers, Rustlers, couriers riding screen; rolling battles at
     Garrison roadblocks and hive sweeps ⟦HOVER routes over the flooded
-    interchanges⟧. **Marshal Drake**'s sappers start cutting Reunion Tower's
+    interchanges⟧. **Marshal Drake**'s sappers start cutting the Spire's
     legs — a demolition that would kill every Ohm mind on the broadcast.
     PERSISTENCE accelerates the Update. The player must beat both.
-20. **The Spire (hrs 26–29).** Reunion Tower, floor by floor: a gauntlet of
+20. **The Spire (hrs 26–29).** The tower, floor by floor: a gauntlet of
     **Ohmega-class hive champions**, **Rook** running second, the colonies
     holding the ground floor against the Garrison. Drake's final checkpoint: he
     uses the player's name and stands down his sappers for exactly one hour.
