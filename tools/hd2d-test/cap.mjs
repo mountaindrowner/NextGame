@@ -1,0 +1,18 @@
+import { chromium } from '../../node_modules/playwright/index.mjs';
+const [,, url, pre] = process.argv;
+const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell', args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const p = await b.newPage({ viewport: { width: 1280, height: 720 } });
+p.on('pageerror', (e) => console.log('[pageerror]', e.message));
+await p.goto(url);
+await p.waitForFunction(() => window.__hd2d?.arena?.ready, null, { timeout: 180000 });
+await p.evaluate(() => { const a = window.__hd2d.arena; a.foe.b.integrity = Math.ceil(a.foe.b.stats.integrity * 0.25); a.updateBars(); for (let i = 0; i < 30; i++) a.update(1 / 30); });
+await p.keyboard.press('c');
+await p.waitForFunction(() => window.__capSolve && document.querySelector('.cap-cell'), null, { timeout: 20000 });
+await p.evaluate(() => window.__capSolve());
+await p.waitForTimeout(700);
+await p.screenshot({ path: `${pre}solved.png` });
+await p.waitForFunction(() => !window.__hd2d.arena, null, { timeout: 60000 });
+await p.waitForTimeout(3000);
+await p.screenshot({ path: `${pre}after.png` });
+console.log(JSON.stringify({ party: await p.evaluate(() => window.__hd2d.party.map((x) => `${x.name} Lv${x.level}`)), nodes: await p.evaluate(() => window.__hd2d.nodes), dlg: await p.evaluate(() => document.querySelector('.dlg-text')?.textContent) }));
+await b.close();

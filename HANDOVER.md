@@ -1,5 +1,72 @@
 # HANDOVER
 
+## ▶ RESUME HERE (updated 2026-10-24)
+
+**Branch `claude/hd2d`** (HD-2D remake; the old Phaser game is frozen on
+`claude/make-this-happen-o0q20w`). Read `docs/hd2d-direction.md` first — it
+holds every decision Mark has made for this branch. Latest commit is on
+origin; the tree was clean at hand-off.
+
+**Play link pattern:** `https://raw.githack.com/mountaindrowner/NextGame/<sha>/dist/hd2d.html`
+(always commit `dist/` with `git add -f dist`; githack can't be fetched from
+this sandbox, so verify with the headless scripts in `tools/hd2d-test/`).
+URL params: `?area=ohmstead|field|farmroad|railhead|scar|cistern` (surface
+maps alias into the overworld) · `?x=&z=` (map-local start) · `?face=n|s|e|w` ·
+`?time=night` · `?hud=0` · `?battle=<num>&lv=<n>` · `?arena=field|road|bunker|cistern` ·
+`?nodes=<n>` · `?hero=<style id>|old` · `?lineup=sal|duo|cast` · `?wide=1` ·
+`?topdown=1[&tdbox=x0,x1,z0,z1]` · `?seams=1` (old separate maps).
+
+**What exists (src/hd2d/):** engine (`main.ts`, `post.ts` tilt-shift+bloom+grade,
+`mood.ts`, `world.ts` chunked collision/heights, `terrain.ts`, `sprites.ts`
+RotHero 8-dir + packed anim sheets, `ui.ts/.css`), areas (`ohmstead/`,
+`field/`, `farmroad/`, `railhead/`, `scar/`, `cistern/`), the continuous
+surface (`overworld/area.ts` + `transition.ts`), grid battles
+(`battle/rules.ts` [PROPOSAL] rules + tests, `arena.ts`, `themes.ts` region
+grids, `capture.ts` node puzzle). Route: Ohmstead (lift) → Field → homestead
+stretch → Farm Road → grain line → Railhead → interstate approach → 45 Scar →
+(culvert) → Cistern.
+
+**Locked by Mark this session:** HD-2D + one fixed camera + always-on
+tilt-shift; SAL's art style = "Indie action" (e_pro); dialogue shows the
+speaker's sprite (not portraits) on the right facing left; battle grids look
+like the region's ground (not neon); one continuous seamless overworld with
+long transition stretches; build order = critical path; he approved the
+approach and all proposals so far ("I like everything you're proposing").
+
+**Still [PROPOSAL] / to flag:** grid-combat rules; the 45 Scar layout +
+`scar-wrecks` table; transition stretches (content, working names "old
+homestead / grain line / interstate approach", signs incl. "NEXT EXIT · FUEL ·
+FOOD"); invented lines (lift, lookout, relay, rental booth, cradle,
+seed-vault); Cistern battle grid; the Lantern crystal in Ohmstead Commons.
+Open question from before: are legendaries #144–149 catchable / is #150 a
+catch or boss? Cast names are still proposals (Flint for the Bastion scout).
+
+**Next, in order (Mark: "keep going"):** the Furrows (new route north of the
+Cistern — no layout exists, propose one, add as an overworld/underground
+link) → Bastion (Colony 3, layout in public/world/bastion.json /
+tools/gen-bastion.ts) → Military Road → Redoubt. Also queued: lengthen Farm
+Road + Scar inside the overworld; Ohm switching in battle; a save system;
+Warden trials; redesign the dialogue sprite layout (Mark found it janky);
+restyle the remaining NPC cast (PixelLab ~50 gen each; tools/gen-cast-style.mjs).
+
+**PixelLab:** 3,882 generations left (plan total 5,000) — never go below
+1,000 without telling Mark. Key in env `PIXELLAB_API_KEY`. API notes: Pro
+characters `v2/create-character-pro` (style_character_id = SAL
+`cea31c61-3b70-4ec6-a617-413b60f80ece`), animations `v2/animate-character`
+(template ids e.g. breathing-idle, walking-8-frames, running-8-frames,
+picking-up, taking-punch, jumping-1, throw-object, falling-back-death,
+getting-up; skeleton-v3 mode keeps the model steadier), max ~3 concurrent jobs,
+download via `/v2/characters/<id>/zip` (CDN host is blocked), zip folders use
+readable names (breathing_idle…). After new animations run
+`node tools/pack-anims.mjs` (one sheet per animation — githack throttles
+hundreds of requests).
+
+**Gotchas:** fresh containers need `npm ci`; headless WebGL needs swiftshader
+flags and runs ~1–3 fps; `?x=&z=` inside a solid freezes the player; the
+placeholder NPC sheets (npc_kid/npc_rancher/npc_elder) have no meta — inferred
+as 3×3 frames of 20×32; any NPC that fails to load is skipped. Commits end
+with the Co-Authored-By + Claude-Session lines (see earlier commits).
+
 ## Session 2026-10-23 (cont.) — art style locked, cast, animations, grid-combat POC
 
 - **SAL's style locked:** "Indie action" (PixelLab Pro, character
