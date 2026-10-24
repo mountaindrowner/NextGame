@@ -88,7 +88,7 @@
   - **The Chancel** — Warden **Verity Hale** (the true-faith Attuned)
   - **Redbed** — Warden **Sol** (the Red Hand's roost; Rook's home)
   - **The Array** — Warden **Tobias Frost** (the data-center lattice)
-  - **The Verge** — Warden **Ruth Amos** (the last holdout before the Old City)
+  - **The Verge** — Warden **Ruth Amos** (the last holdout before New Central)
 - Ohmstead itself is home, kept by **Warden Hollis Boone** (quest-giver, not a
   trial). Full battle teams + per-Warden dialogue land with each area script.
 

@@ -4,7 +4,7 @@ Read this first, every session. Then read HANDOVER.md. Source of record:
 `docs/master-prompt-v4.md` (creator canon) and `docs/GDD.md` (Phase 1, locked
 2026-06-12). **World/story/asset bibles (2026-06-14, canon-of-record):**
 `docs/design/` — story-bible, critical-path-locations (the A→Z spine: Ohmstead
-→ Field → 8 colonies → the Old City/Spire → Ohmcoming), wider-world (optional
+→ Field → 8 colonies → New Central/Spire → Ohmcoming), wider-world (optional
 content), level-building-assets + asset-bible (the governing asset system),
 clutter-detail-layer (the lived-in set-dressing layer), principal-cast +
 colony-npc-casts + variable-npcs (the character casts — names are proposals
@@ -56,14 +56,18 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   collapse = **the Waking** · colony network = **the Downtowns** · Militarists
   = **the Garrison** · rival colony = **Redbed** · scrapper guild = **the
   Yard** · cult = **the Attuned** · finale landmark = **the Spire** (a fictional
-  broadcast tower in **the Old City** *(working name)*; was Reunion Tower/Dallas
+  broadcast tower in **New Central** *(locked 2026-10-24)*; was Reunion Tower/Dallas
   until 2026-10-24).
-- **Setting (CHANGED 2026-10-24, Mark):** OHMFRONT is not Texas. An unnamed
-  plains country, Texas-adjacent in feel (cattle towns, prairie, rail, caliche,
-  dead interstates); never name a real state, city or landmark (no Texas,
-  Texan, Dallas, Reunion Tower, bluebonnet). Texas — South Texas above all —
-  belongs to Mark's separate game THE LONG NOON; the two stay separate.
-  `npm run lint` enforces it on game content.
+- **Setting (CHANGED 2026-10-24, Mark):** OHMFRONT is not Texas. ~500 years on,
+  nothing resembles itself: rivers died or moved, the coast drowned, regions
+  were renamed by the people living there. Plains/cattle-country feel, but
+  never a real state, city or landmark (no Texas, Texan, Dallas, Reunion
+  Tower, bluebonnet). Names come from what a place does, what it did to
+  people, or who took it, and must read well in plain text (no voice actor
+  to sell them). World + map: `docs/design/world-gazetteer.md` (proposals
+  except New Central). Texas, South Texas above all, belongs to Mark's
+  separate game THE LONG NOON; the two stay separate. `npm run lint`
+  enforces the no-real-places rule on game content.
 - **Locked phrases:** stay current · recharged · clear the static · factory
   settings · End Users · the Update · the Terms of Service · *Ohm's Law* ·
   the Resistance · Ohmgrown · Ohmsick · Ohmcoming · Ohm Runs · The Current ·
@@ -183,4 +187,4 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   violations**, gated in CI. **Shared foundation ART done** (Primary, Hive
   Overlay, Building/Interior, Cave/Mine, universal Clutter; each `npm run
   assets:*` + a `_contact*.png`). Next: per-area secondary ART + dressing in
-  critical-path order (Railhead → … → the Old City), then compose maps.
+  critical-path order (Railhead → … → New Central), then compose maps.

@@ -1,0 +1,140 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  html,body{margin:0;background:#1d1a16}
+  svg{display:block}
+  .rg{font-family:'DejaVu Serif',serif;font-weight:bold;letter-spacing:6px;fill:#3b2f22;text-anchor:middle}
+  .rs{font-family:'DejaVu Serif',serif;font-style:italic;fill:#5a4a36;text-anchor:middle;font-size:15px}
+  .pl{font-family:'DejaVu Sans',sans-serif;fill:#2e261c;font-size:13px}
+  .plb{font-family:'DejaVu Sans',sans-serif;font-weight:bold;fill:#2e261c;font-size:14px}
+  .rt{font-family:'DejaVu Serif',serif;font-style:italic;fill:#6b4a2a;font-size:13px}
+</style></head>
+<body>
+<svg id="m" xmlns="http://www.w3.org/2000/svg" width="1600" height="1130" viewBox="0 0 1600 1130"></svg>
+<script>
+const W=1600,H=1130, NS='http://www.w3.org/2000/svg';
+const svg=document.getElementById('m');
+let seed=7; const R=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+const el=(n,a,p=svg)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;};
+const txt=(s,x,y,cls,extra={})=>{const t=el('text',{x,y,class:cls,...extra});t.textContent=s;return t;};
+// wobbly closed blob through points
+function blob(pts,j=10){
+  const p=pts.map(([x,y])=>[x+(R()-.5)*j,y+(R()-.5)*j]);
+  let d=`M${p[0][0]},${p[0][1]}`;
+  for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length];const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;d+=` Q${a[0]},${a[1]} ${mx},${my}`;}
+  return d+'Z';
+}
+const defs=el('defs',{});
+defs.innerHTML=`
+<filter id="paper"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 .45  0 0 0 0 .36  0 0 0 0 .25  0 0 0 .16 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+<filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="9"/><feDisplacementMap in="SourceGraphic" scale="14"/></filter>
+<radialGradient id="vig" cx="50%" cy="48%" r="72%"><stop offset="62%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#2a1d10" stop-opacity=".55"/></radialGradient>
+<linearGradient id="south" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8dbbd" stop-opacity="0"/><stop offset=".55" stop-color="#e8dbbd" stop-opacity=".85"/><stop offset="1" stop-color="#e8dbbd"/></linearGradient>
+<linearGradient id="fr" x1="0" y1="0" x2="1" y2="0"><stop offset=".7" stop-color="#fff"/><stop offset=".92" stop-color="#000"/></linearGradient><mask id="fadeR" maskUnits="userSpaceOnUse" x="0" y="0" width="1250" height="1130"><rect x="0" y="0" width="1250" height="1130" fill="url(#fr)"/></mask><pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="9" stroke="#8a7656" stroke-width="1" opacity=".35"/></pattern>`;
+// paper
+el('rect',{x:0,y:0,width:W,height:H,fill:'#e6d6b4'});
+el('rect',{x:0,y:0,width:W,height:H,fill:'#e6d6b4',filter:'url(#paper)'});
+
+const land=el('g',{filter:'url(#rough)'});
+// regions (soft tints)
+const reg=(pts,fill,op=.55)=>el('path',{d:blob(pts,24),fill,opacity:op},land);
+reg([[60,120],[470,90],[560,260],[540,560],[520,820],[300,900],[90,860],[50,500]],'#d6a86a',.6);          // Sundog
+reg([[470,40],[1180,30],[1230,170],[1080,230],[640,240],[500,200]],'#a39d92',.55);                          // Anvil
+reg([[1070,190],[1540,150],[1560,520],[1480,700],[1250,760],[1110,600],[1060,380]],'#7f9c6a',.6);           // Wildwoods
+reg([[560,250],[1080,230],[1110,560],[1180,760],[1000,930],[700,960],[540,830],[530,520]],'#c7c48a',.55);  // Tallgrass
+reg([[260,900],[700,950],[1050,940],[1250,980],[1200,1110],[300,1110],[120,1040]],'#d9c9a3',.6);           // Lost Country
+// the Shallows (sea) eating the southeast coast
+el('path',{d:blob([[1180,760],[1480,700],[1600,640],[1600,1130],[1150,1130],[1100,1010],[1080,900]],30),fill:'#8fb3ad',opacity:.85},land);
+svg.appendChild(land);
+// sea waves
+for(let i=0;i<46;i++){const x=1190+R()*390,y=790+R()*320;if(x<1120+(y-760)*0.1)continue;el('path',{d:`M${x},${y} q6,-5 12,0 q6,5 12,0`,stroke:'#4d7a76',fill:'none','stroke-width':1.4,opacity:.7});}
+// sunk town stubs in the Shallows
+for(const [x,y] of [[1265,860],[1330,935],[1420,880],[1290,1010]]){for(let k=0;k<3;k++)el('rect',{x:x+k*7,y:y-(4+k*3),width:4,height:4+k*3,fill:'#3f5f5c',opacity:.6});}
+
+// grass ticks in Tallgrass
+for(let i=0;i<260;i++){const x=600+R()*470,y=290+R()*620;el('path',{d:`M${x},${y} l-2,-7 M${x+3},${y} l0,-9 M${x+6},${y} l2,-7`,stroke:'#7a7a3e','stroke-width':1.1,opacity:.45});}
+// humps
+for(let i=0;i<14;i++){const x=620+R()*440,y=330+R()*560;el('path',{d:`M${x-11},${y} q11,-12 22,0`,stroke:'#6e6236',fill:'none','stroke-width':1.3,opacity:.55});}
+// Sundog: mesas + dead turbines
+for(let i=0;i<20;i++){const x=150+R()*360,y=180+R()*640,w=26+R()*30;el('path',{d:`M${x},${y} l6,-16 h${w} l6,16 z`,fill:'#b97d45',stroke:'#6b4520','stroke-width':1.2,opacity:.75});}
+for(let i=0;i<16;i++){const x=180+R()*330,y=170+R()*640;const g=el('g',{stroke:'#5a4630','stroke-width':1.3,opacity:.7});el('line',{x1:x,y1:y,x2:x,y2:y-22},g);const a=R()*6.28;for(let k=0;k<3;k++){const b=a+k*2.094;el('line',{x1:x,y1:y-22,x2:x+Math.cos(b)*10,y2:y-22+Math.sin(b)*10},g);}}
+// the Jawbone: a curved ridge of jagged peaks on Sundog's western edge
+const ridge=[];for(let t=0;t<=1.0001;t+=1/26){ridge.push([115+Math.sin(t*3.1)*55,150+t*690]);}
+ridge.forEach(([x,y],i)=>{const h=18+R()*16+(i===12?26:0);el('path',{d:`M${x-14},${y+8} L${x},${y-h} L${x+14},${y+8} Z`,fill:i===12?'#5c4a3a':'#7a6650',stroke:'#3b2f22','stroke-width':1.3});el('path',{d:`M${x},${y-h} L${x+5},${y+8}`,stroke:'#3b2f22','stroke-width':.8,opacity:.6});});
+// Talking Mountain signal rings
+const [tmx,tmy]=ridge[12];for(let k=1;k<=3;k++)el('path',{d:`M${tmx-14*k},${tmy-48-6*k} q${14*k},-${10*k} ${28*k},0`,stroke:'#8a2e24',fill:'none','stroke-width':1.6,opacity:1-k*.22});
+// Wildwoods trees
+for(let i=0;i<190;i++){const x=1090+R()*440,y=180+R()*540;if(y>650&&x>1300)continue;const s=6+R()*6;el('path',{d:`M${x},${y} l${-s*.7},${s*1.5} h${s*1.4} z`,fill:R()<.5?'#3e5d34':'#4f6e3f',opacity:.85});}
+// wildwire tendrils
+for(let i=0;i<9;i++){let x=1110+R()*400,y=220+R()*420,d=`M${x},${y}`;for(let k=0;k<5;k++){x+=(R()-.3)*40;y+=(R()-.5)*30;d+=` T${x},${y}`;}el('path',{d,stroke:'#2f6f7a',fill:'none','stroke-width':1.6,opacity:.7,'stroke-dasharray':'5 3'});}
+// Anvil smokestacks + smoke
+for(let i=0;i<14;i++){const x=i<7?530+R()*170:985+R()*95,y=110+R()*90;el('rect',{x,y:y-26,width:6,height:26,fill:'#4b4640'});el('path',{d:`M${x+3},${y-28} q-8,-10 2,-18 q10,-8 0,-18`,stroke:'#6f6a62',fill:'none','stroke-width':2,opacity:.5});}
+// Lost Country: dry ditch + fade
+let dx=170,dy=1010,dd=`M${dx},${dy}`;for(let k=0;k<12;k++){dx+=85;dy=1000+Math.sin(k*1.3)*30+(R()-.5)*12;dd+=` T${dx},${dy}`;}
+el('path',{d:dd,stroke:'#8a6a44',fill:'none','stroke-width':7,opacity:.35,'stroke-linecap':'round'});
+el('path',{d:dd,stroke:'#5a4026',fill:'none','stroke-width':1.6,'stroke-dasharray':'2 7',opacity:.8});
+const sg=el('g',{mask:'url(#fadeR)'});el('rect',{x:0,y:930,width:1250,height:200,fill:'url(#south)'},sg);el('rect',{x:0,y:1000,width:1250,height:130,fill:'url(#hatch)',opacity:.5},sg);
+
+// Brownwater: from the north-west of Tallgrass, down east, through the Drowned Woods to the Shallows
+const river='M600,250 C650,330 700,360 760,400 S900,470 960,520 S1030,640 1080,720 S1140,820 1190,860';
+el('path',{d:river,stroke:'#7a5a36',fill:'none','stroke-width':6,opacity:.55,'stroke-linecap':'round'});
+el('path',{d:river,stroke:'#9bb8b0',fill:'none','stroke-width':2.2,opacity:.9});
+// Drowned Woods: dead trees standing in water
+el('ellipse',{cx:985,cy:545,rx:60,ry:34,fill:'#8fb3ad',opacity:.55});
+for(let i=0;i<16;i++){const x=940+R()*90,y=530+R()*36;el('path',{d:`M${x},${y} v-14 m0,6 l-5,-5 m5,2 l4,-6`,stroke:'#3b3a2c','stroke-width':1.3,fill:'none'});}
+
+// New Central: skyline + the Spire
+const nc=el('g',{});
+for(let i=0;i<18;i++){const x=760+i*7+R()*3,h=14+R()*34;el('rect',{x,y:262-h,width:6,height:h,fill:'#3d342b',opacity:.85},nc);}
+el('line',{x1:826,y1:262,x2:826,y2:196,stroke:'#2b241d','stroke-width':3},nc);
+el('path',{d:'M816,200 L826,186 L836,200 Z',fill:'#8a2e24'},nc);
+for(let k=1;k<=2;k++)el('path',{d:`M${826-9*k},${180-5*k} q${9*k},-${7*k} ${18*k},0`,stroke:'#8a2e24',fill:'none','stroke-width':1.5,opacity:.8});
+
+// the road north: colonies (●) and routes (·)
+const stops=[
+  ['Ohmstead',812,890,1],['the Field',812,866,0],['Farm Road',780,832,0],['Railhead',760,790,1],['the Parking Lot',800,748,0],
+  ['the Cistern',846,706,1],['the Furrows',800,668,0],['Bastion',752,628,1],['Military Road',800,592,0],['Redoubt',866,560,1],
+  ['the Drowned Woods',960,500,0],['the Chancel',900,452,1],['the Red Flats',820,440,0],['Redbed',730,420,1],['Paygate',770,380,0],
+  ['the Array',846,350,1],['the Stack',820,318,0],['the Verge',790,292,1]];
+let road=`M${stops[0][1]},${stops[0][2]}`;stops.slice(1).forEach(s=>road+=` L${s[1]},${s[2]}`);road+=' L826,262';
+el('path',{d:road,stroke:'#6b2a1e',fill:'none','stroke-width':2.4,'stroke-dasharray':'7 5',opacity:.9});
+for(const [n,x,y,c] of stops){
+  if(c){el('circle',{cx:x,cy:y,r:7,fill:'#efe3c8',stroke:'#6b2a1e','stroke-width':2.4});el('circle',{cx:x,cy:y,r:2.6,fill:'#6b2a1e'});}
+  else el('circle',{cx:x,cy:y,r:3,fill:'#6b2a1e'});
+  const left=['Railhead','Bastion','Redbed','the Verge','Farm Road'].includes(n);
+  txt(n,left?x-13:x+13,y+4,c?'plb':'rt',{'text-anchor':left?'end':'start'});
+}
+
+// region labels
+const lab=(name,x,y,size,sub)=>{txt(name,x,y,'rg',{'font-size':size});if(sub)txt(sub,x,y+24,'rs');};
+lab('NEW CENTRAL',828,168,26,'');
+txt('the Spire',878,196,'rs',{'font-size':13});
+lab('ANVIL',840,70,30,'foundries that never cooled');
+lab('SUNDOG',330,120,34,'mesas · dead wind farms');
+txt('THE JAWBONE',72,500,'rg',{'font-size':18,transform:'rotate(-90 72 500)'});
+txt('Talking Mountain',tmx+112,tmy-6,'rs',{'font-size':15,fill:'#8a2e24'});
+lab('THE WILDWOODS',1330,130,30,'wildwire · the forest walked west');
+lab('TALLGRASS',660,980-40,32,'');
+txt('Region 1 — this game',660,965,'rs');
+lab('THE SHALLOWS',1390,1000,28,'the drowned coast');
+lab('LOST COUNTRY',760,1062,30,'past the radio’s reach');
+txt('the Ditch',300,985,'rs',{'font-size':14});
+txt('Brownwater',640,300,'rs',{transform:'rotate(38 640 300)','font-size':14});
+
+// cartouche
+// compass rose
+const cr=el('g',{transform:'translate(1490,250)'});
+el('circle',{r:46,fill:'none',stroke:'#5a4a36','stroke-width':1.2},cr);
+el('path',{d:'M0,-58 L8,0 L0,58 L-8,0 Z',fill:'#3b2f22'},cr);
+el('path',{d:'M-58,0 L0,-8 L58,0 L0,8 Z',fill:'#7a6650'},cr);
+txt('N',0,-64,'plb',{'text-anchor':'middle'}).setAttribute('transform','translate(1490,250)');
+// title
+el('rect',{x:40,y:1000,width:420,height:96,fill:'#efe3c8',stroke:'#3b2f22','stroke-width':2,opacity:.92});
+el('rect',{x:47,y:1007,width:406,height:82,fill:'none',stroke:'#3b2f22','stroke-width':.8});
+txt('OHMFRONT',250,1046,'rg',{'font-size':30,'letter-spacing':10});
+txt('the known world · ~500 years after the Waking',250,1072,'rs',{'font-size':14});
+// vignette
+el('rect',{x:0,y:0,width:W,height:H,fill:'url(#vig)'});
+document.title='done';
+</script>
+</body></html>

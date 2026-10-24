@@ -42,9 +42,9 @@ The Safari / Game-Corner / Battle-Tower layer, retooled for this world.
 - **Ohmsick visits** *(canon)* — return freed Ohms to their original sites; a repeatable chain across the whole region.
 - **The Current's Errands** — couriers hand out delivery, rumor, and fetch quests that stitch the colonies together.
 - **Lost Ohmlet** — track a child's runaway Ohmlet; one in nearly every town (the "lost item" staple).
-- **The Collector's Registry** — scan target Ohms for a traveling archivist; Ohmdex-completion rewards.
+- **The Collector's Registry** — scan target Ohms for a traveling archivist; Manifest-completion rewards.
 - **Faction Favor** — help the scrapper guild, the Chancel, or a colony with their troubles for standing and gear.
-- **Parts Unknown** *(Build-A-MAC)* — hunt rare locomotion and chassis parts in the optional areas to unlock new starter-build options at the Bench.
+- **Parts Unknown** — hunt rare locomotion and chassis parts in the optional areas to unlock new starter-build options at the Bench.
 - **NPC Trades** — swap Ohms with locals for region-locked species (straight species trades — **no** trade-evolution triggers, per canon).
 
 **Named highlights:**

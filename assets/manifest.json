@@ -8071,9 +8071,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.city.skyscraper",
+    "id": "sec.central.skyscraper",
     "display_name": "Skyscraper facade (backdrop)",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "autotile",
     "layer": "bottom",
@@ -8086,9 +8086,9 @@
     "blocks": 3
   },
   {
-    "id": "sec.city.glass_curtain",
+    "id": "sec.central.glass_curtain",
     "display_name": "Shattered glass curtain-wall",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "single",
     "layer": "bottom",
@@ -8100,9 +8100,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.city.broken_floor",
+    "id": "sec.central.broken_floor",
     "display_name": "Broken climb floor",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "single",
     "layer": "bottom",
@@ -8114,9 +8114,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.city.exposed_girder",
+    "id": "sec.central.exposed_girder",
     "display_name": "Exposed girder",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "single",
     "layer": "top",
@@ -8129,9 +8129,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.city.elevator_shaft",
+    "id": "sec.central.elevator_shaft",
     "display_name": "Elevator shaft / hazard gap",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "object",
     "layer": "object",
@@ -8143,9 +8143,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.city.overpass_tangle",
+    "id": "sec.central.overpass_tangle",
     "display_name": "Collapsed overpass tangle (the Stack)",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "prop",
     "layer": "bottom",
@@ -8194,9 +8194,9 @@
     "blocks": 12
   },
   {
-    "id": "sec.city.tunnel_wall",
+    "id": "sec.central.tunnel_wall",
     "display_name": "Pedestrian tunnel wall",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "autotile",
     "layer": "bottom",
@@ -8209,9 +8209,9 @@
     "blocks": 3
   },
   {
-    "id": "sec.city.tunnel_floor",
+    "id": "sec.central.tunnel_floor",
     "display_name": "Tunnel/concourse floor (flooded)",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "autotile",
     "layer": "bottom",
@@ -8224,9 +8224,9 @@
     "blocks": 4
   },
   {
-    "id": "sec.city.sealed_blastdoor",
+    "id": "sec.central.sealed_blastdoor",
     "display_name": "Sealed blast door",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "object",
     "layer": "object",
@@ -8238,9 +8238,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.city.dead_vehicle",
+    "id": "sec.central.dead_vehicle",
     "display_name": "Dead-vehicle field",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "prop",
     "layer": "bottom",
@@ -8280,9 +8280,9 @@
     "blocks": 6
   },
   {
-    "id": "sec.city.plaza",
+    "id": "sec.central.plaza",
     "display_name": "Open plaza ground",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "single",
     "layer": "bottom",
@@ -8294,9 +8294,9 @@
     "blocks": 1
   },
   {
-    "id": "sec.city.spire",
+    "id": "sec.central.spire",
     "display_name": "The Spire (tower exterior)",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "prop",
     "layer": "bottom",
@@ -8367,9 +8367,9 @@
     "blocks": 24
   },
   {
-    "id": "sec.city.crown",
+    "id": "sec.central.crown",
     "display_name": "The Crown (antenna chamber)",
-    "kit": "sec.city",
+    "kit": "sec.central",
     "biome": "urban",
     "type": "prop",
     "layer": "bottom",
@@ -13862,9 +13862,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.city.debris_field",
+    "id": "dressing.central.debris_field",
     "display_name": "Mass debris field",
-    "kit": "dressing.city",
+    "kit": "dressing.central",
     "biome": "urban",
     "type": "single",
     "layer": "bottom",
@@ -13883,9 +13883,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.city.dead_cars",
+    "id": "dressing.central.dead_cars",
     "display_name": "Dead cars",
-    "kit": "dressing.city",
+    "kit": "dressing.central",
     "biome": "urban",
     "type": "object",
     "layer": "object",
@@ -13904,9 +13904,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.city.ash_drift",
+    "id": "dressing.central.ash_drift",
     "display_name": "Ash drifts",
-    "kit": "dressing.city",
+    "kit": "dressing.central",
     "biome": "urban",
     "type": "single",
     "layer": "bottom",
@@ -13925,9 +13925,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.city.fallen_sign",
+    "id": "dressing.central.fallen_sign",
     "display_name": "Fallen signage",
-    "kit": "dressing.city",
+    "kit": "dressing.central",
     "biome": "urban",
     "type": "object",
     "layer": "object",
@@ -13946,9 +13946,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.city.glass",
+    "id": "dressing.central.glass",
     "display_name": "Glass everywhere",
-    "kit": "dressing.city",
+    "kit": "dressing.central",
     "biome": "urban",
     "type": "single",
     "layer": "bottom",
@@ -13967,9 +13967,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.city.choking_dust",
+    "id": "dressing.central.choking_dust",
     "display_name": "Choking dust",
-    "kit": "dressing.city",
+    "kit": "dressing.central",
     "biome": "urban",
     "type": "single",
     "layer": "top",
@@ -13988,9 +13988,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.city.torn_billboard",
+    "id": "dressing.central.torn_billboard",
     "display_name": "Torn billboard",
-    "kit": "dressing.city",
+    "kit": "dressing.central",
     "biome": "urban",
     "type": "single",
     "layer": "top",
@@ -14009,9 +14009,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.city.hive_detritus",
+    "id": "dressing.central.hive_detritus",
     "display_name": "Hive-growth detritus (shed flesh-metal)",
-    "kit": "dressing.city",
+    "kit": "dressing.central",
     "biome": "urban",
     "type": "object",
     "layer": "object",
@@ -14030,9 +14030,9 @@
     "blocks": 1
   },
   {
-    "id": "dressing.city.pulsing_spores",
+    "id": "dressing.central.pulsing_spores",
     "display_name": "Pulsing spores",
-    "kit": "dressing.city",
+    "kit": "dressing.central",
     "biome": "urban",
     "type": "single",
     "layer": "top",

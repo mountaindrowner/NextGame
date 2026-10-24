@@ -9,7 +9,7 @@ Crown / Cray Wells / … — now corrected to the locked names).*
 ## The Downtowns — the eight colony trials
 
 The colony network: linked by *The Current* and the satellite net, divided by
-philosophy. The journey runs roughly **south-to-north into the Old City**; each colony
+philosophy. The journey runs roughly **south-to-north into New Central**; each colony
 sits where its real-world kind would, under invented trade dress (no real logos
 or signage). Home base is **Ohmstead** (an underground bunker beneath a dead
 cattle town), kept by **Warden Hollis Boone** — a quest-giver, not a trial. The
@@ -70,7 +70,7 @@ eight **trial** colonies, each held by a Warden you best for its **Patch**:
   experimental wing). The antenna farm where the tower plan is laid bare.
 - **Patch:** the **Lattice Patch**.
 
-### 8. THE VERGE — Colony 8 *(the oldest colony, fortified at the Old City's edge, under siege)*
+### 8. THE VERGE — Colony 8 *(the oldest colony, fortified at New Central's edge, under siege)*
 
 - **Creed:** *Hold the line; light the Beacon.*
 - **Warden:** **Ruth Amos**, the Lorekeeper (mixed). The Walls, the **Beacon**

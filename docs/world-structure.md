@@ -59,7 +59,7 @@ wager-hall, the Gauntlet, uplink dives).
 ## 3. Biome BANDS (south → north), blended at seams
 
 A gradient like Hoenn's, each band several maps wide, with a rising **hive
-saturation** north toward the Old City:
+saturation** north toward New Central:
 
 | Band | Maps | Biome | Hive |
 |---|---|---|---|

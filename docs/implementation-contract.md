@@ -106,7 +106,7 @@ on green smoke test. Tags at gates: `phase3-contract`, `slice-v0`, `act1`,
 | Battle backs | 45 | player-side species realistically fielded early QA → full 156 by M11; same spec |
 | Trainer battle sprites | 33 | 2 player backs (SAL/WREN), 13 named fronts (8 Wardens, Rook, Drake, Reyes, Faraday, Grandpa Eli), 18 class fronts |
 | Overworld character sheets | 46 | 2 player (walk/run/ride), ~32 NPC types, 12 story/ride Ohm forms; 16×16 grid, Gen 3 proportions |
-| Tilesets | 11 | Ohmstead under, the Field, ranchland/routes, lake & dam, the Bakerhouse, speedway, stockyards, stadium, airfield, the Old City/the Spire, caves/EM zones |
+| Tilesets | 11 | Ohmstead under, the Field, ranchland/routes, lake & dam, the Bakerhouse, speedway, stockyards, stadium, airfield, New Central/the Spire, caves/EM zones |
 | Maps (Tiled) | ~48 | 8 colonies, 9 dungeons, ~14 routes/surface zones, ~17 interiors |
 | UI sheets | 6 | textbox, menus, battle HUD, Manifest, capture puzzle, fonts |
 | Music | 15 + 5 | GDD §13 track list + fanfares; GBA chiptune exactly |

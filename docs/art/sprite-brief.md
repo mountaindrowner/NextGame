@@ -32,7 +32,7 @@ in `assets/styleguide/` — read those first. Questions route through Mark.*
 1. **Tier 1 — the slice set** (ship first): 001–009 + starter variants,
    010, 011, 012, 015, 018, 019, 021, 024, 029, 030, 032, 036, 041, 046.
 2. **Tier 2 — rest of the Field & Act I** (017–048 remainder).
-3. **Tier 3 — the road to the Old City** (049–143).
+3. **Tier 3 — the road to New Central** (049–143).
 4. **Tier 4 — legendaries** (144–150; concept pass to Mark before final).
 
 -----

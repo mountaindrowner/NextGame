@@ -4,7 +4,7 @@
 Everything unmarked is locked canon. Anything tagged `[PROPOSAL]` awaits the
 creator's written approval and is in canon nowhere else.*
 
-> **Setting amendment (Mark, 2026-10-24):** OHMFRONT is no longer set in Texas. The world is an unnamed plains country — Texas-adjacent in feel (cattle towns, prairie, interstates, caliche), never Texas by name. No real state, city or landmark is named: Dallas is now **the Old City** *(working)* and Reunion Tower is now **the Spire**, a fictional broadcast tower. Texas, and South Texas above all, belongs to THE LONG NOON. Older text below is amended in place.
+> **Setting amendment (Mark, 2026-10-24):** OHMFRONT is no longer set in Texas. The world is an unnamed plains country — Texas-adjacent in feel (cattle towns, prairie, interstates, caliche), never Texas by name. No real state, city or landmark is named: Dallas is now **New Central** and Reunion Tower is now **the Spire**, a fictional broadcast tower. Texas, and South Texas above all, belongs to THE LONG NOON. Older text below is amended in place.
 
 -----
 
@@ -24,7 +24,7 @@ creator's written approval and is in canon nowhere else.*
 | Rival colony | **Redbed** |
 | Scrapper guild | **the Yard** |
 | Coexistence cult | **the Attuned** |
-| Finale landmark | **the Spire**, a fictional broadcast tower in the Old City *(amended 2026-10-24; was Reunion Tower, named as itself)* |
+| Finale landmark | **the Spire**, a fictional broadcast tower in New Central *(amended 2026-10-24; was Reunion Tower, named as itself)* |
 | Protagonist presets | **2** — one boy, one girl, both fully written |
 | Bench part set | **Locomotion + Core (type) + Plating (stat lean)** |
 | Status names | OVERHEAT · SHORT · CORRUPTED · STANDBY · LOCKED · GLITCHED |
@@ -193,9 +193,9 @@ Full character sheets in `docs/compendium/characters.md` (Phase 2).
    by the hive, allies with the player. The Garrison chooses total purge —
    every Ohm, freed or not. Three-way board.
 
-### ACT III — TOWARD THE OLD CITY (hrs 22–30)
+### ACT III — TOWARD NEW CENTRAL (hrs 22–30)
 
-10. **The Convoy.** United colonies push down the old highways toward the Old City.
+10. **The Convoy.** United colonies push down the old highways toward New Central.
     Vehicle Ohms shine; final field ability; last Patches.
 11. **The Spire.** The Spire is PERSISTENCE's antenna driving the Static
     continent-wide. Gauntlet of Ohmega-class hive champions — while the
@@ -220,7 +220,7 @@ Full character sheets in `docs/compendium/characters.md` (Phase 2).
 - **Region 1 geography (locked):** The home colony, **Ohmstead**, sits
   underground; an elevator rises to **the Field**, a large surface zone on the
   ruins of an old cattle town, homes still standing. The region arcs outward
-  through the other Downtowns, then toward the Old City for the final chapters.
+  through the other Downtowns, then toward New Central for the final chapters.
 - **Badge analog:** The player connects surface Raiders and underground
   colonies; **8 Patches**, one per colony, template per §5.5.
 - **Garages:** Heal/respawn points. "You're all **recharged** — **stay

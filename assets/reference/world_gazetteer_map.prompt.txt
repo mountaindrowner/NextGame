@@ -1,0 +1,4 @@
+World gazetteer map (2026-10-24). Not AI-generated: hand-built SVG.
+Source: tools/worldmap/gazetteer-map.html (seeded, deterministic).
+Render: node tools/worldmap/render.cjs "$PWD/tools/worldmap/gazetteer-map.html" "$PWD/assets/reference/world_gazetteer_map.png"
+Names are [PROPOSAL] except New Central (locked); see docs/design/world-gazetteer.md.

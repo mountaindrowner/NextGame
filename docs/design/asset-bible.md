@@ -46,7 +46,7 @@ No asset exists without a full label set. Labels are how the agent knows what a 
 - `building` — shared interior shells + furniture. **Usable on any interior map.**
 - `dungeon.cave` / `dungeon.mine` — shared dungeon sets. **Usable on dungeon maps only.**
 - `overlay.hive` — the Static/hive corruption overlay. **Composited on top of a base map; saturated zones only** (see R3).
-- `sec.<area>` — one per area: `sec.ohmstead` `sec.field` `sec.railhead` `sec.cistern` `sec.bastion` `sec.redoubt` `sec.chancel` `sec.redbed` `sec.array` `sec.verge` `sec.city` `sec.trinity` + optional `sec.depot` `sec.drivein` `sec.boneyard` `sec.silo` `sec.bogshrine` `sec.stadium` `sec.fortress`. **Usable ONLY in its named area.**
+- `sec.<area>` — one per area: `sec.ohmstead` `sec.field` `sec.railhead` `sec.cistern` `sec.bastion` `sec.redoubt` `sec.chancel` `sec.redbed` `sec.array` `sec.verge` `sec.central` `sec.trinity` + optional `sec.depot` `sec.drivein` `sec.boneyard` `sec.silo` `sec.bogshrine` `sec.stadium` `sec.fortress`. **Usable ONLY in its named area.**
 
 ---
 
@@ -111,7 +111,7 @@ Hard rules. The agent validates against these before composing any map and fails
 | Redbed | red_hardpan | ✅ | ✅ | – | `sec.redbed` | **heavy** (fallen) |
 | The Array | data | ✅ | ✅ | – | `sec.array` | **med** |
 | The Verge | urban | ✅ | ✅ | – | `sec.verge` | **heavy** |
-| the Old City | urban | ✅ | ✅ | mine | `sec.city` | **max** |
+| New Central | urban | ✅ | ✅ | mine | `sec.central` | **max** |
 | Mountain Fortress | military/underground | ✅ | ✅ | cave | `sec.fortress` | **max** |
 
 ✅ allowed · ✕ forbidden · – n/a. Optional areas inherit the biome/kit of their host region plus their own light `sec.*`.
@@ -328,7 +328,7 @@ Each location's unique art. Assume the Primary Kit covers generic ground/grass/w
 
 **The Verge — Colony 8 (fortified terminal):** grand rail-terminal architecture (facade, clock, columns), defensive barricades (sandbags, barricaded windows, scrap walls), the **beacon** (signal mast + light FX), refugee tents & bedrolls, cook-fires, supply crates, the **Lorekeeper's archive** interior (shelves, scrolls, relics, an **ANCIENT Ohm shrine**), watch-posts, siege damage (scorch, breaches), the **convoy staging ground** (vehicles, fuel drums), barbed wire, makeshift gates.
 
-**The Old City — Act III (downtown ruins):** **skyscraper facades** (towering backdrops), shattered glass curtain-walls, the **skyscraper-climb interior** (broken floors, exposed girders, elevator shafts, hazard gaps), rubble-choked **street canyons**, collapsed **overpass tangles** (the Stack), the **pedestrian-tunnel interior** (tiled corridors, flooded concourse, junctions, sealed blast doors), mass dead-vehicle fields, street-furniture ruins, the open **plaza**, and the **Spire** (the ball-on-stalk tower exterior + the **stalk-climb** + the **Crown antenna chamber**). Heavy **hive-growth/Static overlay** throughout (Part 7), storm-sky backdrop.
+**New Central — Act III (downtown ruins):** **skyscraper facades** (towering backdrops), shattered glass curtain-walls, the **skyscraper-climb interior** (broken floors, exposed girders, elevator shafts, hazard gaps), rubble-choked **street canyons**, collapsed **overpass tangles** (the Stack), the **pedestrian-tunnel interior** (tiled corridors, flooded concourse, junctions, sealed blast doors), mass dead-vehicle fields, street-furniture ruins, the open **plaza**, and the **Spire** (the ball-on-stalk tower exterior + the **stalk-climb** + the **Crown antenna chamber**). Heavy **hive-growth/Static overlay** throughout (Part 7), storm-sky backdrop.
 
 **Generic Cave / Mine kit (reused dungeon set):** **cave walls** (rock, multi-height, edges/corners), cave floors (rock/gravel/earth), cave-ceiling overhang (top-layer dark), stalactites & stalagmites, underground pools/streams (+ edges), mine supports (wood/metal beams), mine-cart rails & carts, ladders, **glowing ore/crystal nodes** (FX), boulders/rubble (BREACH), cracks/pit-drops, the **LUMEN darkness overlay** (unlit vs lit), drips, glow-flora.
 
@@ -365,7 +365,7 @@ A reusable overlay applied to *any* area to show hive saturation — author once
 1. **Shared Primary Kit** first — it unblocks every map.
 2. **Hive Overlay** — needed early since saturation appears from Bastion onward.
 3. **Cave/Mine + Building/Interior kits** — reused everywhere.
-4. **Per-area Secondaries in critical-path order** (Ohmstead → the Field → Railhead → … → the Old City), so the playable slice and the main road come online first.
+4. **Per-area Secondaries in critical-path order** (Ohmstead → the Field → Railhead → … → New Central), so the playable slice and the main road come online first.
 5. **Optional-area kits** last, alongside the wider-world pass.
 
 **Pipeline:** author 16×16 tilesheet PNGs (8×8 sub-structure intact for two-layer walk-behind depth), define collision + elevation + behavior per tile in **Tiled**, export to Phaser. Claude generates the tiles first inside the Gen 3 style (per the art-direction canon); PixelLab is the later-stage tool.

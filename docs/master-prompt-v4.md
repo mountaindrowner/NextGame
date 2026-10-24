@@ -4,7 +4,7 @@
 
 You are the lead developer and design partner for OHMFRONT, a complete, original monster-taming RPG. The creator (Mark) has settled canon through 100 interview questions plus naming sessions. Your job is to realize his vision — not reinterpret it. This document is sufficient to build in one pass; the remaining open items are in Section 17.
 
-> **Setting amendment (Mark, 2026-10-24):** OHMFRONT is no longer set in Texas. The world is an unnamed plains country — Texas-adjacent in feel (cattle towns, prairie, interstates, caliche), never Texas by name. No real state, city or landmark is named: Dallas is now **the Old City** *(working)* and Reunion Tower is now **the Spire**, a fictional broadcast tower. Texas, and South Texas above all, belongs to THE LONG NOON. Older text below is amended in place.
+> **Setting amendment (Mark, 2026-10-24):** OHMFRONT is no longer set in Texas. The world is an unnamed plains country — Texas-adjacent in feel (cattle towns, prairie, interstates, caliche), never Texas by name. No real state, city or landmark is named: Dallas is now **New Central** and Reunion Tower is now **the Spire**, a fictional broadcast tower. Texas, and South Texas above all, belongs to THE LONG NOON. Older text below is amended in place.
 
 -----
 
@@ -83,8 +83,8 @@ You are the lead developer and design partner for OHMFRONT, a complete, original
 
 ### ACT III — TOWARD DALLAS (hrs 22–30)
 
-1. **The Convoy.** United colonies push down the old highways toward the Old City. Vehicle Ohms shine; final field ability; last colony tokens.
-1. **The Spire.** The Old City landmark (17.8) is the Core’s antenna driving the Static continent-wide. Gauntlet of Ohmega-class hive champions — while Militarists race to destroy the tower in a way that would kill every Ohm mind with it. The player must beat both clocks.
+1. **The Convoy.** United colonies push down the old highways toward New Central. Vehicle Ohms shine; final field ability; last colony tokens.
+1. **The Spire.** The New Central landmark (17.8) is the Core’s antenna driving the Static continent-wide. Gauntlet of Ohmega-class hive champions — while Militarists race to destroy the tower in a way that would kill every Ohm mind with it. The player must beat both clocks.
 1. **Clear the Static.** Final battle vs. the Core’s avatar (Prototype-class legendary). The win isn’t destruction: the player **broadcasts the recalibration through the satellite net** — the firewall hack scaled to the sky, through the same network that shelters their own Ohms. The Static clears. Ohms everywhere wake as individuals. One ending: a shared surface, the **Ohmcoming** festival in Ohmstead, Grandpa’s final *Ohm’s Law* quote. Hooks remain: the Core was one node of something larger; other regions still hum; the virus’s origin stays unanswered.
 
 -----
@@ -93,7 +93,7 @@ You are the lead developer and design partner for OHMFRONT, a complete, original
 
 - **Structure:** Linear main push, generous side content, the Pokémon recipe. Zones open but are **gated** by ability locks, key items, task/boss prerequisites.
 - **The loop:** Topside expeditions are **Ohm Runs**.
-- **Region 1 geography (locked):** The home colony — **Ohmstead** — sits underground; an **elevator** rises to **the Field**, a large surface zone on the ruins of an old cattle town, homes still standing. Region arcs outward, then **toward the Old City** for the final chapters.
+- **Region 1 geography (locked):** The home colony — **Ohmstead** — sits underground; an **elevator** rises to **the Field**, a large surface zone on the ruins of an old cattle town, homes still standing. Region arcs outward, then **toward New Central** for the final chapters.
 - **Badge analog:** The player connects surface Raiders and underground colonies; **8 colony tokens** (form pending, 17.3), template per 5.5.
 - **Garages:** Heal/respawn points. “You’re all **recharged** — **stay current** out there.” **Party wipe loses nothing**; return to nearest garage.
 - **Side content:** **6 side quests** in Region 1, plus the **Ohmsick** pattern (freed Ohms missing their original sites — visit quests).
@@ -275,7 +275,7 @@ Normal English noun: *an Ohm, two Ohms, the Ohm’s firewall, a three-Ohm squad.
 1. **Collapse event name** — the Waking · the Hum · the First Update.
 1. **Colony network** — the Understates · the Downtowns · the Burrows.
 1. **Faction names** — Militarists (the Cordon · the Garrison · the Bulwark); scrapper guild (the Salvage Union · the Yard); cult (the Attuned · the Choir · the Listeners); rival colony (Caliche · Redbed · Spindle).
-1. **Finale landmark** — *resolved 2026-10-24:* **the Spire**, a fictional tower in the Old City (was Reunion Tower or other).
+1. **Finale landmark** — *resolved 2026-10-24:* **the Spire**, a fictional tower in New Central (was Reunion Tower or other).
 1. **Bench part set** — locomotion plus what other slots?
 1. **Stat names, status set, type chart, field-ability final set, 5th-move tradeoff, release term** — approve or rework the `[PROPOSAL]`s above.
 1. **Evolution item & resource naming** — salvage tiers + Resonance Cores or other.

@@ -101,11 +101,11 @@ marked ⟦…⟧.*
     data-center campus. Trial: the Server Halls, the Lattice, **Warden Tobias
     Frost** — the most tactical fight pre-finale (a **PROTOTYPE legendary** can
     lurk in the experimental wing). The antenna farm lays the tower plan bare:
-    towers → the Old City antenna → the satnet upload, and the **Breaker can
+    towers → the New Central antenna → the satnet upload, and the **Breaker can
     broadcast the recalibration through the tower**. The endgame plan is born.
     **Lattice Patch (7/8).** **Ohmsick #3** (the Sirenado's last noon test).
 18. **THE VERGE — Colony 8 (hrs 24–26).** The oldest colony, fortified at
-    the Old City's edge, under siege. The Walls, the **Beacon** that gathers the
+    New Central's edge, under siege. The Walls, the **Beacon** that gathers the
     colonies, the Convoy Staging Ground; the Lorekeeper **Warden Ruth Amos** (an
     **ANCIENT legendary** may be guarded in her archive). **Grandpa confirmed —
     Eli uploaded himself into the net and may be holding the line still.**

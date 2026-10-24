@@ -52,7 +52,7 @@ Dressing is composited in **four planes**, bottom to top — this is what turns 
 - **`lived_in`** — the default for inhabited spaces; clutter in the natural spots.
 - **`cluttered`** — heavy mess (workshops, markets, raider dens, refugee camps).
 - **`squalid`** — overrun (abandoned interiors, the worst slums).
-- **`ruined`** — debris-dominated (dead buildings, the Old City, dungeons).
+- **`ruined`** — debris-dominated (dead buildings, New Central, dungeons).
 
 **Scatter logic — where clutter accumulates (so it reads real, not random):**
 - **Against walls & in corners** (clutter pools at edges, not centers).
@@ -126,7 +126,7 @@ Each area's clutter reflects its people. Universal library still applies, biome-
 - **Redbed** *(raiders · cluttered→squalid):* bones and scrap trophies, oil-drum ash, strewn bike parts, war-paint stains, hoarded junk piles, New Order graffiti, hung skull-totems, a tipped fuel can, buzzing flies (fx).
 - **The Array** *(data center · cluttered):* tangled cable nests, dead monitors, energy-drink cans, printout drifts, sticky notes everywhere, server dust, blinking junk, a foil-lined cap (the conspiracy-coder's), screen-glow pools (fx), a half-eaten meal at a terminal.
 - **The Verge** *(memory-keepers, siege · cluttered):* refugee bundles and bedrolls, ration-line crates, sandbags, old-world relics on shelves, memorial candles, siege scorch and breaches, packed-up belongings, festival bunting half-hung, a child's keepsake.
-- **The Old City** *(ruins · ruined):* mass debris fields, dead cars, rubble, ash drifts, fallen signage, glass everywhere, choking dust (fx), torn billboards, and **hive-growth detritus** (shed flesh-metal, pulsing spores — pairs with the hive overlay) intensifying toward the tower.
+- **New Central** *(ruins · ruined):* mass debris fields, dead cars, rubble, ash drifts, fallen signage, glass everywhere, choking dust (fx), torn billboards, and **hive-growth detritus** (shed flesh-metal, pulsing spores — pairs with the hive overlay) intensifying toward the tower.
 - **Caves / dungeons** *(ruined):* rubble and boulders, scattered bones, an old dead campfire, dropped/rusted gear, mineral crust, fungal growth (glow-fx), drips and damp (fx), a forgotten mine-cart of junk, cobwebs.
 
 ---

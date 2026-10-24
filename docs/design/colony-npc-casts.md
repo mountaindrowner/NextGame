@@ -215,7 +215,7 @@
 
 -----
 
-## THE VERGE — Colony 8 *(the oldest colony, memory-keepers, under siege at the Old City’s edge)*
+## THE VERGE — Colony 8 *(the oldest colony, memory-keepers, under siege at New Central’s edge)*
 
 **Local Classes**
 
@@ -225,13 +225,13 @@
 
 **The Warden’s Circle — the Keepers (Ruth Amos’s eldest guardians)**
 
-- Veteran teams that play like a final exam before the Old City; each Keeper carries a fragment of pre-collapse memory dropped in their pre-battle line.
+- Veteran teams that play like a final exam before New Central; each Keeper carries a fragment of pre-collapse memory dropped in their pre-battle line.
 
 **Specific Roles**
 
 - **Lorekeeper** — oral historian; the deepest world lore and the last Grandpa hints.
 - **Beacon-Warden** — tends the signal beacon that calls the colonies to gather.
-- **Convoy-Master** — organizes the march on the Old City; staging and fast-travel hub.
+- **Convoy-Master** — organizes the march on New Central; staging and fast-travel hub.
 
 **Quirky / Funny**
 

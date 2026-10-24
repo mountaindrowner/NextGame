@@ -2,7 +2,7 @@
 
 *The required journey from point A to point Z, fitted to the plot — every town, colony, road, cave, dungeon, and building of note the player must pass to beat the game, in order. The wider optional world comes later; this is the spine.*
 
-**Region name (working):** **the Blackland** — a ruined black-soil prairie, arcing north into the dead sprawl of **the Old City** *(working)*. *(Distinct from the colony-network name, still open. The Old City is the region's dark pole. Since 2026-10-24 no real place is named: the country is Texas-adjacent in feel, never Texas.)*
+**Region name (working):** **the Blackland** — a ruined black-soil prairie, arcing north into the dead sprawl of **New Central**. *(Distinct from the colony-network name, still open. New Central is the region's dark pole. Since 2026-10-24 no real place is named: the country is Texas-adjacent in feel, never Texas.)*
 
 **Geography:** The journey runs roughly south-to-north. It opens in cattle-and-grain country, climbs through prairie and quarry land, crosses the drowned Trinity bottoms, threads the ruined sprawl, and ends in the downtown canyon at the tower. Each colony sits where its real-world kind would: traders on a rail junction, quarry-folk in the cement lands, scholars in the northern data corridor, the last holdout at the city's edge.
 
@@ -143,7 +143,7 @@
 - **Terrain:** Server halls, cooling towers, an antenna farm.
 - **Places of note:** **the Server Halls** (the trial — the Lattice, Warden Tobias Frost, the most tactical fight pre-finale; a **PROTOTYPE** legendary can lurk in the experimental wing); **the Uplink Chamber** (net encounters); the antenna farm where the tower plan is laid bare.
 - **Gate in:** Story.
-- **Plot beat:** The **full threat** is explained — towers → the Old City antenna → the satnet upload; **Mag works out the Breaker can broadcast through the tower.** The endgame plan is born. **Token 7.**
+- **Plot beat:** The **full threat** is explained — towers → the New Central antenna → the satnet upload; **Mag works out the Breaker can broadcast through the tower.** The endgame plan is born. **Token 7.**
 - **Leads to:** The Stack.
 
 ### 16. THE STACK — route-dungeon *(a colossal ruined highway interchange)*
@@ -154,19 +154,19 @@
 - **Plot beat:** The united convoy pushes toward the city; the Pull is now a visible storm of wild Ohms trailing the column.
 - **Leads to:** The Verge.
 
-### 17. THE VERGE — Colony 8 *(the oldest colony, fortified at the Old City's edge, under siege)*
+### 17. THE VERGE — Colony 8 *(the oldest colony, fortified at New Central's edge, under siege)*
 - **Type:** Colony + Trial 8.
 - **Terrain:** Old walls around a fortified rail terminal at the city's southern lip.
 - **Places of note:** **the Walls** and **the Beacon** (that calls the colonies to gather); the **Convoy Staging Ground**; the Lorekeeper's archive (Warden Ruth Amos; an **ANCIENT** legendary may be kept/guarded here).
 - **Gate in:** Story.
 - **Plot beat:** **Grandpa confirmed** — Eli uploaded himself into the net and may be holding the line still; the convoy assembles for the final push. **Token 8.**
-- **Leads to:** the Old City — the Outer Ring.
+- **Leads to:** New Central — the Outer Ring.
 
 ---
 
 # ACT III — TOWARD THE TOWER (DALLAS)
 
-### 18. THE OUTER RING — dungeon-zone *(the Old City's hive-saturated outskirts)*
+### 18. THE OUTER RING — dungeon-zone *(New Central's hive-saturated outskirts)*
 - **Type:** Hostile wild zone.
 - **Terrain:** Ruined neighborhoods drowning in Static; **feral, near-unhackable Ohms** everywhere — the most dangerous wilds in the game; the skyline of dead towers ahead.
 - **Places of note:** burned suburbs; the first fallen skyscrapers; hive relay-towers humming.
@@ -174,7 +174,7 @@
 - **Plot beat:** Fight through the worst of the Static toward downtown.
 - **Leads to:** The Canyon.
 
-### 19. THE CANYON — dungeon *(the Old City downtown, the skyscraper ruins)*
+### 19. THE CANYON — dungeon *(downtown New Central, the skyscraper ruins)*
 - **Type:** Urban dungeon — **a skyscraper climb.**
 - **Terrain:** The dead financial district; a chosen **collapsed skyscraper** the player ascends (and partly descends through its broken floors) to cross the impassable street-level wreckage.
 - **Places of note:** the **leaning tower** (the skyscraper dungeon — vertical, hazardous, hive champions on the upper floors); an open **plaza** below; the dead West End.
