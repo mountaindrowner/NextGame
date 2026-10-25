@@ -193,7 +193,7 @@
 ### 21. THE SPIRE — final dungeon *(the old broadcast tower, retrofitted as PERSISTENCE's antenna)*
 - **Type:** Final dungeon + final boss.
 - **Terrain:** The iconic ball-on-a-stalk tower, old steel fused with hive-grown flesh; an ascent through a **gauntlet of Ohmega-class hive champions** to the antenna chamber at the crown.
-- **Places of note:** the **stalk** (the climb); **the Crown** (the antenna chamber — the final arena).
+- **Places of note:** the **stalk** (the climb); **the Crown** (the antenna chamber — the final arena); **the plaque** at the tower's foot, bronze, most letters gone: *"…UNION…"*. It's the game's one hint of the old world, never explained (LOCKED 2026-10-25).
 - **Gate in:** Story → the **Breaker** is the only thing that can cut the tower's deep Static (the Breaker hard-gates the very end).
 - **Plot beat:** The two-front finale — **the Monad** (Prototype-class avatar) descends as Drake's remnant attacks; **Reyes's holding sacrifice** buys the way up. Final battle vs. the Monad = the node-puzzle hack at maximum scale; **Grandpa's voice breaks through the Static**; the Breaker uploads through the tower into the satnet. **The Static clears worldwide.**
 - **Leads to:** Resolution.

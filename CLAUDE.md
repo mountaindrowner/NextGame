@@ -73,7 +73,8 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   factory, statics, rattler, plug-lover; Rook uses them early, drops them
   as his arc turns). Names must sound natural said by a tired local.
   **The old world is forgotten:** no old-world proper name or history in the
-  game, only tiny unexplained hints midway or near the end. The Spire keeps
+  game, only tiny unexplained hints midway or near the end (so far exactly
+  one: the worn plaque at the Spire's foot reading "…UNION…"). The Spire keeps
   the old tower's silhouette (stalk + lattice ball) but is never named for it. The rest there is proposal. Texas, South Texas above all, belongs to Mark's
   separate game THE LONG NOON; the two stay separate. `npm run lint`
   enforces the no-real-places rule on game content.
@@ -192,7 +193,7 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   `assets/manifest.json`. Catalog seeded with the Primary, Building, Cave, and
   the two slice secondary kits. **Catalog now enumerates EVERY asset**: all 19
   per-area secondaries + the universal clutter/wall/fx libraries + 12 area
-  dressing sets (the four-plane lived-in layer, D1/D4 rules) — **643 records, 0
+  dressing sets (the four-plane lived-in layer, D1/D4 rules) — **644 records, 0
   violations**, gated in CI. **Shared foundation ART done** (Primary, Hive
   Overlay, Building/Interior, Cave/Mine, universal Clutter; each `npm run
   assets:*` + a `_contact*.png`). Next: per-area secondary ART + dressing in

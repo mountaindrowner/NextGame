@@ -239,6 +239,7 @@ const add = (records: AssetRecord[]): void => { all.push(...records); };
   k.single('sec.central.plaza', 'Open plaza ground', { collision: 'pass', pal: 6 });
   k.prop('sec.central.spire', 'The Spire (tower exterior)', { footprint: [4, 6], hero: true, pal: 8, prompt: `${HD}; a tall concrete stalk topped by a lattice ball of lights (keeps the old tower's silhouette; never named in game), old steel fused with hive-flesh, storm sky` });
   k.prop('sec.central.crown', 'The Crown (antenna chamber)', { footprint: [3, 3], hero: true, pal: 8 });
+  k.single('sec.central.plaque', 'Worn bronze plaque at the Spire\'s foot (reads only "…UNION…")', { collision: 'solid', pal: 7 });
   add(k.R);
 }
 // ---- MOUNTAIN FORTRESS (post-game) ---------------------------------------

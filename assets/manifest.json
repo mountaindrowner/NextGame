@@ -8416,6 +8416,20 @@
     "blocks": 9
   },
   {
+    "id": "sec.central.plaque",
+    "display_name": "Worn bronze plaque at the Spire's foot (reads only \"…UNION…\")",
+    "kit": "sec.central",
+    "biome": "urban",
+    "type": "single",
+    "layer": "bottom",
+    "collision": "solid",
+    "elev": "0",
+    "pal": 7,
+    "phase": "act3",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth, top-left light; Worn bronze plaque at the Spire's foot (reads only \"…UNION…\")",
+    "blocks": 1
+  },
+  {
     "id": "sec.fortress.cold_rock",
     "display_name": "Cold mountain rock",
     "kit": "sec.fortress",

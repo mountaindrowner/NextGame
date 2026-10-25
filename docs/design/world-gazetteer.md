@@ -161,14 +161,11 @@ know to catch.
 lattice ball of lights. Nobody in the game knows what it used to be called,
 and the game never says.
 
-Hint ideas `[PROPOSAL]`, pick any or none:
-- **A plaque at the Spire's foot** (finale), most letters gone: *"…UNION…"*.
-  Colonists read it as "union", which is what the ending is about.
-- **A postcard in the Verge's archive** (Act III): the tower lit up at night,
-  the caption worn away. The Verge's Keepers hold fragments of the old world;
-  nobody can say what this one shows.
-- **A faded jingle on The Current's oldest tape** (midway, the Array): a
-  few bars of a station ID from before, the call letters lost in hiss.
+**The one hint (LOCKED 2026-10-25): the plaque.** A worn bronze plaque at the
+Spire's foot, reached in the finale, most letters gone: *"…UNION…"*. Nobody
+comments on it. Colonists would read it as "union", which is what the ending
+is about. (A postcard in the Verge's archive and a jingle on The Current's
+oldest tape were considered and dropped; add a hint only with Mark's OK.)
 
 ---
 
@@ -183,6 +180,5 @@ Hint ideas `[PROPOSAL]`, pick any or none:
 
 ## Open for Mark
 
-1. Which old-world hints to use (plaque, postcard, jingle, or none).
-2. `[PROPOSAL]` still: humps, ghost roads, topside, and the history names (the
+1. `[PROPOSAL]` still: humps, ghost roads, topside, and the history names (the
    Before · the Underyears).

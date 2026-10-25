@@ -118,7 +118,8 @@ marked ⟦…⟧.*
     PERSISTENCE accelerates the Update. The player must beat both.
 20. **The Spire (hrs 26–29).** The tower, floor by floor: a gauntlet of
     **Ohmega-class hive champions**, **Rook** running second, the colonies
-    holding the ground floor against the Garrison. Drake's final checkpoint: he
+    holding the ground floor against the Garrison. At the tower's foot, a worn
+    bronze plaque reads only *"…UNION…"*; nobody comments on it. Drake's final checkpoint: he
     uses the player's name and stands down his sappers for exactly one hour.
 21. **Clear the Static (hr 29).** **EXEMPLAR** — PERSISTENCE's avatar (**the
     Monad**), Prototype-class. In the antenna chamber, at the end of everything,
