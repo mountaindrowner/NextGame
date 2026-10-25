@@ -9,6 +9,7 @@ import { cottonwood, mesquite, deadTree, bush, tumbleweed, motes, swayTrees, tru
 import { maskAt } from '../field/layout';
 import { DAY, NIGHT } from '../mood';
 import { regionPaint } from '../region1/section';
+import { dressDoor, markDoor } from '../doorway';
 import { boardSign } from '../region1/props';
 import { castOf, loadMap, type AreaBuilder } from '../area';
 
@@ -120,10 +121,12 @@ function cottonGin(scene: THREE.Scene, cx: number, cz: number): Built {
   g.add(cyl(0.14, 0.2, 0.9, M.steel(), -W / 2 - 1.55, H - 1.2, 1.65, 10));
   // doors: a big rolling door (half open) and a man door
   const fz = D / 2 + 0.01;
-  g.add(box(1.8, 2.1, 0.04, M.dark(), -0.6, 0, fz));
-  g.add(box(1.0, 2.1, 0.08, M.tin(), -1.05, 0, fz + 0.04));
+  // the rolling door run shut and boarded, the man door boarded too: nobody goes in (the door language)
+  g.add(box(1.8, 2.1, 0.08, M.tin(), -0.6, 0, fz + 0.04));
   g.add(box(2.4, 0.08, 0.08, M.steel(), -0.6, 2.12, fz + 0.06));
+  dressDoor(g, -0.6, 0, fz + 0.1, 1.8, 2.1, 'boarded', false, 0, { noLeaf: true });
   g.add(box(0.7, 1.6, 0.05, M.wood(), 1.2, 0, fz));
+  dressDoor(g, 1.2, 0, fz + 0.05, 0.7, 1.6, 'boarded', false, 0, { noLeaf: true });
   // a ghost sign, nearly gone
   const sign = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 0.55), new THREE.MeshStandardMaterial({
     map: textTexture('CO-OP GIN', { w: 96, h: 20, fg: '#e8e0cc', font: 'bold 15px monospace', worn: 0.45, seed: 41 }), transparent: true, alphaTest: 0.4, roughness: 1,
@@ -159,6 +162,7 @@ function cottonGin(scene: THREE.Scene, cx: number, cz: number): Built {
   vines(g, 1.9, 0, fz + 0.03, 1.0, 2.6);
   vines(g, W / 2 - 0.2, 2.2, 0.42, 1.1, 2.4);
   put(g, cx, cz, W, D, scene);
+  markDoor(cx - 0.6, cz + D / 2, 'boarded');
   addSolid(cx - W / 2, cz - D / 2, cx + W / 2 + 0.2, cz + D / 2);
   addSolid(cx - W / 2 - 2.3, cz + 0.4, cx - W / 2 - 0.7, cz + 2.9);
   addSolid(cx + W / 2 + 0.3, cz + 0.4, cx + W / 2 + 1.2, cz + 2.2);

@@ -72,6 +72,7 @@ export const buildField: AreaBuilder = async (scene, night) => {
     things: [
       // the sign post stands a touch east of its old tile (props.ts)
       ...(sign ? [{ x: 22.7, z: 16.7, height: 1.5, label: 'Read', say: { name: 'Sign', lines: [sign.text] } }] : []),
+      { x: 16.4, z: 13.0, height: 2.0, label: 'Look', reach: 1.6, say: { lines: ['The vault doors are chained shut. Whatever the co-op kept in there, it\'s still in there.'] } },
       { x: 28.4, z: 17.9, height: 1.2, label: 'Look', reach: 1.8, say: { lines: ['Three Ohms, switched off and left where they fell. Grey paint on each: a chevron, a row of tally marks.'] } },
       { x: 20.5, z: 17.1, height: 2.6, label: 'Ride down', reach: 1.3, say: { lines: ['The cage rattles shut. Down to Ohmstead.'] }, go: { to: 'ohmstead', spawn: 'lift' } },
     ],

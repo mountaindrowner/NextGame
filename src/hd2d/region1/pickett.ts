@@ -96,12 +96,13 @@ export const buildPickett = section({
   },
   dress(d) {
     const { scene, night } = d;
-    d.built.push(farmhouse(scene, 12.2, 12.0, 1, night));
+    d.built.push(farmhouse(scene, 12.2, 12.0, 1, night, 'open')); // lived in: lit, and you can go in
+    d.spawns.house = { x: 12.2, z: 14.0, face: 'S' };
     d.built.push(barn(scene, 28.0, 10.4));
     d.built.push(windmill(scene, 31.6, 15.0));
     stockTank(scene, 33.4, 15.4, 0.9);
     brassTag(scene, 31.6, heightAt(31.6, 15.0) + 1.6, 15.62);
-    porchSet(scene, 12.2, 14.2);
+    porchSet(scene, 15.2, 14.4);
     tradeShed(scene, 18.0, 23.6);
     clothesline(scene, 5.0, 9.4, 15.6);
     d.built.push(sprinkler(scene, 23.4, 23.5, 12.5));
@@ -127,12 +128,13 @@ export const buildPickett = section({
       { x: 18.0, z: 24.6, height: 1.3, label: 'Trade', say: { name: 'Hob Pickett', lines: ['Seed, rope, Repair Kits. We trade for salvage.', 'Keep your credits. Credits don\'t grow.'] } },
     );
     d.npcs.push(
-      { char: 'npc_elder', col: 11, row: 14, name: 'Ada Pickett', facing: 's', lines: ['Sit a minute. Your Ohms look run down.', 'We never went under. Somebody had to keep the windmill company.', 'You\'ve got Eli\'s jaw. Don\'t ask me to say more than that.'] },
+      { char: 'npc_elder', col: 14, row: 14, name: 'Ada Pickett', facing: 's', lines: ['Sit a minute. Your Ohms look run down.', 'We never went under. Somebody had to keep the windmill company.', 'You\'ve got Eli\'s jaw. Don\'t ask me to say more than that.'] },
       { char: 'npc_rancher', col: 19, row: 22, name: 'Hob Pickett', facing: 'n', lines: ['Ma\'ll patch your Ohms up if you ask. The shed\'s mine.'] },
       { char: 'npc_kid', col: 30, row: 17, name: 'Lettie', facing: 'w', lines: ['That\'s Mister Pump. That\'s Sprocket, in the barn.', 'The sprinkler is called Rain. She doesn\'t answer. She listens, though.'] },
     );
     // a heal at Ada's porch
-    d.things.push({ x: 12.2, z: 14.6, height: 1.2, label: 'Rest', action: 'heal', say: { name: 'Ada Pickett', lines: ['There. Recharged. Stay current, and come back when they\'re tired.'] } });
+    d.things.push({ x: 12.2, z: 13.7, height: 2.0, label: 'Enter', reach: 1.5, go: { to: 'pickett_house', spawn: 'door' } });
+    d.things.push({ x: 15.2, z: 14.9, height: 1.2, label: 'Rest', action: 'heal', say: { name: 'Ada Pickett', lines: ['There. Recharged. Stay current, and come back when they\'re tired.'] } });
     d.roamers.push({ num: 65, level: 6, x: 6.0, z: 22.0, range: 2.2 }, { num: 80, level: 6, x: 34.0, z: 6.5, range: 1.8 });
   },
 });

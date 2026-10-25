@@ -39,6 +39,63 @@ The world never explains itself. It shows, and the player reads.
 - **The old world is forgotten.** No old-world names or history, ever. Only a
   few tiny, unexplained hints (one so far: the Spire's plaque, "…UNION…").
 
+## 2b. Design language is a promise, and we keep every one
+
+*(Mark, 2026-10-25: "Design language is huge.")* Everything the player sees
+says something. A visual choice is a **promise** about how the world works,
+and the player learns to trust it. Three things matter for every piece of
+design language:
+
+1. **What it promises.** Say it in one plain sentence. "A lit lamp at a door
+   means you can go in." If we can't say it that plainly, the language is
+   muddy.
+2. **How it resolves.** A promise is only worth something if it's kept
+   **every time**. The lit door always opens. The boarded door never does.
+   The chained door opens later, and the game does open it later. One broken
+   promise teaches the player to stop trusting what they see, and then they
+   walk up to every door to check, which is exactly the guessing we're
+   designing out.
+3. **What it implies.** Visuals carry messages we didn't mean to send. A door
+   slid open on darkness implies "come in." A lamp lit over a vault implies
+   "this is the way." Check what each thing implies, not only what it was
+   meant to say, and fix anything that implies a promise we can't keep.
+
+Design language is shared across the whole game: the same sign means the
+same thing in every region. When we add a new one, we write it down here
+first.
+
+### The door language (LOCKED 2026-10-25)
+
+**Light is the promise.** Whether you can go somewhere should be readable
+from across the map, before you walk up to it.
+
+| What you see at a doorway | What it means | Resolves |
+|---|---|---|
+| **A lit lamp right at the door, warm light inside, a clear step** | Go in. | Always opens. Day and night. |
+| **Planks nailed across, no light** | Never opens. Scenery. | Never. No prompt needed. |
+| **A chain and padlock, no light** | Opens later, when the story gets there. | The story opens it later. |
+| **A dead lamp (empty bracket, broken bulb) over a black doorway** | Too dark: needs LUMEN. | Opens once you have LUMEN. |
+| **Heaped debris / fallen gates** | Needs HAUL. | Opens with HAUL. |
+| **Thorny growth grown solid** | Needs SHEAR. | Opens with SHEAR. |
+| **Open water between you and it** | Needs HOVER. | Opens with HOVER. |
+| **A cracked, sealed wall or welded door** | Needs BREACH. | Opens with BREACH. |
+| **No door at all, just a ruin** | Walk around it. | — |
+
+Rules that keep the promise:
+
+- **Never light a door you can't use.** No decorative lit doors, no glowing
+  vaults that don't open. Street lamps on posts are a different shape (a
+  lamp on a pole, not on a wall by a door) and promise nothing.
+- **Every way in is lit.** Every door, hatch, stairway or lift you can use
+  has its lamp: dungeon stairs, the lift, a dungeon's exit back outside
+  (daylight spilling through the doorway).
+- **Ground doors stay shut unless they're the way in.** Leaves slid open or
+  half-open at ground level read as "come in", so on a building you can't
+  enter, the doors are closed and boarded, barred or chained.
+- **The check is automatic.** In development, the game warns if a lit door
+  has nothing to go to, or if a way in has no lit lamp
+  (`src/hd2d/doorway.ts`; any map built with it is checked on load).
+
 ## 3. Threads: lore with a fixed visual language
 
 The underlayer is carried by a handful of **threads**, each with one
@@ -140,4 +197,5 @@ From Mark's direction and the benchmark study (`scope-benchmarks.md`,
 6. One routine and one signature per section.
 7. People with short, double-reading lines.
 8. Wild Ohms themed to what each place used to be.
-9. Build it, screenshot it, walk every exit, show Mark.
+9. Every door speaks the door language (§2b); the automatic check is clean.
+10. Build it, screenshot it, walk every exit, show Mark.

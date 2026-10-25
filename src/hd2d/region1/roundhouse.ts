@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { box, cyl, beam, colMat, shade, cylGeo } from '../geo';
 import { addSolid } from '../world';
 import { KM, wallLamp, pendant, crate, drum, table, shelf } from '../ohmstead/kit';
-import { interior } from './interior';
+import { interior, exitDoor } from './interior';
 import type { Grid } from './section';
 
 /**
@@ -71,8 +71,7 @@ export const buildRoundhouse = interior({
   },
   dress(d) {
     const { root, pool } = d;
-    d.spawns.door = { x: 19.5, z: 22.4, face: 'N' };
-    d.triggers.push({ x0: 18.0, x1: 21.0, z0: 23.8, z1: 26, go: { to: 'railhead', spawn: 'roundhouse' } });
+    exitDoor(d, 19.5, 'railhead', 'roundhouse');
     deadEngine(root, 19.5, 10.0);
     // the gantry over the middle stall, its hook on a long chain, swinging
     for (const dx of [-3.4, 3.4]) root.add(box(0.25, 3.2, 0.25, KM.steel(), 19.5 + dx, 0, 6.0));

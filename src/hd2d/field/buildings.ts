@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { T, Pix, textTexture } from '../textures';
 import { box, cyl, beam, boxGeo, cylGeo, planeGeo, texMat, colMat, shade, prism } from '../geo';
 import { addSolid, heightAt } from '../world';
+import { dressDoor, markDoor } from '../doorway';
 import { rng } from '../noise';
 
 /**
@@ -138,7 +139,8 @@ export function barn(scene: THREE.Scene, cx: number, cz: number): Built {
     l.position.set(x, 0.02, D / 2 + 0.07);
     return l;
   };
-  g.add(leaf(-0.47), leaf(1.35)); // the right leaf has slid aside on its track
+  g.add(leaf(-0.47), leaf(0.47)); // both leaves shut: nobody goes in (the door language)
+  dressDoor(g, 0, 0.02, D / 2 + 0.13, 1.9, 1.95, 'boarded', false, 0, { noLeaf: true });
   g.add(box(2.9, 0.07, 0.07, M.steel(), 0.45, 1.98, D / 2 + 0.06)); // door track
   // hay-loft door hanging open
   g.add(box(0.95, 0.85, 0.05, M.dark(), 0, 2.7, D / 2 + 0.01));
@@ -174,6 +176,7 @@ export function barn(scene: THREE.Scene, cx: number, cz: number): Built {
   vines(g, W / 2 + 0.07, 0, 0.6, 1.6, 1.6, Math.PI / 2);
   vines(g, 1.9, 0, D / 2 + 0.06, 0.8, 1.1);
   put(g, cx, cz, W, D, scene);
+  markDoor(cx, cz + D / 2, 'boarded');
   addSolid(cx - W / 2, cz - D / 2, cx + W / 2, cz + D / 2);
   addSolid(cx - 2.5, cz + D / 2, cx - 0.7, cz + D / 2 + 0.95); // the bales
   return {};
@@ -181,7 +184,7 @@ export function barn(scene: THREE.Scene, cx: number, cz: number): Built {
 
 // =============================================================== FARMHOUSE
 
-export function farmhouse(scene: THREE.Scene, cx: number, cz: number, variant: 0 | 1, night: boolean): Built {
+export function farmhouse(scene: THREE.Scene, cx: number, cz: number, variant: 0 | 1, night: boolean, door: 'boarded' | 'open' = 'boarded'): Built {
   const g = new THREE.Group();
   const W = 4.2, BD = 2.0, H = 2.2, PD = 1.0; // body depth + porch depth
   const bodyZ = -PD / 2;
@@ -218,7 +221,8 @@ export function farmhouse(scene: THREE.Scene, cx: number, cz: number, variant: 0
   g.add(box(1.0, 0.11, 0.35, M.deck(), 0, 0, pz + PD / 2 + 0.17));
   // front door + windows (some boarded)
   const fz = bodyZ + BD / 2 + 0.01;
-  g.add(box(0.78, 1.55, 0.05, M.wood(), 0, 0.22, fz));
+  if (door === 'boarded') g.add(box(0.78, 1.55, 0.05, M.wood(), 0, 0.22, fz));
+  const doorFx = dressDoor(g, 0, 0.22, fz + 0.03, 0.78, 1.55, door, night, 0, { noLeaf: true });
   g.add(box(0.9, 0.08, 0.06, M.trim(), 0, 1.78, fz + 0.01));
   const panes: THREE.Mesh[] = [];
   panes.push(windowAt(g, -1.35, 1.3, fz, 0.7, 0.75, 0, variant === 1 ? 'boarded' : 'glass'));
@@ -233,6 +237,7 @@ export function farmhouse(scene: THREE.Scene, cx: number, cz: number, variant: 0
   vines(g, W / 2 + 0.07, 0, bodyZ, 1.4, 1.7, Math.PI / 2);
   if (variant === 1) vines(g, 0.9, H - 0.4, fz + 0.02, 1.4, 0.9);
   put(g, cx, cz, W, BD + PD, scene);
+  markDoor(cx, cz + fz, door);
   addSolid(cx - W / 2 - 0.1, cz - (BD + PD) / 2, cx + W / 2 + 0.1, cz + (BD + PD) / 2 + 0.3);
 
   // "Keep off the dead houses. Some flicker — there, then gone." (Rivet)
@@ -245,6 +250,7 @@ export function farmhouse(scene: THREE.Scene, cx: number, cz: number, variant: 0
   let next = 0, on = false;
   return {
     update(t) {
+      doorFx.update?.(t);
       if (!night) return;
       if (t > next) {
         on = !on;
@@ -291,7 +297,7 @@ export function chapel(scene: THREE.Scene, cx: number, cz: number): Built {
   g.add(cross);
   // doors + tall windows (a couple broken out)
   g.add(box(0.72, 1.55, 0.05, M.wood(), 0, 0, tz + 0.56));
-  g.add(box(0.06, 1.55, 0.06, M.dark(), 0, 0, tz + 0.59));
+  dressDoor(g, 0, 0, tz + 0.6, 0.72, 1.55, 'boarded', false, 0, { noLeaf: true });
   for (const side of [-1, 1]) {
     windowAt(g, side * (W / 2 + 0.01), 1.4, -0.9, 0.45, 1.0, side * Math.PI / 2, side < 0 ? 'boarded' : 'glass');
     windowAt(g, side * (W / 2 + 0.01), 1.4, 0.4, 0.45, 1.0, side * Math.PI / 2);
@@ -303,6 +309,7 @@ export function chapel(scene: THREE.Scene, cx: number, cz: number): Built {
   vines(g, -0.4, 0, tz + 0.57, 0.7, 1.4);
   vines(g, 0.55, 1.8, tz + 0.57, 0.5, 1.1);
   put(g, cx, cz, W, D + 0.6, scene);
+  markDoor(cx, cz + tz + 0.56, 'boarded');
   addSolid(cx - W / 2, cz - D / 2 - 0.3, cx + W / 2, cz + D / 2 + 0.5);
   return {};
 }
@@ -441,22 +448,19 @@ export function coopVault(scene: THREE.Scene, cx: number, cz: number, night: boo
   // blast-door recess with hazard frame
   const fz = D / 2;
   g.add(box(1.9, 2.3, 0.22, M.concrete(), 0, 0, fz + 0.06));
-  g.add(box(1.5, 2.0, 0.05, colMat('#ffcf8a', { emissive: '#ffb867', emissiveIntensity: night ? 3.2 : 1.6 }), 0, 0, fz + 0.1));
+  g.add(box(1.5, 2.0, 0.05, M.dark(), 0, 0, fz + 0.1));
   for (const [x, y, w, h] of [[-0.86, 0, 0.14, 2.1], [0.86, 0, 0.14, 2.1], [0, 2.02, 1.86, 0.14]] as Array<[number, number, number, number]>)
     g.add(box(w, h, 0.06, M.hazard(), x, y, fz + 0.2));
-  // left leaf shut, right leaf swung open — somebody cracked it last night
+  // both leaves shut and chained: the vault opens on the prologue night (the story), not before
   g.add(box(0.74, 1.98, 0.14, M.steel(), -0.37, 0, fz + 0.18));
   const leafPivot = new THREE.Group();
   leafPivot.position.set(0.74, 0, fz + 0.2);
   const leafM = box(0.74, 1.98, 0.14, M.steel(), -0.37, 0, 0);
   leafPivot.add(leafM);
   leafPivot.add(box(0.1, 0.5, 0.06, M.steel(), -0.62, 0.8, 0.09)); // wheel-lock handle
-  leafPivot.rotation.y = -1.05;
+  leafPivot.rotation.y = 0;
   g.add(leafPivot);
-  // light spilling out of the vault
-  const spill = new THREE.PointLight('#ffb867', night ? 14 : 6, 7, 1.6);
-  spill.position.set(0, 1.0, fz + 0.7);
-  g.add(spill);
+  dressDoor(g, 0, 0, fz + 0.28, 1.48, 1.98, 'chained', night, 0, { noLeaf: true });
   // "CO-OP" stenciled over the door
   const sten = new THREE.Mesh(
     new THREE.PlaneGeometry(2.4, 0.6),
@@ -465,11 +469,7 @@ export function coopVault(scene: THREE.Scene, cx: number, cz: number, night: boo
   sten.position.set(-0.05, 2.62, fz + 0.012);
   sten.receiveShadow = true;
   g.add(sten);
-  // sodium lamp over the door
-  g.add(box(0.06, 0.06, 0.4, M.steel(), 0, 2.38, fz + 0.2));
-  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 6), colMat('#ffd27a', { emissive: '#ffb050', emissiveIntensity: night ? 6 : 0.4 }));
-  bulb.position.set(0, 2.3, fz + 0.4);
-  g.add(bulb);
+  // (no lamp over the vault door: a lit door is a promise, and this one is chained)
   // loading dock + crates + a drainpipe
   g.add(box(1.3, 0.55, 0.9, M.concrete(), -1.5, 0, fz + 0.45));
   g.add(box(0.5, 0.5, 0.5, M.wood(), -1.75, 0.55, fz + 0.4));
@@ -488,6 +488,7 @@ export function coopVault(scene: THREE.Scene, cx: number, cz: number, night: boo
   vines(g, -1.7, 0.55, fz + 0.03, 0.9, 1.9);
   vines(g, 1.8, 0, fz + 0.03, 0.7, 2.4);
   put(g, cx, cz, W, D, scene);
+  markDoor(cx, cz + fz, 'chained');
   addSolid(cx - W / 2, cz - D / 2, cx + W / 2, cz + D / 2);
   addSolid(cx - 2.15, cz + D / 2, cx - 0.85, cz + D / 2 + 0.9);
   addSolid(cx - 2.2, cz - 3.5, cx + 1.2, cz - 1.6);
@@ -568,6 +569,7 @@ export function liftHatch(scene: THREE.Scene, cx: number, cz: number, night: boo
   const lamp = new THREE.PointLight('#ffb867', night ? 9 : 2.5, 6, 1.7);
   lamp.position.set(0.7, 2.3, 0.6);
   g.add(lamp);
+  markDoor(cx, cz, 'open'); // the lift's lamp is its door light
   // call box with a green ready light
   g.add(box(0.2, 0.3, 0.12, M.steel(), -0.95, 0.9, 0.55));
   const led = new THREE.Mesh(new THREE.SphereGeometry(0.03, 6, 4), colMat('#7dff9a', { emissive: '#3dff7a', emissiveIntensity: 3 }));

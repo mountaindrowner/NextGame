@@ -55,7 +55,7 @@ export const buildGrainLine = section({
     hopperCar(scene, 26, 55, '#7a3a2e', Math.PI / 2);
     d.built.push(crossingSignal(scene, 23.0, 47.6, night));
     d.built.push(binCluster(scene, [31.0, 32.7, 34.3], 49.4));
-    d.built.push(grainElevator(scene, 7.0, 25.0));
+    d.built.push(grainElevator(scene, 7.0, 25.0, night));
     poles(scene, [[15.5, 58], [10.6, 48], [9.8, 38], [10.8, 30], [12.6, 20], [15.2, 10], [16.0, 2]]);
     fence(scene, [[3.0, 40.5], [9.6, 40.5], [9.6, 57.0]], d.seed());
     fence(scene, [[3.0, 18.0], [9.0, 18.0]], d.seed());

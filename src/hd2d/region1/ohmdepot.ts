@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { box, beam, colMat } from '../geo';
 import { addSolid } from '../world';
 import { KM, wallLamp, pendant, crate } from '../ohmstead/kit';
-import { interior } from './interior';
+import { interior, exitDoor } from './interior';
 import type { Grid } from './section';
 import { rack, forklift } from './dungeon-props';
 import { shoppingCart } from './props';
@@ -60,8 +60,7 @@ export const buildOhmDepot = interior({
   },
   dress(d) {
     const { root, pool } = d;
-    d.spawns.door = { x: 9.5, z: 30.4, face: 'N' };
-    d.triggers.push({ x0: 8.0, x1: 11.0, z0: 31.8, z1: 34, go: { to: 'depotroad', spawn: 'depot' } });
+    exitDoor(d, 9.5, 'depotroad', 'depot');
     RACKS.forEach((x, i) => rack(root, x, 5.0, 23.0, 900 + i));
     d.built.push(forklift(root, 12.0, 6.0, 22.0, 0.55), forklift(root, 28.0, 7.0, 22.5, 0.45));
     const screens = [6, 12, 18, 24].map((x) => register(root, x, 27.2));

@@ -5,6 +5,7 @@ import { box, cyl, beam, boxGeo, cylGeo, colMat, shade, planeGeo } from '../geo'
 import { heightAt, addSolid } from '../world';
 import { M, put, vines, windowAt, type Built } from '../field/buildings';
 import { powerLine } from '../field/props';
+import { dressDoor, markDoor } from '../doorway';
 
 /**
  * Railhead Country's shared props (docs/design/region1-railhead-country.md):
@@ -489,8 +490,8 @@ export function brickShell(scene: THREE.Scene, cx: number, cz: number, w: number
   const wall = (len: number, x: number, z: number, rot: number): void => {
     const seg = 1.0;
     for (let a = -len / 2 + seg / 2; a < len / 2; a += seg) {
-      const hh = h * (0.45 + r() * 0.55);
-      if (r() < 0.12) continue; // a gap blown through
+      // broken low in places, never gapped: a visible gap you can't walk through would be a broken promise
+      const hh = h * (r() < 0.14 ? 0.3 : 0.45 + r() * 0.55);
       const b = box(seg + 0.02, hh, 0.3, brick, 0, 0, 0);
       const holder = new THREE.Group();
       holder.add(b);
@@ -609,7 +610,7 @@ export function railLineV(scene: THREE.Scene, x: number, z0: number, z1: number,
 
 /** The grain elevator: a row of tall concrete silos, the headhouse on top,
  *  the bucket leg and spouts, and the dump shed at its foot (the dungeon door). */
-export function grainElevator(scene: THREE.Scene, cx: number, cz: number): Built {
+export function grainElevator(scene: THREE.Scene, cx: number, cz: number, night = false): Built {
   const g = new THREE.Group();
   const conc = M.concrete();
   const n = 4, R = 1.0, H = 8.2;
@@ -631,8 +632,8 @@ export function grainElevator(scene: THREE.Scene, cx: number, cz: number): Built
   const roof = box(4.6, 0.08, 2.9, M.tin(), 0, 2.7, 0.1);
   roof.rotation.x = 0.12;
   shed.add(roof);
-  shed.add(box(1.4, 2.0, 0.05, M.dark(), -0.6, 0, 1.21));
-  shed.add(box(1.4, 2.0, 0.06, M.tin(), 0.3, 0, 1.24)); // the slid-open door
+  shed.add(box(1.4, 2.0, 0.06, M.tin(), 0.85, 0, 1.24)); // the door, slid aside
+  const doorFx = dressDoor(shed, -0.6, 0, 1.22, 1.4, 2.0, 'open', night);
   shed.position.set(-2.0, 0, R + 1.6);
   g.add(shed);
   brassTag(shed, 0.6, 1.5, 1.23);
@@ -645,7 +646,8 @@ export function grainElevator(scene: THREE.Scene, cx: number, cz: number): Built
   addSolid(cx - n * R, cz - R, cx + n * R, cz + R);
   addSolid(cx - 4.2, cz + R + 0.4, cx + 0.2, cz + R + 2.8);
   addSolid(cx - R * 2.9 - 0.35, cz + R + 0.1, cx - R * 2.9 + 0.35, cz + R + 0.7);
-  return {};
+  markDoor(cx - 2.6, cz + R + 2.8, 'open');
+  return doorFx;
 }
 
 /** A shopping cart, wheels rusted, nosed into the weeds. */
@@ -787,7 +789,7 @@ export function signFlipper(scene: THREE.Scene, x: number, z: number): Built {
 
 /** The orange warehouse front: a long tilt-up wall, an orange band with every
  *  letter long gone, loading docks, the entrance hall (the dungeon door). */
-export function warehouseFront(scene: THREE.Scene, cx: number, cz: number, w: number): void {
+export function warehouseFront(scene: THREE.Scene, cx: number, cz: number, w: number, night = false): Built {
   const g = new THREE.Group();
   const wall = colMat('#b8b0a2', { roughness: 1 });
   const D = 6, H = 5.0;
@@ -798,14 +800,13 @@ export function warehouseFront(scene: THREE.Scene, cx: number, cz: number, w: nu
   const hall = new THREE.Group();
   hall.add(box(4.0, 3.4, 1.6, wall, 0, 0, 0));
   hall.add(box(4.2, 0.6, 1.8, colMat('#d0702a'), 0, 3.4, 0));
-  hall.add(box(2.6, 2.4, 0.05, M.dark(), 0, 0, 0.81));
-  for (const dx of [-0.65, 0.65]) hall.add(box(1.2, 2.3, 0.04, colMat('#2a3a3a', { roughness: 0.2, metalness: 0.2 }), dx, 0.05, 0.84));
+  const doorFx = dressDoor(hall, 0, 0, 0.82, 2.6, 2.4, 'open', night);
   hall.position.set(-w * 0.18, 0, D / 2 + 0.8);
   g.add(hall);
   // loading docks down the east end
   for (let i = 0; i < 3; i++) {
     const x = w * 0.18 + i * 2.6;
-    g.add(box(2.0, 2.6, 0.05, i === 1 ? M.dark() : M.tin(), x, 0.9, D / 2 + 0.03));
+    g.add(box(2.0, 2.6, 0.05, M.tin(), x, 0.9, D / 2 + 0.03)); // dock doors rolled down
     g.add(box(2.4, 0.9, 1.2, M.concrete(), x, 0, D / 2 + 0.6));
   }
   vines(g, -w / 2 + 0.5, 0, D / 2 + 0.05, 2.4, 3.8);
@@ -814,6 +815,8 @@ export function warehouseFront(scene: THREE.Scene, cx: number, cz: number, w: nu
   addSolid(cx - w / 2, cz - D / 2, cx + w / 2, cz + D / 2 + 0.2);
   addSolid(cx - w * 0.18 - 2.0, cz + D / 2, cx - w * 0.18 + 2.0, cz + D / 2 + 1.5);
   addSolid(cx + w * 0.18 - 1.2, cz + D / 2, cx + w * 0.18 + 6.4, cz + D / 2 + 1.2);
+  markDoor(cx - w * 0.18, cz + D / 2 + 1.6, 'open');
+  return doorFx;
 }
 
 /** An old fuel stop: a sagging canopy on four posts over two dead pump islands. */

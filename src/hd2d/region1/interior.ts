@@ -8,6 +8,8 @@ import type { Built } from '../field/buildings';
 import type { Mood } from '../mood';
 import type { Area, AreaBuilder, NPC, SectionKind, Spot, Thing, Trigger } from '../area';
 import { Grid } from './section';
+import { dressDoor, markDoor } from '../doorway';
+import { pendant } from '../ohmstead/kit';
 
 /**
  * Interiors for Railhead Country's dungeons (the Grain Tower, the Roundhouse,
@@ -29,7 +31,7 @@ export const INSIDE: Mood = {
   sprite: [0.95, 0.88, 0.8],
 };
 
-export type WallKind = 'concrete' | 'brick' | 'tin' | 'block';
+export type WallKind = 'concrete' | 'brick' | 'tin' | 'block' | 'boards';
 const H = (h: string): RGB => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
 const mix = (a: RGB, b: RGB, k: number): RGB => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
 
@@ -49,6 +51,12 @@ function wallTex(kind: WallKind): THREE.Texture {
     } else if (kind === 'tin') {
       c = mix(H('#8a8c88'), H('#6a6c68'), (Math.sin(x * 1.6) + 1) / 2 * 0.6 + n * 0.4);
       if (fbm(x * 0.15, y * 0.15, 6, 3) > 0.58) c = mix(c, H('#8a4a2a'), 0.6); // rust
+    } else if (kind === 'boards') {
+      // painted board walls gone soft with age, a dado rail low down
+      const seam = x % 6 === 0;
+      c = seam ? H('#5a4a3a') : mix(H('#a8957a'), H('#968468'), n);
+      if (up === 14 || up === 15) c = H('#6a5440');
+      if (up < 14) c = mix(c, H('#7a6650'), 0.35);
     } else if (kind === 'block') {
       const mortar = up % 6 === 0 || (x + (Math.floor(up / 6) % 2) * 8) % 16 === 0;
       c = mortar ? H('#7a766c') : mix(H('#b8b0a0'), H('#a09888'), n);
@@ -80,6 +88,21 @@ export interface InteriorDress {
   roamers: NonNullable<Area['roamers']>;
   triggers: Trigger[];
   spawns: Record<string, Spot>;
+}
+
+/** The way back out: a gap in the south wall with daylight in it (the door language: every way in is lit). */
+export function exitDoor(d: InteriorDress, x: number, to: string, spawn: string, w = 1.6): void {
+  const rows = d.grid.rows;
+  d.spawns.door = { x, z: rows - 1.3, face: 'N' };
+  d.triggers.push({ x0: x - 1.4, x1: x + 1.4, z0: rows - 0.2, z1: rows + 2, go: { to, spawn } });
+  d.built.push(dressDoor(d.root, x, 0, rows - 0.04, w, 2.2, 'open', false, Math.PI, { daylight: true }));
+  markDoor(x, rows - 0.1, 'open');
+}
+
+/** A lamp over a stairway or ladder (every way through is lit). */
+export function stairLight(d: InteriorDress, x: number, z: number): void {
+  pendant(d.root, d.pool, x, z, true);
+  markDoor(x, z, 'open');
 }
 
 export interface InteriorSpec {

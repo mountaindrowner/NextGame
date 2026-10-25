@@ -21,6 +21,7 @@ import { buildScar } from './scar/area';
 import { buildCistern } from './cistern/area';
 import { buildOverworld, OVERWORLD_IDS, overworldOffset } from './overworld/area';
 import { REGION1 } from './region1';
+import { checkDoors } from './doorway';
 import { beginArea } from './world';
 import { partyHasFieldAbility, HOVER_GIFT_SPECIES } from '../data/field-abilities';
 
@@ -253,6 +254,7 @@ function travelBox(path: Array<[number, number]>): [number, number, number, numb
   return [cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2];
 }
 const visited = new Set<string>();
+let doorIssues: string[] = [];
 
 /**
  * Travel. Every road and town is its own map (Mark, 2026-10-25): walking off an
@@ -337,6 +339,9 @@ async function enter(id: string, spawn: string, first = false, how: 'fade' | 'di
     if (big) ui.titleCard(a.title, a.sub); else ui.nameTag(a.title.replace(/^THE /, ''), a.kind === 'road' || a.kind === 'travel' ? a.sub : '');
   }
   visited.add(a.id);
+  // the door language keeps its promises (design-philosophy §2b): say so loudly when it doesn't
+  doorIssues = checkDoors(a);
+  for (const i of doorIssues) console.warn('[door language]', i);
 }
 
 // ---------------------------------------------------------------- input
@@ -619,4 +624,4 @@ renderer.setAnimationLoop(() => {
   post.tick(t);
   post.composer.render(dt);
 });
-Object.assign(window, { __ready: true, __hd2d: { get area() { return area; }, areas: Object.keys(AREAS), get scene() { return scene; }, get arena() { return arena; }, get roamers() { return roamers; }, party, storage, get nodes() { return nodes; }, lead, camera, player, ohm, THREE, enter } });
+Object.assign(window, { __ready: true, __hd2d: { get area() { return area; }, get doorIssues() { return doorIssues; }, areas: Object.keys(AREAS), get scene() { return scene; }, get arena() { return arena; }, get roamers() { return roamers; }, party, storage, get nodes() { return nodes; }, lead, camera, player, ohm, THREE, enter } });

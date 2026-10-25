@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { box, colMat } from '../geo';
 import { addSolid } from '../world';
 import { KM, wallLamp, pendant, crate, drum } from '../ohmstead/kit';
-import { interior, type InteriorDress } from './interior';
+import { interior, exitDoor, stairLight, type InteriorDress } from './interior';
 import type { Grid } from './section';
 import { bucketLoop, wheel, stairs, hopper, binTop } from './dungeon-props';
 
@@ -26,10 +26,6 @@ function grainFloor(gl: string, x: number, z: number, fine: number): RGB {
   if (fine > 0.985) c = H('#c8a050');
   return c;
 }
-const door = (d: InteriorDress, x: number, rows: number, to: string, spawn: string): void => {
-  d.spawns.door = { x, z: rows - 1.3, face: 'N' };
-  d.triggers.push({ x0: x - 1.4, x1: x + 1.4, z0: rows - 0.2, z1: rows + 2, go: { to, spawn } });
-};
 
 export const buildGrainTower = interior({
   id: 'graintower',
@@ -50,7 +46,7 @@ export const buildGrainTower = interior({
   floor: grainFloor,
   dress(d) {
     const { root, pool } = d;
-    door(d, 14.5, 18, 'grainline', 'tower');
+    exitDoor(d, 14.5, 'grainline', 'tower');
     d.spawns.top = { x: 25.0, z: 5.6, face: 'S' };
     const back = d.mount(0);
     for (const x of [6.5, 14.5, 21.5]) wallLamp(back, pool, x, 1.0, 2.1);
@@ -60,6 +56,7 @@ export const buildGrainTower = interior({
     root.add(box(1.6, 0.5, 1.6, KM.rust(), 24.2, 0, 8.5)); // the boot
     addSolid(23.3, 7.6, 25.1, 9.4);
     stairs(root, 25.0, 4.2);
+    stairLight(d, 25.0, 5.2);
     pendant(root, pool, 9.5, 12.0, true);
     pendant(root, pool, 19.5, 12.0, true);
     for (const [x, z] of [[2.2, 15.2], [2.8, 15.6]] as Array<[number, number]>) drum(root, x, z);
@@ -102,6 +99,8 @@ export const buildGrainTower2 = interior({
     pendant(root, pool, 13.5, 7.5, true);
     pendant(root, pool, 3.5, 12.5, true);
     stairs(root, 24.0, 3.4);
+    stairLight(d, 24.0, 4.4);
+    stairLight(d, 3.0, 13.2);
     // light falling in through a broken high window
     const shaft = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 5), new THREE.MeshBasicMaterial({ color: '#ffe0a0', transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
     shaft.position.set(11.0, 2.0, 6.0);
@@ -132,6 +131,7 @@ export const buildGrainTower3 = interior({
   dress(d) {
     const { root, pool } = d;
     d.spawns.stairs = { x: 3.0, z: 11.0, face: 'N' };
+    stairLight(d, 3.0, 11.6);
     // the head pulley: the wheel the whole tower turns on, cups cresting and tipping out nothing
     d.built.push(bucketLoop(root, 11.0, 3.2, 0.2, 3.0, 14, 0.5));
     d.built.push(wheel(root, 11.0, 3.0, 3.2, 0.5, 1.3));

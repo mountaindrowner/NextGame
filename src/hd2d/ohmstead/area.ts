@@ -4,6 +4,7 @@ import { UNDER } from '../mood';
 import { OhmFollower } from '../sprites';
 import { textTexture } from '../textures';
 import { fbm, vnoise } from '../noise';
+import { markDoor } from '../doorway';
 import { castOf, loadMap, type AreaBuilder, type Thing } from '../area';
 import { cylGeo, boxGeo, colMat, shade } from '../geo';
 import {
@@ -463,6 +464,7 @@ export const buildOhmstead: AreaBuilder = async (scene) => {
     pool.add({ pos: new THREE.Vector3(30.9, 2.2, 17.3), color: new THREE.Color('#ffc070'), intensity: 5, dist: 5 });
     addSolid(29.6, 16.0, 29.9, 17.6);
     addSolid(31.9, 16.0, 32.6, 17.6);
+    markDoor(30.9, 17.3, 'open');
     things.push({ x: 30.9, z: 17.0, height: 2.7, label: 'Ride up', reach: 1.7, say: { lines: ['The cage rattles shut. Up to the Field.'] }, go: { to: 'field', spawn: 'lift' } });
     // notice board by the west door
     const nb = mount(R.z0 - 1);

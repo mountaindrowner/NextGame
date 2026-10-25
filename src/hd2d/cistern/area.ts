@@ -6,6 +6,7 @@ import { setWorld, hitsSolid, addSolid } from '../world';
 import { buildWater, buildGrass } from '../terrain';
 import { CISTERN } from '../mood';
 import { castOf, loadMap, type AreaBuilder, type Thing } from '../area';
+import { dressDoor, markDoor } from '../doorway';
 import { KM, LightPool, worldUV, paintFloor, wallLamp, pendant, growBed, crate, drum, pipes, creeper, glow, kitHex, kitMix, type RGB } from '../ohmstead/kit';
 
 /**
@@ -336,6 +337,20 @@ export const buildCistern: AreaBuilder = async (scene) => {
     // across the flood, the colony's lamps: strings of bulbs over the water
   }
 
+  // the north gate: the Warden holds it — bars, a chain, no light (the door language: later)
+  {
+    const gate = new THREE.Group();
+    for (let k = 0; k < 7; k++) gate.add(box(0.06, 2.3, 0.06, KM.steel(), -1.35 + k * 0.45, 0, 0));
+    for (const y of [0.3, 1.2, 2.2]) gate.add(box(2.9, 0.07, 0.07, KM.steel(), 0, y, 0));
+    gate.position.set(20.5, 0, 0.9);
+    root.add(gate);
+    dressDoor(gate, 0, 0, 0.06, 2.6, 2.3, 'chained', true, 0, { noLeaf: true });
+    markDoor(20.5, 0.9, 'chained');
+    // the culvert back out to the Rust Mile: lit, like every way through
+    pendant(root, pool, 20.5, 26.4, true);
+    markDoor(20.5, 27.2, 'open');
+    addSolid(19.0, 0.6, 22.0, 1.1);
+  }
   // lily-pad scum and floating junk on the basin
   for (let i = 0; i < 40; i++) {
     const [x, z] = waterCells[Math.floor(r() * waterCells.length)]!;

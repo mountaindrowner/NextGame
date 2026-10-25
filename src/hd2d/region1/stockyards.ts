@@ -5,6 +5,7 @@ import { M, cattlePen } from '../field/buildings';
 import { cottonwood, mesquite, bush, truck, tumbleweed } from '../field/props';
 import { section } from './section';
 import { stockTank, loadingChute, swingGate, stencil, brickShell, boardSign } from './props';
+import { dressDoor, markDoor } from '../doorway';
 
 /**
  * THE STOCKYARDS — side spot off Stockyard Lane. Rows of pens down a central
@@ -60,7 +61,9 @@ export const buildStockyards = section({
     // the big gate at the mouth, stencilled grey
     d.built.push(swingGate(scene, 2.4, 14.9, 3.2, Math.PI / 2));
     const shell = brickShell(scene, 36.5, 9.5, 9.0, 7.0, 3.4, d.seed());
-    stencil(shell, -1.0, 2.0, 3.66, 0, 0.7);
+    stencil(shell, -1.8, 2.0, 3.66, 0, 0.7);
+    dressDoor(shell, 0, 0, 3.66, 1.4, 2.2, 'chained', d.night, 0, { fresh: true });
+    markDoor(36.5, 13.0, 'chained');
     loadingChute(scene, 33.6, 21.6, Math.PI / 2);
     stockTank(scene, 12.2, 17.9, 0.7);
     stockTank(scene, 21.0, 15.1, 0.7);

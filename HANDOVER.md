@@ -33,6 +33,14 @@ like the region's ground (not neon); one continuous seamless overworld with
 long transition stretches; build order = critical path; he approved the
 approach and all proposals so far ("I like everything you're proposing").
 
+**Door language LOCKED (Mark, 2026-10-25: "design language is huge").** Light
+is the promise: a lit lamp at a door = you can go in, always; planks = never;
+chain = later (the story); dead lamp + black doorway = LUMEN; debris = HAUL;
+thorns = SHEAR. Principle + table in `design-philosophy.md` §2b, kit + the
+automatic promise check in `src/hd2d/doorway.ts` (runs on every area load;
+`window.__hd2d.doorIssues`). Region 1 audited and clean; the promises still
+owed are listed in the region bible. New: the Pickett house interior.
+
 **Design philosophy captured (Mark, 2026-10-25: "exactly what I'm looking
 for"): `docs/design/design-philosophy.md`. Read it before designing anything.**
 Overhead web of region 1: `assets/reference/region1_overhead.png`.

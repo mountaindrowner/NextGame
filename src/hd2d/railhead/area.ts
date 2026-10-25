@@ -9,6 +9,7 @@ import { cottonwood, mesquite, bush, tumbleweed, motes, swayTrees, crates } from
 import { railLine, boxcar, fence } from '../farmroad/area';
 import { DAY, NIGHT } from '../mood';
 import { castOf, loadMap, type AreaBuilder } from '../area';
+import { dressDoor, markDoor } from '../doorway';
 
 /**
  * RAILHEAD — Colony 1, the crossroads trade-town on an old rail junction.
@@ -112,8 +113,9 @@ const rust = (): THREE.MeshStandardMaterial => M.tank();
 /** The roundhouse: a long brick engine shed with three arched bays facing the
  *  turntable, a clerestory roof, soot-stained stacks — and a dead locomotive
  *  still nosing out of the middle bay, rusted where it stopped. */
-function roundhouse(scene: THREE.Scene, cx: number, cz: number): Built {
+function roundhouse(scene: THREE.Scene, cx: number, cz: number, night: boolean): Built {
   const g = new THREE.Group();
+  const built: Built[] = [];
   const W = 7.4, D = 3.0, Hh = 3.2;
   g.add(box(W + 0.12, 0.6, D + 0.12, M.concrete(), 0, -0.55, 0));
   g.add(box(W, Hh, D, M.brick()));
@@ -138,16 +140,11 @@ function roundhouse(scene: THREE.Scene, cx: number, cz: number): Built {
     const voussoir = new THREE.Mesh(new THREE.TorusGeometry(0.92, 0.09, 4, 16, Math.PI), M.concrete());
     voussoir.position.set(bx, 2.45, fz + 0.03);
     g.add(shade(voussoir));
-    // half-open timber doors on the outer bays
+    // the outer bays: timber doors shut and boarded; the middle bay, round the engine, is the way in (lit)
     if (bx !== 0) {
-      const leaf = box(0.8, 2.3, 0.08, M.wood(), 0, 0, 0);
-      const piv = new THREE.Group();
-      piv.position.set(bx + (bx < 0 ? -0.85 : 0.85), 0, fz + 0.05);
-      leaf.position.x = bx < 0 ? 0.4 : -0.4;
-      piv.add(leaf);
-      piv.rotation.y = bx < 0 ? -1.2 : 1.2;
-      g.add(piv);
-    }
+      for (const dx of [-0.42, 0.42]) g.add(box(0.82, 2.3, 0.08, M.wood(), bx + dx, 0, fz + 0.05));
+      dressDoor(g, bx, 0, fz + 0.1, 1.7, 2.3, 'boarded', false, 0, { noLeaf: true });
+    } else built.push(dressDoor(g, 0, 0, fz + 0.04, 1.7, 2.45, 'open', night));
   }
   for (const px of [-3.6, -1.2, 1.2, 3.6]) g.add(box(0.28, Hh, 0.18, M.brick(), px, 0, fz + 0.05));
   // the dead locomotive in the middle bay
@@ -194,9 +191,11 @@ function roundhouse(scene: THREE.Scene, cx: number, cz: number): Built {
   vines(g, W / 2 + 0.07, 0, 0.2, 1.8, 2.2, Math.PI / 2);
   vines(g, 3.0, 1.6, fz + 0.04, 0.9, 1.4);
   put(g, cx, cz, W, D, scene);
+  markDoor(cx, cz + fz, 'open');
+  for (const bx of [-2.4, 2.4]) markDoor(cx + bx, cz + fz, 'boarded');
   addSolid(cx - W / 2, cz - D / 2, cx + W / 2, cz + D / 2);
   addSolid(cx - 0.75, cz + D / 2, cx + 0.75, cz + D / 2 + 1.2);
-  return {};
+  return { update(t) { for (const b of built) b.update?.(t); } };
 }
 
 /** The turntable: a stone-rimmed pit with a girder bridge that once swung
@@ -378,7 +377,8 @@ function switchHouse(scene: THREE.Scene, cx: number, cz: number, night: boolean)
   roof.add(slab(0, 3.45, 1.3, 2.75, 3.3, M.shingle()));
   roof.rotation.y = Math.PI / 2;
   g.add(roof);
-  g.add(box(0.8, 1.2, 0.05, M.wood(), -0.6, 0, 1.01)); // door
+  g.add(box(0.8, 1.2, 0.05, M.wood(), -0.6, 0, 1.01)); // door: boarded (the relay is up top, not inside)
+  dressDoor(g, -0.6, 0, 1.05, 0.8, 1.2, 'boarded', false, 0, { noLeaf: true });
   // stairs up the side
   for (let i = 0; i < 5; i++) g.add(box(0.7, 0.08, 0.3, M.wood(), -1.75, i * 0.28, 0.6 - i * 0.28));
   // the relay mast: lattice, cross-arms, insulators, a blinking beacon
@@ -573,7 +573,7 @@ export const buildRailhead: AreaBuilder = async (scene, night) => {
   setWorld(WORLD);
   const data = await loadMap('railhead');
   const built: Built[] = [
-    roundhouse(scene, 8.0, 8.3),
+    roundhouse(scene, 8.0, 8.3, night),
     turntable(scene, 8.5, 16.0, 1.75),
     waterTower(scene, 13.6, 7.6),
     switchHouse(scene, 30.6, 6.1, night),
@@ -581,6 +581,7 @@ export const buildRailhead: AreaBuilder = async (scene, night) => {
     semaphore(scene, 37.6, 8.4, night),
     gantry(scene, 26.2, 8.25, 19.75, night),
   ];
+  markDoor(30.0, 7.1, 'boarded'); // the switch-house door
   bayRails(scene, [new THREE.Vector2(5.6, 9.8), new THREE.Vector2(8.0, 10.9), new THREE.Vector2(10.4, 9.8)], new THREE.Vector2(8.5, 16.0));
   // the four yard tracks (row 9 starts clear of the roundhouse; the rest meet the turntable)
   railLine(scene, 9.5, 12.2, 40.6);

@@ -114,3 +114,32 @@ New encounter tables, levels climbing toward Railhead (L3–10), themed to what
 each place was: tools on Depot Road, farm machines on the Grain Line, cactus
 and wind Ohms in the Breaks, water Ohms on the Creek Road, heavy herd Ohms in
 the Stockyards, screen and light Ohms at the Drive-In.
+
+---
+
+## Doors, and the promises they make
+
+Every door here speaks the door language (`design-philosophy.md` §2b). The
+automatic check is clean: every lit door leads somewhere, and every way in is
+lit.
+
+**Lit (you can go in):** the Field lift · the Pickett house (the one house you
+can walk into, since people live in it) · the Grain Tower's dump shed · Ohm
+Depot's entrance · the Roundhouse's middle bay · every dungeon exit (daylight
+in the doorway) and stairway.
+
+**Boarded (never):** the Field's farmhouses, chapel and barn · the Pickett
+barn · the cotton gin · the switch-house · the Roundhouse's outer bays.
+
+**Promises still owed.** Each of these says "later", so the game has to keep
+it:
+
+| Door | Says | Kept when |
+|---|---|---|
+| the Co-op Vault (the Field) | chained | the prologue night (story) |
+| the slaughterhouse (the Stockyards) | chained, fresh lock, Garrison stencil | `[PROPOSAL]` Act II: what the Garrison keeps in there |
+| the Cistern's north gate | chained bars | Warden trial 2 |
+| the Breaks' thicket | thorn growth | SHEAR |
+| the Stockyards' inner pen | fallen gates | HAUL |
+| the Creek Road bridge | broken deck | HAUL (the shortcut to Drive-In Road) |
+| Ohm Depot's back stock | pitch dark | LUMEN |

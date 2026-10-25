@@ -31,7 +31,7 @@ export const buildDepotRoad = section({
   },
   dress(d) {
     const { scene } = d;
-    warehouseFront(scene, 14.0, 6.2, 22.0);
+    d.built.push(warehouseFront(scene, 14.0, 6.2, 22.0, d.night));
     fuelCanopy(scene, 36.0, 22.0);
     blankBillboard(scene, 44.0, 9.0, 0);
     d.built.push(grader(scene, [[55.0, 14.6], [30.0, 15.2]], 0.8));
@@ -49,7 +49,7 @@ export const buildDepotRoad = section({
 
     d.spawns.depot = { x: 9.6, z: 11.8, face: 'S' };
     d.things.push(
-      { x: 9.6, z: 10.6, height: 2.6, label: 'Enter', reach: 1.6, say: { lines: ['The doors are long gone. Inside, in the dark, something is stacking shelves.'] }, go: { to: 'ohmdepot', spawn: 'door' } },
+      { x: 9.6, z: 10.6, height: 2.6, label: 'Enter', reach: 1.6, say: { lines: ['The doors are long gone. A lamp still burns over the entrance. Inside, something is stacking shelves.'] }, go: { to: 'ohmdepot', spawn: 'door' } },
       { x: 44.0, z: 15.6, height: 1.6, label: 'Look', reach: 2.2, say: { lines: ['The grader works the road end to end, blade down, all day. There isn\'t a rut on it.'] } },
     );
     d.npcs.push(
