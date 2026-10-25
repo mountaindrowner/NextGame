@@ -9,6 +9,7 @@ import { cottonwood, mesquite, bush, tumbleweed, motes, swayTrees, blobGeo, leaf
 import { roadSign } from '../farmroad/area';
 import { DAY, NIGHT } from '../mood';
 import type { AreaBuilder } from '../area';
+import { TO_RUST_MILE } from '../region1/travel';
 
 /**
  * THE RUST MILE (was the 45 Scar; internal id `scar`) — route (Critical Path §4): a ruined interstate, miles of dead
@@ -105,12 +106,12 @@ function blocked(x: number, z: number, r: number): boolean {
 
 // =============================================================== wrecks
 
-type Kind = 'sedan' | 'hatch' | 'pickup' | 'van' | 'semi';
+export type Kind = 'sedan' | 'hatch' | 'pickup' | 'van' | 'semi';
 const PAINT = ['#6a7a86', '#8a3a2e', '#3e5a4a', '#c8c0aa', '#2e3a4a', '#7a6a4a', '#5a5a5e', '#8a7a3a'];
 
 /** A dead car: faded paint over rust, flat tyres, a door hanging, glass gone
  *  or grimed, and something growing out of it. Lengths run along z. */
-function wreck(scene: THREE.Scene, x: number, z: number, rot: number, kind: Kind, seed: number, fleet?: string): void {
+export function wreck(scene: THREE.Scene, x: number, z: number, rot: number, kind: Kind, seed: number, fleet?: string): void {
   const r = rng(seed);
   const g = new THREE.Group();
   const paint = colMat(fleet ?? PAINT[Math.floor(r() * PAINT.length)]!, { roughness: 0.85, metalness: 0.25 });
@@ -494,6 +495,7 @@ export const buildScar: AreaBuilder = async (scene, night) => {
 
   return {
     id: 'scar',
+    kind: 'road',
     title: 'THE RUST MILE',
     sub: 'Miles of dead cars',
     mood: night ? NIGHT : DAY,
@@ -515,7 +517,7 @@ export const buildScar: AreaBuilder = async (scene, night) => {
       north: { x: 24.0, z: 1.6, face: 'S' },
     },
     triggers: [
-      { x0: 16.6, z0: 33.4, x1: 35.4, z1: 36, go: { to: 'railhead', spawn: 'north' } },
+      { x0: 16.6, z0: 33.4, x1: 35.4, z1: 36, go: { to: 'onramp', spawn: 'north', travel: { line: 'South, down off the interstate. Half a day to Railhead.', path: [...TO_RUST_MILE].reverse() } } },
       { x0: 16.6, z0: -2, x1: 35.4, z1: 0.4, go: { to: 'cistern', spawn: 'south' } },
     ],
     things: [

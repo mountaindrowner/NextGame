@@ -120,6 +120,8 @@ export function buildGround(scene: THREE.Scene): void {
   const apronMat = new THREE.MeshStandardMaterial({ map: scrubTex(), roughness: 1 });
   const bankMat = new THREE.MeshStandardMaterial({ color: '#2b2419', roughness: 1, side: THREE.DoubleSide });
   const roadMat = new THREE.MeshStandardMaterial({ color: '#5f5c57', roughness: 1 });
+  const dirtMat = new THREE.MeshStandardMaterial({ color: '#6a5238', roughness: 1 });
+  const gravelMat = new THREE.MeshStandardMaterial({ color: '#7a746a', roughness: 1 });
   const E = 40;
   // each side's apron sits level with that edge's berm top
   const edgeY = (side: 'n' | 's' | 'w' | 'e'): number => {
@@ -131,29 +133,38 @@ export function buildGround(scene: THREE.Scene): void {
     }
     return sum / n;
   };
-  const rects: Array<[number, number, number, number, number]> = [[-E, 0, 0, ROWS, edgeY('w')], [COLS, 0, COLS + E, ROWS, edgeY('e')]];
-  for (const side of ['n', 's'] as const) {
-    const z0 = side === 'n' ? -E : ROWS, z1 = side === 'n' ? 0 : ROWS + E;
+  const rects: Array<[number, number, number, number, number]> = [];
+  for (const side of ['n', 's', 'w', 'e'] as const) {
+    const ns = side === 'n' || side === 's';
+    // the apron band beyond this edge: along-edge span a0..a1, depth d0..d1
+    const a0 = ns ? -E : 0, a1 = ns ? COLS + E : ROWS;
+    const d0 = side === 'n' ? -E : side === 's' ? ROWS : side === 'w' ? -E : COLS;
+    const d1 = side === 'n' ? 0 : side === 's' ? ROWS + E : side === 'w' ? 0 : COLS + E;
     const ay = edgeY(side);
-    let x = -E;
-    for (const o of openings.filter((q) => q.side === side).sort((a, b) => a.x0 - b.x0)) {
-      rects.push([x, z0, o.x0, z1, ay]);
-      x = o.x1;
-      const ry = heightAt((o.x0 + o.x1) / 2, side === 'n' ? 0.01 : ROWS - 0.01);
+    const band = (s0: number, s1: number): void => { if (s1 > s0) rects.push(ns ? [s0, d0, s1, d1, ay] : [d0, s0, d1, s1, ay]); };
+    let a = a0;
+    for (const o of openings.filter((q) => q.side === side).sort((p, q) => p.x0 - q.x0)) {
+      band(a, o.x0);
+      a = o.x1;
+      const mid = (o.x0 + o.x1) / 2;
+      const ry = heightAt(ns ? mid : side === 'w' ? 0.01 : COLS - 0.01, ns ? (side === 'n' ? 0.01 : ROWS - 0.01) : mid);
       // the road cut through the berm gets its own banks, and runs on out of frame
-      for (const bx of [o.x0, o.x1]) {
+      for (const b of [o.x0, o.x1]) {
         const bank = new THREE.Mesh(new THREE.PlaneGeometry(E, Math.max(0.1, ay - ry + 0.05)), bankMat);
-        bank.rotation.y = Math.PI / 2;
-        bank.position.set(bx, (ay + ry) / 2, (z0 + z1) / 2);
+        if (ns) { bank.rotation.y = Math.PI / 2; bank.position.set(b, (ay + ry) / 2, (d0 + d1) / 2); }
+        else bank.position.set((d0 + d1) / 2, (ay + ry) / 2, b);
         scene.add(bank);
       }
-      const out = new THREE.Mesh(new THREE.PlaneGeometry(o.x1 - o.x0, E), roadMat);
+      // the road out matches whatever runs off the edge: blacktop, a dirt lane, gravel
+      const g0 = cell(Math.floor(ns ? mid : side === 'w' ? 0 : COLS - 1), Math.floor(ns ? (side === 'n' ? 0 : ROWS - 1) : mid));
+      const outMat = g0 === 'e' ? dirtMat : g0 === 'v' ? gravelMat : roadMat;
+      const out = new THREE.Mesh(new THREE.PlaneGeometry(ns ? o.x1 - o.x0 : E, ns ? E : o.x1 - o.x0), outMat);
       out.rotation.x = -Math.PI / 2;
-      out.position.set((o.x0 + o.x1) / 2, ry + 0.01, (z0 + z1) / 2);
+      out.position.set(ns ? mid : (d0 + d1) / 2, ry + 0.01, ns ? (d0 + d1) / 2 : mid);
       out.receiveShadow = true;
       scene.add(out);
     }
-    rects.push([x, z0, COLS + E, z1, ay]);
+    band(a, a1);
   }
   for (const [ax0, az0, ax1, az1, y] of rects) {
     // tuck each apron half a unit under the map edge so no seam shows the sky
@@ -304,10 +315,11 @@ export function buildGrass(scene: THREE.Scene): (t: number) => void {
         const px = x + r(), pz = z + r();
         if (insideSolid(px, pz)) continue;
         const tall = c === 'T' || c === '#';
+        const pick = tall ? tallTints[Math.floor(r() * 4)]! : shortTints[Math.floor(r() * 4)]!;
         spots.push({
           x: px, z: pz,
           s: tall ? 0.55 + r() * 0.45 : 0.22 + r() * 0.2,
-          c: new THREE.Color(tall ? tallTints[Math.floor(r() * 4)]! : shortTints[Math.floor(r() * 4)]!),
+          c: new THREE.Color(world().grassTint?.(px, pz) ?? pick),
         });
       }
     }

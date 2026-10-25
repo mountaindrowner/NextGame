@@ -377,6 +377,7 @@ export const buildCistern: AreaBuilder = async (scene) => {
 
   return {
     id: 'cistern',
+    kind: 'town',
     title: 'THE CISTERN',
     sub: 'Colony 2 · the flooded waterworks',
     mood: CISTERN,

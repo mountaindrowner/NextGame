@@ -5,6 +5,7 @@ import { FIELD_WORLD, fieldBlocked, COLS, ROWS, WATER_Y } from './layout';
 import { setWorld, heightAt, cell } from '../world';
 import { DAY, NIGHT } from '../mood';
 import { castOf, loadMap, type AreaBuilder } from '../area';
+import { husk } from '../region1/props';
 
 /**
  * The Field, version B: every structure hand-modeled. Placement keeps the
@@ -34,6 +35,10 @@ export const buildField: AreaBuilder = async (scene, night) => {
     liftHatch(scene, 20.5, 17.2, night),
     culvertCrossing(scene),
   ];
+  // the Spotting: three freed Ohms the Garrison decommissioned in the open street
+  husk(scene, 27.6, 16.9, 0.4, 11);
+  husk(scene, 29.2, 17.6, 2.1, 12);
+  husk(scene, 28.4, 12.1, 1.2, 13);
   const props = buildProps(scene, night);
   buildGround(scene);
   const water = buildWater(scene, night, 0.6, 23.7, 19.2, 27.3, WATER_Y);
@@ -42,6 +47,7 @@ export const buildField: AreaBuilder = async (scene, night) => {
   const sign = data.signs?.[0];
   return {
     id: 'field',
+    kind: 'town',
     title: 'THE FIELD',
     sub: night ? 'Ohmstead surface · after dark' : 'Ohmstead surface',
     mood: night ? NIGHT : DAY,
@@ -55,11 +61,18 @@ export const buildField: AreaBuilder = async (scene, night) => {
       start: { x: data.spawn.x + 0.5, z: data.spawn.y + 0.3, face: 'S' },
       lift: { x: 20.5, z: 18.3, face: 'S' },
       north: { x: 20.5, z: 1.1, face: 'S' },
+      west: { x: 1.1, z: 14.5, face: 'E' },
+      east: { x: COLS - 1.1, z: 14.5, face: 'W' },
     },
-    triggers: [{ x0: 18.6, z0: -2, x1: 22.4, z1: 0.3, go: { to: 'farmroad', spawn: 'south' } }],
+    triggers: [
+      { x0: 18.6, z0: -2, x1: 22.4, z1: 0.3, go: { to: 'farmroad', spawn: 'south' } },
+      { x0: -3, z0: 12.6, x1: 0.3, z1: 16.4, go: { to: 'depotroad', spawn: 'east' } },
+      { x0: COLS - 0.3, z0: 12.6, x1: COLS + 3, z1: 16.4, go: { to: 'stocklane', spawn: 'west' } },
+    ],
     things: [
       // the sign post stands a touch east of its old tile (props.ts)
       ...(sign ? [{ x: 22.7, z: 16.7, height: 1.5, label: 'Read', say: { name: 'Sign', lines: [sign.text] } }] : []),
+      { x: 28.4, z: 17.9, height: 1.2, label: 'Look', reach: 1.8, say: { lines: ['Three Ohms, switched off and left where they fell. Grey paint on each: a chevron, a row of tally marks.'] } },
       { x: 20.5, z: 17.1, height: 2.6, label: 'Ride down', reach: 1.3, say: { lines: ['The cage rattles shut. Down to Ohmstead.'] }, go: { to: 'ohmstead', spawn: 'lift' } },
     ],
     npcs: castOf(data),

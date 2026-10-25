@@ -8,6 +8,8 @@ import { M, slab, shapeOf, vines, windowAt, put, waterTower, type Built } from '
 import { cottonwood, mesquite, deadTree, bush, tumbleweed, motes, swayTrees, truck } from '../field/props';
 import { maskAt } from '../field/layout';
 import { DAY, NIGHT } from '../mood';
+import { regionPaint } from '../region1/section';
+import { boardSign } from '../region1/props';
 import { castOf, loadMap, type AreaBuilder } from '../area';
 
 /**
@@ -33,6 +35,7 @@ rect(18, 10, 3, 12, 'd');
 rect(8, 8, 13, 3, 'd'); // bend west
 rect(8, 1, 3, 9, 'd');
 rect(8, 0, 3, 1, 'd'); // north opening → Railhead
+rect(0, 20, 12, 3, 'e'); // a dirt track west to the Breaks
 rect(4, 14, 6, 5, 'T');
 rect(20, 14, 5, 6, 'T');
 rect(12, 4, 6, 4, 'T');
@@ -50,7 +53,8 @@ function height(x: number, z: number): number {
   // the lower terrace south of the ledge
   h -= THREE.MathUtils.smoothstep(z, LEDGE_Z - 0.05, LEDGE_Z + 0.2) * 0.55;
   // tree-line berms frame the road
-  const edge = Math.min(x - 1.2, COLS - 1.2 - x, z, ROWS - z);
+  const track = z > 19.4 && z < 23.6;
+  const edge = Math.min(track ? 99 : x - 1.2, COLS - 1.2 - x, z, ROWS - z);
   if (edge < 1.4) h += (1.4 - edge) * 0.5;
   if (z < 1.6 && x > 7.6 && x < 11.4) h = Math.min(h, 0.05);
   if (z > ROWS - 1.6 && x > 11.6 && x < 15.4) h = Math.min(h, -0.5);
@@ -59,16 +63,18 @@ function height(x: number, z: number): number {
 
 const WORLD: TileWorld = {
   cols: COLS, rows: ROWS, cell: get, height, seed: 4202,
-  openings: [{ side: 'n', x0: 7.6, x1: 11.4 }, { side: 's', x0: 11.6, x1: 15.4 }],
+  openings: [{ side: 'n', x0: 7.6, x1: 11.4 }, { side: 's', x0: 11.6, x1: 15.4 }, { side: 'w', x0: 19.6, x1: 23.4 }],
+  paint: regionPaint,
 };
 
 function blocked(x: number, z: number, r: number, fx: number, fz: number): boolean {
-  if (x - r < 0.15 || x + r > COLS - 0.15 || z < -0.2) return true;
+  const track = z - r > 20.1 && z + r < 22.9;
+  if (x - r < -2.5 || (x - r < 0.15 && !track) || x + r > COLS - 0.15 || z < -0.2) return true;
   if (z - r < 0.05 && !(x > 8.2 && x < 10.8)) return true;
   if (z + r > ROWS - 0.05 && !(x > 12.2 && x < 14.8)) return true;
   for (const [dx, dz] of [[-r, -r], [r, -r], [-r, r], [r, r], [0, 0]] as Array<[number, number]>) {
     const zz = z + dz;
-    if (zz < 0 || zz >= ROWS) continue; // the road runs on past the edge
+    if (zz < 0 || zz >= ROWS || x + dx < 0) continue; // the road runs on past the edge
     if (cell(Math.floor(x + dx), Math.floor(zz)) === '#') return true;
   }
   // one-way ledge: never climb back up; hop down only on the road
@@ -402,7 +408,8 @@ export const buildFarmRoad: AreaBuilder = async (scene, night) => {
   railLine(scene, 2.4, -4, COLS + 4);
   boxcar(scene, 15.8, 2.4);
   crossbuck(scene, 11.6, 3.4);
-  roadSign(scene, 7.2, 4.6, 'RAILHEAD ^');
+  boardSign(scene, 7.0, 4.6, 'PICKETT PL. ^', 0, 121);
+  boardSign(scene, 3.4, 19.0, '< THE BREAKS', 0, 122);
   roadSign(scene, 15.9, 27.8, 'THE FIELD');
   truck(scene, 6.2, 20.6);
   ledgeLip(scene);
@@ -420,8 +427,10 @@ export const buildFarmRoad: AreaBuilder = async (scene, night) => {
     addSolid(o.position.x - solid, o.position.z - solid, o.position.x + solid, o.position.z + solid);
   };
   for (let z = -2; z < ROWS + 3; z += 1.1 + r() * 0.9) {
-    tree(cottonwood(0.6 + r() * 0.8, z, 1.0 + r() * 0.45, seed++));
-    scene.add(cottonwood(-1.2 - r() * 2.5, z + r(), 1.1 + r() * 0.4, seed++));
+    if (!(z > 18.8 && z < 24.2)) {
+      tree(cottonwood(0.6 + r() * 0.8, z, 1.0 + r() * 0.45, seed++));
+      scene.add(cottonwood(-1.2 - r() * 2.5, z + r(), 1.1 + r() * 0.4, seed++));
+    }
     tree(cottonwood(COLS - 0.6 - r() * 0.8, z, 1.0 + r() * 0.45, seed++));
     scene.add(cottonwood(COLS + 1.2 + r() * 2.5, z + r(), 1.1 + r() * 0.4, seed++));
   }
@@ -448,8 +457,9 @@ export const buildFarmRoad: AreaBuilder = async (scene, night) => {
 
   return {
     id: 'farmroad',
+    kind: 'road',
     title: 'THE FARM ROAD',
-    sub: 'North to the Railhead',
+    sub: 'North to the Pickett Place',
     mood: night ? NIGHT : DAY,
     sky: true,
     cam: { x0: 8.2, x1: COLS - 8.2, z0: 4.4, z1: ROWS - 4.6 },
@@ -461,10 +471,12 @@ export const buildFarmRoad: AreaBuilder = async (scene, night) => {
       start: { x: 13.5, z: 28.4, face: 'N' },
       south: { x: 13.5, z: 28.9, face: 'N' },
       north: { x: 9.5, z: 0.9, face: 'S' },
+      west: { x: 1.1, z: 21.5, face: 'E' },
     },
     triggers: [
       { x0: 11.6, z0: 29.6, x1: 15.4, z1: 32, go: { to: 'field', spawn: 'north' } },
-      { x0: 7.6, z0: -2, x1: 11.4, z1: 0.3, go: { to: 'railhead', spawn: 'south' } },
+      { x0: 7.6, z0: -2, x1: 11.4, z1: 0.3, go: { to: 'pickett', spawn: 'south' } },
+      { x0: -3, z0: 19.6, x1: 0.3, z1: 23.4, go: { to: 'breaks', spawn: 'east' } },
     ],
     things: [
       { x: 17.4, z: 26.6, height: 1.0, label: 'Rest', say: { lines: ['A field medic tops off your Ohms. Recharged. Stay current.'] } },

@@ -13,8 +13,10 @@ export interface TileWorld {
   /** Ground glyph at a cell: g prairie · T tall grass · d road · w water · # wall/scrub · . floor */
   cell(x: number, z: number): string;
   height(x: number, z: number): number;
-  /** Gaps in the edge apron where a road runs off the map. */
-  openings?: Array<{ side: 'n' | 's'; x0: number; x1: number }>;
+  /** Gaps in the edge apron where a road runs off the map (x0..x1 runs along the edge: x on n/s, z on e/w). */
+  openings?: Array<{ side: 'n' | 's' | 'e' | 'w'; x0: number; x1: number }>;
+  /** Tint override for grass blades (silvered Static patches…). */
+  grassTint?(x: number, z: number): string | undefined;
   /** Painted road centre-line test (world units). */
   centerLine?(x: number, z: number): boolean;
   seed?: number;

@@ -28,10 +28,13 @@ export interface Thing {
   action?: 'heal' | 'hovergift';
 }
 
+/** A trip between regions: the travel card's map crop, the route drawn on it, one line of text. */
+export interface Travel { line: string; path: Array<[number, number]> }
+
 /** Walking into this box travels (or, with only `say`, turns you back). */
 export interface Trigger {
   x0: number; z0: number; x1: number; z1: number;
-  go?: { to: string; spawn: string };
+  go?: { to: string; spawn: string; travel?: Travel };
   say?: Line;
 }
 
@@ -47,10 +50,15 @@ export interface NPC {
   warden?: { bark?: string };
 }
 
+/** What a section is, which decides how it's announced (title card or name tag). */
+export type SectionKind = 'home' | 'town' | 'road' | 'side' | 'dungeon' | 'travel';
+
 export interface Area {
   id: string;
   title: string;
   sub: string;
+  /** Towns and dungeons get the big title card on a first visit; everything else a name tag. */
+  kind?: SectionKind;
   mood: Mood;
   /** Camera look-target clamp (world units). */
   cam: { x0: number; x1: number; z0: number; z1: number };

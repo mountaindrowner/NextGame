@@ -92,8 +92,9 @@ for(let k=1;k<=2;k++)el('path',{d:`M${826-9*k},${180-5*k} q${9*k},-${7*k} ${18*k
 
 // the road north: colonies (●) and routes (·)
 const stops=[
-  ['Ohmstead',812,890,1],['the Field',812,866,0],['Farm Road',780,832,0],['Railhead',760,790,1],['the Rust Mile',800,748,0],
-  ['the Cistern',846,706,1],['the Furrows',800,668,0],['Bastion',752,628,1],['Military Road',800,592,0],['Redoubt',866,560,1],
+  ['Ohmstead',812,908,1],['the Field',812,884,0],['Farm Road',792,857,0],['the Pickett Place',772,830,1],['the Grain Line',768,802,0],
+  ['Railhead',760,774,1],['the On-Ramp',784,748,0],['the Rust Mile',808,724,0],
+  ['the Cistern',846,700,1],['the Furrows',800,668,0],['Bastion',752,628,1],['Military Road',800,592,0],['Redoubt',866,560,1],
   ['the Drowned Woods',960,500,0],['the Chancel',900,452,1],['the Red Flats',820,440,0],['Redbed',730,420,1],['Paygate',770,380,0],
   ['the Array',846,350,1],['the Stack',820,318,0],['the Verge',790,292,1]];
 let road=`M${stops[0][1]},${stops[0][2]}`;stops.slice(1).forEach(s=>road+=` L${s[1]},${s[2]}`);road+=' L826,262';
@@ -101,7 +102,7 @@ el('path',{d:road,stroke:'#6b2a1e',fill:'none','stroke-width':2.4,'stroke-dashar
 for(const [n,x,y,c] of stops){
   if(c){el('circle',{cx:x,cy:y,r:7,fill:'#efe3c8',stroke:'#6b2a1e','stroke-width':2.4});el('circle',{cx:x,cy:y,r:2.6,fill:'#6b2a1e'});}
   else el('circle',{cx:x,cy:y,r:3,fill:'#6b2a1e'});
-  const left=['Railhead','Bastion','Redbed','the Verge','Farm Road'].includes(n);
+  const left=['Railhead','Bastion','Redbed','the Verge','Farm Road','the Pickett Place','the On-Ramp'].includes(n);
   txt(n,left?x-13:x+13,y+4,c?'plb':'rt',{'text-anchor':left?'end':'start'});
 }
 

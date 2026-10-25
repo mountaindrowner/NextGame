@@ -1,5 +1,6 @@
 import { fbm } from '../noise';
 import { cell, hitsSolid, type TileWorld } from '../world';
+import { regionPaint } from '../region1/section';
 
 /**
  * The Field's layout, carried over 1:1 from tools/gen-field.ts (Mark: keep
@@ -17,7 +18,7 @@ const rect = (x0: number, z0: number, w: number, h: number, c: string): void => 
 };
 for (let x = 0; x < COLS; x++) { MAP[0]![x] = '#'; MAP[ROWS - 1]![x] = '#'; }
 for (let z = 0; z < ROWS; z++) { MAP[z]![0] = '#'; MAP[z]![COLS - 1] = '#'; }
-rect(1, 13, COLS - 2, 3, 'd'); // main street (E–W)
+rect(0, 13, COLS, 3, 'd'); // main street (E–W), open at both ends: west to Depot Road, east to Stockyard Lane
 rect(19, 0, 3, ROWS - 1, 'd'); // crossing road; opens the north edge → Farm Road
 rect(1, 24, 18, 3, 'w'); // the creek
 rect(19, 24, 3, 3, 'd'); // bridge
@@ -28,9 +29,13 @@ rect(29, 18, 8, 4, 'T');
 
 /** True where nothing may stand: border scrub, water, any registered solid. */
 export function fieldBlocked(x: number, z: number, r = 0): boolean {
-  if (x - r < 0.15 || x + r > COLS - 0.15 || z + r > ROWS - 0.15) return true;
+  const street = z - r > 13.2 && z + r < 15.8; // main street runs off both side edges
+  if (x - r < -2.5 || x + r > COLS + 2.5) return true;
+  if ((x - r < 0.15 || x + r > COLS - 0.15) && !street) return true;
+  if (z + r > ROWS - 0.15) return true;
   if (z - r < 0.05) return !(x > 19.2 && x < 21.8); // north edge opens only on the road
   for (const [dx, dz] of [[-r, -r], [r, -r], [-r, r], [r, r], [0, 0]] as Array<[number, number]>) {
+    if (x + dx < 0 || x + dx >= COLS) continue; // out along main street
     const c = cell(Math.floor(x + dx), Math.floor(z + dz));
     if (c === '#' || c === 'w') return true;
   }
@@ -54,7 +59,8 @@ function fieldHeight(x: number, z: number): number {
   let h = (fbm(x * 0.09, z * 0.09, 5, 3) - 0.5) * 0.45;
   h *= 1 - maskAt(get, 'd', x, z) * 0.9;
   h -= maskAt(get, 'w', x, z) * 0.55;
-  const edge = Math.min(x, z, COLS - x, ROWS - z);
+  const street = z > 12.4 && z < 16.6;
+  const edge = Math.min(street ? 99 : x, z, street ? 99 : COLS - x, ROWS - z);
   if (edge < 1.6) h += (1.6 - edge) * 0.55;
   if (z < 1.6 && x > 18.6 && x < 22.4) h = Math.min(h, 0.05); // the road out stays level
   return h;
@@ -67,7 +73,8 @@ export const FIELD_WORLD: TileWorld = {
   rows: ROWS,
   cell: get,
   height: fieldHeight,
-  openings: [{ side: 'n', x0: 18.6, x1: 22.4 }],
+  openings: [{ side: 'n', x0: 18.6, x1: 22.4 }, { side: 'w', x0: 12.6, x1: 16.4 }, { side: 'e', x0: 12.6, x1: 16.4 }],
+  paint: regionPaint,
   centerLine: (x, z) => Math.abs(z - 14.5) < 0.06 && Math.floor(x * 1.2) % 3 !== 0 && fbm(x * 0.5, 2, 36, 2) > 0.38,
   seed: 2026,
 };

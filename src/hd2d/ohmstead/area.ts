@@ -697,6 +697,7 @@ export const buildOhmstead: AreaBuilder = async (scene) => {
 
   return {
     id: 'ohmstead',
+    kind: 'home',
     title: 'OHMSTEAD',
     sub: 'Home colony · beneath the Field',
     mood: UNDER,

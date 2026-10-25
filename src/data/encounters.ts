@@ -144,6 +144,147 @@ export const ENCOUNTER_ZONES: readonly EncounterZone[] = [
       { speciesNum: 108, weight: 5, minLevel: 26, maxLevel: 29 }, // Lampyre (OPTIC, LUMEN)
     ],
   },
+  // ---- Railhead Country sections (docs/design/region1-railhead-country.md) — [PROPOSAL] tables
+  {
+    // the Pickett Place — pasture and yard (L5-7): pump, bale and till Ohms of the working ranch
+    id: 'pickett-pasture',
+    rate: 24,
+    slots: [
+      { speciesNum: 65, weight: 20, minLevel: 5, maxLevel: 7 }, // Pumplet
+      { speciesNum: 80, weight: 18, minLevel: 5, maxLevel: 7 }, // Balelet
+      { speciesNum: 82, weight: 16, minLevel: 5, maxLevel: 7 }, // Tillbit
+      { speciesNum: 38, weight: 14, minLevel: 5, maxLevel: 6 }, // Spoutlet
+      { speciesNum: 47, weight: 12, minLevel: 5, maxLevel: 7 }, // Mowlet
+      { speciesNum: 46, weight: 12, minLevel: 5, maxLevel: 7 }, // Barbwyre
+      { speciesNum: 45, weight: 8, minLevel: 6, maxLevel: 7 }, // Bonnetbloom (rare VERDANT)
+    ],
+  },
+  {
+    // the Grain Line — rails and grain cars (L7-9): augers, balers, crossing signals; the north end hums. [PROPOSAL]
+    id: 'grainline-rail',
+    rate: 26,
+    slots: [
+      { speciesNum: 53, weight: 18, minLevel: 7, maxLevel: 9 }, // Augerlock
+      { speciesNum: 80, weight: 16, minLevel: 7, maxLevel: 9 }, // Balelet
+      { speciesNum: 82, weight: 14, minLevel: 7, maxLevel: 9 }, // Tillbit
+      { speciesNum: 70, weight: 14, minLevel: 7, maxLevel: 9 }, // Rustbed
+      { speciesNum: 54, weight: 14, minLevel: 7, maxLevel: 9 }, // Cellet
+      { speciesNum: 36, weight: 12, minLevel: 7, maxLevel: 9 }, // Digitall
+      { speciesNum: 107, weight: 8, minLevel: 8, maxLevel: 9 }, // Crossignal (rare)
+      { speciesNum: 84, weight: 4, minLevel: 9, maxLevel: 9 }, // Combinator (rare)
+    ],
+  },
+  {
+    // the Breaks — dry gullies at the edge of the west (L5-8): cactus, wind and sun Ohms. [PROPOSAL]
+    id: 'breaks-dry',
+    rate: 24,
+    slots: [
+      { speciesNum: 43, weight: 20, minLevel: 5, maxLevel: 7 }, // Pricklet
+      { speciesNum: 41, weight: 18, minLevel: 5, maxLevel: 7 }, // Tumblet
+      { speciesNum: 62, weight: 16, minLevel: 5, maxLevel: 8 }, // Whirlet
+      { speciesNum: 60, weight: 14, minLevel: 5, maxLevel: 7 }, // Sunplate
+      { speciesNum: 46, weight: 12, minLevel: 5, maxLevel: 7 }, // Barbwyre
+      { speciesNum: 63, weight: 10, minLevel: 6, maxLevel: 8 }, // Windlass
+      { speciesNum: 44, weight: 10, minLevel: 7, maxLevel: 8 }, // Cactacomb (rare)
+    ],
+  },
+  {
+    // Stockyard Lane — pens and chutes (L4-6): fence, cart and mailbox Ohms. [PROPOSAL]
+    id: 'stockyard-lane',
+    rate: 28,
+    slots: [
+      { speciesNum: 46, weight: 18, minLevel: 4, maxLevel: 6 }, // Barbwyre
+      { speciesNum: 47, weight: 16, minLevel: 4, maxLevel: 6 }, // Mowlet
+      { speciesNum: 77, weight: 16, minLevel: 4, maxLevel: 6 }, // Cartlet
+      { speciesNum: 24, weight: 14, minLevel: 4, maxLevel: 6 }, // Mailstrom
+      { speciesNum: 80, weight: 14, minLevel: 4, maxLevel: 6 }, // Balelet
+      { speciesNum: 19, weight: 12, minLevel: 4, maxLevel: 5 }, // Vacuette
+      { speciesNum: 41, weight: 10, minLevel: 5, maxLevel: 6 }, // Tumblet
+    ],
+  },
+  {
+    // the Stockyards — heavy herd Ohms in the pens (L7-10). [PROPOSAL]
+    id: 'stockyards-pens',
+    rate: 24,
+    slots: [
+      { speciesNum: 80, weight: 22, minLevel: 7, maxLevel: 9 }, // Balelet
+      { speciesNum: 73, weight: 18, minLevel: 7, maxLevel: 9 }, // Quadlet
+      { speciesNum: 74, weight: 16, minLevel: 8, maxLevel: 10 }, // Trailbronc
+      { speciesNum: 66, weight: 14, minLevel: 7, maxLevel: 9 }, // Jacklift
+      { speciesNum: 46, weight: 14, minLevel: 7, maxLevel: 9 }, // Barbwyre
+      { speciesNum: 81, weight: 10, minLevel: 9, maxLevel: 10 }, // Baleron
+      { speciesNum: 31, weight: 6, minLevel: 9, maxLevel: 10 }, // Vendetta (rare)
+    ],
+  },
+  {
+    // the Creek Road — Mule Creek and the ford (L4-7): water, pump and bird Ohms. [PROPOSAL]
+    id: 'creek-ford',
+    rate: 28,
+    slots: [
+      { speciesNum: 38, weight: 20, minLevel: 4, maxLevel: 6 }, // Spoutlet
+      { speciesNum: 65, weight: 18, minLevel: 4, maxLevel: 7 }, // Pumplet
+      { speciesNum: 88, weight: 16, minLevel: 4, maxLevel: 6 }, // Tweetle
+      { speciesNum: 12, weight: 14, minLevel: 5, maxLevel: 7 }, // Wavelet
+      { speciesNum: 15, weight: 12, minLevel: 5, maxLevel: 7 }, // Filaglow
+      { speciesNum: 21, weight: 12, minLevel: 4, maxLevel: 6 }, // Fanlet
+      { speciesNum: 39, weight: 8, minLevel: 6, maxLevel: 7 }, // Hydrantler (rare)
+    ],
+  },
+  {
+    // Depot Road — the ghost road to the warehouse (L3-6): tool and cart Ohms. [PROPOSAL]
+    id: 'depot-road',
+    rate: 30,
+    slots: [
+      { speciesNum: 49, weight: 18, minLevel: 3, maxLevel: 6 }, // Sawlet
+      { speciesNum: 52, weight: 16, minLevel: 3, maxLevel: 6 }, // Drillbit
+      { speciesNum: 77, weight: 16, minLevel: 3, maxLevel: 5 }, // Cartlet
+      { speciesNum: 32, weight: 14, minLevel: 3, maxLevel: 5 }, // Staplejaw
+      { speciesNum: 54, weight: 14, minLevel: 3, maxLevel: 6 }, // Cellet
+      { speciesNum: 78, weight: 12, minLevel: 4, maxLevel: 6 }, // Stampecart
+      { speciesNum: 40, weight: 10, minLevel: 5, maxLevel: 6 }, // Suppressure
+    ],
+  },
+  {
+    // Drive-In Road — the edge of a forgotten town (L7-9). [PROPOSAL]
+    id: 'driveinroad',
+    rate: 26,
+    slots: [
+      { speciesNum: 68, weight: 18, minLevel: 7, maxLevel: 9 }, // Nozzlet
+      { speciesNum: 76, weight: 16, minLevel: 7, maxLevel: 9 }, // Remotorist
+      { speciesNum: 33, weight: 14, minLevel: 7, maxLevel: 9 }, // Snoozebox
+      { speciesNum: 88, weight: 14, minLevel: 7, maxLevel: 9 }, // Tweetle
+      { speciesNum: 29, weight: 14, minLevel: 7, maxLevel: 9 }, // Registill
+      { speciesNum: 37, weight: 14, minLevel: 7, maxLevel: 9 }, // Flashbat
+      { speciesNum: 36, weight: 10, minLevel: 8, maxLevel: 9 }, // Digitall
+    ],
+  },
+  {
+    // the Drive-In — dead cars facing the screen (L8-10): light, sound and screen Ohms. [PROPOSAL]
+    id: 'drivein-lot',
+    rate: 24,
+    slots: [
+      { speciesNum: 15, weight: 20, minLevel: 8, maxLevel: 10 }, // Filaglow
+      { speciesNum: 37, weight: 18, minLevel: 8, maxLevel: 10 }, // Flashbat
+      { speciesNum: 89, weight: 16, minLevel: 8, maxLevel: 10 }, // Wooferal
+      { speciesNum: 16, weight: 14, minLevel: 9, maxLevel: 10 }, // Lumenaire
+      { speciesNum: 18, weight: 14, minLevel: 8, maxLevel: 10 }, // Beeplet
+      { speciesNum: 36, weight: 12, minLevel: 8, maxLevel: 10 }, // Digitall
+      { speciesNum: 99, weight: 6, minLevel: 10, maxLevel: 10 }, // Marqueen (rare)
+    ],
+  },
+  {
+    // the On-Ramp — the climb onto the interstate (L7-9): few, and wary. [PROPOSAL]
+    id: 'onramp',
+    rate: 14,
+    slots: [
+      { speciesNum: 70, weight: 24, minLevel: 7, maxLevel: 9 }, // Rustbed
+      { speciesNum: 75, weight: 20, minLevel: 7, maxLevel: 9 }, // Kartwheel
+      { speciesNum: 73, weight: 18, minLevel: 7, maxLevel: 9 }, // Quadlet
+      { speciesNum: 76, weight: 16, minLevel: 7, maxLevel: 9 }, // Remotorist
+      { speciesNum: 54, weight: 14, minLevel: 7, maxLevel: 9 }, // Cellet
+      { speciesNum: 59, weight: 8, minLevel: 8, maxLevel: 9 }, // Gridlock (rare)
+    ],
+  },
 ];
 
 export const ZONES_BY_ID: ReadonlyMap<string, EncounterZone> = new Map(

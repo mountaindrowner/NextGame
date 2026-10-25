@@ -34,7 +34,8 @@ for (const r of TRACK_ROWS) rect(8, r, 33, 1, 'r');
 rect(2, 7, 16, 14, 'v'); // gravel apron west (roundhouse, turntable)
 rect(34, 20, 9, 6, 'v'); // market apron east
 rect(21, 19, 3, ROWS - 19, 'd'); // the road in from the Farm Road
-rect(21, 0, 3, 7, 'd'); // the road out to the Cistern
+rect(21, 0, 3, 7, 'd'); // the road north to the On-Ramp
+rect(41, 24, 3, 3, 'd'); // the road east out of the market: Drive-In Road
 rect(2, 2, 8, 5, 'T');
 rect(34, 2, 8, 5, 'T');
 rect(2, 22, 6, 4, 'g');
@@ -80,21 +81,23 @@ function height(x: number, z: number): number {
   if (edge < 1.5) h += (1.5 - edge) * 0.5;
   if (z < 1.6 && x > 20.6 && x < 24.4) h = Math.min(h, 0.05);
   if (z > ROWS - 1.6 && x > 20.6 && x < 24.4) h = Math.min(h, 0.05);
+  if (x > COLS - 1.6 && z > 23.6 && z < 27.4) h = Math.min(h, 0.05);
   return h;
 }
 
 const WORLD: TileWorld = {
   cols: COLS, rows: ROWS, cell: get, height, seed: 4207, paint,
-  openings: [{ side: 'n', x0: 20.6, x1: 24.4 }, { side: 's', x0: 20.6, x1: 24.4 }],
+  openings: [{ side: 'n', x0: 20.6, x1: 24.4 }, { side: 's', x0: 20.6, x1: 24.4 }, { side: 'e', x0: 23.8, x1: 27.2 }],
 };
 
 function blocked(x: number, z: number, r: number): boolean {
-  if (x - r < 0.15 || x + r > COLS - 0.15 || z < -0.2) return true;
+  const eastRoad = z - r > 24.2 && z + r < 26.9;
+  if (x - r < 0.15 || x + r > COLS + 2.5 || (x + r > COLS - 0.15 && !eastRoad) || z < -0.2) return true;
   if (z - r < 0.05 && !(x > 21.2 && x < 23.8)) return true;
   if (z + r > ROWS - 0.05 && !(x > 21.2 && x < 23.8)) return true;
   for (const [dx, dz] of [[-r, -r], [r, -r], [-r, r], [r, r], [0, 0]] as Array<[number, number]>) {
     const zz = z + dz;
-    if (zz < 0 || zz >= ROWS) continue;
+    if (zz < 0 || zz >= ROWS || x + dx >= COLS) continue;
     if (cell(Math.floor(x + dx), Math.floor(zz)) === '#') return true;
   }
   return hitsSolid(x, z, r);
@@ -603,7 +606,7 @@ export const buildRailhead: AreaBuilder = async (scene, night) => {
   bunting(scene, new THREE.Vector3(34.0, 2.6, 20.8), new THREE.Vector3(42.0, 2.6, 21.4));
   bunting(scene, new THREE.Vector3(34.2, 2.5, 23.6), new THREE.Vector3(41.8, 2.5, 24.0));
   for (const [x, z] of [[24.6, 21.6], [11.6, 21.6], [36.6, 21.0], [20.2, 24.6], [17.5, 13.6]] as Array<[number, number]>) lantern(scene, x, z, night);
-  gateArch(scene, 22.5, 1.2, 'CISTERN  ^');
+  gateArch(scene, 22.5, 1.2, 'NORTH  ^');
   gateArch(scene, 22.5, 26.4, 'RAILHEAD');
   fence(scene, [[2.5, 21.3], [8.6, 21.3]], 8);
   fence(scene, [[33.6, 7.4], [42.4, 7.4]], 9);
@@ -618,7 +621,7 @@ export const buildRailhead: AreaBuilder = async (scene, night) => {
   }
   for (let z = 0; z < ROWS + 2; z += 1.5 + r() * 1.2) {
     scene.add(cottonwood(-1.0 - r() * 2.5, z, 1.0 + r() * 0.4, seed++));
-    scene.add(cottonwood(COLS + 1.0 + r() * 2.5, z, 1.0 + r() * 0.4, seed++));
+    if (!(z > 22.8 && z < 28.2)) scene.add(cottonwood(COLS + 1.0 + r() * 2.5, z, 1.0 + r() * 0.4, seed++));
   }
   for (const [x, z, k] of [[3.0, 12.5, 'm'], [16.5, 4.0, 'c'], [29.0, 3.0, 'm'], [42.2, 13.0, 'c'], [3.2, 26.0, 'm'], [12.0, 24.6, 'c'], [30.5, 22.5, 'm']] as Array<[number, number, string]>)
     tree(k === 'c' ? cottonwood(x, z, 1.0, seed++) : mesquite(x, z, 1.1, seed++));
@@ -640,6 +643,7 @@ export const buildRailhead: AreaBuilder = async (scene, night) => {
   const sign = data.signs?.[0];
   return {
     id: 'railhead',
+    kind: 'town',
     title: 'RAILHEAD',
     sub: 'Colony 1 · the rail junction',
     mood: night ? NIGHT : DAY,
@@ -653,14 +657,18 @@ export const buildRailhead: AreaBuilder = async (scene, night) => {
       start: { x: 22.5, z: 26.0, face: 'N' },
       south: { x: 22.5, z: 26.9, face: 'N' },
       north: { x: 22.5, z: 1.8, face: 'S' },
+      east: { x: COLS - 1.1, z: 25.5, face: 'W' },
+      roundhouse: { x: 8.0, z: 11.4, face: 'S' },
     },
     triggers: [
-      { x0: 20.6, z0: 27.6, x1: 24.4, z1: 30, go: { to: 'farmroad', spawn: 'north' } },
-      // the Warden's gate: open for now (Marrow's trial isn't built yet) — the road north runs to the Rust Mile
-      { x0: 20.6, z0: -2, x1: 24.4, z1: 0.5, go: { to: 'scar', spawn: 'south' } },
+      { x0: 20.6, z0: 27.6, x1: 24.4, z1: 30, go: { to: 'grainline', spawn: 'north' } },
+      // the Warden's gate: open for now (Marrow's trial isn't built yet) — the road north climbs the On-Ramp
+      { x0: 20.6, z0: -2, x1: 24.4, z1: 0.5, go: { to: 'onramp', spawn: 'south' } },
+      { x0: COLS - 0.3, z0: 24.0, x1: COLS + 3, z1: 27.0, go: { to: 'driveinrd', spawn: 'west' } },
     ],
     things: [
       ...(sign ? [{ x: sign.col + 0.5, z: sign.row + 0.5, height: 1.6, label: 'Read', say: { name: 'Sign', lines: [sign.text] } }] : []),
+      { x: 8.0, z: 10.6, height: 2.6, label: 'Enter', reach: 1.6, say: { lines: ['The roundhouse doors stand open on the dark. The Warden\'s trial waits inside.'] }, go: { to: 'roundhouse', spawn: 'door' } },
       { x: 30.6, z: 7.4, height: 3.6, label: 'Relay', reach: 1.9, say: { lines: ['The switch-house relay spits sparks where its feed line has been cut clean through.'] } },
       { x: 35.4, z: 22.9, height: 1.4, label: 'Supply', say: { name: 'Counter-clerk Hettie', lines: ['Railhead supply. Kits, nodes, a D-FIB if you can spare the credits. Salvage bought here.'] } },
     ],

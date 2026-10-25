@@ -12,7 +12,7 @@ import { Rng } from '../core/rng';
 import { Walker, OhmFollower, RotHero, stillSprite, spriteCard, type Dir } from './sprites';
 import { world } from './world';
 import { UI } from './ui';
-import type { Area, AreaBuilder, Line, Thing } from './area';
+import type { Area, AreaBuilder, Line, Thing, Travel } from './area';
 import { buildField } from './field/area';
 import { buildFarmRoad } from './farmroad/area';
 import { buildOhmstead } from './ohmstead/area';
@@ -20,6 +20,7 @@ import { buildRailhead } from './railhead/area';
 import { buildScar } from './scar/area';
 import { buildCistern } from './cistern/area';
 import { buildOverworld, OVERWORLD_IDS, overworldOffset } from './overworld/area';
+import { REGION1 } from './region1';
 import { beginArea } from './world';
 import { partyHasFieldAbility, HOVER_GIFT_SPECIES } from '../data/field-abilities';
 
@@ -32,7 +33,7 @@ import { partyHasFieldAbility, HOVER_GIFT_SPECIES } from '../data/field-abilitie
  *      ?face=n|s|w|e · ?wide=1 overview · ?hud=0
  */
 
-const AREAS: Record<string, AreaBuilder> = { ohmstead: buildOhmstead, field: buildField, farmroad: buildFarmRoad, railhead: buildRailhead, scar: buildScar, cistern: buildCistern, overworld: buildOverworld };
+const AREAS: Record<string, AreaBuilder> = { ohmstead: buildOhmstead, field: buildField, farmroad: buildFarmRoad, railhead: buildRailhead, scar: buildScar, cistern: buildCistern, overworld: buildOverworld, ...REGION1 };
 
 const q = new URLSearchParams(location.search);
 const night = q.get('time') === 'night';
@@ -243,13 +244,30 @@ function badge(): void {
     (area.sky ? `<a href="${link(false)}" class="${night ? '' : 'on'}">Day</a><a href="${link(true)}" class="${night ? 'on' : ''}">Night</a>` : ''));
 }
 
-/** Travel: fade out, tear down, build the next area, place everyone, fade in. */
-async function enter(id: string, spawn: string, first = false): Promise<void> {
-  // the surface maps live inside the one continuous overworld (?seams=1 keeps them separate, for comparison)
+/** The travel card's map: the Tallgrass crop of the gazetteer map (2× pixels). */
+const TRAVEL_MAP = './world/ui/tallgrass-map.jpg';
+function travelBox(path: Array<[number, number]>): [number, number, number, number] {
+  const xs = path.map((q) => q[0]), ys = path.map((q) => q[1]);
+  const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+  const w = Math.max(620, Math.max(...xs) - Math.min(...xs) + 360), h = w / 1.25;
+  return [cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2];
+}
+const visited = new Set<string>();
+
+/**
+ * Travel. Every road and town is its own map (Mark, 2026-10-25): walking off an
+ * edge is a quick pixel dissolve, a trip between regions adds the travel card,
+ * and the lift and other doors keep the slower fade.
+ */
+async function enter(id: string, spawn: string, first = false, how: 'fade' | 'dissolve' = 'fade', travel?: Travel): Promise<void> {
+  if (!AREAS[id] && !(OVERWORLD_IDS.has(id) && q.get('world') === 'continuous')) { speak({ lines: ['(This way isn\'t built yet.)'] }); return; }
+  // ?world=continuous plays the old single seamless overworld, for comparison
   let off = { ox: 0, oz: 0 };
-  if (OVERWORLD_IDS.has(id) && q.get('seams') !== '1') { off = overworldOffset(id)!; spawn = `${id}:${spawn}`; id = 'overworld'; }
+  if (OVERWORLD_IDS.has(id) && q.get('world') === 'continuous') { off = overworldOffset(id)!; spawn = `${id}:${spawn}`; id = 'overworld'; }
   loading = true;
-  if (!first) await ui.fade(true);
+  keys.clear();
+  if (!first) await (how === 'dissolve' || travel ? ui.dissolve(true) : ui.fade(true));
+  if (travel && hud) await ui.travel({ img: TRAVEL_MAP, box: travelBox(travel.path), path: travel.path, line: travel.line });
   const old = scene;
   old.remove(player.root, ohm.root);
   if (hoverRig) old.remove(hoverRig.root);
@@ -312,8 +330,13 @@ async function enter(id: string, spawn: string, first = false): Promise<void> {
   history.replaceState(null, '', `?${u}`);
   badge();
   loading = false;
-  if (!first) await ui.fade(false);
-  if (hud) ui.titleCard(a.title, a.sub);
+  if (!first) await (how === 'dissolve' || travel ? ui.dissolve(false) : ui.fade(false));
+  // towns and dungeons get the big card the first time; every other arrival a small name tag
+  if (hud) {
+    const big = !visited.has(a.id) && (!a.kind || a.kind === 'town' || a.kind === 'dungeon' || a.kind === 'home');
+    if (big) ui.titleCard(a.title, a.sub); else ui.nameTag(a.title.replace(/^THE /, ''), a.kind === 'road' || a.kind === 'travel' ? a.sub : '');
+  }
+  visited.add(a.id);
 }
 
 // ---------------------------------------------------------------- input
@@ -423,7 +446,7 @@ function update(dt: number): void {
     const hit = a.triggers.find((t) => p.x > t.x0 && p.x < t.x1 && p.z > t.z0 && p.z < t.z1);
     if (hit && !inTrigger) {
       inTrigger = true;
-      if (hit.go) void enter(hit.go.to, hit.go.spawn);
+      if (hit.go) void enter(hit.go.to, hit.go.spawn, false, 'dissolve', hit.go.travel);
       else if (hit.say) speak(hit.say);
     } else if (!hit) inTrigger = false;
   }

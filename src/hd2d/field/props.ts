@@ -359,6 +359,7 @@ export function buildProps(scene: THREE.Scene, night: boolean): Built & { motes:
     if (r() > 0.5) add(cottonwood(x + 0.8, 0.5 + r() * 0.4, 0.8 + r() * 0.3, seed++));
   }
   for (let z = 1; z < ROWS + 2; z += 1.5 + r() * 1.3) {
+    if (z > 11.8 && z < 17.2) continue; // main street runs out both sides
     add(r() > 0.3 ? cottonwood(-0.6 - r() * 2.5, z, 1.0 + r() * 0.4, seed++) : mesquite(-0.5, z, 1.2, seed++));
     add(r() > 0.3 ? cottonwood(COLS + 0.6 + r() * 2.5, z, 1.0 + r() * 0.4, seed++) : mesquite(COLS + 0.5, z, 1.2, seed++));
   }
