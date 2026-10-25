@@ -1,0 +1,78 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  html,body{margin:0;background:#1d1a16}
+  svg{display:block}
+  .t{font-family:'DejaVu Serif',serif;font-weight:bold;fill:#3b2f22;text-anchor:middle}
+  .s{font-family:'DejaVu Serif',serif;font-style:italic;fill:#5a4a36;text-anchor:middle}
+  .n{font-family:'DejaVu Sans',sans-serif;font-weight:bold;fill:#2e261c;text-anchor:middle}
+  .d{font-family:'DejaVu Sans',sans-serif;fill:#4a3d2c;text-anchor:middle}
+</style></head>
+<body>
+<svg id="m" xmlns="http://www.w3.org/2000/svg" width="1500" height="1100" viewBox="0 0 1500 1100"></svg>
+<script>
+// Region 1 sketch (2026-10-25): Railhead Country as a web of separate maps.
+const NS='http://www.w3.org/2000/svg', svg=document.getElementById('m');
+const el=(n,a,p=svg)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;};
+const txt=(s,x,y,cls,size,extra={})=>{const t=el('text',{x,y,class:cls,'font-size':size,...extra});t.textContent=s;return t;};
+el('defs',{}).innerHTML=`<filter id="paper"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 .45  0 0 0 0 .36  0 0 0 0 .25  0 0 0 .14 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+<radialGradient id="vig" cx="50%" cy="50%" r="72%"><stop offset="65%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#2a1d10" stop-opacity=".45"/></radialGradient>`;
+el('rect',{x:0,y:0,width:1500,height:1100,fill:'#e6d6b4'});
+el('rect',{x:0,y:0,width:1500,height:1100,fill:'#e6d6b4',filter:'url(#paper)'});
+
+// kinds: town · road · dungeon · side · gate (the transition space out of the region)
+const K={town:{fill:'#c9a46a',stroke:'#5a3d1c',w:210,h:74},road:{fill:'#d9cf9e',stroke:'#6f6436',w:176,h:56},dungeon:{fill:'#9c8fb0',stroke:'#3e3352',w:168,h:56},side:{fill:'#a9bf94',stroke:'#3f5a32',w:168,h:56},gate:{fill:'#8fb3ad',stroke:'#2f5552',w:200,h:60},under:{fill:'#8f8478',stroke:'#3a332c',w:190,h:56}};
+const N={
+  onramp:['gate','THE ON-RAMP','travel space → the Rust Mile',750,70],
+  railhead:['town','RAILHEAD','Colony 1 · Trial 1 · market',750,215],
+  roundhouse:['dungeon','the Roundhouse','trial dungeon',470,215],
+  driveinrd:['road','Drive-In Road','east out of Railhead',1030,215],
+  drivein:['side','the Drive-In','LUMEN · night only',1290,215],
+  grainline:['road','the Grain Line','old rail line north',690,370],
+  graintower:['dungeon','the Grain Tower','first dungeon',410,370],
+  pickett:['town','the Pickett Place','a family that stayed topside',800,520],
+  creek:['road','the Creek Road','along Mule Creek',1100,520],
+  farmroad:['road','Farm Road','gin · water tower',680,670],
+  breaks:['side','the Breaks','dead end · SHEAR nook',380,670],
+  field:['town','THE FIELD','the dead cattle town',750,825],
+  depotrd:['road','Depot Road','west out of the Field',470,825],
+  depot:['dungeon','Ohm Depot','optional mega-dungeon',220,825],
+  stockln:['road','Stockyard Lane','east out of the Field',1030,825],
+  stockyards:['side','the Stockyards','HAUL · heavy herd Ohms',1290,825],
+  ohmstead:['under','OHMSTEAD','home · below the Field',750,985],
+};
+const E=[['onramp','railhead'],['railhead','roundhouse'],['railhead','driveinrd'],['driveinrd','drivein'],['railhead','grainline'],['grainline','graintower'],
+  ['grainline','pickett'],['pickett','creek'],['pickett','farmroad'],['farmroad','breaks'],['farmroad','field'],['field','depotrd'],['depotrd','depot'],
+  ['field','stockln'],['stockln','stockyards'],['field','ohmstead','lift']];
+const P=k=>({x:N[k][3],y:N[k][4]});
+// the loop: Stockyard Lane ↔ the Creek Road (bend the line out east)
+const loop=(a,b,bend)=>{const A=P(a),B=P(b);const mx=(A.x+B.x)/2+bend,my=(A.y+B.y)/2;el('path',{d:`M${A.x},${A.y} Q${mx},${my} ${B.x},${B.y}`,stroke:'#6b2a1e',fill:'none','stroke-width':3});};
+for(const [a,b,kind] of E){const A=P(a),B=P(b);el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y,stroke:kind==='lift'?'#3a332c':'#6b2a1e','stroke-width':kind==='lift'?3:3,'stroke-dasharray':kind==='lift'?'4 6':''});}
+loop('stockln','creek',120);
+// late shortcut: Creek Road ↔ Drive-In Road over the washed-out bridge (HAUL)
+(()=>{const A=P('creek'),B=P('driveinrd');el('path',{d:`M${A.x},${A.y} Q${A.x+90},${(A.y+B.y)/2} ${B.x},${B.y}`,stroke:'#6b2a1e',fill:'none','stroke-width':2.5,'stroke-dasharray':'9 7',opacity:.75});
+  txt('washed-out bridge · HAUL (later)',A.x+150,(A.y+B.y)/2+4,'s',14);})();
+txt('lift',780,915,'s',14);
+txt('the loop',1215,690,'s',15);
+// region exit arrow
+el('path',{d:'M750,38 L750,10',stroke:'#2f5552','stroke-width':3});el('path',{d:'M740,20 L750,6 L760,20 Z',fill:'#2f5552'});
+// edge hints
+txt('west: toward Sundog (not reachable yet)',150,560,'s',15,{transform:'rotate(-90 150 560)'});
+txt('east: toward Brownwater',1440,560,'s',15,{transform:'rotate(90 1440 560)'});
+
+for(const [k,v] of Object.entries(N)){const [kind,name,sub,x,y]=v,s=K[kind];
+  const g=el('g',{});
+  if(kind==='dungeon'){el('path',{d:`M${x-s.w/2+14},${y-s.h/2} h${s.w-28} l14,${s.h/2} l-14,${s.h/2} h-${s.w-28} l-14,-${s.h/2} z`,fill:s.fill,stroke:s.stroke,'stroke-width':2.4},g);}
+  else el('rect',{x:x-s.w/2,y:y-s.h/2,width:s.w,height:s.h,rx:kind==='road'?28:kind==='town'?10:8,fill:s.fill,stroke:s.stroke,'stroke-width':kind==='town'?3:2.4,'stroke-dasharray':kind==='gate'?'8 5':''},g);
+  txt(name,x,y-(kind==='town'?6:4),kind==='town'?'t':'n',kind==='town'?20:15,{fill:'#2b2218'});
+  txt(sub,x,y+(kind==='town'?20:16),'d',12);
+}
+// title + legend
+txt('RAILHEAD COUNTRY',750,1045,'t',30,{'letter-spacing':8});
+txt('Tallgrass · region 1 · sketch, every box is its own map',750,1072,'s',16);
+const L=[['town','town / colony'],['road','road'],['dungeon','dungeon'],['side','side spot'],['gate','travel space to the next region']];
+L.forEach(([k,label],i)=>{const s=K[k],x=40,y=40+i*34;el('rect',{x,y,width:30,height:20,rx:k==='road'?10:4,fill:s.fill,stroke:s.stroke,'stroke-width':2});txt(label,x+40,y+15,'d',14,{style:'text-anchor:start'});});
+el('rect',{x:0,y:0,width:1500,height:1100,fill:'url(#vig)'});
+document.title='done';
+</script>
+</body></html>

@@ -110,7 +110,17 @@ and `src/hd2d/battle/arena.ts` (HD-2D stage + UI).
 - **Not yet:** switching (captured Ohms can't be sent in yet), items, XP,
   trainer battles, multiple foes, Ohm battle animations.
 
-## One continuous overworld (2026-10-23)
+## Regions of separate maps (2026-10-25) — supersedes the continuous overworld
+
+Mark: the surface felt like a straight line of walled boxes. The new
+structure is Octopath's: **regions**, each a **web of separate maps** (every
+road and town its own map) joined by a **quick pixel dissolve** with a name
+tag; moving **between regions** goes through a **travel space** and a short
+**travel card** that implies time and distance. Spec, region 1 sketch and
+build order: `docs/design/regions.md`. The continuous overworld below stays
+in the code until the section mode replaces it.
+
+## One continuous overworld (2026-10-23) — superseded 2026-10-25
 
 Mark: the surface should be one seamless world, with real distance crossed
 between places. `src/hd2d/overworld/` places the Field, Farm Road, Railhead

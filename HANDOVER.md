@@ -33,6 +33,16 @@ like the region's ground (not neon); one continuous seamless overworld with
 long transition stretches; build order = critical path; he approved the
 approach and all proposals so far ("I like everything you're proposing").
 
+**World structure changed (Mark, 2026-10-25): regions of separate maps.** The
+continuous overworld read as a straight line of walled boxes. New plan in
+`docs/design/regions.md`: each region is a web of separate maps (every road
+and town its own map) with a quick pixel dissolve and a name tag between them,
+and a travel space + travel card between regions. Region 1 (working name
+Railhead Country) is sketched in `assets/reference/region1_railhead_country_sketch.png`:
+3 towns, 7 roads, 4 dungeons/side spots, the On-Ramp. **Not built yet:**
+waiting on Mark's OK of the sketch; build order is in the doc (engine first).
+Benchmarks against ten JRPGs: `docs/design/scope-benchmarks.md`.
+
 **Setting changed (Mark, 2026-10-24): OHMFRONT is not Texas.** An unnamed
 plains country, Texas-adjacent in feel, never named. Mark's other story, THE
 LONG NOON (South Texas, Laredo → Houston, sun-killed sky), keeps Texas, and the
