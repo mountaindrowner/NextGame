@@ -33,6 +33,29 @@ like the region's ground (not neon); one continuous seamless overworld with
 long transition stretches; build order = critical path; he approved the
 approach and all proposals so far ("I like everything you're proposing").
 
+**Region 1 BUILT (2026-10-25): Railhead Country as a web of separate maps.**
+Code: `src/hd2d/region1/` — `section.ts` (the outdoor section kit: glyph grid,
+natural edges, exits → spawns + triggers), `interior.ts` (the dungeon kit, the
+Cistern's cutaway walls generalised), `props.ts` + `dungeon-props.ts`, one
+file per section, `index.ts` registers them. Sections: the Field (now opens
+W/E), Farm Road (forks W), **the Pickett Place, the Grain Line, the Breaks,
+Stockyard Lane, the Stockyards, the Creek Road, Depot Road, Drive-In Road, the
+Drive-In, the On-Ramp**, Railhead (opens E/S, roundhouse door); dungeons **the
+Grain Tower** (3 floors), **the Roundhouse** (Marrow + Brokers placed, trial
+not wired), **Ohm Depot**. Transitions: pixel dissolve + name tag; title card
+on a town/dungeon's first visit; the On-Ramp ↔ Rust Mile trip shows the
+travel card (`public/world/ui/tallgrass-map.jpg`, path in `region1/travel.ts`).
+`?world=continuous` keeps the old overworld. All links checked (every exit
+lands on a real spawn) and the side exits walked on foot. Lore threads per
+`docs/design/region1-railhead-country.md`. 11 new [PROPOSAL] encounter tables.
+New people [PROPOSAL]: the Picketts (Ada, Hob, Lettie), Traveler Pell,
+Grain-hand Sutter, Drifter Kell, Drover Ames, Old Ruel, Runner Fen, Picker Rhee,
+Courier Tam, Night-owl Vess, the Garrison Sentry.
+**Next:** region 2 (the Rust Mile country: the Rust Mile + side roads, the
+Cistern) in the same kit; lengthen Farm Road; wire trainer battles + the
+Roundhouse trial; LUMEN/HAUL/SHEAR gates (the Breaks thicket, the Stockyards
+pen, the Depot back stock, the Creek Road bridge); the Drive-In night event.
+
 **World structure changed (Mark, 2026-10-25): regions of separate maps.** The
 continuous overworld read as a straight line of walled boxes. New plan in
 `docs/design/regions.md`: each region is a web of separate maps (every road

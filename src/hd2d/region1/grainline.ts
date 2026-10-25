@@ -73,6 +73,7 @@ export const buildGrainLine = section({
     boardSign(scene, 20.4, 59.0, 'PICKETT PL.', 0, 32);
     boardSign(scene, 11.0, 32.6, 'TOWER', 0, 33);
 
+    d.spawns.tower = { x: 5.0, z: 30.6, face: 'S' };
     d.things.push(
       { x: 5.0, z: 29.2, height: 2.2, label: 'Enter', reach: 1.6, say: { lines: ['The dump shed\'s door stands slid open. Somewhere above, buckets knock.'] }, go: { to: 'graintower', spawn: 'door' } },
       { x: 5.6, z: 28.0, height: 1.6, label: 'Look', reach: 1.4, say: { lines: ['A small brass tag on the lift motor by the door. Three notches stamped in it.'] } },

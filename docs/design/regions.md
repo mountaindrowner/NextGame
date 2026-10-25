@@ -1,6 +1,7 @@
 # OHMFRONT — Regions & Sections
 
-*2026-10-25. Mark's direction (approved): the world is built in **regions**,
+*2026-10-25. **Region 1 is BUILT** (all 15 sections + 5 dungeon floors, code in
+`src/hd2d/region1/`). Mark's direction (approved): the world is built in **regions**,
 each a **web of separate maps** (every road and town its own map, Octopath
 style), joined by a **quick dissolve**. Moving **between regions** goes through
 a **travel space** that implies time and distance. This replaces the

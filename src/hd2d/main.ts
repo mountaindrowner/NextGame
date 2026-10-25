@@ -619,4 +619,4 @@ renderer.setAnimationLoop(() => {
   post.tick(t);
   post.composer.render(dt);
 });
-Object.assign(window, { __ready: true, __hd2d: { get scene() { return scene; }, get arena() { return arena; }, get roamers() { return roamers; }, party, storage, get nodes() { return nodes; }, lead, camera, player, ohm, THREE, enter } });
+Object.assign(window, { __ready: true, __hd2d: { get area() { return area; }, areas: Object.keys(AREAS), get scene() { return scene; }, get arena() { return arena; }, get roamers() { return roamers; }, party, storage, get nodes() { return nodes; }, lead, camera, player, ohm, THREE, enter } });

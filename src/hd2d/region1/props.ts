@@ -745,7 +745,7 @@ export function projectorBooth(scene: THREE.Scene, cx: number, cz: number, night
   return {
     update(t) {
       const f = 0.85 + Math.sin(t * 17) * 0.08 + Math.sin(t * 5.3) * 0.07;
-      mat.opacity = night ? 0.07 * f : 0;
+      mat.opacity = night ? 0.035 * f : 0;
       lamp.intensity = night ? 1.6 * f : 0;
     },
   };

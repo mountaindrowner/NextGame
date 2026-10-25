@@ -1,7 +1,8 @@
 # Railhead Country — Region Bible
 
-*Region 1 of Tallgrass (working name). Every map in this region is built from
-this page. Structure and section list: `docs/design/regions.md`. All new
+*Region 1 of Tallgrass (working name). **Built 2026-10-25** (`src/hd2d/region1/`;
+dungeons: the Grain Tower ×3 floors, the Roundhouse, Ohm Depot). Every map in
+this region is built from this page. Structure and section list: `docs/design/regions.md`. All new
 names, people and lore here are `[PROPOSAL]` until Mark approves them.*
 
 ---

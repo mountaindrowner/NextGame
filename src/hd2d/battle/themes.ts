@@ -318,5 +318,7 @@ export const THEMES: Record<ThemeId, ArenaTheme> = { field, road, bunker, cister
 
 /** Which grid a region fights on. */
 export function themeFor(areaId: string): ThemeId {
+  // a section can name its grid outright (region: 'road' | 'bunker' …)
+  if (areaId === 'field' || areaId === 'road' || areaId === 'bunker' || areaId === 'cistern') return areaId;
   return areaId === 'farmroad' || areaId === 'railhead' || areaId === 'scar' ? 'road' : areaId === 'ohmstead' ? 'bunker' : areaId === 'cistern' ? 'cistern' : 'field';
 }

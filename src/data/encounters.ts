@@ -285,6 +285,35 @@ export const ENCOUNTER_ZONES: readonly EncounterZone[] = [
       { speciesNum: 59, weight: 8, minLevel: 8, maxLevel: 9 }, // Gridlock (rare)
     ],
   },
+  {
+    // the Grain Tower — the first dungeon (L8-10): auger, drill and fan Ohms in the dust; the loop-keeper waits at the head. [PROPOSAL]
+    id: 'graintower-bins',
+    rate: 30,
+    slots: [
+      { speciesNum: 53, weight: 20, minLevel: 8, maxLevel: 10 }, // Augerlock
+      { speciesNum: 52, weight: 18, minLevel: 8, maxLevel: 10 }, // Drillbit
+      { speciesNum: 21, weight: 16, minLevel: 8, maxLevel: 10 }, // Fanlet
+      { speciesNum: 22, weight: 12, minLevel: 9, maxLevel: 10 }, // Oscillord
+      { speciesNum: 80, weight: 14, minLevel: 8, maxLevel: 10 }, // Balelet
+      { speciesNum: 82, weight: 12, minLevel: 8, maxLevel: 10 }, // Tillbit
+      { speciesNum: 81, weight: 8, minLevel: 9, maxLevel: 10 }, // Baleron (rare)
+    ],
+  },
+  {
+    // Ohm Depot — the aisles (L5-9): tool, cart and register Ohms. [PROPOSAL]
+    id: 'ohmdepot-aisles',
+    rate: 30,
+    slots: [
+      { speciesNum: 49, weight: 18, minLevel: 5, maxLevel: 8 }, // Sawlet
+      { speciesNum: 52, weight: 16, minLevel: 5, maxLevel: 8 }, // Drillbit
+      { speciesNum: 78, weight: 14, minLevel: 6, maxLevel: 8 }, // Stampecart
+      { speciesNum: 29, weight: 12, minLevel: 6, maxLevel: 8 }, // Registill
+      { speciesNum: 66, weight: 12, minLevel: 6, maxLevel: 9 }, // Jacklift
+      { speciesNum: 51, weight: 10, minLevel: 7, maxLevel: 9 }, // Buzzsawyer
+      { speciesNum: 40, weight: 10, minLevel: 6, maxLevel: 8 }, // Suppressure
+      { speciesNum: 50, weight: 8, minLevel: 8, maxLevel: 9 }, // Chainsawrus (rare)
+    ],
+  },
 ];
 
 export const ZONES_BY_ID: ReadonlyMap<string, EncounterZone> = new Map(
