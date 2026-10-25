@@ -1,0 +1,4 @@
+Region 1 (Railhead Country) overhead web, 2026-10-25. Not AI-generated.
+Each tile is the section's own ?topdown=1 render (tools/hd2d-test style, 10 px/unit,
+headless Chromium). Composed by tools/worldmap/region1-overhead.html?dir=<folder of
+<id>.png renders>. Placement shows connections, not true distance.

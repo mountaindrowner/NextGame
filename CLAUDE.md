@@ -1,6 +1,9 @@
 # OHMFRONT — Project Constitution
 
-Read this first, every session. Then read HANDOVER.md. Source of record:
+Read this first, every session. Then read HANDOVER.md. **Before designing
+anything** (a region, map, name, character or system), read
+`docs/design/design-philosophy.md`: how we design, in Mark's words "exactly
+what I'm looking for". Source of record:
 `docs/master-prompt-v4.md` (creator canon) and `docs/GDD.md` (Phase 1, locked
 2026-06-12). **World/story/asset bibles (2026-06-14, canon-of-record):**
 `docs/design/` — story-bible, critical-path-locations (the A→Z spine: Ohmstead

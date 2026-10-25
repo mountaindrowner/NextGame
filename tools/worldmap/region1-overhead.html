@@ -1,0 +1,90 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  html,body{margin:0;background:#141210}
+  #w{position:relative;width:1700px;height:2480px;background:#1b1916}
+  img{position:absolute;image-rendering:auto;box-shadow:0 6px 18px rgba(0,0,0,.6);border-radius:3px}
+  svg{position:absolute;left:0;top:0}
+  .lab{position:absolute;font-family:'DejaVu Serif',serif;font-weight:bold;color:#f1dfb1;font-size:19px;letter-spacing:2px;text-shadow:0 2px 6px #000,0 0 2px #000;white-space:nowrap}
+  .sub{font-family:'DejaVu Sans',sans-serif;font-weight:normal;font-size:12px;letter-spacing:1px;color:#c9b896;display:block}
+</style></head>
+<body>
+<div id="w"><svg id="s" width="1700" height="2480"></svg></div>
+<script>
+// Railhead Country from overhead (2026-10-25): every section's ?topdown=1 render,
+// laid out as the web. Separate maps; the lines are the exits between them.
+const K = 6, OX = 50, OY = 70;           // px per unit, margins
+const dir = new URLSearchParams(location.search).get('dir') || '.';
+const W = document.getElementById('w'), S = document.getElementById('s');
+const P = (x, y) => [OX + x * K, OY + y * K];
+// id: [x, y, cols, rows, label, sub, kind]
+const M = {
+  onramp: [90, 30, 42, 50, 'THE ON-RAMP', 'travel space', 'travel'],
+  railhead: [89, 94, 44, 28, 'RAILHEAD', 'Colony 1', 'town'],
+  roundhouse: [35, 96, 40, 24, 'the Roundhouse', 'trial dungeon', 'dungeon'],
+  driveinrd: [147, 94, 58, 28, 'Drive-In Road', 'road', 'road'],
+  drivein: [219, 90, 42, 36, 'the Drive-In', 'side spot', 'side'],
+  grainline: [93, 136, 36, 62, 'the Grain Line', 'road', 'road'],
+  graintower: [51, 160, 28, 18, 'the Grain Tower', 'dungeon · 3 floors', 'dungeon'],
+  pickett: [91, 212, 40, 30, 'THE PICKETT PLACE', 'town', 'town'],
+  creekroad: [173, 225, 36, 64, 'the Creek Road', 'road', 'road'],
+  breaks: [43, 256, 40, 30, 'the Breaks', 'side spot', 'side'],
+  farmroad: [97, 256, 28, 30, 'Farm Road', 'road', 'road'],
+  field: [91, 300, 40, 28, 'THE FIELD', 'town', 'town'],
+  depotroad: [19, 300, 58, 28, 'Depot Road', 'road', 'road'],
+  stocklane: [145, 301, 52, 26, 'Stockyard Lane', 'road', 'road'],
+  stockyards: [211, 297, 44, 34, 'the Stockyards', 'side spot', 'side'],
+  ohmdepot: [5, 344, 46, 32, 'Ohm Depot', 'dungeon', 'dungeon'],
+  ohmstead: [84, 344, 54, 42, 'OHMSTEAD', 'home · underground', 'home'],
+};
+const COL = { town: '#e0b060', road: '#cfc08a', side: '#9fc08a', dungeon: '#b8a0d8', travel: '#8fc0b8', home: '#c0b0a0' };
+const el = (n, a) => { const e = document.createElementNS('http://www.w3.org/2000/svg', n); for (const k in a) e.setAttribute(k, a[k]); S.appendChild(e); return e; };
+// links: [x1,y1,x2,y2,style]  (world units)  — road exits solid, doors/lift dotted, later-gated dashed
+const L = [
+  [111.5, 300, 110.5, 286, 'road'], [106.5, 256, 105.5, 242, 'road'], [97, 277.5, 83, 271.5, 'road'],
+  [111.5, 212, 110.5, 198, 'road'], [131, 229.5, 173, 235.5, 'road'], [111.5, 136, 111.5, 122, 'road'],
+  [111.5, 94, 110.5, 80, 'road'], [133, 119.5, 147, 106.5, 'road'], [205, 106.5, 219, 116.5, 'road'],
+  [91, 314.5, 77, 314.5, 'road'], [131, 314.5, 145, 315.5, 'road'], [197, 314.5, 211, 313.5, 'road'],
+  [185.5, 301, 185.5, 289, 'road'],
+  [98, 165.2, 65.5, 178, 'door'], [97, 104.6, 54.5, 120, 'door'], [28.6, 310.6, 14.5, 376, 'door'], [111.5, 317.1, 114.9, 361, 'door'],
+  [198, 234, 178, 115, 'later'],
+];
+// draw links first (under the tiles)
+for (const [x1, y1, x2, y2, st] of L) {
+  const [a, b] = P(x1, y1), [c, d] = P(x2, y2);
+  el('line', { x1: a, y1: b, x2: c, y2: d, stroke: st === 'later' ? '#a07a50' : st === 'door' ? '#c9b8e8' : '#f1dfb1', 'stroke-width': st === 'road' ? 7 : 4, 'stroke-dasharray': st === 'road' ? '' : st === 'door' ? '3 9' : '14 10', 'stroke-linecap': 'round', opacity: st === 'road' ? 0.95 : 0.85 });
+}
+for (const [id, [x, y, c, r, lab, sub, kind]] of Object.entries(M)) {
+  const i = document.createElement('img');
+  i.src = `${dir}/${id}.png`;
+  const [px, py] = P(x - 0.5, y - 0.5);
+  Object.assign(i.style, { left: px + 'px', top: py + 'px', width: (c + 1) * K + 'px', height: (r + 1) * K + 'px', outline: `3px solid ${COL[kind]}` });
+  W.appendChild(i);
+  const t = document.createElement('div');
+  t.className = 'lab';
+  t.innerHTML = `${lab}<span class="sub">${sub}</span>`;
+  Object.assign(t.style, { left: px + 6 + 'px', top: py + 4 + 'px' });
+  W.appendChild(t);
+}
+// link dots on top, so each exit reads as a joint
+for (const [x1, y1, x2, y2, st] of L) for (const [x, y] of [[x1, y1], [x2, y2]]) { const [a, b] = P(x, y); el('circle', { cx: a, cy: b, r: st === 'road' ? 7 : 5, fill: st === 'road' ? '#f1dfb1' : '#c9b8e8', stroke: '#2a2016', 'stroke-width': 2 }); }
+// north: the trip out of the region
+const [ax, ay] = P(112.5, 30);
+el('line', { x1: ax, y1: ay, x2: ax, y2: ay - 120, stroke: '#8fc0b8', 'stroke-width': 7, 'stroke-dasharray': '16 10' });
+el('path', { d: `M${ax - 16},${ay - 112} L${ax},${ay - 140} L${ax + 16},${ay - 112} Z`, fill: '#8fc0b8' });
+const out = document.createElement('div');
+out.className = 'lab';
+out.innerHTML = 'THE RUST MILE<span class="sub">region 2 · the travel card plays on the way</span>';
+Object.assign(out.style, { left: ax + 26 + 'px', top: ay - 150 + 'px' });
+W.appendChild(out);
+// title + legend
+const title = document.createElement('div');
+title.className = 'lab';
+title.style.cssText = 'left:900px;top:2160px;font-size:40px;letter-spacing:8px';
+title.innerHTML = 'RAILHEAD COUNTRY<span class="sub" style="font-size:16px;margin-top:8px;white-space:normal;width:740px;line-height:1.5">Tallgrass · region 1 · from overhead. Every tile is its own map; the lines are the exits between them. Placement shows how they connect, not true distance.</span>';
+W.appendChild(title);
+const leg = [['#f1dfb1', 'road exit (walk off the edge · dissolve)', ''], ['#c9b8e8', 'door, stairs, lift', '3 9'], ['#a07a50', 'opens later (HAUL: the washed-out bridge)', '14 10']];
+leg.forEach(([c, t, d], i) => { const y = 2300 + i * 34; el('line', { x1: 905, y1: y, x2: 965, y2: y, stroke: c, 'stroke-width': 6, 'stroke-dasharray': d }); const l = document.createElement('div'); l.className = 'lab'; l.style.cssText = `left:980px;top:${y - 12}px;font-size:15px;font-family:DejaVu Sans,sans-serif;font-weight:normal`; l.textContent = t; W.appendChild(l); });
+Promise.all([...document.images].map((i) => i.decode().catch(() => null))).then(() => { document.title = 'done'; });
+</script>
+</body></html>

@@ -33,6 +33,10 @@ like the region's ground (not neon); one continuous seamless overworld with
 long transition stretches; build order = critical path; he approved the
 approach and all proposals so far ("I like everything you're proposing").
 
+**Design philosophy captured (Mark, 2026-10-25: "exactly what I'm looking
+for"): `docs/design/design-philosophy.md`. Read it before designing anything.**
+Overhead web of region 1: `assets/reference/region1_overhead.png`.
+
 **Region 1 BUILT (2026-10-25): Railhead Country as a web of separate maps.**
 Code: `src/hd2d/region1/` — `section.ts` (the outdoor section kit: glyph grid,
 natural edges, exits → spawns + triggers), `interior.ts` (the dungeon kit, the
