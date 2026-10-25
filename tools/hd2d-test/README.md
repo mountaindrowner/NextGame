@@ -12,6 +12,7 @@ installed here; the scripts launch `/opt/pw-browsers/chromium_headless_shell-119
 - `hover2.mjs <url> <prefix>` — takes the Cistern drone and rides across the flood
 - `flaky.mjs <url> <out>` — loads under a delayed, lossy network (drops ~8% of png/json)
 - `arena.mjs <url> <out>` — battle arena screenshot mid-telegraph
+- `scope.mjs` — walks every built map and prints what's there (maps, NPCs, looks, roamers, exits, data counts) for `docs/design/scope-benchmarks.md`
 - `stitch.py` — joins per-area `?topdown=1` shots into the old world map (ImageMagick)
 
 Rendering is ~1–3 fps, so real-time timers (the capture puzzle) can expire —

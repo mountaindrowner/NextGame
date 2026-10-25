@@ -33,6 +33,13 @@ like the region's ground (not neon); one continuous seamless overworld with
 long transition stretches; build order = critical path; he approved the
 approach and all proposals so far ("I like everything you're proposing").
 
+**Scope yardstick kept (Mark: "all important information").**
+`docs/design/scope-benchmarks.md` holds the ten-game comparison plus a measured
+history and a pace table; re-measure with `node tools/hd2d-test/scope.mjs`
+after every region. After region 1: 22 maps, 47 NPCs, 0 side quests and 0
+trainer battles wired, 17 items, 55 moves. On pace for maps; short on NPCs,
+items and moves; trainers and side quests are missing systems.
+
 **Door language LOCKED (Mark, 2026-10-25: "design language is huge").** Light
 is the promise: a lit lamp at a door = you can go in, always; planks = never;
 chain = later (the story); dead lamp + black doorway = LUMEN; debris = HAUL;

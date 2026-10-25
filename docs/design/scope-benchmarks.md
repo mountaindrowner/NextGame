@@ -1,7 +1,9 @@
 # OHMFRONT — Scope Benchmarks
 
 *Compiled 2026-10-25 for Mark: how big ten classic and modern JRPGs really
-were, so OHMFRONT knows what to shoot for. The targets at the bottom are
+were, so OHMFRONT knows what to shoot for, and where we stand against them.
+**Keep this.** Mark: "That's all important information so we can compare
+ourselves and where we are." Re-measure after every region. The targets at the bottom are
 `[PROPOSAL]` until Mark approves them.*
 
 **How solid the numbers are.** Counts marked **(data)** come straight from the
@@ -51,22 +53,52 @@ so it's an upper bound. Blank = not found. Nothing here is invented.
 
 ---
 
-## Where OHMFRONT stands
+## Where OHMFRONT stands (keep this current)
 
-| Metric | Planned (docs) | Built so far |
-|---|---|---|
-| Hours | ~30 main | — |
-| Settlements | 9 (Ohmstead + 8 colonies) | Ohmstead, Railhead, the Cistern (HD-2D) |
-| Routes | ~12–14 | the Field, Farm Road, the Rust Mile + 3 transition stretches |
-| Dungeons | ~9–10 | — |
-| Maps | ~48 (contract) / ~40+ (world structure) | 6 areas + 1 continuous surface |
-| Side quests | 6 named (SQ1–6) + repeatable systems (Ohmsick, Errands, Lost Ohmlet…) | — |
-| NPCs | ~32 NPC types; 8 Wardens + circles; named cast | a few dozen placed |
-| Trainers | ~18 trainer classes | — |
-| Items | Repair Kit tiers, cures, D-FIB, Resonance/Prime Cores, mod chips, key items | 17 |
-| Creatures | 150 Ohms | 150 in data |
-| Moves | — | 55 |
-| Bosses | 8 Wardens, Rook, Reyes, Drake, the Monad, legendaries | — |
+**Re-measure after every region** with `node tools/hd2d-test/scope.mjs` (serve
+`dist/` on :8765 first; see `tools/hd2d-test/README.md`). It walks every built
+map and counts what's really there. Add a row to the history, then update the
+pace table below.
+
+### Measured history
+
+| Date | Milestone | Maps | Connections | NPCs placed (names) | Looks | Roamers | Encounter tables | Ohms / moves / items | Side quests | Trainer battles |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 2026-10-25 | Region 1 (Railhead Country) built, plus Ohmstead, the Rust Mile, the Cistern | **22** (5 towns, 1 home, 7 roads, 3 side spots, 5 dungeon maps, 1 travel) | 44 | 47 (42) | 36 | 39 (4 at L10+) | 21 (17 used) | 150 / 55 / 17 | 0 wired | 0 wired |
+
+### Pace: are we on track?
+
+The world is planned as ~7 regions (`regions.md`). Region 1 is done, so
+multiplying its numbers by 7 shows where the finished game would land at this
+density.
+
+| Metric | Region 1 | × 7 regions | Target | Verdict |
+|---|---|---|---|---|
+| Maps | ~20 | ~140 | 150–200 | **close.** Add 1–3 interiors per region (houses, sheds, back rooms). |
+| NPCs placed | ~45 | ~315 | 400–600 | **short.** Aim for 60–85 per region: more locals in towns, travelers on roads. |
+| Things to look at | ~35 | ~245 | — | good density; keep it. |
+| Visible wild Ohms | ~39 | ~270 | — | good. |
+| Trainers | 0 | 0 | 180–250 | **missing.** Needs trainer battles wired, then ~25–35 per region. |
+| Side quests | 0 | 0 | 30–40 | **missing.** ~5 per region (the 6 named in the beats, Ohmsick, the Scrapper's Legacy, small local ones). |
+| Items | 17 (data) | — | 140–180 | **short.** Needs an items pass. |
+| Moves | 55 (data) | — | 160–200 | **short.** Needs a moves pass. |
+| Ohm species | 150 | — | 150 | done (data). |
+
+### What the plan said before region 1 (for reference)
+
+| Metric | Planned (docs) |
+|---|---|
+| Hours | ~30 main |
+| Settlements | 9 (Ohmstead + 8 colonies) |
+| Routes | ~12–14 |
+| Dungeons | ~9–10 |
+| Maps | ~48 (contract) / ~40+ (world structure) |
+| Side quests | 6 named (SQ1–6) + repeatable systems (Ohmsick, Errands, Lost Ohmlet…) |
+| NPCs | ~32 NPC types; 8 Wardens + circles; named cast |
+| Trainers | ~18 trainer classes |
+| Items | Repair Kit tiers, cures, D-FIB, Resonance/Prime Cores, mod chips, key items |
+| Creatures | 150 Ohms |
+| Bosses | 8 Wardens, Rook, Reyes, Drake, the Monad, legendaries |
 
 ---
 

@@ -199,3 +199,5 @@ From Mark's direction and the benchmark study (`scope-benchmarks.md`,
 8. Wild Ohms themed to what each place used to be.
 9. Every door speaks the door language (§2b); the automatic check is clean.
 10. Build it, screenshot it, walk every exit, show Mark.
+11. Measure it (`tools/hd2d-test/scope.mjs`), add the row to
+    `scope-benchmarks.md`, and check the pace against the targets.
