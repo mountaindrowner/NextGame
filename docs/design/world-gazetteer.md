@@ -1,11 +1,13 @@
 # OHMFRONT — World Gazetteer
 
-*Started 2026-10-24. **LOCKED by Mark (2026-10-24):** New Central · Tallgrass
-(Region 1) · Sundog · the Jawbone · the Wildwoods (with wildwire) · the Drowned
-Woods (replaces the Trinity Bottoms) · Foundry Row (the north) · the Ohm slurs.
-Everything else is `[PROPOSAL]` and enters canon only with Mark's written OK.
-Internal map/asset ids (`trinity`, `sec.trinity`) keep their old spelling; only
-what players read changed.
+*Started 2026-10-24. **LOCKED by Mark (2026-10-24/25):** New Central ·
+Tallgrass (Region 1) · Sundog · the Jawbone · Old Mutter · the Wildwoods (with
+wildwire) · Foundry Row · the Sinks · Lost Country (while it stays lost) ·
+Brownwater · the Dryway · the Drowned Woods (was the Trinity Bottoms) · the Rust
+Mile (was the 45 Scar) · Paygate (was the Tollway Ruins) · the Ohm slurs.
+Anything still marked `[PROPOSAL]` enters canon only with Mark's written OK.
+Internal map/asset ids (`trinity`, `scar`, `sec.trinity`, `bgm.route.tollway`)
+keep their old spelling; only what players read changed.
 Map: `assets/reference/world_gazetteer_map.png`.*
 
 ---
@@ -21,6 +23,10 @@ old names are gone, and people named what was left.
   capital.)
 - It has to read well in plain text, with no voice actor to sell it. Plain words
   only, no puns, no attitude.
+- It has to sound natural said out loud by a tired local: *"You're gonna have
+  to go down the Rust Mile."* Real people name places like neighbors: after
+  somebody, with "Old" for what outlasted everyone, or with plain land words
+  (bend, fork, flats, gap, sinks).
 - It must not name a real place, or land so close to one that a local would
   recognize it.
 
@@ -29,9 +35,9 @@ old names are gone, and people named what was left.
 ## How the land changed
 
 - **The sea came in.** The old southeast coast drowned. A shallow salt sea now
-  reaches far inland over sunk towns and marsh: **the Shallows**.
+  reaches far inland over sunk towns and marsh: **the Sinks**.
 - **The big southern river died.** The river that once drew a border dried to a
-  long, cracked bed full of wrecks. People call it **the Ditch**. Nobody
+  long, cracked bed full of wrecks. People call it **the Dryway**. Nobody
   crosses it, and nobody knows it was ever a river.
 - **The dams broke.** Reservoirs drained into dead basins. Downstream, the main
   river backed up behind collapsed highway and drowned a forest: **the Drowned
@@ -62,12 +68,12 @@ old names are gone, and people named what was left.
    farms · dust               ▲                              wildwire · living-
                       ┌───────┴────────┐                     machine heartland
   THE JAWBONE ▲       │   TALLGRASS    │
-  Talking Mountain    │  Region 1 —    │      Brownwater ~~~
+  Old Mutter          │  Region 1 —    │      Brownwater ~~~
   (PERSISTENCE)       │   this game    │      the Drowned Woods
                       └───────┬────────┘
-                              ▼                         THE SHALLOWS
+                              ▼                         THE SINKS
                         LOST COUNTRY                  the drowned coast
-                 the Ditch · past the radio's reach      salt marsh · sunk towns
+                the Dryway · past the radio's reach      salt marsh · sunk towns
 ```
 
 | Region | Status | What it is |
@@ -76,11 +82,11 @@ old names are gone, and people named what was left.
 | **New Central** | **LOCKED** | The old hub city at the north end of Region 1. The Garrison took it and stencilled the name on every checkpoint; people say **Central**. After the reveal it reads as PERSISTENCE's central node. |
 | **Sundog** | **LOCKED** | The west. A sundog is the halo around the sun on dry days. |
 | **the Jawbone** | **LOCKED** | The broken ridge on Sundog's far edge. |
-| **Talking Mountain** | `[PROPOSAL]` | The Jawbone peak where PERSISTENCE sleeps. A bedtime warning (*"don't listen to the Talking Mountain"*) until the reveal. Post-game fortress. |
+| **Old Mutter** | **LOCKED** | The Jawbone peak where PERSISTENCE sleeps; the post-game Mountain Fortress is inside it. A folk warning (*"Don't go listening to Old Mutter"*) until the reveal shows the mountain really was talking. |
 | **the Wildwoods** | **LOCKED** | The east. Home of the ORGANIC-HYBRID line. |
 | **Foundry Row** | **LOCKED** | The north, past New Central. Foundry country, still burning in places. |
-| **the Shallows** | `[PROPOSAL]` | The southeast. The drowned coast; salt and marsh Ohms. |
-| **Lost Country** | `[PROPOSAL]` *or* the Far South · the Blank | The south. Off every map, past the reach of *The Current*. The Ditch runs through it. |
+| **the Sinks** | **LOCKED** | The southeast. The drowned coast; salt and marsh Ohms. |
+| **Lost Country** | **LOCKED**, on one condition | The south. Mark: *"only if it's really lost."* So it stays lost: no route reaches it, nobody in the game has been there and come back, and *The Current* never gets an answer from it. The Dryway runs into it. **If content ever goes south, it becomes the Far Country.** |
 
 **Ohmgrown** forms take the region's name: a *Sundog form*, a *Wildwoods form*.
 Tallgrass forms are the baseline.
@@ -98,7 +104,7 @@ and stay. The changes are on the routes.
 | 1 | the Field | locked | keep |
 | 2 | Farm Road | keep | — |
 | 3 | Railhead | locked | keep |
-| 4 | the 45 Scar | `[PROPOSAL]` | **the Parking Lot**: miles of cars frozen in traffic for 500 years, named with a straight face · *or* Wreck Mile · the Jam |
+| 4 | ~~the 45 Scar~~ | **LOCKED** | **the Rust Mile**: the dead interstate, miles of cars rusting in place; applied in docs and game text |
 | 5 | the Cistern | keep | *(the name is shared with THE LONG NOON; see below)* |
 | 6 | the Furrows | keep | — |
 | 7 | Bastion | locked | keep |
@@ -108,7 +114,7 @@ and stay. The changes are on the routes.
 | 11 | the Chancel | locked | keep |
 | 12 | the Red Flats | keep | — |
 | 13 | Redbed | locked | keep |
-| 14 | the Tollway Ruins | `[PROPOSAL]` | **Paygate**: the old toll gantries, where toll-booth Ohms still demand payment · *or* keep |
+| 14 | ~~the Tollway Ruins~~ | **LOCKED** | **Paygate**: the old toll gantries, where toll-booth Ohms still demand payment |
 | 15 | the Array | locked | keep |
 | 16 | the Stack | keep | — |
 | 17 | the Verge | locked | keep |
@@ -151,10 +157,7 @@ The mirror is already canon: PERSISTENCE calls humans **End Users**.
 
 ## Open for Mark
 
-1. The south: Lost Country · the Far South · the Blank.
-2. Yes/no on each of these proposed names: **the Parking Lot** (for the 45
-   Scar) · **Paygate** (for the Tollway Ruins) · **Brownwater** (the main
-   river) · **the Ditch** (the dead southern river) · **the Shallows** (the
-   drowned coast) · **Talking Mountain** (PERSISTENCE's peak).
-3. Does Rook use the slurs early and drop them as his arc turns?
-4. The Spire's silhouette (the ball-on-a-stalk still reads as one real tower).
+1. Does Rook use the slurs early and drop them as his arc turns?
+2. The Spire's silhouette (the ball-on-a-stalk still reads as one real tower).
+3. `[PROPOSAL]` still: humps, ghost roads, topside, and the history names (the
+   Before · the Underyears).

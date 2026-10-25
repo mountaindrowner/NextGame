@@ -2,7 +2,7 @@ import subprocess, sys
 P=24; PAD=12
 maps=[
  ('cistern','cistern.png',40,28,-4.0,'THE CISTERN','Colony 2 · flooded waterworks · HOVER gate'),
- ('scar','scar.png',52,34,-9.5,'THE 45 SCAR','Route · the dead interstate · first vehicle Ohm'),
+ ('scar','scar.png',52,34,-9.5,'THE RUST MILE','Route · the dead interstate · first vehicle Ohm'),
  ('railhead','railhead.png',44,28,-6.0,'RAILHEAD','Colony 1 · the rail junction'),
  ('farmroad','farmroad.png',28,30,7.0,'THE FARM ROAD','Route · north to the Railhead'),
  ('field','field.png',40,28,0.0,'THE FIELD','Ohmstead surface · the prologue'),

@@ -43,12 +43,12 @@ reg([[470,40],[1180,30],[1230,170],[1080,230],[640,240],[500,200]],'#a39d92',.55
 reg([[1070,190],[1540,150],[1560,520],[1480,700],[1250,760],[1110,600],[1060,380]],'#7f9c6a',.6);           // Wildwoods
 reg([[560,250],[1080,230],[1110,560],[1180,760],[1000,930],[700,960],[540,830],[530,520]],'#c7c48a',.55);  // Tallgrass
 reg([[260,900],[700,950],[1050,940],[1250,980],[1200,1110],[300,1110],[120,1040]],'#d9c9a3',.6);           // Lost Country
-// the Shallows (sea) eating the southeast coast
+// the Sinks (sea) eating the southeast coast
 el('path',{d:blob([[1180,760],[1480,700],[1600,640],[1600,1130],[1150,1130],[1100,1010],[1080,900]],30),fill:'#8fb3ad',opacity:.85},land);
 svg.appendChild(land);
 // sea waves
 for(let i=0;i<46;i++){const x=1190+R()*390,y=790+R()*320;if(x<1120+(y-760)*0.1)continue;el('path',{d:`M${x},${y} q6,-5 12,0 q6,5 12,0`,stroke:'#4d7a76',fill:'none','stroke-width':1.4,opacity:.7});}
-// sunk town stubs in the Shallows
+// sunk town stubs in the Sinks
 for(const [x,y] of [[1265,860],[1330,935],[1420,880],[1290,1010]]){for(let k=0;k<3;k++)el('rect',{x:x+k*7,y:y-(4+k*3),width:4,height:4+k*3,fill:'#3f5f5c',opacity:.6});}
 
 // grass ticks in Tallgrass
@@ -61,7 +61,7 @@ for(let i=0;i<16;i++){const x=180+R()*330,y=170+R()*640;const g=el('g',{stroke:'
 // the Jawbone: a curved ridge of jagged peaks on Sundog's western edge
 const ridge=[];for(let t=0;t<=1.0001;t+=1/26){ridge.push([115+Math.sin(t*3.1)*55,150+t*690]);}
 ridge.forEach(([x,y],i)=>{const h=18+R()*16+(i===12?26:0);el('path',{d:`M${x-14},${y+8} L${x},${y-h} L${x+14},${y+8} Z`,fill:i===12?'#5c4a3a':'#7a6650',stroke:'#3b2f22','stroke-width':1.3});el('path',{d:`M${x},${y-h} L${x+5},${y+8}`,stroke:'#3b2f22','stroke-width':.8,opacity:.6});});
-// Talking Mountain signal rings
+// Old Mutter signal rings
 const [tmx,tmy]=ridge[12];for(let k=1;k<=3;k++)el('path',{d:`M${tmx-14*k},${tmy-48-6*k} q${14*k},-${10*k} ${28*k},0`,stroke:'#8a2e24',fill:'none','stroke-width':1.6,opacity:1-k*.22});
 // Wildwoods trees
 for(let i=0;i<190;i++){const x=1090+R()*440,y=180+R()*540;if(y>650&&x>1300)continue;const s=6+R()*6;el('path',{d:`M${x},${y} l${-s*.7},${s*1.5} h${s*1.4} z`,fill:R()<.5?'#3e5d34':'#4f6e3f',opacity:.85});}
@@ -75,7 +75,7 @@ el('path',{d:dd,stroke:'#8a6a44',fill:'none','stroke-width':7,opacity:.35,'strok
 el('path',{d:dd,stroke:'#5a4026',fill:'none','stroke-width':1.6,'stroke-dasharray':'2 7',opacity:.8});
 const sg=el('g',{mask:'url(#fadeR)'});el('rect',{x:0,y:930,width:1250,height:200,fill:'url(#south)'},sg);el('rect',{x:0,y:1000,width:1250,height:130,fill:'url(#hatch)',opacity:.5},sg);
 
-// Brownwater: from the north-west of Tallgrass, down east, through the Drowned Woods to the Shallows
+// Brownwater: from the north-west of Tallgrass, down east, through the Drowned Woods to the Sinks
 const river='M600,250 C650,330 700,360 760,400 S900,470 960,520 S1030,640 1080,720 S1140,820 1190,860';
 el('path',{d:river,stroke:'#7a5a36',fill:'none','stroke-width':6,opacity:.55,'stroke-linecap':'round'});
 el('path',{d:river,stroke:'#9bb8b0',fill:'none','stroke-width':2.2,opacity:.9});
@@ -92,7 +92,7 @@ for(let k=1;k<=2;k++)el('path',{d:`M${826-9*k},${180-5*k} q${9*k},-${7*k} ${18*k
 
 // the road north: colonies (●) and routes (·)
 const stops=[
-  ['Ohmstead',812,890,1],['the Field',812,866,0],['Farm Road',780,832,0],['Railhead',760,790,1],['the Parking Lot',800,748,0],
+  ['Ohmstead',812,890,1],['the Field',812,866,0],['Farm Road',780,832,0],['Railhead',760,790,1],['the Rust Mile',800,748,0],
   ['the Cistern',846,706,1],['the Furrows',800,668,0],['Bastion',752,628,1],['Military Road',800,592,0],['Redoubt',866,560,1],
   ['the Drowned Woods',960,500,0],['the Chancel',900,452,1],['the Red Flats',820,440,0],['Redbed',730,420,1],['Paygate',770,380,0],
   ['the Array',846,350,1],['the Stack',820,318,0],['the Verge',790,292,1]];
@@ -112,13 +112,13 @@ txt('the Spire',878,196,'rs',{'font-size':13});
 lab('FOUNDRY ROW',840,70,30,'foundries that never cooled');
 lab('SUNDOG',330,120,34,'mesas · dead wind farms');
 txt('THE JAWBONE',72,500,'rg',{'font-size':18,transform:'rotate(-90 72 500)'});
-txt('Talking Mountain',tmx+112,tmy-6,'rs',{'font-size':15,fill:'#8a2e24'});
+txt('Old Mutter',tmx+112,tmy-6,'rs',{'font-size':15,fill:'#8a2e24'});
 lab('THE WILDWOODS',1330,130,30,'wildwire · the forest walked west');
 lab('TALLGRASS',660,980-40,32,'');
 txt('Region 1 — this game',660,965,'rs');
-lab('THE SHALLOWS',1390,1000,28,'the drowned coast');
+lab('THE SINKS',1390,1000,28,'the drowned coast');
 lab('LOST COUNTRY',760,1062,30,'past the radio’s reach');
-txt('the Ditch',300,985,'rs',{'font-size':14});
+txt('the Dryway',300,985,'rs',{'font-size':14});
 txt('Brownwater',640,300,'rs',{transform:'rotate(38 640 300)','font-size':14});
 
 // cartouche

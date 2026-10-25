@@ -44,9 +44,9 @@
 - **Places of note:** **the Rail Yard / Roundhouse** (the trial dungeon — tool and scrap Ohms, the Brokers, Warden Dell Marrow); the market; the switch-house.
 - **Gate in:** Story.
 - **Plot beat:** Win the colony's trust by clearing a **sabotaged relay** (Captain Holt, first Militant officer — visibly "off"). **Token 1.** Marrow's warning: the wild Ohms are coordinating.
-- **Leads to:** The 45 Scar.
+- **Leads to:** The Rust Mile.
 
-### 4. THE 45 SCAR — route *(a ruined interstate, miles of dead cars)*
+### 4. THE RUST MILE — route *(a ruined interstate, miles of dead cars)*
 - **Type:** Route + traversal unlock.
 - **Terrain:** Wrecked highway; Hauler convoys, vehicle Ohms.
 - **Places of note:** **the Hertz Lot** (rental-car ruin — prime vehicle-Ohm hunting); **Mobile Ohm Park** (trailer-park nest where vehicle Ohms gather). **This is where you catch your first vehicle Ohm.**
@@ -128,9 +128,9 @@
 - **Places of note:** **the Battle-Pit** (where the New Order settles disputes — and where the trial plays out); the Bike-works; the Red Hand's roost (Warden Sol). The trial doubles as **fighting through a hive assault** alongside Sol and Rook.
 - **Gate in:** Story.
 - **Plot beat:** Redbed falls to the Static; **Rook's home is taken**; rival becomes ally; the cost of the hive lands on a familiar face. **Token 6.**
-- **Leads to:** The Tollway Ruins.
+- **Leads to:** Paygate.
 
-### 14. THE TOLLWAY RUINS — route *(ruined toll roads on the city's edge)*
+### 14. PAYGATE — route *(ruined toll roads on the city's edge)*
 - **Type:** Route.
 - **Terrain:** The first true urban sprawl — overpasses, on-ramps, dead toll plazas; Merc and Drifter encounters.
 - **Places of note:** stacked **overpass ramps**; a toppled toll gantry.
@@ -208,7 +208,7 @@
 
 ## CRITICAL-PATH AT A GLANCE
 
-Ohmstead → the Field → Farm Road → **Railhead (T1)** → the 45 Scar *(first vehicle Ohm)* → **the Cistern (T2 · HOVER gate)** → the Furrows → **Bastion (T3)** → Military Road → **Redoubt + the Bunker (T4 · REVEAL)** → the Drowned Woods → **the Chancel (T5)** → the Red Flats → **Redbed (T6 · siege)** → Tollway Ruins → **the Array (T7 · the plan)** → the Stack → **the Verge (T8 · Grandpa confirmed)** → the Outer Ring → the Canyon *(skyscraper)* → the Underground *(tunnels)* → **the Spire (FINALE)** → Ohmcoming.
+Ohmstead → the Field → Farm Road → **Railhead (T1)** → the Rust Mile *(first vehicle Ohm)* → **the Cistern (T2 · HOVER gate)** → the Furrows → **Bastion (T3)** → Military Road → **Redoubt + the Bunker (T4 · REVEAL)** → the Drowned Woods → **the Chancel (T5)** → the Red Flats → **Redbed (T6 · siege)** → Paygate → **the Array (T7 · the plan)** → the Stack → **the Verge (T8 · Grandpa confirmed)** → the Outer Ring → the Canyon *(skyscraper)* → the Underground *(tunnels)* → **the Spire (FINALE)** → Ohmcoming.
 
 ---
 

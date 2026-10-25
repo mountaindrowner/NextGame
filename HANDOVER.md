@@ -23,7 +23,7 @@ RotHero 8-dir + packed anim sheets, `ui.ts/.css`), areas (`ohmstead/`,
 surface (`overworld/area.ts` + `transition.ts`), grid battles
 (`battle/rules.ts` [PROPOSAL] rules + tests, `arena.ts`, `themes.ts` region
 grids, `capture.ts` node puzzle). Route: Ohmstead (lift) → Field → homestead
-stretch → Farm Road → grain line → Railhead → interstate approach → 45 Scar →
+stretch → Farm Road → grain line → Railhead → interstate approach → the Rust Mile →
 (culvert) → Cistern.
 
 **Locked by Mark this session:** HD-2D + one fixed camera + always-on
@@ -45,19 +45,21 @@ Stored generation prompts under `assets/reference/` were left as the historical
 record. **The world, reimagined** (Mark: far enough in the future that nothing
 resembles itself): `docs/design/world-gazetteer.md` + map
 `assets/reference/world_gazetteer_map.png` (source `tools/worldmap/`). Mark's
-**LOCKED** (same day): Tallgrass (Region 1, was "the Blackland"), Sundog, the
-Jawbone, the Wildwoods (+ wildwire), the Drowned Woods (was the Trinity
-Bottoms; applied to docs + game text, internal ids `trinity`/`sec.trinity`
-unchanged), Foundry Row (the north), and the Ohm slurs. He rejected: the Wide, the
+**LOCKED** (2026-10-24/25): Tallgrass (Region 1, was "the Blackland"), Sundog,
+the Jawbone, Old Mutter, the Wildwoods (+ wildwire), Foundry Row, the Sinks,
+Lost Country (while it stays lost), Brownwater, the Dryway, the Drowned Woods
+(was the Trinity Bottoms), the Rust Mile (was the 45 Scar), Paygate (was the
+Tollway Ruins), and the Ohm slurs. Applied to docs + game text; internal ids
+(`trinity`, `scar`, `sec.trinity`) unchanged. Mark's naming test: it must
+sound natural said by a tired local ("go down the Rust Mile"). He rejected: the Wide, the
 Upstairs, Blackland, Dead Air, the Merge, Cinder, the Haze, the Slow (too
 try-hard; names must read well without voice acting). **Open for Mark:** the
-gazetteer's "Open for Mark" list (the south's name; yes/no on the Parking Lot,
-Paygate, Brownwater, the Ditch, the Shallows, Talking Mountain; whether Rook
-uses the slurs; the Spire's silhouette). Don't apply renames in docs/maps until he locks them.
+gazetteer's "Open for Mark" list (whether Rook uses the slurs; the Spire's
+silhouette; humps/ghost roads/topside and the history names). Don't apply renames in docs/maps until he locks them.
 Name collisions with THE LONG NOON (Cistern, Nursery, Warden, Keeper, Hale)
 are parked.
 
-**Still [PROPOSAL] / to flag:** grid-combat rules; the 45 Scar layout +
+**Still [PROPOSAL] / to flag:** grid-combat rules; the Rust Mile layout +
 `scar-wrecks` table; transition stretches (content, working names "old
 homestead / grain line / interstate approach", signs incl. "NEXT EXIT · FUEL ·
 FOOD"); invented lines (lift, lookout, relay, rental booth, cradle,

@@ -114,7 +114,7 @@ and `src/hd2d/battle/arena.ts` (HD-2D stage + UI).
 
 Mark: the surface should be one seamless world, with real distance crossed
 between places. `src/hd2d/overworld/` places the Field, Farm Road, Railhead
-and the 45 Scar in one coordinate space (north = −z), each keeping its own
+and the Rust Mile in one coordinate space (north = −z), each keeping its own
 layout and code, with a **transition stretch** between neighbours — open
 country a few screens long ([PROPOSAL] content: a road winding from one exit
 to the next entrance, tall grass, groves, telephone poles, fences and one

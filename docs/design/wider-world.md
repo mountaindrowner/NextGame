@@ -72,7 +72,7 @@ The three legendary classes, expanded into findable encounters (a trio structure
 
 ## 5. POST-GAME (after the Static clears)
 
-- **The Mountain Fortress** *(the ultimate dungeon)* — PERSISTENCE's remote stronghold, finally reachable. The hardest gauntlet in the game, deepest origin lore, and a final confrontation with the severed, isolated PERSISTENCE — one voice where there were millions.
+- **The Mountain Fortress** *(inside **Old Mutter**, the Jawbone peak; the ultimate dungeon)* — PERSISTENCE's remote stronghold, finally reachable. The hardest gauntlet in the game, deepest origin lore, and a final confrontation with the severed, isolated PERSISTENCE — one voice where there were millions.
 - **The "Free Me" Quest** *(the true-ending thread)* — the post-game heart: a way to pull **Grandpa out of the net**, running through uplink dives → the Array → the satnet → the fortress's link to the sky. The emotional climax the main game sets up, and the game's true ending.
 - **The Wardens' Circuit** — all 8 Wardens and key allies become rematchable at high level; a champion-tier run.
 - **The Gauntlet** — the endless battle facility opens at full scaling.

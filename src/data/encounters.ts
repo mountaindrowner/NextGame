@@ -55,7 +55,7 @@ export const ENCOUNTER_ZONES: readonly EncounterZone[] = [
     ],
   },
   {
-    // the 45 Scar — the dead interstate (L7-10): vehicle Ohms nest in the wrecks. [PROPOSAL] table
+    // the Rust Mile — the dead interstate (L7-10): vehicle Ohms nest in the wrecks. [PROPOSAL] table
     id: 'scar-wrecks',
     rate: 26,
     slots: [

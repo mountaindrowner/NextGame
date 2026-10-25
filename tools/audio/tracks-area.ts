@@ -150,7 +150,7 @@ export const AREA_TRACKS: Record<string, Track> = {
       ...mel([['C5', 2], ['B4', 2], ['E4', 4]], 16, { duty: 0.25, vel: 0.55 }),
     ],
   }),
-  // bgm.route.tollway — A min 124 · Main, Static · the old sprawl begins
+  // bgm.route.tollway (Paygate) — A min 124 · Main, Static · the old sprawl begins
   'bgm.route.tollway': song({
     bpm: 124, bars: 8, key: 'A3', mode: 'minor', progression: [1, 7, 6, 7, 1, 4, 5, 1], bass: 'driving', drums: 'drive',
     arp: { duty: 0.25, vel: 0.24, step: 0.5 },

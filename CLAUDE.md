@@ -65,9 +65,13 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   Tower, bluebonnet). Names come from what a place does, what it did to
   people, or who took it, and must read well in plain text (no voice actor
   to sell them). World + map: `docs/design/world-gazetteer.md`. **Locked:**
-  New Central · Tallgrass (Region 1) · Sundog · the Jawbone · the Wildwoods
-  (+ wildwire) · the Drowned Woods · Foundry Row · the Ohm slurs (appliance,
-  junk, factory, statics, rattler, plug-lover). The rest there is proposal. Texas, South Texas above all, belongs to Mark's
+  New Central · Tallgrass (Region 1) · Sundog · the Jawbone · Old Mutter
+  (PERSISTENCE's peak) · the Wildwoods (+ wildwire) · Foundry Row · the Sinks
+  · Lost Country (only while it stays truly lost, else the Far Country) ·
+  Brownwater · the Dryway · the Drowned Woods · the Rust Mile (was the 45
+  Scar) · Paygate (was the Tollway Ruins) · the Ohm slurs (appliance, junk,
+  factory, statics, rattler, plug-lover). Names must sound natural said by a
+  tired local. The rest there is proposal. Texas, South Texas above all, belongs to Mark's
   separate game THE LONG NOON; the two stay separate. `npm run lint`
   enforces the no-real-places rule on game content.
 - **Locked phrases:** stay current · recharged · clear the static · factory

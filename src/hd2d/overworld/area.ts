@@ -17,7 +17,7 @@ import { buildTransition, type TransitionSpec } from './transition';
  * country. North is −z. Interiors (Ohmstead, the Cistern) stay separate areas
  * reached through the lift and the culvert.
  *
- *   z     −224 … −190   the 45 Scar
+ *   z     −224 … −190   the Rust Mile
  *         −190 … −146   (transition: the interstate approach)
  *         −146 … −118   Railhead
  *         −118 …  −74   (transition: the grain line)

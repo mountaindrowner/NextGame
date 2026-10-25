@@ -656,7 +656,7 @@ export const buildRailhead: AreaBuilder = async (scene, night) => {
     },
     triggers: [
       { x0: 20.6, z0: 27.6, x1: 24.4, z1: 30, go: { to: 'farmroad', spawn: 'north' } },
-      // the Warden's gate: open for now (Marrow's trial isn't built yet) — the road north runs to the 45 Scar
+      // the Warden's gate: open for now (Marrow's trial isn't built yet) — the road north runs to the Rust Mile
       { x0: 20.6, z0: -2, x1: 24.4, z1: 0.5, go: { to: 'scar', spawn: 'south' } },
     ],
     things: [

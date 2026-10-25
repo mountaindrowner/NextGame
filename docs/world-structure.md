@@ -37,10 +37,10 @@ walker can cross edges. Maps lose their **solid border on edges that connect**
   → the Field (prologue overld)  ◆ the Bunker / Site B (Redoubt)
   → Farm Road                    ◆ the Catacombs (Chancel)
 ● Railhead (C1)                  ◆ the Vein (under Bastion, opt)
-  → the 45 Scar (1st vehicle)    → the Drowned Woods (route-dungeon)
+  → the Rust Mile (1st vehicle)    → the Drowned Woods (route-dungeon)
 ● the Cistern (C2 · HOVER)       → the Red Flats
   → the Furrows                  ● Redbed (C6 · siege)
-● Bastion (C3)                   → the Tollway Ruins
+● Bastion (C3)                   → Paygate
   → the Military Road            ● the Array (C7)
 ● Redoubt (C4 · reveal)          → the Stack (5-level interchange)
   → (the Drowned Woods)            ● the Verge (C8)
@@ -64,12 +64,12 @@ saturation** north toward New Central:
 | Band | Maps | Biome | Hive |
 |---|---|---|---|
 | Home | Ohmstead, Field, Farm Road | underground / prairie | none |
-| Rail & flats | Railhead, 45 Scar | industrial | none |
+| Rail & flats | Railhead, Rust Mile | industrial | none |
 | Waterworks | Cistern, Furrows | flooded / prairie | none |
 | Cement lands | Bastion, Military Road | quarry / military | light→med |
 | Drowned + sacred | Drowned Woods, Chancel | forest / sacred | light→med |
 | Hardpan | Red Flats, Redbed | red_hardpan | heavy |
-| Data corridor | Tollway, Array, Stack | data / urban | med→heavy |
+| Data corridor | Paygate, Array, Stack | data / urban | med→heavy |
 | The city | Verge, Outer Ring, Canyon, Underground, Spire | urban ruins | max |
 
 Transitions blend at the shared edge (prairie thins into quarry scree, etc.).
@@ -77,7 +77,7 @@ Transitions blend at the shared edge (prairie thins into quarry scree, etc.).
 ## 4. Branches & LOOPS (kill the corridor)
 
 - **A hub:** Railhead is the natural crossroads (trade-town on a junction) —
-  give it 3–4 arms (south to the Field, the 45 Scar east, a spur to the
+  give it 3–4 arms (south to the Field, the Rust Mile east, a spur to the
   Drive-In, the rail line as fast-travel once unlocked).
 - **At least one loop:** e.g., a back-route from the Furrows looping to the
   Stockyards and back to the Field, so the south isn't one-way.

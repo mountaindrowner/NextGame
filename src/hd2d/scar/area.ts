@@ -11,7 +11,7 @@ import { DAY, NIGHT } from '../mood';
 import type { AreaBuilder } from '../area';
 
 /**
- * THE 45 SCAR — route (Critical Path §4): a ruined interstate, miles of dead
+ * THE RUST MILE (was the 45 Scar; internal id `scar`) — route (Critical Path §4): a ruined interstate, miles of dead
  * cars. Layout is [PROPOSAL] (no map existed): a six-lane highway running
  * north, jammed with wrecks and split by a jersey-barrier median; a collapsed
  * overpass across it; the rental lot to the west and Mobile Ohm Park to the
@@ -494,7 +494,7 @@ export const buildScar: AreaBuilder = async (scene, night) => {
 
   return {
     id: 'scar',
-    title: 'THE 45 SCAR',
+    title: 'THE RUST MILE',
     sub: 'Miles of dead cars',
     mood: night ? NIGHT : DAY,
     sky: true,

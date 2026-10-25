@@ -37,7 +37,7 @@ rect(4, 4, 4, 2, 'r');
 rect(19, 22, 3, 4, '.'); // the south entry dock
 MAP[22]![20] = '=';
 MAP[0]![20] = MAP[0]![19] = MAP[0]![21] = 'n'; // the way north (Warden-held)
-MAP[27]![19] = MAP[27]![20] = MAP[27]![21] = 's'; // the culvert back to the 45 Scar
+MAP[27]![19] = MAP[27]![20] = MAP[27]![21] = 's'; // the culvert back to the Rust Mile
 
 const get = (x: number, z: number): string => (inb(x, z) ? MAP[z]![x]! : '#');
 const isWall = (x: number, z: number): boolean => get(x, z) === '#';
