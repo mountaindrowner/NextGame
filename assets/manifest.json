@@ -8304,7 +8304,7 @@
     "elev": "0",
     "pal": 8,
     "phase": "act3",
-    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth, top-left light; the ball-on-stalk tower, old steel fused with hive-flesh, storm sky",
+    "gen_prompt": "HD top-down, 32px, grid method, limited cohesive palette, material depth, top-left light; a tall concrete stalk topped by a lattice ball of lights (keeps the old tower's silhouette; never named in game), old steel fused with hive-flesh, storm sky",
     "hero": true,
     "footprint": [
       4,

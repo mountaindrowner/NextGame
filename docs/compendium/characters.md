@@ -65,6 +65,8 @@
   Ohmstead's stores in Act I and keeps crossing the protagonist's route.
 - **Voice:** Says "y'all got more than you need" like a creed. Counts
   everything out loud, an accountant of grievances.
+- **Slurs (LOCKED 2026-10-25):** uses the Ohm slurs early ("plug-lover", "junk"),
+  drops them as his arc turns; calling an Ohm by name marks the change.
 - **Arc:** Rivalry → grudging respect → the hive burns Redbed and Rook arrives
   asking for help with empty hands → convoy ally and final-gauntlet second.
 - **Team:** MOTOR/BREAKER raiders' kit; signature Ohm: a Rustler named

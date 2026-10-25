@@ -70,8 +70,11 @@ English only. Primary platform PC, secondary iPhone. Engine: **Phaser 3**,
   · Lost Country (only while it stays truly lost, else the Far Country) ·
   Brownwater · the Dryway · the Drowned Woods · the Rust Mile (was the 45
   Scar) · Paygate (was the Tollway Ruins) · the Ohm slurs (appliance, junk,
-  factory, statics, rattler, plug-lover). Names must sound natural said by a
-  tired local. The rest there is proposal. Texas, South Texas above all, belongs to Mark's
+  factory, statics, rattler, plug-lover; Rook uses them early, drops them
+  as his arc turns). Names must sound natural said by a tired local.
+  **The old world is forgotten:** no old-world proper name or history in the
+  game, only tiny unexplained hints midway or near the end. The Spire keeps
+  the old tower's silhouette (stalk + lattice ball) but is never named for it. The rest there is proposal. Texas, South Texas above all, belongs to Mark's
   separate game THE LONG NOON; the two stay separate. `npm run lint`
   enforces the no-real-places rule on game content.
 - **Locked phrases:** stay current · recharged · clear the static · factory

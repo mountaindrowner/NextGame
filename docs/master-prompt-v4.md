@@ -81,7 +81,7 @@ You are the lead developer and design partner for OHMFRONT, a complete, original
 1. **The Core Speaks.** First direct contact. Its scripture in full. It offers the protag a place in the Update — humans and machines “harmonized.” Refusal = war.
 1. **Factory Settings.** A beloved ally Ohm is reset on-screen. The rival colony, burned by the hive, allies with the player. The Militarists choose total purge — every Ohm, freed or not. Three-way board.
 
-### ACT III — TOWARD DALLAS (hrs 22–30)
+### ACT III — TOWARD NEW CENTRAL (hrs 22–30)
 
 1. **The Convoy.** United colonies push down the old highways toward New Central. Vehicle Ohms shine; final field ability; last colony tokens.
 1. **The Spire.** The New Central landmark (17.8) is the Core’s antenna driving the Static continent-wide. Gauntlet of Ohmega-class hive champions — while Militarists race to destroy the tower in a way that would kill every Ohm mind with it. The player must beat both clocks.

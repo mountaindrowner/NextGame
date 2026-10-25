@@ -54,8 +54,11 @@ Tollway Ruins), and the Ohm slurs. Applied to docs + game text; internal ids
 sound natural said by a tired local ("go down the Rust Mile"). He rejected: the Wide, the
 Upstairs, Blackland, Dead Air, the Merge, Cinder, the Haze, the Slow (too
 try-hard; names must read well without voice acting). **Open for Mark:** the
-gazetteer's "Open for Mark" list (whether Rook uses the slurs; the Spire's
-silhouette; humps/ghost roads/topside and the history names). Don't apply renames in docs/maps until he locks them.
+gazetteer's "Open for Mark" list (which old-world hints to plant: plaque /
+postcard / jingle; humps/ghost roads/topside and the history names). Locked
+2026-10-25: Rook uses the slurs early and drops them as his arc turns; the
+Spire keeps the old tower's silhouette, never named; the old world's names and
+history are forgotten (only tiny hints midway/near the end). Don't apply renames in docs/maps until he locks them.
 Name collisions with THE LONG NOON (Cistern, Nursery, Warden, Keeper, Hale)
 are parked.
 

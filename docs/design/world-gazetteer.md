@@ -142,7 +142,33 @@ and stay. The changes are on the routes.
 | **rattler** | ranch folk | *"Rattlers got into the feed again."* |
 | **plug-lover** | anyone, for people who side with Ohms | Rook, early, at the hero. |
 
+**Rook (LOCKED 2026-10-25):** uses the slurs freely early on and drops them as
+his arc turns. The first time he calls an Ohm by its name, the rivalry is over.
+
 The mirror is already canon: PERSISTENCE calls humans **End Users**.
+
+---
+
+## The forgotten past (LOCKED 2026-10-25)
+
+Nobody remembers the old world's names or history. People live among its
+leftovers (roads, towers, signs too faded to read) and call them what they
+are now. **No old-world proper name appears in the game**, except a few tiny
+hints placed **midway or near the end**, never explained, for players who
+know to catch.
+
+**The Spire** keeps the old tower's look on purpose: a tall stalk topped by a
+lattice ball of lights. Nobody in the game knows what it used to be called,
+and the game never says.
+
+Hint ideas `[PROPOSAL]`, pick any or none:
+- **A plaque at the Spire's foot** (finale), most letters gone: *"…UNION…"*.
+  Colonists read it as "union", which is what the ending is about.
+- **A postcard in the Verge's archive** (Act III): the tower lit up at night,
+  the caption worn away. The Verge's Keepers hold fragments of the old world;
+  nobody can say what this one shows.
+- **A faded jingle on The Current's oldest tape** (midway, the Array): a
+  few bars of a station ID from before, the call letters lost in hiss.
 
 ---
 
@@ -157,7 +183,6 @@ The mirror is already canon: PERSISTENCE calls humans **End Users**.
 
 ## Open for Mark
 
-1. Does Rook use the slurs early and drop them as his arc turns?
-2. The Spire's silhouette (the ball-on-a-stalk still reads as one real tower).
-3. `[PROPOSAL]` still: humps, ghost roads, topside, and the history names (the
+1. Which old-world hints to use (plaque, postcard, jingle, or none).
+2. `[PROPOSAL]` still: humps, ghost roads, topside, and the history names (the
    Before · the Underyears).

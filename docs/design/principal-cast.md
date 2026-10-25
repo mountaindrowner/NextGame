@@ -20,7 +20,7 @@
 
 **Odessa.** Ohmstead’s archivist and the closest thing to a Professor figure. She hands the boy the index and his charge to fill it, then rides along on his device’s comms for the entire journey — the steady, dry, encouraging voice in his ear who keeps him oriented and relays what the colonies report. The friendly constant.
 
-**Rook.** The rival. A hard-edged young Raider out of the rival colony of Caliche, first crossing the protagonist as competition for salvage and wild Ohms in the early routes and needling him through the midgame. When Caliche falls to the hive (Colony 6) his bravado collapses into desperation, and rival turns ally for the road to Dallas.
+**Rook.** The rival. A hard-edged young Raider out of the rival colony of Caliche, first crossing the protagonist as competition for salvage and wild Ohms in the early routes and needling him through the midgame. When Caliche falls to the hive (Colony 6) his bravado collapses into desperation, and rival turns ally for the road to New Central. **His language turns with him (LOCKED 2026-10-25):** early on he uses the Ohm slurs freely ("plug-lover" at the hero, "junk" for wild Ohms); after Redbed falls he stops, and the first time he calls an Ohm by its name is the sign the rivalry is over.
 
 **Commander Tomas Reyes.** The most important human ally. A weathered, honorable Militarist officer who reads as the Act I villain — until the midpoint reveals he’s been a puppet, taking orders from the Static against his own will. Freed at Redoubt, he becomes the protagonist’s military backbone for the back half, and at the tower he holds off the hive-loyal remnant with his life so the boy can reach the antenna.
 
@@ -104,7 +104,7 @@ The oldest colony, closest to New Central; memory-keepers under direct siege as 
 
 -----
 
-## PART 4 — THE DALLAS FINALE
+## PART 4 — THE NEW CENTRAL FINALE
 
 **Marshal Iver Drake.** The hive-loyal remnant leader, the Militarist who never broke free — Reyes’s mirror image and the defender of the tower. Reyes holds him off so the boy can reach the antenna, and the two soldiers, one freed and one not, end the fight together.
 

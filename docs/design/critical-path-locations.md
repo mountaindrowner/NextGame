@@ -164,7 +164,7 @@
 
 ---
 
-# ACT III — TOWARD THE TOWER (DALLAS)
+# ACT III — TOWARD THE TOWER (NEW CENTRAL)
 
 ### 18. THE OUTER RING — dungeon-zone *(New Central's hive-saturated outskirts)*
 - **Type:** Hostile wild zone.
