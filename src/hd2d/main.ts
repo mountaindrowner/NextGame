@@ -167,7 +167,7 @@ async function battle(foeNum: number, foeLevel: number, foeCount?: number): Prom
 
 // ------------------------------------------------------------- roamers
 // Visible wild Ohms (the design's mix of visible + random encounters). Beaten ones stay gone this session.
-interface Roamer { key: string; num: number; level: number; home: THREE.Vector2; range: number; root: THREE.Object3D; goal: THREE.Vector2; next: number; cool: number }
+interface Roamer { key: string; num: number; level: number; home: THREE.Vector2; range: number; root: THREE.Object3D; hero?: RotHero; goal: THREE.Vector2; next: number; cool: number }
 let roamers: Roamer[] = [];
 const beatenRoamers = new Set<string>();
 async function spawnRoamers(a: Area, tint: THREE.Color): Promise<void> {
@@ -175,11 +175,14 @@ async function spawnRoamers(a: Area, tint: THREE.Color): Promise<void> {
   await Promise.all((a.roamers ?? []).map(async (r, i) => {
     const key = `${a.id}:${i}`;
     if (beatenRoamers.has(key)) return;
-    const root = await stillSprite(`./sprites/ohms/${r.num}_front_hd.png`, 1.35, tint).catch(() => null);
+    // the 8-direction PixelLab Ohm when it exists, else the old front still
+    const sid = styled.ohms?.[String(r.num)];
+    const hero = sid ? await RotHero.load(sid, tint, 1.2).catch(() => null) : null;
+    const root = hero?.root ?? (await stillSprite(`./sprites/ohms/${r.num}_front_hd.png`, 1.35, tint).catch(() => null));
     if (!root) return;
     root.position.set(r.x, a.ground(r.x, r.z), r.z);
     scene.add(root);
-    roamers.push({ key, num: r.num, level: r.level, home: new THREE.Vector2(r.x, r.z), range: r.range, root, goal: new THREE.Vector2(r.x, r.z), next: 0, cool: 0 });
+    roamers.push({ key, num: r.num, level: r.level, home: new THREE.Vector2(r.x, r.z), range: r.range, root, hero: hero ?? undefined, goal: new THREE.Vector2(r.x, r.z), next: 0, cool: 0 });
   }));
 }
 function updateRoamers(dt: number, t: number): void {
@@ -196,8 +199,9 @@ function updateRoamers(dt: number, t: number): void {
     if (dist > 0.05) {
       const k = Math.min(1, (1.3 * dt) / dist), nx = pos.x + dx * k, nz = pos.z + dz * k;
       if (!a.blocked(nx, nz, 0.3, pos.x, pos.z)) { pos.x = nx; pos.z = nz; } else r.next = 0;
-      r.root.scale.x = dx < 0 ? -1 : 1;
+      if (r.hero) r.hero.face(dx, dz); else r.root.scale.x = dx < 0 ? -1 : 1;
     }
+    r.hero?.animate(dt, dist > 0.05);
     pos.y = a.ground(pos.x, pos.z) + Math.abs(Math.sin(t * 7 + r.home.x)) * (dist > 0.05 ? 0.06 : 0.015);
     if (r.cool <= 0 && !loading && !ui.talking && Math.hypot(p.x - pos.x, p.z - pos.z) < 0.8) {
       r.cool = 4;

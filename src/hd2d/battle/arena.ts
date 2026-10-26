@@ -34,7 +34,9 @@ const PW = 1.14, PD = 0.86; // panel size (world units)
 const cellPos = (c: Cell): THREE.Vector3 => new THREE.Vector3((c.col - (COLS - 1) / 2) * PW, 0, (c.row - (ROWS - 1) / 2) * PD);
 const same = (a: Cell, b: Cell): boolean => a.col === b.col && a.row === b.row;
 /** Styled 8-direction Ohms (public/world/styles). */
-const STYLED: Record<number, string> = { 1: 'scootlet', 4: 'dronelet', 7: 'scraplet' };
+/** Species drawn as 8-direction PixelLab Ohms (public/world/styles/index.json), loaded once. */
+let STYLED: Record<number, string> = { 1: 'scootlet', 4: 'dronelet', 7: 'scraplet' };
+const styledReady = fetch('./world/styles/index.json').then((r) => r.json()).then((j: { ohms?: Record<string, string> }) => { STYLED = { ...STYLED, ...Object.fromEntries(Object.entries(j.ohms ?? {}).map(([k, v]) => [Number(k), v])) }; }).catch(() => undefined);
 const LANE: ReadonlySet<Pattern> = new Set(['shot', 'dash', 'row']);
 
 interface Wind { at: number; move: MoveDef; cells: Cell[]; target: Fighter }
@@ -174,9 +176,10 @@ export class BattleArena {
     const make = async (b: Battler, side: Side, cell: Cell): Promise<Fighter> => {
       let root: THREE.Object3D;
       let hero: RotHero | undefined;
-      if (side === 'player' && STYLED[b.speciesNum]) {
+      await styledReady;
+      if (STYLED[b.speciesNum]) {
         hero = (await RotHero.load(STYLED[b.speciesNum]!, tint, 0.98).catch(() => null)) ?? undefined;
-        hero?.face(1, 0);
+        hero?.face(side === 'player' ? 1 : -1, 0.8); // three-quarter toward the camera so faces read
       }
       if (hero) root = hero.root;
       else root = await stillSprite(`./sprites/ohms/${b.speciesNum}_${side === 'player' ? 'back' : 'front'}_hd.png`, side === 'player' ? 0.98 : 1.05, tint);

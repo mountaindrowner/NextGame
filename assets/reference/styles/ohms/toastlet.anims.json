@@ -1,0 +1,33 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/animate-character",
+  "character_id": "89b43b68-ad9d-47a9-91e3-cd87ad82a750",
+  "plan": [
+    {
+      "name": "idle",
+      "mode": "v3",
+      "action": "idle: bouncing slightly on its little feet, the hot slots pulsing",
+      "frames": 4,
+      "fps": 6,
+      "loop": true
+    }
+  ],
+  "staged": {
+    "idle": {
+      "frames": 5,
+      "fps": 6,
+      "loop": true,
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    }
+  },
+  "at": "2026-10-26T07:26:12.032Z"
+}

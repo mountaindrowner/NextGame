@@ -9,6 +9,18 @@ rules + controls in `docs/hd2d-direction.md` → "Squad grid combat". Code:
 specials), `arena.ts` (squad arena, ally/foe AI, panel states, HUD),
 `main.ts` (party + packs, `?party=&plv=&foes=`). Tests: `tests/gridrules.test.ts`.
 Waiting on Mark's reaction to the feel before tuning numbers.
+
+**20 more Ohms in SAL's style (PixelLab, 2026-10-26)**, the next ones met on
+the critical path (Field → Farm Road → Pickett Place): Toastlet, Vacuette,
+Fanlet, Mailstrom, Wavelet, Filaglow, Mowlet, Staplejaw, Beeplet, Tumblet,
+Sawlet, Cellet, Vendlet, Rustbed, Pumplet, Balelet, Tillbit, Spoutlet,
+Barbwyre, Bonnetbloom. 8 directions each (`tools/gen-ohms-style.mjs`, ~10
+generations per Ohm), idles via `tools/animate-cast.mjs` (~7 each), contact
+sheet `assets/reference/styles/ohms/_contact.png` (`node tools/ohm-contact.cjs`).
+Registered in `public/world/styles/index.json`; wild roamers and BOTH battle
+sides now use any styled Ohm (three-quarter facing so faces read). Next in
+encounter order: Augerlock, Crossignal, Digitall, Combinator, Drillbit,
+Oscillord, Baleron, Buzzsawyer, Insulet, Kartwheel, Quadlet, Remotorist…
 Open questions still owed from 2026-10-25: door-language alternative to the
 lit lamp, lap order + collection mechanic, plot-driver chain, Verge / New
 Central tiers, slaughterhouse chain payoff, region 1 name, SHEAR vs HOVER gate,

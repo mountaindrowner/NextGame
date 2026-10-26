@@ -1,0 +1,19 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "species": 15,
+  "body": {
+    "description": "Filaglow: a tiny light bulb creature, clear glass head with a glowing coiled filament like a wisp of hair and eyes, a screw-thread metal base as its body, hopping on the threads, warm amber glow, gentle. a small living machine creature (an Ohm), an old household or farm machine that woke up with a will of its own, weathered by years outdoors, no humans, no rider",
+    "style_description": "modern indie action-adventure pixel art: chunky stylized proportions, big bold readable silhouette, saturated colours, lineless with strong graphic light and shadow shapes, expressive and punchy",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 64,
+      "height": 64
+    },
+    "no_background": true,
+    "style_character_id": "cea31c61-3b70-4ec6-a617-413b60f80ece"
+  },
+  "character_id": "7bd8e743-4ffd-4331-ba9f-653d03bc0761",
+  "at": "2026-10-26T07:11:29.628Z"
+}

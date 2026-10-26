@@ -1,0 +1,19 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "species": 21,
+  "body": {
+    "description": "Fanlet: a little ceiling fan creature that walks on its pull-chain legs, five wooden blades as a spinning crown, frosted glass light dome as its face with a soft eye glow, brass motor housing, swaying and dainty. a small living machine creature (an Ohm), an old household or farm machine that woke up with a will of its own, weathered by years outdoors, no humans, no rider",
+    "style_description": "modern indie action-adventure pixel art: chunky stylized proportions, big bold readable silhouette, saturated colours, lineless with strong graphic light and shadow shapes, expressive and punchy",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 64,
+      "height": 64
+    },
+    "no_background": true,
+    "style_character_id": "cea31c61-3b70-4ec6-a617-413b60f80ece"
+  },
+  "character_id": "a96b843c-a80d-4c4a-a18a-ec281421dadf",
+  "at": "2026-10-26T07:09:14.592Z"
+}

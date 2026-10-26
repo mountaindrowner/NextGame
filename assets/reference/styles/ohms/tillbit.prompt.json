@@ -1,0 +1,19 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "species": 82,
+  "body": {
+    "description": "Tillbit: a small farm tractor creature, big rear wheels and small front wheels, a rounded hood like a snout with headlight eyes, an exhaust stack like a horn, a little tiller rake on its back, red paint. a small living machine creature (an Ohm), an old household or farm machine that woke up with a will of its own, weathered by years outdoors, no humans, no rider",
+    "style_description": "modern indie action-adventure pixel art: chunky stylized proportions, big bold readable silhouette, saturated colours, lineless with strong graphic light and shadow shapes, expressive and punchy",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 64,
+      "height": 64
+    },
+    "no_background": true,
+    "style_character_id": "cea31c61-3b70-4ec6-a617-413b60f80ece"
+  },
+  "character_id": "1d90db62-f6f9-43ba-ae9c-1ff35424c34f",
+  "at": "2026-10-26T07:19:21.593Z"
+}

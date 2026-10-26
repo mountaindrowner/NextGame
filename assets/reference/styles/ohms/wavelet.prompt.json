@@ -1,0 +1,19 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "species": 12,
+  "body": {
+    "description": "Wavelet: a small microwave oven creature, boxy beige body, the glass door is a face with a dim turntable glow inside, keypad on its side like freckles, short stubby legs, humming, waiting patiently. a small living machine creature (an Ohm), an old household or farm machine that woke up with a will of its own, weathered by years outdoors, no humans, no rider",
+    "style_description": "modern indie action-adventure pixel art: chunky stylized proportions, big bold readable silhouette, saturated colours, lineless with strong graphic light and shadow shapes, expressive and punchy",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 64,
+      "height": 64
+    },
+    "no_background": true,
+    "style_character_id": "cea31c61-3b70-4ec6-a617-413b60f80ece"
+  },
+  "character_id": "b63b2c74-d655-4665-a310-8baafd50126c",
+  "at": "2026-10-26T07:11:23.594Z"
+}

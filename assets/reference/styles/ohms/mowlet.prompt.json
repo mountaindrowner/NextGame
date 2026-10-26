@@ -1,0 +1,19 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "species": 47,
+  "body": {
+    "description": "Mowlet: a small push lawn mower creature, red deck body with a grass-stained skirt, the handle bar arching up like a tail, front wheels as paws, little blades whirring underneath, headlamp eyes, grass clippings flying. a small living machine creature (an Ohm), an old household or farm machine that woke up with a will of its own, weathered by years outdoors, no humans, no rider",
+    "style_description": "modern indie action-adventure pixel art: chunky stylized proportions, big bold readable silhouette, saturated colours, lineless with strong graphic light and shadow shapes, expressive and punchy",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 64,
+      "height": 64
+    },
+    "no_background": true,
+    "style_character_id": "cea31c61-3b70-4ec6-a617-413b60f80ece"
+  },
+  "character_id": "e4bb767f-5731-48e2-9f2c-f135bd43c236",
+  "at": "2026-10-26T07:11:59.976Z"
+}

@@ -24,11 +24,33 @@ const PLAN = {
   scraplet: [ohmIdle('idle: standing in place, breathing, tail antenna wagging gently'), { name: 'walk', mode: 'v3', action: 'trotting walk cycle in place, four legs stepping', frames: 8, fps: 11, loop: true }],
   scootlet: [ohmIdle('idle: rocking gently on its wheels, headlight eye blinking')],
   dronelet: [ohmIdle('idle: hovering in place, bobbing up and down, rotors spinning')],
+  // wild Ohms (tools/gen-ohms-style.mjs), in encounter order
+  toastlet: [ohmIdle('idle: bouncing slightly on its little feet, the hot slots pulsing')],
+  vacuette: [ohmIdle('idle: dust bag breathing in and out, hose nozzle swaying')],
+  fanlet: [ohmIdle('idle: blades turning slowly, light dome glowing softly, swaying')],
+  mailstrom: [ohmIdle('idle: mailbox door flapping open and shut, red flag twitching')],
+  wavelet: [ohmIdle('idle: humming in place, the window glow pulsing like a turntable')],
+  filaglow: [ohmIdle('idle: hopping gently, the filament flickering bright and dim')],
+  mowlet: [ohmIdle('idle: idling engine rumble, rocking on its wheels, clippings puffing')],
+  staplejaw: [ohmIdle('idle: jaw snapping open and shut slowly, crouched')],
+  beeplet: [ohmIdle('idle: red light blinking, little jitter as it chirps')],
+  tumblet: [ohmIdle('idle: rocking side to side in the wind, brush rustling')],
+  sawlet: [ohmIdle('idle: engine purring, chain bar shaking, exhaust puffs')],
+  cellet: [ohmIdle('idle: bobbing in place, small sparks crackling at the terminal')],
+  vendlet: [ohmIdle('idle: heavy breathing sway, the front lights flickering')],
+  rustbed: [ohmIdle('idle: engine idling, the body shuddering on its suspension')],
+  pumplet: [ohmIdle('idle: the beam head nodding slowly up and down')],
+  balelet: [ohmIdle('idle: pickup reel turning, puffs of straw from its chute')],
+  tillbit: [ohmIdle('idle: engine idling, exhaust stack puffing smoke, rocking')],
+  spoutlet: [ohmIdle('idle: standing firm, a small spurt of water from its nozzle')],
+  barbwyre: [ohmIdle('idle: loose wire coils swaying and curling like tentacles')],
+  bonnetbloom: [ohmIdle('idle: flower spikes swaying gently, buried cable glowing and dimming')],
 };
+const refDir = (id) => join(ROOT, 'assets/reference/styles', existsSync(join(ROOT, 'assets/reference/styles/cast', `${id}.prompt.json`)) ? 'cast' : 'ohms');
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const bal = async () => (await (await fetch(`${API}/balance`, { headers: H })).json()).subscription?.generations;
-const charId = (id) => JSON.parse(readFileSync(join(ROOT, 'assets/reference/styles/cast', `${id}.prompt.json`), 'utf8')).character_id;
+const charId = (id) => JSON.parse(readFileSync(join(refDir(id), `${id}.prompt.json`), 'utf8')).character_id;
 
 async function waitJob(id) {
   for (let i = 0; i < 400; i++) {
@@ -83,7 +105,7 @@ async function generate(ids) {
 async function stage(ids) {
   for (const id of ids) {
     const cid = charId(id);
-    const tmp = join(ROOT, `assets/reference/styles/cast/.zip_${id}`);
+    const tmp = join(refDir(id), `.zip_${id}`);
     rmSync(tmp, { recursive: true, force: true });
     mkdirSync(tmp, { recursive: true });
     writeFileSync(join(tmp, 'c.zip'), Buffer.from(await (await fetch(`${API}/characters/${cid}/zip`, { headers: H })).arrayBuffer()));
@@ -112,7 +134,7 @@ async function stage(ids) {
       console.log(`${id}/${a.name}: ${dirs.length} dirs × ${frames} frames (from ${folder})`);
     }
     if (Object.keys(anim).length) writeFileSync(join(out, 'anim.json'), JSON.stringify(anim, null, 2));
-    const rec = join(ROOT, 'assets/reference/styles/cast', `${id}.anims.json`);
+    const rec = join(refDir(id), `${id}.anims.json`);
     writeFileSync(rec, JSON.stringify({ source: 'pixellab', endpoint: 'v2/animate-character', character_id: cid, plan: PLAN[id], staged: anim, at: new Date().toISOString() }, null, 2));
     rmSync(tmp, { recursive: true, force: true });
   }

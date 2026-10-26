@@ -1,0 +1,19 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/create-character-pro",
+  "species": 19,
+  "body": {
+    "description": "Vacuette: an upright vacuum cleaner creature, bulging dust bag body, a long nozzle hose like an elephant trunk, the floor head as feet, power cord trailing like a tail, one round glowing eye, faded maroon plastic. a small living machine creature (an Ohm), an old household or farm machine that woke up with a will of its own, weathered by years outdoors, no humans, no rider",
+    "style_description": "modern indie action-adventure pixel art: chunky stylized proportions, big bold readable silhouette, saturated colours, lineless with strong graphic light and shadow shapes, expressive and punchy",
+    "method": "create_with_style",
+    "view": "low top-down",
+    "image_size": {
+      "width": 64,
+      "height": 64
+    },
+    "no_background": true,
+    "style_character_id": "cea31c61-3b70-4ec6-a617-413b60f80ece"
+  },
+  "character_id": "ed86fdc8-72a8-473e-92fa-430acbf87eec",
+  "at": "2026-10-26T07:09:29.193Z"
+}
