@@ -1,0 +1,33 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/animate-character",
+  "character_id": "a96b843c-a80d-4c4a-a18a-ec281421dadf",
+  "plan": [
+    {
+      "name": "idle",
+      "mode": "v3",
+      "action": "idle: blades turning slowly, light dome glowing softly, swaying",
+      "frames": 4,
+      "fps": 6,
+      "loop": true
+    }
+  ],
+  "staged": {
+    "idle": {
+      "frames": 5,
+      "fps": 6,
+      "loop": true,
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    }
+  },
+  "at": "2026-10-26T08:41:33.045Z"
+}

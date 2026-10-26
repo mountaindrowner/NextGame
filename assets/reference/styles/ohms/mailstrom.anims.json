@@ -1,0 +1,33 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/animate-character",
+  "character_id": "ac53b5eb-48cf-4d5e-b250-8e498b7a6a48",
+  "plan": [
+    {
+      "name": "idle",
+      "mode": "v3",
+      "action": "idle: mailbox door flapping open and shut, red flag twitching",
+      "frames": 4,
+      "fps": 6,
+      "loop": true
+    }
+  ],
+  "staged": {
+    "idle": {
+      "frames": 5,
+      "fps": 6,
+      "loop": true,
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    }
+  },
+  "at": "2026-10-26T08:41:35.314Z"
+}

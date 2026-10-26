@@ -1,0 +1,33 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/animate-character",
+  "character_id": "e4bb767f-5731-48e2-9f2c-f135bd43c236",
+  "plan": [
+    {
+      "name": "idle",
+      "mode": "v3",
+      "action": "idle: idling engine rumble, rocking on its wheels, clippings puffing",
+      "frames": 4,
+      "fps": 6,
+      "loop": true
+    }
+  ],
+  "staged": {
+    "idle": {
+      "frames": 5,
+      "fps": 6,
+      "loop": true,
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    }
+  },
+  "at": "2026-10-26T08:41:44.350Z"
+}

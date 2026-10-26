@@ -1,0 +1,33 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/animate-character",
+  "character_id": "54ab2b19-975f-41fd-83d4-e2ffb86accaa",
+  "plan": [
+    {
+      "name": "idle",
+      "mode": "v3",
+      "action": "idle: rocking side to side in the wind, brush rustling",
+      "frames": 4,
+      "fps": 6,
+      "loop": true
+    }
+  ],
+  "staged": {
+    "idle": {
+      "frames": 5,
+      "fps": 6,
+      "loop": true,
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    }
+  },
+  "at": "2026-10-26T08:41:52.566Z"
+}

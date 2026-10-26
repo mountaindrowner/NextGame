@@ -1,0 +1,20 @@
+{
+  "idle": {
+    "frames": 5,
+    "fps": 6,
+    "loop": true,
+    "dirs": [
+      "east",
+      "north",
+      "north-east",
+      "north-west",
+      "south",
+      "south-east",
+      "south-west",
+      "west"
+    ],
+    "sheet": true,
+    "w": 64,
+    "h": 64
+  }
+}

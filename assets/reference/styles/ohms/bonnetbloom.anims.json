@@ -1,0 +1,33 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/animate-character",
+  "character_id": "19ab9c0f-7267-41ab-be81-21bfd3494569",
+  "plan": [
+    {
+      "name": "idle",
+      "mode": "v3",
+      "action": "idle: flower spikes swaying gently, buried cable glowing and dimming",
+      "frames": 4,
+      "fps": 6,
+      "loop": true
+    }
+  ],
+  "staged": {
+    "idle": {
+      "frames": 5,
+      "fps": 6,
+      "loop": true,
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    }
+  },
+  "at": "2026-10-26T08:42:20.521Z"
+}

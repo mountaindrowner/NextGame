@@ -1,0 +1,33 @@
+{
+  "source": "pixellab",
+  "endpoint": "v2/animate-character",
+  "character_id": "aaf6ed81-10ee-47e0-81fa-89f2e6d91cb8",
+  "plan": [
+    {
+      "name": "idle",
+      "mode": "v3",
+      "action": "idle: pickup reel turning, puffs of straw from its chute",
+      "frames": 4,
+      "fps": 6,
+      "loop": true
+    }
+  ],
+  "staged": {
+    "idle": {
+      "frames": 5,
+      "fps": 6,
+      "loop": true,
+      "dirs": [
+        "east",
+        "north",
+        "north-east",
+        "north-west",
+        "south",
+        "south-east",
+        "south-west",
+        "west"
+      ]
+    }
+  },
+  "at": "2026-10-26T08:42:12.872Z"
+}

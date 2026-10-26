@@ -15,7 +15,7 @@ the critical path (Field → Farm Road → Pickett Place): Toastlet, Vacuette,
 Fanlet, Mailstrom, Wavelet, Filaglow, Mowlet, Staplejaw, Beeplet, Tumblet,
 Sawlet, Cellet, Vendlet, Rustbed, Pumplet, Balelet, Tillbit, Spoutlet,
 Barbwyre, Bonnetbloom. 8 directions each (`tools/gen-ohms-style.mjs`, ~10
-generations per Ohm), idles via `tools/animate-cast.mjs` (~7 each), contact
+generations per Ohm), idles via `tools/animate-cast.mjs` (~7 each; all 20 done, packed, facings checked against the stills), contact
 sheet `assets/reference/styles/ohms/_contact.png` (`node tools/ohm-contact.cjs`).
 Registered in `public/world/styles/index.json`; wild roamers and BOTH battle
 sides now use any styled Ohm (three-quarter facing so faces read). Next in
