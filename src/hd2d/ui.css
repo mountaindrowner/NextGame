@@ -449,3 +449,39 @@ html, body {
 }
 .ui.battling .name-tag { display: none; }
 .bt-chip.sq-off { opacity: 0.4; }
+
+/* ---------------------------------------- battle on phones (landscape) */
+/* Touch or short screens: slim plates in the top corners, the stick bottom-left,
+   the move pad bottom-right (moves on top, special/swap/capture below). */
+@media (pointer: coarse), (max-height: 520px) {
+  .bt-help { display: none; }
+  .sq-side { top: max(6px, env(safe-area-inset-top)); gap: 3px; }
+  .sq-side .sq-plate { min-width: 0; width: 150px; padding: 2px 7px 3px; font-size: 10px; line-height: 1.2; }
+  .sq-plate b { font-size: 12px; }
+  .sq-plate i { font-size: 9px; margin-left: 3px; }
+  .sq-plate span { position: absolute; top: 3px; right: 7px; font-size: 9px; margin: 0; }
+  .sq-theirs .sq-plate span { right: auto; left: 7px; }
+  .sq-plate em { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); font-size: 8px; }
+  .sq-plate .bt-bar { height: 4px; margin-top: 1px; }
+  .sq-sp { height: 2px; margin-top: 1px; }
+  .sq-mine { left: max(8px, env(safe-area-inset-left)); }
+  .sq-theirs { right: max(8px, env(safe-area-inset-right)); }
+  .bt-chips {
+    left: auto; right: max(8px, env(safe-area-inset-right)); bottom: max(8px, env(safe-area-inset-bottom));
+    transform: none; display: grid; grid-template-columns: repeat(4, 84px); gap: 5px;
+  }
+  .bt-chip, .bt-chip.sq-special, .bt-chip.sq-swap { width: auto; height: 40px; padding: 4px 6px 4px 8px; }
+  .bt-chip b { font-size: 12px; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bt-chip small { display: none; }
+  .bt-chip kbd { display: none; }
+  .bt-chip.sq-shared b::before, .bt-chip.sq-own b::before, .bt-chip.sq-taught b::before { content: '●'; font-size: 8px; margin-right: 3px; vertical-align: 2px; }
+  .bt-chip.sq-shared b::before { color: #9fb0bd; }
+  .bt-chip.sq-own b::before { color: #f2c45a; }
+  .bt-chip.sq-taught b::before { color: #7cc8ff; }
+  .bt-chip.sq-special { grid-column: span 2; }
+  .bt-banner { top: 22%; font-size: 16px; padding: 4px 14px; }
+  .bt-banner.end { font-size: 22px; }
+  .bt-float { font-size: 16px; }
+  .ui.battling .stick { z-index: 31; left: max(14px, env(safe-area-inset-left)); bottom: 12px; width: 104px; height: 104px; }
+  .ui.battling .btn-a { display: none; }
+}

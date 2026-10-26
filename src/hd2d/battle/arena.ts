@@ -149,7 +149,7 @@ export class BattleArena {
 
   private placeCamera(sx = 0, sy = 0): void {
     this.camera.position.set(sx, 8.4 + sy, 11.4);
-    this.camera.lookAt(0, 0.2, 0.35);
+    this.camera.lookAt(0, 0.2, this.compact ? 0.9 : 0.35);
   }
 
   /** Build the stage and run the fight; resolves when it ends. */
@@ -227,7 +227,11 @@ export class BattleArena {
   resize(w: number, h: number): void {
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
+    // short landscape screens (phones): lift the field clear of the move pad
+    this.compact = h < 520;
+    this.placeCamera();
   }
+  private compact = false;
 
   // ------------------------------------------------------------- stage
 
