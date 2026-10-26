@@ -4,6 +4,8 @@ Read this first, every session. Then read HANDOVER.md. **Before designing
 anything** (a region, map, name, character or system), read
 `docs/design/design-philosophy.md`: how we design, in Mark's words "exactly
 what I'm looking for".
+**How the world is built** (look, maps, density, sprites, every method and
+number): `docs/design/how-we-build-the-world.md`.
 **Scope yardstick:** `docs/design/scope-benchmarks.md` compares OHMFRONT with
 ten JRPGs (maps, side quests, NPCs, items, trainers…) and tracks where we
 stand; re-measure with `node tools/hd2d-test/scope.mjs` after every region. Source of record:
