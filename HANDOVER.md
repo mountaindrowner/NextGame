@@ -8,7 +8,11 @@ rules + controls in `docs/hd2d-direction.md` → "Squad grid combat". Code:
 `src/hd2d/battle/rules.ts` (10×5 field, ability origins, mod chips,
 specials), `arena.ts` (squad arena, ally/foe AI, panel states, HUD),
 `main.ts` (party + packs, `?party=&plv=&foes=`). Tests: `tests/gridrules.test.ts`.
-Waiting on Mark's reaction to the feel before tuning numbers.
+**Now turn-based** (Mark, 2026-10-26: "turn-based… based on speed stat"):
+rounds by CLOCK, 2 steps + 1 action per turn, foes wind up in red and strike
+on their next turn, cooldowns/specials/ground/statuses in turns — see
+`docs/hd2d-direction.md` → "Turn-based". The real-time arena is in git history
+(commit 3b7b411) if Mark wants to compare. Waiting on his feel before tuning.
 
 **20 more Ohms in SAL's style (PixelLab, 2026-10-26)**, the next ones met on
 the critical path (Field → Farm Road → Pickett Place): Toastlet, Vacuette,

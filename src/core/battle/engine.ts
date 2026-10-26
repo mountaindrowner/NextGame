@@ -6,7 +6,7 @@ import { rollSalvage } from '../shop';
 import { gen3Damage } from './damage';
 import type { BattleAction, BattleEvent, BattlePhase, BattleSetup, Battler, DataView, Side } from './contract';
 
-const STATUS_IMMUNITY: Partial<Record<PassiveId, StatusName>> = {
+export const STATUS_IMMUNITY: Partial<Record<PassiveId, StatusName>> = {
   'heat-sink': 'OVERHEAT',
   grounded: 'SHORT',
   insulated: 'LOCKED',
@@ -15,7 +15,7 @@ const STATUS_IMMUNITY: Partial<Record<PassiveId, StatusName>> = {
   firewall: 'CORRUPTED',
 };
 
-const STAGE_GUARD: Partial<Record<PassiveId, BattleStatKey>> = {
+export const STAGE_GUARD: Partial<Record<PassiveId, BattleStatKey>> = {
   backlit: 'accuracy',
   momentum: 'clock',
   'heavy-duty': 'output',

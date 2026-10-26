@@ -151,6 +151,35 @@ to fight enemy ohms." Everything below except those four facts is proposal.
 - **Not yet:** buying mod chips, the 5th move slot, items in battle, XP,
   trainers, foe-side starters' styled sprites.
 
+### Turn-based (2026-10-26) · [PROPOSAL] — replaces the real-time flow above
+
+Mark: "I was envisioning the combat being turn-based… based on speed stat for
+now." The field, patterns, abilities and specials above stay; the clock goes.
+
+- **Rounds by CLOCK:** every round each Ohm takes one turn, highest effective
+  CLOCK first (stages apply, SHORT quarters it, ties go to your side). The
+  order shows at the top; the one acting is lit.
+- **Your turn:** step up to **2 panels** (click/tap a lit panel, or WASD /
+  the stick), then **one action**: a move, the special, Capture, or Wait.
+  Pick a move once to preview where it lands; pick it again (or tap a lit
+  panel) to use it. Tab or tapping a foe changes your aim for Lob/Burst moves
+  and specials. You control all your Ohms; there's no swapping.
+- **Foes wind up in plain sight:** a foe moves, then winds up its move (red
+  panels, "WINDING UP"); it lands at the **start of its next turn**. Every Ohm
+  of yours that acts in between can step out, put up a Bulwark, push it
+  (Ram/Gust cancel the wind-up) or stun it (Shockwave, Live Wire).
+- **Recharge in turns:** light moves (power < 45) every turn, heavier ones
+  rest 1–2 turns, status moves rest 1; specials charge over 3–4 of the Ohm's
+  own turns (half-charged at the start).
+- **Ground, per turn:** scorched burns 1/8 at the start of a turn; grown heals
+  1/8; ice and live panels stop your steps (start on one: 1 step); cracked
+  panels break when you step off. Changed ground lasts 2–3 rounds, barriers 2.
+- **Statuses are the core's Gen 3 rules,** now that there are turns: STANDBY
+  sleeps 1–4 turns, LOCKED thaws 1 in 5, GLITCHED may thrash itself, SHORT
+  loses 1 turn in 4, OVERHEAT/CORRUPTED chip 1/8 after each turn; passives give
+  the same immunities.
+- **Test it:** `?battle=10&lv=8&foes=3&party=7,1,4&plv=9`.
+
 ## Regions of separate maps (2026-10-25) — supersedes the continuous overworld
 
 Mark: the surface felt like a straight line of walled boxes. The new

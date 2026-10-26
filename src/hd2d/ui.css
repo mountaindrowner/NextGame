@@ -299,7 +299,7 @@ html, body {
 .bt-chip .bt-cd { position: absolute; left: 0; bottom: 0; width: 100%; height: 0; background: rgba(0, 0, 0, 0.55); pointer-events: none; }
 .bt-chip.ready { box-shadow: inset 0 0 0 1px var(--tc); }
 .bt-help {
-  position: absolute; left: max(16px, env(safe-area-inset-left)); bottom: 96px;
+  position: absolute; left: max(16px, env(safe-area-inset-left)); bottom: 112px;
   font-size: 12px; color: var(--ink-dim); letter-spacing: 0.04em; pointer-events: none;
 }
 .bt-help kbd { font: inherit; padding: 0 4px; border: 1px solid var(--gold-dim); border-radius: 3px; color: var(--ink); margin: 0 1px; }
@@ -449,19 +449,38 @@ html, body {
 }
 .ui.battling .name-tag { display: none; }
 .bt-chip.sq-off { opacity: 0.4; }
+/* turn-based: the order bar, the picked move, recharge counts, the pad resting while foes act */
+.sq-order {
+  position: absolute; left: 50%; top: max(12px, env(safe-area-inset-top)); transform: translateX(-50%);
+  display: flex; align-items: center; gap: 5px; pointer-events: none; white-space: nowrap;
+}
+.sq-order small { color: var(--ink-dim); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; margin-right: 4px; }
+.sq-turn { padding: 2px 8px; font-size: 12px; background: var(--panel); border-bottom: 2px solid #7cc8ff; color: var(--ink); opacity: 0.85; }
+.sq-turn.theirs { border-bottom-color: #ff8f6b; }
+.sq-turn.now { opacity: 1; color: #17140e; background: #f2c45a; }
+.sq-turn.done { opacity: 0.35; }
+.bt-chip .sq-cd { position: absolute; right: 8px; bottom: 6px; font: 700 15px 'Alegreya Sans', sans-serif; color: #ffb35c; }
+.bt-chip.sq-picked { box-shadow: inset 0 0 0 2px var(--tc), 0 0 14px -2px var(--tc); background: #2a2418; }
+.bt-chips.sq-wait { opacity: 0.4; pointer-events: none; }
+.sq-plate.sq-aimed { box-shadow: inset -3px 0 0 #ff6a5a, 0 0 0 1px rgba(255, 106, 90, 0.55); }
+.sq-theirs .sq-plate { pointer-events: auto; cursor: pointer; }
 
 /* ---------------------------------------- battle on phones (landscape) */
 /* Touch or short screens: slim plates in the top corners, the stick bottom-left,
    the move pad bottom-right (moves on top, special/swap/capture below). */
 @media (pointer: coarse), (max-height: 520px) {
   .bt-help { display: none; }
+  .sq-order { top: max(4px, env(safe-area-inset-top)); gap: 3px; }
+  .sq-order small { display: none; }
+  .sq-turn { font-size: 10px; padding: 1px 5px; }
+  .bt-chip .sq-cd { font-size: 12px; right: 5px; bottom: 3px; }
   .sq-side { top: max(6px, env(safe-area-inset-top)); gap: 3px; }
   .sq-side .sq-plate { min-width: 0; width: 150px; padding: 2px 7px 3px; font-size: 10px; line-height: 1.2; }
   .sq-plate b { font-size: 12px; }
   .sq-plate i { font-size: 9px; margin-left: 3px; }
   .sq-plate span { position: absolute; top: 3px; right: 7px; font-size: 9px; margin: 0; }
   .sq-theirs .sq-plate span { right: auto; left: 7px; }
-  .sq-plate em { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); font-size: 8px; }
+  .sq-plate em { position: static; display: block; font-size: 8px; line-height: 1.1; }
   .sq-plate .bt-bar { height: 4px; margin-top: 1px; }
   .sq-sp { height: 2px; margin-top: 1px; }
   .sq-mine { left: max(8px, env(safe-area-inset-left)); }

@@ -1,6 +1,7 @@
 import type { Battler, DataView } from '../../core/battle/contract';
 import { gen3Damage } from '../../core/battle/damage';
-import { SPECIAL_TYPES, type MoveDef, type TypeName } from '../../core/defs';
+import { STATUS_IMMUNITY } from '../../core/battle/engine';
+import { MAJOR_STATUSES, SPECIAL_TYPES, type MoveDef, type StatusName, type TypeName } from '../../core/defs';
 import { stageMultiplier } from '../../core/stats';
 import type { Rng } from '../../core/rng';
 
@@ -59,9 +60,83 @@ export function patternOf(m: MoveDef): Pattern {
   return BY_MOVE[m.id] ?? BY_TYPE[m.type];
 }
 
-/** Seconds before a move can fire again: heavier moves recharge longer. */
+/** Seconds before a move can fire again: heavier moves recharge longer (real-time mode). */
 export function cooldownOf(m: MoveDef): number {
   return m.power === 0 ? 2.6 : 0.6 + m.power / 55;
+}
+
+// ------------------------------------------------------------- turns [PROPOSAL]
+// Mark, 2026-10-26: "I was envisioning the combat being turn-based… based on
+// speed stat for now." Every round each Ohm acts once, fastest CLOCK first.
+
+/** Panels an Ohm may step on its turn before acting (1 on ice). */
+export const STEPS = 2;
+
+/** Effective CLOCK, as the Gen 3 core reads it: stages apply, SHORT quarters it. */
+export function clockOf(b: Battler): number {
+  let v = Math.floor(b.stats.clock * stageMultiplier(b.stages.clock));
+  if (b.status === 'SHORT') v = Math.floor(v / 4);
+  return Math.max(1, v);
+}
+
+/** This round's order: highest CLOCK first; ties go to your side, then to whoever was placed first. */
+export function turnOrder<T extends { id: number; side: Side; b: Battler }>(fs: readonly T[]): T[] {
+  return fs.slice().sort((a, b) => clockOf(b.b) - clockOf(a.b) || (a.side === b.side ? 0 : a.side === 'player' ? -1 : 1) || a.id - b.id);
+}
+
+/** Turns a move waits after use: weak moves every turn, heavy ones rest. */
+export function cooldownTurns(m: MoveDef): number {
+  return m.power === 0 ? 1 : Math.floor(m.power / 45);
+}
+
+/** Own turns a special takes to charge. */
+export function specialTurns(s: SpecialDef): number {
+  return Math.max(2, Math.round(s.cooldown / 3));
+}
+
+/** Can it act this turn? The core's Gen 3 rules: STANDBY sleeps, LOCKED thaws 1 in 5, GLITCHED may thrash itself, SHORT fails 1 in 4. */
+export function statusGate(b: Battler, rng: Rng): { acts: boolean; text?: string; selfHit?: number } {
+  if (b.status === 'STANDBY') {
+    b.statusTurns -= 1;
+    if (b.statusTurns <= 0) { b.status = undefined; return { acts: true, text: `${b.name} powers back on!` }; }
+    return { acts: false, text: `${b.name} is on STANDBY…` };
+  }
+  if (b.status === 'LOCKED') {
+    if (rng.chance(20)) { b.status = undefined; return { acts: true, text: `${b.name} grinds back into motion!` }; }
+    return { acts: false, text: `${b.name} is LOCKED solid!` };
+  }
+  if (b.glitchedTurns > 0) {
+    b.glitchedTurns -= 1;
+    if (b.glitchedTurns === 0) return { acts: true, text: `${b.name} cleared its own static!` };
+    if (rng.chance(50)) {
+      const atk = Math.max(1, Math.floor(b.stats.output * stageMultiplier(b.stages.output)));
+      const def = Math.max(1, Math.floor(b.stats.armor * stageMultiplier(b.stages.armor)));
+      let d = Math.floor((Math.floor((2 * b.level) / 5 + 2) * 40 * atk) / def);
+      d = Math.max(1, Math.floor(d / 50) + 2);
+      return { acts: false, text: `${b.name} is GLITCHED! It thrashed its own chassis!`, selfHit: d };
+    }
+  }
+  if (b.status === 'SHORT' && rng.chance(25)) return { acts: false, text: `${b.name} SHORTed out and can't move!` };
+  return { acts: true };
+}
+
+/** End of its turn: OVERHEAT and CORRUPTED cost 1/8. */
+export function statusChip(b: Battler): number {
+  return b.status === 'OVERHEAT' || b.status === 'CORRUPTED' ? Math.max(1, Math.floor(b.stats.integrity / 8)) : 0;
+}
+
+/** Inflict a status the way the core does: passives can be immune, one major fault at a time, GLITCHED is volatile. */
+export function inflict(b: Battler, status: StatusName, data: DataView, rng: Rng): boolean {
+  if (STATUS_IMMUNITY[data.species(b.speciesNum).passive] === status) return false;
+  if (status === 'GLITCHED') {
+    if (b.glitchedTurns > 0) return false;
+    b.glitchedTurns = rng.int(2, 5);
+    return true;
+  }
+  if (b.status && MAJOR_STATUSES.includes(status)) return false;
+  b.status = status;
+  if (status === 'STANDBY') b.statusTurns = rng.int(1, 4);
+  return true;
 }
 
 /**

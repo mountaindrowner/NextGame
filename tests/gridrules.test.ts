@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { coverage, cooldownOf, patternOf, hitDamage, canStand, moveOrigin, teach, specialOf, MOD_CHIPS, COLS, ROWS, HALF, type Cell } from '../src/hd2d/battle/rules';
+import { coverage, cooldownOf, patternOf, hitDamage, canStand, moveOrigin, teach, specialOf, MOD_CHIPS, COLS, ROWS, HALF, clockOf, turnOrder, cooldownTurns, specialTurns, statusGate, statusChip, inflict, type Cell } from '../src/hd2d/battle/rules';
 import { GAME_DATA } from '../src/data/dataview';
 import { SPECIES } from '../src/data/species';
 import { makeBattler } from '../src/core/battle/engine';
@@ -83,5 +83,47 @@ describe('three kinds of ability [PROPOSAL]', () => {
     expect(specialOf(1, 'MOTOR').kind).toBe('ram');
     expect(specialOf(4, 'SIGNAL').kind).toBe('lockon');
     for (const s of SPECIES) expect(specialOf(s.num, s.type).cooldown).toBeGreaterThan(0);
+  });
+});
+
+describe('turns by CLOCK [PROPOSAL]', () => {
+  const mk = (num: number, lv: number) => makeBattler(GAME_DATA.species(num), lv, GAME_DATA);
+
+  it('orders a round fastest first, your side winning ties', () => {
+    const a = { id: 0, side: 'player' as const, b: mk(7, 10) };
+    const b = { id: 1, side: 'foe' as const, b: mk(7, 10) };
+    const c = { id: 2, side: 'foe' as const, b: mk(7, 10) };
+    c.b.stats.clock += 50;
+    expect(turnOrder([b, a, c]).map((x) => x.id)).toEqual([2, 0, 1]);
+  });
+
+  it('SHORT quarters CLOCK and stages scale it, as in the core', () => {
+    const b = mk(1, 20);
+    const base = clockOf(b);
+    b.stages.clock = 2;
+    expect(clockOf(b)).toBe(Math.floor(b.stats.clock * 2));
+    b.stages.clock = 0;
+    b.status = 'SHORT';
+    expect(clockOf(b)).toBe(Math.max(1, Math.floor(base / 4)));
+  });
+
+  it('light moves every turn, heavy ones rest; specials charge over turns', () => {
+    expect(cooldownTurns(GAME_DATA.move('chassis-bash'))).toBe(0);
+    expect(cooldownTurns(GAME_DATA.move('anchor-drop'))).toBeGreaterThanOrEqual(1);
+    expect(cooldownTurns(GAME_DATA.move('brace'))).toBe(1);
+    expect(specialTurns(specialOf(7, 'FRAME'))).toBeGreaterThanOrEqual(2);
+  });
+
+  it('statuses follow the core: STANDBY sleeps, OVERHEAT chips 1/8, passives can be immune', () => {
+    const b = mk(10, 10);
+    const rng = new Rng(4);
+    expect(inflict(b, 'STANDBY', GAME_DATA, rng)).toBe(true);
+    const turns = b.statusTurns;
+    let slept = 0;
+    for (let i = 0; i < 6 && b.status === 'STANDBY'; i++) if (!statusGate(b, rng).acts) slept++;
+    expect(slept).toBe(turns - 1);
+    b.status = 'OVERHEAT';
+    expect(statusChip(b)).toBe(Math.max(1, Math.floor(b.stats.integrity / 8)));
+    expect(inflict(b, 'SHORT', GAME_DATA, rng)).toBe(false); // one major fault at a time
   });
 });
