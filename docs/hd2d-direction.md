@@ -110,6 +110,47 @@ and `src/hd2d/battle/arena.ts` (HD-2D stage + UI).
 - **Not yet:** switching (captured Ohms can't be sent in yet), items, XP,
   trainer battles, multiple foes, Ohm battle animations.
 
+## Squad grid combat (2026-10-26) · [PROPOSAL] rules — supersedes the 6×3 POC field
+
+Mark: "make combat a 5x5 on each side battle area, the ohms have shared
+abilities and teachable abilities but also special abilities in combat that
+influences the combat. The player can play from 1-3 ohms in a single combat
+to fight enemy ohms." Everything below except those four facts is proposal.
+
+- **Field:** 10×5 panels, your 5×5 on the left, theirs on the right
+  (`COLS/ROWS/HALF` in `rules.ts`). Patterns from the POC carry over, scaled:
+  Shot/Dash run the whole row, Close needs your front column, Wave hits three
+  rows of their front column, Surge their whole row, Lob/Burst land on the
+  aimed panel (or five ahead).
+- **Squads:** 1–3 Ohms a side (the healthy party members; a wild pack can be
+  2–3). You steer one (gold ring) and **swap** with Tab or 1/2/3; the others
+  fight on their own (they dodge red panels, line up and fire, use specials).
+  Downed Ohms lie flat and are skipped. Win when every foe is down; lose when
+  your whole squad is.
+- **Three kinds of ability** (each move chip says which):
+  - *Shared* (grey dot): moves four or more lines learn (Bump, Brace…).
+  - *Own* (gold dot): the line's signature moves (POUNCE, HOBBLE…).
+  - *Mod chip* (blue dot): taught moves outside the learnset. Chips:
+    Patch-Up plus each type's opener (`MOD_CHIPS`, `teach()`); a taught move
+    takes the last slot.
+- **Specials (Space):** every Ohm has one, on a long recharge, and each one
+  changes the field: Scorch (3 panels of their column burn), Frost Line (their
+  row ices, slow steps), Live Wire (charged panels short whoever stands
+  there), Bulwark (a barrier that blocks lanes), Fault Line (cracked panels
+  give way after you step off), Ram (charge + knockback), Gust (their row
+  blown back), Lock-On (every hit on the mark crits), Flare (their column's
+  attacks go wide), Shockwave (stuns their column, cancels wind-ups),
+  Overgrowth (your panels heal allies). By type; the starters get their own:
+  **Kickstart** (Scooter, ram), **Spotter** (Drone, lock-on), **Guard Dog**
+  (Dog, barrier + taunt draws fire).
+- **Capture** only works once a single wild Ohm is left standing (the chip
+  dims until then). Defeat recharges the whole party (no whiteout yet).
+- **Test it:** `?battle=13&lv=10&foes=3&party=7,1,4&plv=9` (`foes` 1–3;
+  `party` species list, each starter gets one mod chip so all three ability
+  kinds show; `plv` their level).
+- **Not yet:** buying mod chips, the 5th move slot, items in battle, XP,
+  trainers, foe-side starters' styled sprites.
+
 ## Regions of separate maps (2026-10-25) — supersedes the continuous overworld
 
 Mark: the surface felt like a straight line of walled boxes. The new

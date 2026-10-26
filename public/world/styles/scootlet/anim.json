@@ -15,6 +15,9 @@
     ],
     "sheet": true,
     "w": 72,
-    "h": 72
+    "h": 72,
+    "mirror": {
+      "east": "west"
+    }
   }
 }

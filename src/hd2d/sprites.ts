@@ -225,7 +225,8 @@ const DIRS8 = ['south', 'south-east', 'east', 'north-east', 'north', 'north-west
 export type Dir8 = (typeof DIRS8)[number];
 
 /** One animation as listed in a style's anim.json (sheet: rows = dirs, cols = frames). */
-interface AnimInfo { frames: number; fps: number; loop?: boolean; dirs?: string[]; sheet?: boolean; w?: number; h?: number }
+/** `mirror` replaces a direction's frames with another's flipped, for rows that came out facing the wrong way: { "east": "west" }. */
+interface AnimInfo { frames: number; fps: number; loop?: boolean; dirs?: string[]; sheet?: boolean; w?: number; h?: number; mirror?: Record<string, string> }
 type Frame = { mat: THREE.MeshBasicMaterial; geo: THREE.PlaneGeometry };
 
 /** A hero drawn from 8 directional stills (PixelLab rotations) plus any
@@ -308,6 +309,15 @@ export class RotHero {
             const geo = geoFor(fi.width, fi.height);
             frames[dn] = fr.map((t) => ({ mat: mat(t), geo }));
           }));
+        }
+        for (const [to, from] of Object.entries(info.mirror ?? {})) {
+          const src = frames[from as Dir8];
+          if (!src) continue;
+          frames[to as Dir8] = src.map((f) => {
+            const geo = f.geo.clone();
+            geo.scale(-1, 1, 1); // materials are double-sided, so the flip shows
+            return { mat: f.mat, geo };
+          });
         }
         anims[name] = { info, frames };
       } catch {

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { COLS, ROWS, HALF } from './rules';
 import type { Mood } from '../mood';
 import { cottonwood, bush } from '../field/props';
 import { colMat, box } from '../geo';
@@ -131,13 +132,13 @@ const field: ArenaTheme = {
     }
     // wild grass growing up between the plots, and a line of field stones down the middle
     const gaps: Array<[number, number]> = [];
-    for (let c = 0; c < 5; c++) if (c !== 2) for (let r = 0; r < 3; r++) gaps.push([at(c, r).x + pw / 2, at(c, r).z]); // between columns
-    for (let r = 0; r < 2; r++) for (let c = 0; c < 6; c++) gaps.push([at(c, r).x, at(c, r).z + pd / 2]); // between rows
+    for (let c = 0; c < COLS - 1; c++) if (c !== HALF - 1) for (let r = 0; r < ROWS; r++) gaps.push([at(c, r).x + pw / 2, at(c, r).z]); // between columns
+    for (let r = 0; r < ROWS - 1; r++) for (let c = 0; c < COLS; c++) gaps.push([at(c, r).x, at(c, r).z + pd / 2]); // between rows
     tufts(scene, gaps, mood.night ? '#2e4a24' : '#6a9a3a', 33);
     const stone = colMat('#8a8478', { roughness: 1 });
-    for (let k = 0; k < 7; k++) {
+    for (let k = 0; k < ROWS * 2 + 1; k++) {
       const s = new THREE.Mesh(new THREE.DodecahedronGeometry(0.12 + (k % 3) * 0.03, 0), stone);
-      s.position.set(0, 0.05, at(0, 0).z - pd * 0.7 + k * (pd * 3.4) / 7);
+      s.position.set(0, 0.05, at(0, 0).z - pd * 0.7 + k * (pd * (ROWS + 0.4)) / (ROWS * 2 + 1));
       s.scale.y = 0.55;
       s.castShadow = true;
       scene.add(s);
@@ -170,7 +171,7 @@ const road: ArenaTheme = {
   ground: (mood) => groundDisc(mood.night ? ['#2a3224', '#131812'] : ['#6a7a3c', '#3c4a22'], ['#8a8a4a', '#5e7a32', '#a09a68'], mood.night),
   dress(scene, mood, at, pw, pd) {
     // the faded centre line where the sides meet
-    for (let k = 0; k < 3; k++) {
+    for (let k = 0; k < ROWS; k++) {
       const dash = box(0.08, 0.008, pd * 0.5, colMat('#c9a84a', { roughness: 1 }), 0, 0.065, at(0, k).z);
       scene.add(dash);
     }
@@ -202,7 +203,7 @@ const road: ArenaTheme = {
     }
     // weeds at the slab joints
     const gaps: Array<[number, number]> = [];
-    for (let c = 0; c < 6; c++) gaps.push([at(c, 0).x, at(0, 0).z - pd / 2], [at(c, 2).x + pw / 2, at(0, 2).z + pd / 2]);
+    for (let c = 0; c < COLS; c++) gaps.push([at(c, 0).x, at(0, 0).z - pd / 2], [at(c, ROWS - 1).x + pw / 2, at(0, ROWS - 1).z + pd / 2]);
     tufts(scene, gaps, mood.night ? '#2e4a24' : '#7aa83c', 41);
   },
   standGlow: '#ffd08a',

@@ -3,6 +3,7 @@ import { createPost } from './post';
 import { applyMood, moodPost, DAY, type Lights } from './mood';
 import { BattleArena } from './battle/arena';
 import { themeFor, type ThemeId } from './battle/themes';
+import { teach } from './battle/rules';
 import { GAME_DATA } from '../data/dataview';
 import { ZONES_BY_ID } from '../data/encounters';
 import { makeBattler } from '../core/battle/engine';
@@ -111,9 +112,19 @@ let stepAcc = 0;
 // The party (canon: 3); further catches go to storage. Storage nodes are spent per capture attempt.
 const party: Battler[] = [lead];
 const storage: Battler[] = [];
+// Test seeding: ?party=7,1,4&plv=8 fills the squad (each starter gets one mod chip so all three ability kinds show).
+if (q.has('party')) {
+  const plv = Number(q.get('plv') ?? 8);
+  const nums = (q.get('party') ?? '').split(',').map(Number).filter((n) => n > 0).slice(0, 3);
+  party.length = 0;
+  for (const n of nums) party.push(n === 7 ? Object.assign(lead, makeBattler(GAME_DATA.species(7), plv, GAME_DATA)) : makeBattler(GAME_DATA.species(n), plv, GAME_DATA));
+  const CHIP: Record<number, string> = { 7: 'patch-up', 1: 'static-jab', 4: 'glint' };
+  for (const b of party) if (CHIP[b.speciesNum]) teach(b, CHIP[b.speciesNum]!, GAME_DATA);
+  if (!party.length) party.push(lead);
+}
 let nodes = Number(q.get('nodes') ?? 5);
 
-async function battle(foeNum: number, foeLevel: number): Promise<'victory' | 'defeat' | 'fled' | 'captured' | 'foeFled' | 'skipped'> {
+async function battle(foeNum: number, foeLevel: number, foeCount?: number): Promise<'victory' | 'defeat' | 'fled' | 'captured' | 'foeFled' | 'skipped'> {
   if (arena || loading) return 'skipped';
   loading = true;
   keys.clear();
@@ -123,7 +134,12 @@ async function battle(foeNum: number, foeLevel: number): Promise<'victory' | 'de
   ui.root.classList.add('battling');
   arena = a;
   a.resize(window.innerWidth, window.innerHeight);
-  const run = a.start({ mood: area!.mood, renderer, post, me: lead, foeNum, foeLevel, heroId: heroId === 'old' ? undefined : heroId, nodes: () => nodes, spendNode: () => { nodes -= 1; }, theme: (q.get('arena') as ThemeId | null) ?? themeFor(area!.region ?? area!.id) });
+  const fighters = party.filter((b) => b.integrity > 0);
+  if (!fighters.length) fighters.push(lead);
+  // wild Ohms come alone or, against a squad, sometimes in a pair [PROPOSAL]
+  const count = foeCount ?? Math.min(3, Number(q.get('foes') ?? 0) || (fighters.length > 1 && encRng.int(1, 100) <= 35 ? 2 : 1));
+  const foes = Array.from({ length: count }, () => ({ num: foeNum, level: foeLevel }));
+  const run = a.start({ mood: area!.mood, renderer, post, party: fighters, foes, wild: true, heroId: heroId === 'old' ? undefined : heroId, nodes: () => nodes, spendNode: () => { nodes -= 1; }, theme: (q.get('arena') as ThemeId | null) ?? themeFor(area!.region ?? area!.id) });
   await new Promise((r) => setTimeout(r, 60));
   post.setScene(a.scene, a.camera);
   post.tiltH.uniforms.focus!.value = post.tiltV.uniforms.focus!.value = 0.42;
@@ -135,10 +151,10 @@ async function battle(foeNum: number, foeLevel: number): Promise<'victory' | 'de
   arena = null;
   post.setScene(scene, camera);
   moodPost(renderer, post, area!.mood);
-  if (result.outcome === 'defeat') lead.integrity = lead.stats.integrity; // limps home recharged — the proof has no whiteout yet
+  if (result.outcome === 'defeat') for (const b of party) { b.integrity = b.stats.integrity; b.status = undefined; } // limps home recharged — the proof has no whiteout yet
   loading = false;
   await ui.fade(false, 420);
-  if (result.outcome === 'defeat') speak({ lines: [`${lead.name} needs a recharge. You pull back to catch your breath.`] });
+  if (result.outcome === 'defeat') speak({ lines: [party.length > 1 ? 'Your squad needs a recharge. You pull back to catch your breath.' : `${lead.name} needs a recharge. You pull back to catch your breath.`] });
   if (result.outcome === 'captured' && result.foe) {
     const f = result.foe;
     f.rage = 0;

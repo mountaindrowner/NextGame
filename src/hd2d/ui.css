@@ -309,7 +309,32 @@ html, body {
   animation: bt-up 0.9s ease-out forwards; pointer-events: none;
 }
 @keyframes bt-up { to { transform: translate(-50%, -160%); opacity: 0; } }
-@media (max-width: 760px) { .bt-chip { width: 96px; } .bt-chip small, .bt-help { display: none; } }
+/* squad plates: a column per side, the Ohm you steer ringed in gold */
+.sq-side {
+  position: absolute; top: max(14px, env(safe-area-inset-top));
+  display: flex; flex-direction: column; gap: 6px; pointer-events: none;
+}
+.sq-mine { left: max(16px, env(safe-area-inset-left)); }
+.sq-theirs { right: max(16px, env(safe-area-inset-right)); text-align: right; }
+.sq-side .sq-plate { position: relative; top: auto; min-width: 210px; padding: 5px 12px 7px; transition: opacity 0.3s, box-shadow 0.2s; }
+.sq-plate b { font-size: 17px; }
+.sq-plate em { display: block; font-style: normal; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #ffb35c; min-height: 0; }
+.sq-plate em:empty { display: none; }
+.sq-theirs .bt-bar div { margin-left: auto; }
+.sq-sp { height: 3px; margin-top: 4px; background: #0b0c0e; }
+.sq-sp div { height: 100%; width: 0; background: #7cc8ff; transition: width 0.2s; }
+.sq-theirs .sq-sp div { margin-left: auto; background: #ff8f6b; }
+.sq-plate.sq-ctrl { box-shadow: inset 3px 0 0 #f2c45a, 0 0 0 1px rgba(242, 196, 90, 0.55); }
+.sq-plate.sq-down { opacity: 0.38; filter: grayscale(1); }
+/* where an ability comes from: shared (many Ohms), own (this line), taught (mod chip) */
+.bt-chip.sq-shared small::before, .bt-chip.sq-own small::before, .bt-chip.sq-taught small::before { content: '●'; margin-right: 4px; }
+.bt-chip.sq-shared small::before { color: #9fb0bd; }
+.bt-chip.sq-own small::before { color: #f2c45a; }
+.bt-chip.sq-taught small::before { color: #7cc8ff; }
+.bt-chip.sq-special { --tc: #f2c45a; border-color: #f2c45a; width: 190px; }
+.bt-chip.sq-special b { color: #f6d98a; }
+.bt-chip.sq-swap { --tc: #9fb0bd; width: 110px; }
+@media (max-width: 760px) { .bt-chip { width: 96px; } .bt-chip.sq-special { width: 120px; } .bt-chip small, .bt-help { display: none; } .sq-side .sq-plate { min-width: 140px; } }
 
 .ui.battling .badge, .ui.battling .hint, .ui.battling .prompt, .ui.battling .title-card { display: none; }
 
@@ -423,3 +448,4 @@ html, body {
   padding: 0 16px;
 }
 .ui.battling .name-tag { display: none; }
+.bt-chip.sq-off { opacity: 0.4; }
