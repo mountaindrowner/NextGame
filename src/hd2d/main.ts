@@ -287,6 +287,7 @@ async function enter(id: string, spawn: string, first = false, how: 'fade' | 'di
   let off = { ox: 0, oz: 0 };
   if (OVERWORLD_IDS.has(id) && q.get('world') === 'continuous') { off = overworldOffset(id)!; spawn = `${id}:${spawn}`; id = 'overworld'; }
   loading = true;
+  arriving = true;
   keys.clear();
   if (!first) await (how === 'dissolve' || travel ? ui.dissolve(true) : ui.fade(true));
   if (travel && hud) await ui.travel({ img: TRAVEL_MAP, box: travelBox(travel.path), path: travel.path, line: travel.line });
@@ -353,6 +354,9 @@ async function enter(id: string, spawn: string, first = false, how: 'fade' | 'di
   badge();
   loading = false;
   if (!first) await (how === 'dissolve' || travel ? ui.dissolve(false) : ui.fade(false));
+  // a tap buffered during the trip must not fire on arrival (you land in reach of the way back)
+  ui.takeA();
+  arriving = false;
   // towns and dungeons get the big card the first time; every other arrival a small name tag
   if (hud) {
     const big = !visited.has(a.id) && (!a.kind || a.kind === 'town' || a.kind === 'dungeon' || a.kind === 'home');
@@ -380,8 +384,12 @@ let focusTarget: (typeof talk)[number] | null = null;
 function speak(line: Line, then?: () => void): void {
   ui.say({ name: line.name, portrait: line.portrait, lines: line.lines }, then);
 }
+/** True from the moment a transition starts until the new map has faded in: presses made mid-transition are dropped. */
+let arriving = false;
+/** True while SAL reaches for something: a second press can't queue the same action twice. */
+let reaching = false;
 function act(): void {
-  if (loading) return;
+  if (loading || arriving || reaching) return;
   if (ui.talking) { ui.advance(); return; }
   const t = focusTarget;
   if (!t) return;
@@ -394,7 +402,9 @@ function act(): void {
   // reach for objects (not people, not signs) before the line comes up
   if (!t.walker && t.label !== 'Read' && player instanceof RotHero && player.has('pickup')) {
     player.face(t.pos.x - player.root.position.x, t.pos.z - player.root.position.z);
-    void player.play('pickup').then(run);
+    reaching = true;
+    const from = area;
+    void player.play('pickup').then(() => { reaching = false; if (area === from) run(); });
   } else run();
 }
 
