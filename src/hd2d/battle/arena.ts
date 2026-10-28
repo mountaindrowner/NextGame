@@ -609,12 +609,15 @@ export class BattleArena {
       if ((f.ready[p.slot] ?? 0) > f.turns) { this.say(`${this.data.move(slot.id).name} is still recharging.`, 0.9); return; }
     } else if (f.spReady > f.turns) { this.say(`${f.special.name} is still charging.`, 0.9); return; }
     const again = this.pick && this.pick.kind === p.kind && (p.kind === 'special' || (this.pick.kind === 'move' && this.pick.slot === p.slot));
+    const outOfReach = (): void => this.say(p.kind === 'move' && patternOf(this.data.move(f.b.moves[p.slot]!.id)) === 'melee' ? 'Too far: step up to your front column first.' : 'Nothing in reach from here.', 1.3);
     if (!again) {
       this.pick = p;
       this.refreshChips();
-      if (!this.previewCells().length) this.say(p.kind === 'move' && patternOf(this.data.move(f.b.moves[p.slot]!.id)) === 'melee' ? 'Too far: step up to your front column first.' : 'Nothing in reach from here.', 1.3);
+      if (!this.previewCells().length) outOfReach();
       return;
     }
+    // a move that can reach nothing from here doesn't spend the turn
+    if (!this.previewCells().length) { outOfReach(); return; }
     void this.act(f, p);
   }
 
