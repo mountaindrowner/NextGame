@@ -30,6 +30,20 @@ lit lamp, lap order + collection mechanic, plot-driver chain, Verge / New
 Central tiers, slaughterhouse chain payoff, region 1 name, SHEAR vs HOVER gate,
 "Hertz Lot" brand name.
 
+**Playtest 2026-10-28 (headless, scripts in the session scratchpad):** all 23
+maps load with no errors; every exit and door links to a real map and spawn;
+the door check is clean on every map in the normal game (the old continuous
+overworld, `?world=continuous`, still shows 2 door warnings: low priority);
+the whole region walked on foot both ways, including the loop home, side spots, both
+dungeons and the Pickett house; roamer touch, tall-grass encounters, running,
+losing (party recharged) and capture (joins the party, node spent, roamer
+leaves the map) all work; phone taps work (move by panel, Wait, aim by
+plate). **Fixed:** a double tap while SAL reached for a door/lift queued the
+action twice (you were sent back down the lift), and presses mid-transition
+fired on arrival; confirming a battle move that can't reach anything wasted
+the turn. **Flag for Mark:** the starting Scraplet (Lv5) vs the Pickett
+roamers (Lv6) is winnable but tight 1v1 (won by hand on 9/26 HP).
+
 ### Earlier (2026-10-24)
 
 **Branch `claude/hd2d`** (HD-2D remake; the old Phaser game is frozen on
