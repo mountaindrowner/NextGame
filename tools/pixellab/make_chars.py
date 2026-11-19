@@ -11,6 +11,8 @@ DESC = {
     "diego": "Diego, a Brazilian capoeira fighter: lean muscular man with brown skin and curly dark hair tied up, smiling, shirtless with an open green and yellow sleeveless vest, white capoeira pants with a yellow and green cord belt, bandaged hands, barefoot. 16-bit arcade fighting game character",
     # Vizor was created with the concept image tools/pixellab/concept/vizor.png and style_character_id = karl's id
     "vizor": "Vizor, a tech brawler: stocky young man with short dark curly hair and a thin mustache, a high-tech cybernetic camera monocle over his right eye glowing cyan, black t-shirt with a white camera-shutter logo, dark diagonal harness strap with a small camera, chrome forearm gauntlet with cyan lights, black fingerless gloves, belt with a camera on the hip, baggy blue cargo jeans with gray tech knee pads, white and teal sneakers. 16-bit arcade fighting game character",
+    # Padre: concept image tools/pixellab/concept/padre.png on a dark background, style_character_id = karl's id
+    "padre": "Padre, a fighting priest: muscular man with short slicked-back black hair, a thin mustache and a stern face, black clerical shirt with a white roman collar, rolled short sleeves, a cream-white stole with gold crosses and gold fringe draped around his neck, black wristbands, black belt with silver buckle, baggy black trousers, black boots, holding a big dark-red holy book with a gold cross under one arm. 16-bit arcade fighting game character",
 }
 out = {}
 for k in sys.argv[1:]:

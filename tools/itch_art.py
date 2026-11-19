@@ -94,8 +94,8 @@ draw_text(c, "DOJO", W // 2, 54, 6, grad=FIRE, outline="#3a0808", center=True)
 bar(c, 101, 150, (208, 48, 26, 255))
 draw_text(c, "PIXEL FIGHTERS", W // 2, 108, 1, col="#ffe66a", center=True)
 ground = H - 12
-for i, (id_, flip) in enumerate([("karl", False), ("akira", False), ("vizor", False), ("ivan", True), ("diego", True)]):
-    place(c, id_, 36 + i * 61, ground - (i % 2) * 6, anim="idle", flip=flip)
+for i, (id_, flip) in enumerate([("karl", False), ("akira", False), ("vizor", False), ("padre", True), ("ivan", True), ("diego", True)]):
+    place(c, id_, 30 + i * 51, ground - (i % 2) * 7, anim="idle", flip=flip)
 c.resize((W * 2, H * 2), Image.NEAREST).convert("RGB").save(OUT / "cover-630x500.png")
 
 # --- banner 960x240 (drawn at 480x120, x2) ---
@@ -103,7 +103,7 @@ W, H = 480, 120
 b = stage("karl", W, H, 0.45)
 draw_text(b, "WORLD DOJO", W // 2, 26, 4, grad=FIRE, outline="#3a0808", center=True)
 bar(b, 63, 200, (208, 48, 26, 255))
-draw_text(b, "5 FIGHTERS - 5 STYLES - 1 CHAMPION", W // 2, 70, 1, col="#ffe66a", center=True)
+draw_text(b, "6 FIGHTERS - 12 POWERS - 1 CHAMPION", W // 2, 70, 1, col="#ffe66a", center=True)
 place(b, "karl", 52, H - 6, anim="punch", frame=4)
 place(b, "ivan", 436, H - 6, anim="kick", frame=4, flip=True)
 b.resize((W * 2, H * 2), Image.NEAREST).convert("RGB").save(OUT / "banner-960x240.png")

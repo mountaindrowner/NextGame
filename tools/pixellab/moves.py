@@ -23,6 +23,7 @@ SPECIAL = {
     "akira": {"special": "throwing a ninja shuriken forward with a fast sidearm flick of the hand", "win": "victory pose: stands calmly with arms crossed, ponytail blowing"},
     "ivan":  {"special": "lunges forward and grabs with both arms, then lifts and throws overhead in a suplex slam", "win": "victory pose: flexes both biceps and roars"},
     "vizor": {"special": "thrusts one open hand forward with fingers spread, aiming like a camera, a glowing cyan targeting frame flashes in front of his palm", "win": "victory celebration: lifts the camera from his belt, snaps a photo with a bright flash, then pumps his fist in the air"},
+    "padre": {"special": "raises the big holy book high overhead with both hands and smashes it down hard in front of him, a flash of golden light on impact", "special2": "kneels down on one knee and prays, holding the holy book to his chest, a soft golden light glowing around him", "win": "victory celebration: holds the holy book high in the air with one hand and raises his other fist, glowing golden light"},
     "diego": {"special": "capoeira spinning hook kick, meia lua de compasso, rotating with one hand near the ground and the leg sweeping around high", "win": "victory pose: dances the capoeira ginga, swaying side to side with a smile"},
 }
 

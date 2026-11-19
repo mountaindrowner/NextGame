@@ -1,6 +1,6 @@
 # World Dojo
 
-A handheld-styled pixel fighting game ("Dojo Boy") with five fighters — Papa-Léguas, Akira, Ivan, Diego and Vizor — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU and Training.
+A handheld-styled pixel fighting game ("Dojo Boy") with six fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor and Padre — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU and Training.
 
 ## Play
 
@@ -18,6 +18,21 @@ Controls: arrows/WASD move, `X`/`K` = A (punch), `Z`/`J` = B (kick), Enter = Sta
 - **Juggles & scaling** — at most 2 extra hits on a falling opponent; damage scales down from the 3rd hit (85%, 75%, … 50%).
 - Ivan's Bear Slam is a command grab: it can't grab an opponent in hit-stun, but it can grab out of a blocked string.
 
+## Powers
+
+Every fighter has two specials, and no two work alike. Special 1: **A+B** (or down, forward + A). Special 2: **down + A+B** (or down, back + B). The thin bar under each health bar is special 2's cooldown.
+
+| Fighter | Special 1 | Special 2 |
+|---|---|---|
+| Papa-Léguas | **Légua Rush** — dashing 3-hit punch flurry | **Légua Step** — invincible blur that goes through the opponent to their back |
+| Akira | **Shuriken** — projectile | **Shadow Counter** — counter stance: get hit and he vanishes, reappears behind and kicks (grabs beat it) |
+| Ivan | **Bear Slam** — command grab | **Iron Charge** — shoulder charge with armor that absorbs one hit |
+| Diego | **Meia-Lua** — advancing 3-hit spin kick | **Martelo** — invincible rising kick, the anti-air |
+| Vizor | **Shutter Flash** — reticle lock-on at range, then a knockdown flash | **Instant Replay** — rewinds his position and up to 15 recent damage |
+| Padre | **Holy Tome** — overhead book smash (must be blocked standing) | **Benediction** — kneels and heals; any hit interrupts it |
+
+`tools/powers.js` checks each of these mechanics.
+
 Bread-and-butter combos (checked frame by frame by `tools/combos.js`):
 
 | Fighter | Combo | Hits |
@@ -27,8 +42,9 @@ Bread-and-butter combos (checked frame by frame by `tools/combos.js`):
 | Ivan | jump kick, jab, kick | 3 |
 | Diego | low jab, jab, kick > Meia-Lua | 6 |
 | Vizor | jab, kick > Shutter Flash | 3 |
+| Padre | jab, kick > Holy Tome | 3 |
 
-Training mode: the dummy stands still, health refills, and the top of the screen shows hits, damage and your best combo.
+Training mode: the dummy stands still (SELECT switches it to standing or low block), health refills, and the top of the screen shows hits, damage and your best combo.
 
 Winning a match sets off confetti, fireworks and a crowd cheer; the result and ending screens celebrate too.
 
@@ -50,9 +66,9 @@ Winning a match sets off confetti, fireworks and a crowd cheer; the result and e
 
 The four fighters were redrawn with [PixelLab](https://www.pixellab.ai) as side-view characters (`create-character-pro`, using the original portraits as concept art and the original sprites as style reference), then animated move by move facing east; the game mirrors them for the other side.
 
-Moves per fighter: idle, walk, crouch, jump, punch, kick, crouch punch, low kick, air punch, air kick, block, hurt, knockdown, win and a special (Papa-Léguas's Légua Rush, Akira's Shuriken, Ivan's Bear Slam, Diego's Meia-Lua, Vizor's Shutter Flash).
+Moves per fighter: idle, walk, crouch, jump, punch, kick, crouch punch, low kick, air punch, air kick, block, hurt, knockdown, win and a special (Papa-Léguas's Légua Rush, Akira's Shuriken, Ivan's Bear Slam, Diego's Meia-Lua, Vizor's Shutter Flash, Padre's Holy Tome, plus Padre's Benediction prayer).
 
-Vizor was made from the concept art in `tools/pixellab/concept/vizor.png` (with Papa-Léguas as the PixelLab style reference); his portraits and logo are cut from that art, and his stage was generated with PixelLab's image generator using Ivan's stage as the style image.
+Vizor was made from the concept art in `tools/pixellab/concept/vizor.png` (with Papa-Léguas as the PixelLab style reference); his portraits and logo are cut from that art, and his stage was generated with PixelLab's image generator using Ivan's stage as the style image. Padre was made the same way from `tools/pixellab/concept/padre.png` (his logo is drawn with `tools/make_logo.py`), with an Old Chapel stage.
 
 To regenerate or add moves (needs a PixelLab API token; set `PIXELLAB_TOKEN` outside this environment):
 

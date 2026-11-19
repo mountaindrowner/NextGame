@@ -9,6 +9,7 @@ const COMBOS = {
   ivan:  [['jump'], ['b', { wait: 'air' }], ['a', { wait: 'land' }], ['b']],
   diego: [['a', { down: 1 }], ['a'], ['b'], ['a', 'b']],
   vizor: [['a'], ['b'], ['a', 'b']],
+  padre: [['a'], ['b'], ['a', 'b']],
 };
 (async () => {
   const br = await chromium.launch();

@@ -18,7 +18,7 @@ const path = require('path');
   await run(() => { const d = window.__dbg; d.go(d.Title); d.Title.ph = 'menu'; });
   await p.waitForTimeout(900); await grab('shot-1-title.png');
   // 2 character select
-  await run(() => { const d = window.__dbg; d.go(d.Select, 'arcade'); d.Select.cur = 4; });
+  await run(() => { const d = window.__dbg; d.go(d.Select, 'arcade'); d.Select.cur = 5; });
   await p.waitForTimeout(700); await grab('shot-2-select.png');
   // 3 versus screen
   await run(() => { const d = window.__dbg; d.RUN = { mode: 'arcade', p1: 'diego', ladder: ['akira'], idx: 0, cont: 0 }; d.go(d.VS); });
@@ -43,6 +43,8 @@ const path = require('path');
   await grab('shot-6-meia-lua.png');
   await pose({ a: 'vizor', b: 'diego', x1: 96, x2: 176, hp1: 77, hp2: 61, g: 'hurt', gst: 20, gstun: 60, sp: 9, time: 52, stage: 'vizor' });
   await grab('shot-7-shutter-flash.png');
+  await pose({ a: 'padre', b: 'akira', x1: 104, x2: 150, hp1: 69, hp2: 48, g: 'crouch', gst: 4, sp: 27, time: 33, stage: 'padre' });
+  await grab('shot-8-holy-tome.png');
   console.log('errors:', errs.length ? errs : 'none');
   await br.close();
 })();
