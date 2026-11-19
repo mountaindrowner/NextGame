@@ -38,13 +38,13 @@ const path = require('path');
       check('VIZOR        Instant Replay', F.p1.hp > hp1 && Math.abs(F.p1.x - x0) < Math.abs(x1 - x0), `hp ${hp1 | 0} -> ${F.p1.hp | 0}, x ${x1 | 0} -> ${F.p1.x | 0} (was ${x0 | 0})`); }
     { // Benediction heals over time
       const { F, step } = setup('padre', 'ivan', 60, 200); F.p1.hp = 50; step(1, { a: 1, b: 1, h: { down: 1 } }); step(85);
-      check('PADRE        Benediction', F.p1.hp > 60, `hp 50 -> ${F.p1.hp | 0}`); }
+      check('SAMSON       Benediction', F.p1.hp > 60, `hp 50 -> ${F.p1.hp | 0}`); }
     { // Holy Tome is an overhead: beats a crouching block, loses to a standing one
       let r = setup('padre', 'ivan', 100, 140), F = r.F; F.dummy = 'LOW BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2); r.step(34);
       const crouchHit = F.p2.hp < 100;
       r = setup('padre', 'ivan', 100, 140); F = r.F; F.dummy = 'BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2); r.step(34);
       const standBlocked = F.p2.hp > 95;
-      check('PADRE        Holy Tome (overhead)', crouchHit && standBlocked, `hits crouch-block: ${crouchHit}, blocked standing: ${standBlocked}`); }
+      check('SAMSON       Holy Tome (overhead)', crouchHit && standBlocked, `hits crouch-block: ${crouchHit}, blocked standing: ${standBlocked}`); }
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none');

@@ -1,6 +1,6 @@
 # World Dojo
 
-A handheld-styled pixel fighting game ("Dojo Boy") with six fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor and Padre — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU and Training.
+A handheld-styled pixel fighting game ("Dojo Boy") with six fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor and Samson — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU and Training.
 
 ## Play
 
@@ -29,7 +29,7 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Ivan | **Bear Slam** — command grab | **Iron Charge** — shoulder charge with armor that absorbs one hit |
 | Diego | **Meia-Lua** — advancing 3-hit spin kick | **Martelo** — invincible rising kick, the anti-air |
 | Vizor | **Shutter Flash** — reticle lock-on at range, then a knockdown flash | **Instant Replay** — rewinds his position and up to 15 recent damage |
-| Padre | **Holy Tome** — overhead book smash (must be blocked standing) | **Benediction** — kneels and heals; any hit interrupts it |
+| Samson | **Holy Tome** — overhead book smash (must be blocked standing) | **Benediction** — kneels and heals; any hit interrupts it |
 
 `tools/powers.js` checks each of these mechanics.
 
@@ -42,7 +42,7 @@ Bread-and-butter combos (checked frame by frame by `tools/combos.js`):
 | Ivan | jump kick, jab, kick | 3 |
 | Diego | low jab, jab, kick > Meia-Lua | 6 |
 | Vizor | jab, kick > Shutter Flash | 3 |
-| Padre | jab, kick > Holy Tome | 3 |
+| Samson | jab, kick > Holy Tome | 3 |
 
 Training mode: the dummy stands still (SELECT switches it to standing or low block), health refills, and the top of the screen shows hits, damage and your best combo.
 
@@ -66,9 +66,9 @@ Winning a match sets off confetti, fireworks and a crowd cheer; the result and e
 
 The four fighters were redrawn with [PixelLab](https://www.pixellab.ai) as side-view characters (`create-character-pro`, using the original portraits as concept art and the original sprites as style reference), then animated move by move facing east; the game mirrors them for the other side.
 
-Moves per fighter: idle, walk, crouch, jump, punch, kick, crouch punch, low kick, air punch, air kick, block, hurt, knockdown, win and a special (Papa-Léguas's Légua Rush, Akira's Shuriken, Ivan's Bear Slam, Diego's Meia-Lua, Vizor's Shutter Flash, Padre's Holy Tome, plus Padre's Benediction prayer).
+Moves per fighter: idle, walk, crouch, jump, punch, kick, crouch punch, low kick, air punch, air kick, block, hurt, knockdown, win and a special (Papa-Léguas's Légua Rush, Akira's Shuriken, Ivan's Bear Slam, Diego's Meia-Lua, Vizor's Shutter Flash, Samson's Holy Tome, plus Samson's Benediction prayer).
 
-Vizor was made from the concept art in `tools/pixellab/concept/vizor.png` (with Papa-Léguas as the PixelLab style reference); his portraits and logo are cut from that art, and his stage was generated with PixelLab's image generator using Ivan's stage as the style image. Padre was made the same way from `tools/pixellab/concept/padre.png` (his logo is drawn with `tools/make_logo.py`), with an Old Chapel stage.
+Vizor was made from the concept art in `tools/pixellab/concept/vizor.png` (with Papa-Léguas as the PixelLab style reference); his portraits and logo are cut from that art, and his stage was generated with PixelLab's image generator using Ivan's stage as the style image. Samson (internal id `padre`) was made the same way from `tools/pixellab/concept/padre.png` (his logo is drawn with `tools/make_logo.py`), with an Old Chapel stage.
 
 To regenerate or add moves (needs a PixelLab API token; set `PIXELLAB_TOKEN` outside this environment):
 
