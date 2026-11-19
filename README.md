@@ -17,6 +17,7 @@ Controls: arrows/WASD move, `X`/`K` = A (punch), `Z`/`J` = B (kick), Enter = Sta
 - `tools/build.py` — inlines everything into `dist/index.html`
 - `tools/smoke.js` — headless Playwright smoke test (boots the game, runs fights, screenshots)
 - `tools/poses.js`, `tools/play.js`, `tools/special.js` — render every pose, mash through a fight, or film a special move as a contact sheet
+- `tools/itch_art.py`, `tools/shots.js` — itch.io cover, banner and screenshots (written to `release/itch/`)
 - `tools/pixellab/` — scripts that generated the fighters with the PixelLab API
 
 ## Fighters (PixelLab)
