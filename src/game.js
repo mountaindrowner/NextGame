@@ -154,6 +154,7 @@ const CH={
   diego:{id:'diego',name:'DIEGO',nick:'THE RHYTHM',style:'CAPOEIRA',country:'BRAZIL',flag:'br',ht:"5'10\" (178 CM)",wt:'160 LB (73 KG)',
     speed:1.1,power:1.02,def:0.96,jump:1.1,stats:[4,3,4],special:'spin',spName:'MEIA-LUA',tr:2,
     col:{skin:'#b8743f',glove:'#f0eee8',leg:'#efedf7',foot:'#b8743f',aura:'#3fd06a'},sh:.8,hip:.55,
+    ak:{fall:{air:6,hurtAir:true}},
     quote:'THE RODA NEVER STOPS, AND NEITHER DO I!',lose:'LOST THE RHYTHM... FOR NOW.',stageName:'RIO PLAZA'},
 };
 const ORDER=['karl','akira','ivan','diego'];
@@ -169,7 +170,17 @@ function altVersion(img){const c=mk(img.width,img.height),x=c.getContext('2d');x
 function loadAssets(){return Promise.all(Object.entries(ASSETS).map(([k,src])=>new Promise(res=>{const i=new Image();i.onload=()=>{IMG[k]=i;res()};i.onerror=res;i.src=src}))).then(()=>{
   for(const id of ORDER){const c=CH[id],s=IMG[id+'_spr'];c.spr=s;c.white=silhouette(s,'#ffffff');c.blue=silhouette(s,'#5aa8ff');c.auraS=silhouette(s,c.col.aura);
     c.alt=altVersion(s);c.H=s.height;c.por=IMG[id+'_por'];c.porm=IMG[id+'_porm'];c.pors=IMG[id+'_pors'];c.head=IMG[id+'_head'];c.logo=IMG[id+'_logo'];c.stage=IMG[id+'_stage'];
-    c.porDark=silhouette(c.porm,'#0a0a18')}})}
+    c.porDark=silhouette(c.porm,'#0a0a18');
+    const an=sliceAnims(id);if(an){c.anim=an.A;c.H=an.H}}})}
+// PixelLab frame animations: assets/fighters/<id>/<anim>.png strips + meta.json
+function sliceAnims(id){const m=typeof ASSET_DATA!=='undefined'&&ASSET_DATA['fighters_'+id+'_meta'];if(!m)return null;const A={};
+  for(const[k,a]of Object.entries(m.anims)){const img=IMG['fighters_'+id+'_'+k];if(!img)continue;const fr=[];
+    for(let i=0;i<a.n;i++){const c=mk(a.w,a.h);c.getContext('2d').drawImage(img,i*a.w,0,a.w,a.h,0,0,a.w,a.h);fr.push(c)}A[k]={...a,fr}}
+  return Object.keys(A).length?{H:m.H,A}:null}
+const FXC=new Map();
+function fxCache(img){let m=FXC.get(img);if(!m){m={};FXC.set(img,m)}return m}
+function sil(img,col){const m=fxCache(img);return m[col]||(m[col]=silhouette(img,col))}
+function altOf(img){const m=fxCache(img);return m.alt||(m.alt=altVersion(img))}
 
 function drawFlag(code,x,y){x|=0;y|=0;ctx.fillStyle='#000';ctx.fillRect(x-1,y-1,16,12);
   if(code==='br'){ctx.fillStyle='#1f9a3a';ctx.fillRect(x,y,14,10);ctx.fillStyle='#ffd72a';for(let r=0;r<5;r++){const w=2+r*2;ctx.fillRect(x+7-w/2-1,y+r,w+2,1);ctx.fillRect(x+7-w/2-1,y+9-r,w+2,1)}ctx.fillStyle='#2a3a9a';ctx.fillRect(x+5,y+3,4,4);ctx.fillRect(x+6,y+2,2,6);ctx.fillRect(x+4,y+4,6,2)}
@@ -493,7 +504,51 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;F
     m.forEach(([k,v],i)=>{drawText(k,24,56+i*11,'#ff9a6a',1,{shadow:false});drawText(v,232,56+i*11,'#fff',1,{align:'right',shadow:false})});
     ['RESUME','QUIT TO TITLE'].forEach((s,i)=>drawText((this.psel===i?'> ':'  ')+s,128,148+i*12,this.psel===i?'#ffe66a':'#99a',1,{align:'center'}))}};
 
-function drawFighter(f){const c=f.c;let img=f.flash>0&&(f.flash&1)?c.white:f.img;
+// ---- frame-animated fighters ----
+// Key frames per animation: pk = frame where the strike lands; jump = [prep, rise, apex, fall, land];
+// special = [[tick,frame],...] piecewise map over the move's own timeline. Per-fighter overrides in CH[id].ak.
+const AK={punch:{pk:4},kick:{pk:4},sweep:{pk:4},lowkick:{pk:3},cpunch:{pk:2},airkick:{pk:2},airpunch:{pk:2},jump:{prep:2,rise:3,apex:5,fall:6,land:7},fall:{air:4},
+  special:{rush:[[0,0],[7,3]],shuriken:[[0,0],[9,6],[18,8]],slam:[[0,0],[10,8]],spin:[[0,0],[40,99]]}};
+function akOf(c,k){return (c.ak&&c.ak[k])||AK[k]}
+function kf(t,pts){if(t<=pts[0][0])return pts[0][1];for(let i=1;i<pts.length;i++){const[a,fa]=pts[i-1],[b,fb]=pts[i];if(t<=b)return Math.round(fa+(fb-fa)*(t-a)/(b-a))}return pts[pts.length-1][1]}
+function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>A[k].n,last=k=>A[k].n-1,P=(k,i)=>A[k]?{k,i:clamp(Math.floor(i),0,last(k))}:null;
+  const strike=(k,a,tt)=>{const pk=akOf(f.c,k).pk,N=n(k);if(tt<a.s)return P(k,pk*tt/a.s);if(tt<a.s+a.a||!a.r)return P(k,pk);return P(k,pk+1+(N-pk-1)*(tt-a.s-a.a)/a.r)};
+  switch(f.state){
+    case'idle':return P('idle',((frameNo+f.side*17)/7)%n('idle'));
+    case'walk':{if(!A.walk)return P('idle',0);const fwd=Math.sign(f.vx)===fc,i=Math.floor(frameNo/5)%n('walk');return P('walk',fwd?i:last('walk')-i)}
+    case'crouch':return A.crouch?P('crouch',Math.min(t/2,last('crouch'))):null;
+    case'prejump':return A.jump?P('jump',akOf(f.c,'jump').prep):null;
+    case'land':return A.jump?P('jump',akOf(f.c,'jump').land):null;
+    case'jump':{const a=f.atk;if(a){const k=a.name==='jkick'?(A.airkick?'airkick':'kick'):(A.airpunch?'airpunch':'punch');if(A[k])return strike(k,a,f.ast)}
+      if(!A.jump)return null;const j=akOf(f.c,'jump');return P('jump',f.vy>2?j.rise:f.vy>-1.5?j.apex:j.fall)}
+    case'attack':{const a=f.atk;const k={jab:'punch',kick:'kick',sweep:A.lowkick?'lowkick':'sweep',cjab:A.cpunch?'cpunch':null}[a.name];
+      if(k&&A[k])return strike(k,a,t);if(a.crouch&&A.crouch)return{...P('crouch',last('crouch')),limbs:true};return null}
+    case'hurt':return A.hurt?P('hurt',Math.min(t/3,last('hurt'))):null;
+    case'grabbed':return A.hurt?P('hurt',last('hurt')):null;
+    case'block':return A.block?P('block',Math.min(t,last('block'))):null;
+    case'knock':{const fa=akOf(f.c,'fall');if(fa.hurtAir&&A.hurt)return P('hurt',last('hurt'));return A.fall?P('fall',Math.min(t/4,fa.air)):null}
+    case'down':case'ko':return A.fall?P('fall',Math.min(akOf(f.c,'fall').air+(f.state==='ko'?t:t)/3,last('fall'))):null;
+    case'rise':return A.fall?P('fall',last('fall')*(1-t/12)):null;
+    case'win':return A.win?P('win',t<n('win')*7?t/7:last('win')-(Math.floor(t/12)%2)):P('idle',(frameNo/7)%n('idle'));
+    case'special':{const s=f.sp;if(!A.special||!s)return null;
+      if(s.kind==='rush'&&t>=7)return P('special',t<26?5+Math.floor((t-7)/3)%4:t<31?last('special'):3);// flurry loops the punch frames
+      const L=last('special');return P('special',kf(t,(akOf(f.c,'special')[s.kind]||[[0,0],[36,99]]).map(([a,b])=>[a,Math.min(b,L)])))}
+    case'slamming':return A.throw?P('throw',kf(t,[[0,0],[30,last('throw')]])):A.win?P('win',kf(t,[[0,0],[30,last('win')]])):null;}
+  return null}
+function blitA(img,x,y,fc,ax,ay,rot,pivotC,ox,oy,ph){ctx.save();ctx.translate(Math.round(x+ox),Math.round(GY-y+oy));
+  if(rot){if(pivotC){ctx.translate(0,-ph/2);ctx.rotate(rot);ctx.translate(0,ph/2)}else ctx.rotate(rot)}
+  ctx.scale(fc,1);ctx.drawImage(img,-Math.round(ax),-ay);ctx.restore()}
+function drawFighter(f){const P=pose(f);if(!P)return drawFighterLegacy(f);
+  const c=f.c,a=c.anim[P.k],fr=a.fr[P.i],fc=f.face,t=f.st;let img=f.alt?altOf(fr):fr;if(f.flash>0&&(f.flash&1))img=sil(fr,'#ffffff');
+  let rot=0,pivotC=false,ox=0;if(f.state==='grabbed'){rot=f.rot||0;pivotC=true}if(f.state==='hurt'&&t<6)ox=-fc*2+(t&1?1:-1);
+  const B=(im,x,y)=>blitA(im,x,y,fc,a.ax,a.ay,rot,pivotC,ox,0,f.H);
+  for(const g of f.ghosts){ctx.globalAlpha=g.l/20;B(sil(fr,c.col.aura),g.x,g.y);ctx.globalAlpha=1}
+  if(f.state==='special'&&t<10||F.superFlash>0&&F.superBy===f){const p=(frameNo&2)?2:1;ctx.globalAlpha=.6;for(const[dx,dy]of[[-p,0],[p,0],[0,-p]])B(sil(fr,c.col.aura),f.x+dx,f.y-dy);ctx.globalAlpha=1}
+  if(f.inv>0&&f.state!=='down'&&(frameNo&2))ctx.globalAlpha=.55;
+  B(img,f.x,f.y);ctx.globalAlpha=1;
+  if(f.state==='block'){ctx.globalAlpha=.22;B(sil(fr,'#5aa8ff'),f.x,f.y);ctx.globalAlpha=1}
+  if(P.limbs)drawLimbs(f)}
+function drawFighterLegacy(f){const c=f.c;let img=f.flash>0&&(f.flash&1)?c.white:f.img;
   let sx=1,sy=1,rot=0,shear=0,ox=0,oy=0,pivotC=false;const t=f.st,fc=f.face;
   switch(f.state){
     case'idle':sy=1+Math.sin(frameNo*0.09+f.side)*0.018;break;
