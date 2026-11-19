@@ -9,6 +9,8 @@ DESC = {
     "akira": "Akira, a Japanese ninja fighter: lean man with long spiky dark navy hair tied in a high ponytail, sharp eyes, dark purple sleeveless ninja gi, magenta sash belt with hanging ends, dark arm wraps and bracers, baggy purple pants wrapped at the shins, dark tabi shoes. 16-bit arcade fighting game character",
     "ivan": "Ivan, a huge muscular Russian sambo wrestler: short blond crew cut, square jaw, scar on cheek, stern face, red sambo jacket with short sleeves and red belt, navy blue shorts, dark fingerless gloves, tall blue wrestling boots. 16-bit arcade fighting game character",
     "diego": "Diego, a Brazilian capoeira fighter: lean muscular man with brown skin and curly dark hair tied up, smiling, shirtless with an open green and yellow sleeveless vest, white capoeira pants with a yellow and green cord belt, bandaged hands, barefoot. 16-bit arcade fighting game character",
+    # Vizor was created with the concept image tools/pixellab/concept/vizor.png and style_character_id = karl's id
+    "vizor": "Vizor, a tech brawler: stocky young man with short dark curly hair and a thin mustache, a high-tech cybernetic camera monocle over his right eye glowing cyan, black t-shirt with a white camera-shutter logo, dark diagonal harness strap with a small camera, chrome forearm gauntlet with cyan lights, black fingerless gloves, belt with a camera on the hip, baggy blue cargo jeans with gray tech knee pads, white and teal sneakers. 16-bit arcade fighting game character",
 }
 out = {}
 for k in sys.argv[1:]:
