@@ -139,7 +139,7 @@ document.addEventListener('visibilitychange',()=>{if(!AU.ctx)return;if(document.
 
 // ---------------- CHARACTERS ----------------
 const CH={
-  karl:{id:'karl',name:'KARL',nick:'PAPA-LÉGUAS',style:'KARATE',country:'BRAZIL',flag:'br',ht:"6'0\" (183 CM)",wt:'165 LB (75 KG)',
+  karl:{id:'karl',name:'PAPA-LÉGUAS',nick:'',style:'KARATE',country:'BRAZIL',flag:'br',ht:"6'0\" (183 CM)",wt:'165 LB (75 KG)',
     speed:1.25,power:1.0,def:1.0,jump:1.0,stats:[5,3,3],special:'rush',spName:'LÉGUA RUSH',tr:0,
     col:{skin:'#e0965c',glove:'#2c2a44',leg:'#e9e7f3',foot:'#f6f6f6',aura:'#ffd23a'},sh:.72,hip:.5,
     quote:"TOO SLOW! THEY DON'T CALL ME PAPA-LÉGUAS FOR NOTHING!",lose:'I RAN OUT OF ROAD...',stageName:'CROSSROADS DOJO'},
@@ -487,7 +487,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;F
       const ix=i?232:2;ctx.fillStyle='#ffd23a';ctx.fillRect(ix-1,3,24,24);ctx.imageSmoothingEnabled=true;
       if(i){ctx.save();ctx.translate(ix+22,4);ctx.scale(-1,1);ctx.drawImage(f.c.head,0,0,22,22);ctx.restore()}else ctx.drawImage(f.c.head,ix,4,22,22);ctx.imageSmoothingEnabled=false;
       drawText(f.c.name+(f.alt?' 2':''),i?bx+bw:bx,by+12,'#fff',1,{align:i?'right':'left',outline:'#000'});
-      for(let k=0;k<this.wins[i];k++){const sx=i?bx+bw-60-k*9:bx+52+k*9;drawText('*',sx,by+12,'#ffd23a',1,{outline:'#000'})}});
+      const nw=textW(f.c.name+(f.alt?' 2':''))+6,lo=nw+18>58;for(let k=0;k<this.wins[i];k++){const sx=lo?(i?bx+bw-6-k*9:bx+k*9):(i?bx+bw-nw-6-k*9:bx+nw+k*9);drawText('*',sx,by+(lo?22:12),'#ffd23a',1,{outline:'#000'})}});
     ctx.fillStyle='#000';ctx.fillRect(114,2,28,20);ctx.fillStyle='#ffd23a';ctx.fillRect(115,3,26,18);ctx.fillStyle='#1a1430';ctx.fillRect(116,4,24,16);
     drawText(String(Math.max(0,this.time)).padStart(2,'0'),128,6,this.time<=10?'#ff5a4a':'#fff',2,{align:'center',shadow:false});
     if(this.comboShow){const c=this.comboShow;const x=c.side?248:8;drawText(c.n+' HITS!',x,44,'#fff',1,{align:c.side?'right':'left',grad:FIRE,outline:'#300'})}},
@@ -617,7 +617,7 @@ const Ending={enter(){this.c=CH[RUN.p1];playMusic('ending');setTimeout(()=>say('
   update(){if(this.t>360&&anyPress())goFade(()=>go(Title),0.05)},
   draw(){const t=this.t,c=this.c;stripes(t,'#2a1206','#341808');ctx.fillStyle='rgba(255,210,58,.08)';for(let i=0;i<12;i++){const a=t*0.004+i*Math.PI/6;ctx.beginPath();ctx.moveTo(60,110);ctx.lineTo(60+Math.cos(a)*300,110+Math.sin(a)*300);ctx.lineTo(60+Math.cos(a+0.15)*300,110+Math.sin(a+0.15)*300);ctx.fill()}
     ctx.drawImage(c.por,0,H-c.por.height);
-    const L=['CONGRATULATIONS!','',c.name,'"'+c.nick+'"','','IS THE NEW','WORLD DOJO','CHAMPION!','','','THANKS FOR PLAYING','','A GAME BY MARK','','BUILT WITH CLAUDE','','SEE YOU NEXT FIGHT!'];
+    const L=['CONGRATULATIONS!','',c.name,...(c.nick?['"'+c.nick+'"']:[]),'','IS THE NEW','WORLD DOJO','CHAMPION!','','','THANKS FOR PLAYING','','A GAME BY MARK','','BUILT WITH CLAUDE','','SEE YOU NEXT FIGHT!'];
     const y0=Math.max(20,H-t*0.45);L.forEach((s,i)=>{const y=y0+i*12;if(y>-10&&y<H)drawText(s,190,y,'#fff',1,{align:'center',grad:i<8?FIRE:null,outline:'#200'})});
     if(t>360&&(t>>4)&1)drawText('PRESS START',190,182,'#fff',1,{align:'center',outline:'#000'})}};
 

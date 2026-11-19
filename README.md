@@ -1,6 +1,6 @@
 # World Dojo
 
-A handheld-styled pixel fighting game ("Dojo Boy") with four fighters — Karl, Akira, Ivan and Diego — playable in a browser on phone or desktop.
+A handheld-styled pixel fighting game ("Dojo Boy") with four fighters — Papa-Léguas, Akira, Ivan and Diego — playable in a browser on phone or desktop.
 
 ## Play
 
@@ -24,7 +24,7 @@ Controls: arrows/WASD move, `X`/`K` = A (punch), `Z`/`J` = B (kick), Enter = Sta
 
 The four fighters were redrawn with [PixelLab](https://www.pixellab.ai) as side-view characters (`create-character-pro`, using the original portraits as concept art and the original sprites as style reference), then animated move by move facing east; the game mirrors them for the other side.
 
-Moves per fighter: idle, walk, crouch, jump, punch, kick, crouch punch, low kick, air punch, air kick, block, hurt, knockdown, win and a special (Karl's Légua Rush, Akira's Shuriken, Ivan's Bear Slam, Diego's Meia-Lua).
+Moves per fighter: idle, walk, crouch, jump, punch, kick, crouch punch, low kick, air punch, air kick, block, hurt, knockdown, win and a special (Papa-Léguas's Légua Rush, Akira's Shuriken, Ivan's Bear Slam, Diego's Meia-Lua).
 
 To regenerate or add moves (needs a PixelLab API token; set `PIXELLAB_TOKEN` outside this environment):
 
