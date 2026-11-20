@@ -1,5 +1,6 @@
 'use strict';
 const VER=typeof GAME_VERSION!=='undefined'?GAME_VERSION:'DEV';
+try{document.getElementById('ver').textContent='v'+VER}catch(e){}
 // ============ WORLD DOJO — a Dojo Boy fighting game ============
 const W=256,H=192,GY=176,XMIN=26,XMAX=230,GRAV=0.3;
 const $=id=>document.getElementById(id);
@@ -298,12 +299,12 @@ function goFade(fn,spd=0.1){if(fade.dir)return;fade.dir=1;fade.cb=fn;fade.spd=sp
 const Power={update(){if(ASSETS_READY&&(anyPress()||pressed.b||pressed.select)){$('led').classList.add('on');go(Boot)}},
   draw(){ctx.fillStyle='#16181c';ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(255,255,255,.02)';for(let y=0;y<H;y+=3)ctx.fillRect(0,y,W,1);
     if(!ASSETS_READY){drawText('LOADING...',128,92,'#556',1,{align:'center',shadow:false});return}
-    if((this.t>>5)&1)drawText('PRESS START',128,90,'#4a5260',1,{align:'center',shadow:false});drawText('TAP ANY BUTTON TO POWER ON',128,176,'#2c3038',1,{align:'center',shadow:false})}};
+    if((this.t>>5)&1)drawText('PRESS START',128,90,'#4a5260',1,{align:'center',shadow:false});drawText('WORLD DOJO  V'+VER,128,120,'#3c4350',1,{align:'center',shadow:false});drawText('TAP ANY BUTTON TO POWER ON',128,176,'#2c3038',1,{align:'center',shadow:false})}};
 
 const Boot={update(){if(this.t===74)SFX.ding();if(this.t>160||(this.t>20&&anyPress()))goFade(()=>go(Intro))},
   draw(){ctx.fillStyle='#ebe9e1';ctx.fillRect(0,0,W,H);const y=Math.min(74,-24+this.t*1.35);
     drawText('DOJO BOY',128,y,'#2a2a6a',3,{align:'center',shadow:false});
-    if(this.t>74){drawText('PIXEL FIGHT SYSTEM',128,y+30,'#8b2d6b',1,{align:'center',shadow:false});ctx.fillStyle='#8b2d6b';ctx.fillRect(70,y+26,116,1);ctx.fillStyle='#2d3a8b';ctx.fillRect(70,y+42,116,1)}}};
+    if(this.t>74){drawText('PIXEL FIGHT SYSTEM',128,y+30,'#8b2d6b',1,{align:'center',shadow:false});drawText('WORLD DOJO V'+VER,128,y+50,'#2a2a6a',1,{align:'center',shadow:false});ctx.fillStyle='#8b2d6b';ctx.fillRect(70,y+26,116,1);ctx.fillStyle='#2d3a8b';ctx.fillRect(70,y+42,116,1)}}};
 
 const Intro={enter(){this.slam=-1},
   update(){const t=this.t;if(t>10&&anyPress()){goFade(()=>go(Title));return}
@@ -339,7 +340,7 @@ const Title={enter(){setTwo(false);this.ph='press';this.sel=0;this.petals=Array.
     drawText('DOJO',128,42+bob,'#fff',5,{align:'center',grad:FIRE,outline:'#3a0808',ow:1});
     ctx.fillStyle='#d0301a';ctx.fillRect(64,80+bob,128,2);
     drawText('PIXEL FIGHTERS',128,86,'#ffe66a',1,{align:'center'});
-    drawText('V'+VER,252,184,'#8a86a8',1,{align:'right'});
+    {const v='VERSION '+VER,w=textW(v)+8;ctx.fillStyle='rgba(0,0,0,.65)';ctx.fillRect(W-w-2,H-12,w,11);drawText(v,W-6,H-10,'#ffe66a',1,{align:'right',shadow:false})}
     if(this.ph==='press'){if((t>>4)&1)drawText('PRESS START',128,100,'#fff',1,{align:'center',outline:'#000'})}
     else{box(80,95,96,this.items.length*10+5);this.items.forEach((s,i)=>{const on=i===this.sel;drawText((on?'> ':'  ')+s,86,99+i*10,on?'#ffe66a':'#aab',1)})}}};
 

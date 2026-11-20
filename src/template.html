@@ -25,6 +25,7 @@ html,body{margin:0;height:100%;background:#1a1824;overflow:hidden;touch-action:n
 #led.on{background:#ff3a3a;box-shadow:0 0 8px #ff3030,inset 0 -1px 2px rgba(0,0,0,.4)}
 #screen{display:block;margin:0 auto;width:min(calc(100vw - 58px), calc((50dvh - 80px) * 4 / 3), 400px);aspect-ratio:4/3;height:auto;image-rendering:pixelated;image-rendering:crisp-edges;background:#000;border-radius:2px;box-shadow:0 0 0 2px #2c2b3a}
 #brand{margin:8px 4px 0;color:var(--ink);font-weight:900;font-style:italic;font-size:22px;letter-spacing:-.5px;line-height:1}
+#brand #ver{float:right;font-size:11px;font-style:normal;font-weight:900;letter-spacing:1px;color:#8b2d6b;margin-top:8px}
 #brand small{font-size:10px;font-style:normal;letter-spacing:2px;color:#8b2d6b;margin-left:6px;vertical-align:4px}
 #controls{flex:1;position:relative;min-height:220px}
 .btn{position:absolute;touch-action:none}
@@ -66,7 +67,7 @@ html,body{margin:0;height:100%;background:#1a1824;overflow:hidden;touch-action:n
       <canvas id="screen" width="256" height="192"></canvas>
     </div>
   </div>
-  <div id="brand">DOJO BOY<small>FIGHT</small></div>
+  <div id="brand">DOJO BOY<small>FIGHT</small><span id="ver"></span></div>
   <div id="controls">
     <div id="dpad" class="btn"><div class="h"></div><div class="v"></div><div class="c"></div><i class="arr au"></i><i class="arr ad"></i><i class="arr al"></i><i class="arr ar"></i></div>
     <div id="abwrap" class="btn"><div id="bB" class="ab"><b>B</b></div><div id="bA" class="ab"><b>A</b></div></div>
