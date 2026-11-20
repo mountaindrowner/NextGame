@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.9.0
+
+- **Online multiplayer** — ONLINE on the title menu. One player picks HOST A GAME and gets a 4-letter room code; the other picks JOIN A GAME and types it in (or picks the letters with the d-pad). Both choose fighters on their own device (Hecky's fox costume works too), then fight. Rematch, back to character select, or leave the room after each match; the set score carries over.
+- The fight runs directly between the two browsers (WebRTC). Both games simulate the same frames from the same inputs, with a small input delay set from the measured ping, so there's no host advantage. A "WAITING FOR OPPONENT" banner shows if the connection hiccups, and a dropped player returns the other to the online menu.
+- A tiny matchmaking service (`server/worker.js`, a Cloudflare Worker) only swaps the connection details for a room code; rooms expire after 10 minutes and nothing else is stored.
+
 ## 1.8.0
 
 - **Every fighter has their own super now** (forward + A+B with a full bar) instead of one shared flurry:

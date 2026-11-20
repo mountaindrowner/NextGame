@@ -357,11 +357,11 @@ const Intro={enter(){this.slam=-1},
     if(t>395){ctx.fillStyle=`rgba(255,255,255,${Math.min(1,(t-395)/12)})`;ctx.fillRect(0,0,W,H)}}};
 
 const Title={enter(){setTwo(false);this.ph='press';this.sel=0;this.petals=Array.from({length:18},()=>({x:rnd(0,W),y:rnd(0,H),v:rnd(.3,.8),s:rnd(0,6)}));playMusic('title')},
-  items:['ARCADE','VERSUS CPU','2 PLAYERS','TRAINING','TRIALS','RECORDS','OPTIONS'],
+  items:['ARCADE','VERSUS CPU','2 PLAYERS','ONLINE','TRAINING','TRIALS','RECORDS','OPTIONS'],
   update(){if(this.ph==='press'){if(anyPress()){SFX.start();this.ph='menu';say('Bonfire Bash',1,0.5)}return}
     const n=this.items.length;if(pressed.up){this.sel=(this.sel+n-1)%n;SFX.move()}if(pressed.down){this.sel=(this.sel+1)%n;SFX.move()}
     if(pressed.b){this.ph='press';SFX.back()}
-    if(pressed.a||pressed.start){SFX.ok();const s=this.sel;const it=this.items[s];if(it==='OPTIONS')go(Options);else if(it==='RECORDS')go(Records);else goFade(()=>go(Select,{ARCADE:'arcade','VERSUS CPU':'vs','2 PLAYERS':'2p',TRAINING:'training',TRIALS:'trials'}[it]))}},
+    if(pressed.a||pressed.start){SFX.ok();const s=this.sel;const it=this.items[s];if(it==='OPTIONS')go(Options);else if(it==='RECORDS')go(Records);else if(it==='ONLINE'){Online.ph='menu';goFade(()=>go(Online))}else goFade(()=>go(Select,{ARCADE:'arcade','VERSUS CPU':'vs','2 PLAYERS':'2p',TRAINING:'training',TRIALS:'trials'}[it]))}},
   draw(){const t=this.t;ctx.drawImage(CH.karl.stage,0,0);ctx.fillStyle='rgba(8,6,24,.55)';ctx.fillRect(0,0,W,H);
     ctx.fillStyle='#ffc0d8';for(const p of this.petals){p.y+=p.v;p.x+=Math.sin((t+p.s*30)/30)*0.4-0.2;if(p.y>H){p.y=-4;p.x=rnd(0,W)}ctx.fillRect(p.x|0,p.y|0,2,2)}
     ORDER.forEach((id,i)=>{const im=CH[id].pors;ctx.drawImage(im,Math.round(-8+i*W/ORDER.length),H-im.height)});
@@ -849,7 +849,7 @@ function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:
 function startFight(){const opp=RUN.ladder[RUN.idx];go(Fight,{p1:RUN.p1,p2:opp,stage:opp})}
 const DUMMY=['STAND','BLOCK','LOW BLOCK','CROUCH'];
 const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;this.meters=null;this.trial=null;F=this;stageMusic(cfg.stage);this.startRound()},
-  startRound(){const c=this.cfg,m=RUN&&RUN.mode;this.two=m==='2p';this.training=m==='training'||m==='trials';this.trial=m==='trials'?(this.trial||{i:0,step:0,clear:0}):null;
+  startRound(){const c=this.cfg,m=RUN&&RUN.mode;this.two=m==='2p'||m==='online';this.online=m==='online';this.training=m==='training'||m==='trials';this.trial=m==='trials'?(this.trial||{i:0,step:0,clear:0}):null;
     this.tDmg=0;this.tHits=0;this.tBest=this.tBest||0;this.inLog=[];
     const a1=!!(RUN&&RUN.alt&&RUN.alt[0]),a2=c.p1===c.p2?!a1:!!(RUN&&RUN.alt&&RUN.alt[1]);
     const k1=skinned(c.p1,0),k2=skinned(c.p2,1);this.p1=new Fighter(k1.skinKey||c.p1,0,false,a1);this.p2=new Fighter(k2.skinKey||c.p2,1,!this.two,c.p1===c.p2&&k1!==k2?false:a2);if(this.meters){this.p1.meter=this.meters[0];this.p2.meter=this.meters[1]}this.cine=null;this.proj=[];this.parts=[];this.texts=[];this.hitFx=[];
@@ -858,7 +858,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
   onKO(att,def){if(this.phase!=='play')return;if(!att.cpu&&!this.training&&att.state==='special'&&att.sp&&att.sp.kind==='super')badge('super');this.phase='ko';this.pt=0;this.slow=50;this.koSide=att.side;SFX.ko();this.shake=8;say('K.O.!',0.9,0.5)},
   update(){
     if(this.paused){this.updatePause();return}
-    if((pressed.start||(this.two&&pressed2.start))&&this.phase==='play'){this.paused=true;this.psel=0;SFX.ok();return}
+    if(!this.online&&(pressed.start||(this.two&&pressed2.start))&&this.phase==='play'){this.paused=true;this.psel=0;SFX.ok();return}
     if(this.cine){if(++this.cine.t>=this.cine.n)this.cine=null;return}
     // freezes (hit-stop, super flash, slow-mo): presses still go into the buffer, and the buffer doesn't age
     const frozen=this.hitstop>0||this.superFlash>0||(this.slow>0&&(this.slow-1)%3);
@@ -964,12 +964,13 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
       ctx.fillStyle='#000';ctx.fillRect(x-1,y-1,w+2,6);ctx.fillStyle='#1a1638';ctx.fillRect(x,y,w,4);
       ctx.fillStyle=full?((frameNo>>2)&1?'#ffffff':'#ff4ad8'):'#b03adf';i?ctx.fillRect(x+w-mw,y,mw,4):ctx.fillRect(x,y,mw,4);
       drawText(full?'SUPER!':'SUPER',i?x-4:x+w+4,y-2,full?((frameNo>>3)&1?'#ffe66a':'#ff8ad8'):'#7a6aa0',1,{align:i?'right':'left',outline:'#000'});
-      if(this.two)drawText(i?'2P':'1P',i?W-10:10,30,i?'#5ab4ff':'#ff5a5a',1,{align:i?'right':'left',outline:'#000'})});
+      if(this.online){const me=i===(NET.role==='host'?0:1);drawText(me?'YOU':'',i?W-10:10,30,'#7aff8a',1,{align:i?'right':'left',outline:'#000'})}
+      else if(this.two)drawText(i?'2P':'1P',i?W-10:10,30,i?'#5ab4ff':'#ff5a5a',1,{align:i?'right':'left',outline:'#000'})});
     if(this.cinema){}else if(this.trial){this.drawTrial();this.drawInputs()}
     else if(this.training){this.drawInputs();box(60,26,136,14,'rgba(10,10,30,.75)','#3ae8ff');drawText(`HITS ${this.tHits}  DMG ${Math.round(this.tDmg)}  BEST ${this.tBest}`,128,29,'#fff',1,{align:'center',shadow:false});
       if(!this.cinema)drawText('SELECT: DUMMY '+(this.dummy||'STAND'),128,172,'#9ad',1,{align:'center',outline:'#000'})}
     if(this.comboShow){const c=this.comboShow,tr=this.training;const x=c.side?248:tr?36:8;drawText(c.n+' HITS!',x,tr?54:44,'#fff',1,{align:c.side?'right':'left',grad:FIRE,outline:'#300'})}},
-  winText(w){return this.two?`P${w+1} WINS`:w===0?'YOU WIN':'YOU LOSE'},
+  winText(w){if(this.online)return w===(NET.role==='host'?0:1)?'YOU WIN':'YOU LOSE';return this.two?`P${w+1} WINS`:w===0?'YOU WIN':'YOU LOSE'},
   drawBanner(){const pt=this.pt;let s=null,sc=3,grad=FIRE;
     if(this.phase==='intro'){const fin=this.wins[0]===1&&this.wins[1]===1;if(pt<78)s=fin?'FINAL ROUND':'ROUND '+this.round;else s='FIGHT!';sc=pt<78?(fin?2:3):4}
     else if(this.phase==='ko'){if(pt<100)s='K.O.';else{const wf=this.koSide?this.p2:this.p1;s=wf.hp>=wf.mhp?'PERFECT!':this.winText(this.koSide);sc=s==='PERFECT!'?3:3}if(pt<100)sc=5}
@@ -1127,14 +1128,15 @@ function drawHitFx(h){const r=(8-h.l)*(h.big?3:2)+3;ctx.strokeStyle=h.l>4?'#fff'
   if(h.l>5){ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(h.x,h.y,r*0.35,0,Math.PI*2);ctx.fill()}}
 
 // ---------------- RESULT / CONTINUE / ENDING ----------------
-const Result={enter(w,cfg){this.w=w;this.cfg=cfg;this.two=RUN.mode==='2p';this.win=this.two||w===0;this.wc=w===0?skinned(cfg.p1,0):skinned(cfg.p2,1);this.lc=w===0?skinned(cfg.p2,1):skinned(cfg.p1,0);
+const Result={enter(w,cfg){this.w=w;this.cfg=cfg;this.two=RUN.mode==='2p'||RUN.mode==='online';this.online=RUN.mode==='online';this.win=this.online?w===(NET.role==='host'?0:1):this.two||w===0;this.wc=w===0?skinned(cfg.p1,0):skinned(cfg.p2,1);this.lc=w===0?skinned(cfg.p2,1):skinned(cfg.p1,0);
     playMusic(this.win?'win':'lose');setTimeout(()=>{say(this.two?`Player ${w?'two':'one'} wins`:this.win?'You win!':'You lose');playVoice(this.lc.id+'_ko','f1',1.2)},300);if(this.win)CEL.start(1.2);
     if(this.two)RUN.score[w]++;else{const r=rc(cfg.p1);if(w===0){r.w++;badge('first')}else r.l++;saveRec()}
-    this.menu=(RUN.mode==='vs'||this.two)?['REMATCH','CHARACTER SELECT','MAIN MENU']:null;this.sel=0},
+    this.menu=this.online?['REMATCH','CHARACTER SELECT','LEAVE ROOM']:(RUN.mode==='vs'||this.two)?['REMATCH','CHARACTER SELECT','MAIN MENU']:null;this.sel=0},
   update(){if(this.t<=50)return;
     if(this.menu){const n=this.menu.length;if(pressed.up){this.sel=(this.sel+n-1)%n;SFX.move()}if(pressed.down){this.sel=(this.sel+1)%n;SFX.move()}
       if(pressed.a||pressed.start||(this.two&&(pressed2.a||pressed2.start)&&this.sel===0)){SFX.ok();const k=this.menu[this.sel];
-        goFade(()=>{if(k==='REMATCH')startFight();else if(k==='CHARACTER SELECT')go(Select,RUN.mode);else{go(Title);Title.ph='menu'}})}return}
+        goFade(()=>{if(k==='REMATCH')startFight();else if(this.online&&k==='CHARACTER SELECT'){NET.lock=false;go(OnlineSelect)}else if(this.online){netQuit();go(Title);Title.ph='menu'}
+          else if(k==='CHARACTER SELECT')go(Select,RUN.mode);else{go(Title);Title.ph='menu'}})}return}
     if(pressed.a||pressed.start){SFX.ok();goFade(()=>this.next())}},
   next(){if(RUN.mode!=='arcade'){go(Select,RUN.mode);return}if(this.win){RUN.idx++;if(RUN.idx>=RUN.ladder.length)go(Ending);else go(VS)}else go(Continue)},
   draw(){const t=this.t,c=this.wc;ctx.drawImage(CH[this.cfg.stage].stage,0,0);ctx.fillStyle='rgba(6,4,20,.7)';ctx.fillRect(0,0,W,H);
@@ -1142,13 +1144,130 @@ const Result={enter(w,cfg){this.w=w;this.cfg=cfg;this.two=RUN.mode==='2p';this.w
     const p=Math.min(1,t/16),img=c.por;ctx.drawImage(img,Math.round(-40+40*p)-6,H-img.height);
     if(this.win)CEL.draw();
     const bob=this.win?Math.round(Math.abs(Math.sin(t*.09))*-4):0;
-    drawText(this.two?`P${this.w+1} WINS!`:this.win?'YOU WIN!':'YOU LOSE',186,16+bob,'#fff',2,{align:'center',grad:this.win?FIRE:ICE,outline:'#200'});
+    drawText(this.online?(this.win?'YOU WIN!':'YOU LOSE'):this.two?`P${this.w+1} WINS!`:this.win?'YOU WIN!':'YOU LOSE',186,16+bob,'#fff',2,{align:'center',grad:this.win?FIRE:ICE,outline:'#200'});
     if(this.two)drawText(`P1  ${RUN.score[0]} - ${RUN.score[1]}  P2`,186,32,'#fff',1,{align:'center',outline:'#000'});
     box(118,40,132,94);ctx.drawImage(c.logo,0,0,c.logo.width,c.logo.height,124,44,70,Math.round(c.logo.height*70/c.logo.width));
     const lines=wrap('"'+c.quote+'"',20),n=Math.min(lines.join('').length,Math.floor(t*1.2));let k=0;
     lines.forEach((l,i)=>{const s=l.slice(0,Math.max(0,n-k));k+=l.length;drawText(s,124,74+i*10,'#fff',1,{shadow:false})});
     if(this.menu){if(t>50){box(118,140,132,38);this.menu.forEach((m,i)=>drawText((i===this.sel?'> ':'  ')+m,124,145+i*11,i===this.sel?'#ffe66a':'#aab',1,{shadow:false}))}}
     else if(t>50&&(t>>4)&1)drawText('PRESS A',184,170,'#ffe66a',1,{align:'center',outline:'#000'})}};
+
+// ---------------- ONLINE: browser-to-browser (WebRTC) with lockstep inputs and a small input delay ----------------
+// The matchmaking worker (server/worker.js) only swaps connection offers by a 4-letter room code.
+// During a match both games simulate the same frames from the same inputs; each sends only its button presses.
+const NET_URL='https://bonfire-bash-net.thecrossroads.workers.dev';
+const RTC_ICE=[{urls:'stun:stun.cloudflare.com:3478'},{urls:'stun:stun.l.google.com:19302'}];
+const NET={pc:null,dc:null,role:null,status:'',lock:false,D:4,sim:0,lf:0,loc:{},rem:{},acc:0,stall:0,hashes:{},peerH:{},sess:0,desyncs:0,rtt:0};
+function netReset(){try{NET.dc&&NET.dc.close()}catch(e){}try{NET.pc&&NET.pc.close()}catch(e){}
+  Object.assign(NET,{pc:null,dc:null,role:null,code:'',status:'',err:'',lock:false,sim:0,lf:0,loc:{},rem:{},acc:0,stall:0,hashes:{},peerH:{},snap:null,pick:null,peerPick:null,gone:false})}
+const waitIce=pc=>new Promise(r=>{if(pc.iceGatheringState==='complete')return r();const t=setTimeout(r,2500);pc.addEventListener('icegatheringstatechange',()=>{if(pc.iceGatheringState==='complete'){clearTimeout(t);r()}})});
+async function api(path,body){const r=await fetch(NET_URL+path,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});let j={};try{j=await r.json()}catch(e){}return{status:r.status,...j}}
+function netSend(m){try{if(NET.dc&&NET.dc.readyState==='open')NET.dc.send(JSON.stringify(m))}catch(e){}}
+function wireDC(dc){NET.dc=dc;dc.onopen=()=>{NET.status='connected';netPing()};dc.onclose=()=>netLost();dc.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch(x){return}netMsg(m)}}
+function wirePC(pc){pc.onconnectionstatechange=()=>{if(pc===NET.pc&&['failed','disconnected','closed'].includes(pc.connectionState))netLost()}}
+function netPing(){netSend({t:'ping',at:performance.now()})}
+async function netHost(){netReset();NET.role='host';NET.status='creating';
+  try{const pc=NET.pc=new RTCPeerConnection({iceServers:RTC_ICE});wirePC(pc);wireDC(pc.createDataChannel('bonfire',{ordered:true}));
+    await pc.setLocalDescription(await pc.createOffer());await waitIce(pc);
+    const r=await api('/room',{offer:pc.localDescription.sdp});if(!r.code)throw new Error('no code');if(NET.pc!==pc)return;NET.code=r.code;NET.status='waiting';
+    for(let i=0;i<300&&NET.pc===pc&&!pc.remoteDescription;i++){await new Promise(z=>setTimeout(z,1500));if(NET.pc!==pc)return;
+      const a=await api('/room/'+r.code+'/answer');if(a.answer&&NET.pc===pc){await pc.setRemoteDescription({type:'answer',sdp:a.answer});NET.status='connecting'}}
+    if(NET.pc===pc&&!pc.remoteDescription){NET.status='error';NET.err='NOBODY JOINED'}
+  }catch(e){if(NET.role==='host'){NET.status='error';NET.err='CAN\'T REACH THE SERVER'}}}
+async function netJoin(code){netReset();NET.role='guest';NET.code=code;NET.status='connecting';
+  try{const o=await api('/room/'+code);if(!o.offer){NET.status='error';NET.err=o.error==='room full'?'THAT ROOM IS FULL':'NO ROOM WITH THAT CODE';return}
+    const pc=NET.pc=new RTCPeerConnection({iceServers:RTC_ICE});wirePC(pc);pc.ondatachannel=e=>wireDC(e.channel);
+    await pc.setRemoteDescription({type:'offer',sdp:o.offer});await pc.setLocalDescription(await pc.createAnswer());await waitIce(pc);
+    const a=await api('/room/'+code+'/answer',{answer:pc.localDescription.sdp});if(a.error){NET.status='error';NET.err='THAT ROOM IS FULL';return}
+    setTimeout(()=>{if(NET.pc===pc&&NET.status!=='connected'){NET.status='error';NET.err='COULD NOT CONNECT'}},20000)
+  }catch(e){if(NET.role==='guest'){NET.status='error';NET.err='CAN\'T REACH THE SERVER'}}}
+function netLost(){if(!NET.role||NET.gone)return;NET.gone=true;const inGame=NET.status==='connected';NET.lock=false;
+  if(!inGame){NET.status='error';NET.err='COULD NOT CONNECT';return}
+  setTimeout(()=>{netReset();fade.a=0;fade.dir=0;go(Online);Online.ph='msg';Online.msg='OPPONENT DISCONNECTED'},30)}
+function netQuit(){netSend({t:'bye'});NET.gone=true;netReset()}
+function netMsg(m){switch(m.t){
+  case'ping':netSend({t:'pong',at:m.at});break;
+  case'pong':NET.rtt=Math.round(performance.now()-m.at);NET.D=clamp(Math.ceil(NET.rtt/2/16.7)+2,3,9);break;
+  case'pick':NET.peerPick=m.id?{id:m.id,skin:!!m.skin}:null;break;
+  case'start':netBegin(m);break;
+  case'i':if(m.s===NET.sess)NET.rem[m.f]=m.v;break;
+  case'h':if(m.s===NET.sess){NET.peerH[m.f]=m.h;netCheck(m.f)}break;
+  case'rq':if(NET.role==='host'&&scene===Fight&&NET.lock)netSend({t:'snap',s:NET.sess,f:NET.sim,d:snapState()});break;
+  case'snap':if(m.s===NET.sess){if(NET.sim<m.f)NET.snap=m;else applySnap(m.d)}break;
+  case'bye':netLost();break}}
+// inputs: held directions (bits 0-3) + presses since the last sample (bits 4-11)
+const NK=['left','right','up','down'],NP=['left','right','up','down','a','b','start','select'];
+function edgeBits(){let v=0;NP.forEach((k,i)=>{if(pressed[k])v|=1<<(4+i)});return v}
+function heldBits(){let v=0;NK.forEach((k,i)=>{if(held[k])v|=1<<i});return v}
+function applyIn(v,H,P){NK.forEach((k,i)=>{H[k]=!!(v&(1<<i))});NP.forEach((k,i)=>{P[k]=!!(v&(1<<(4+i)))});H.a=P.a;H.b=P.b;H.start=P.start;H.select=P.select;H.tap=P.tap=false}
+function netBegin(cfg){NET.sess=cfg.s;NET.D=cfg.D;NET.lock=true;NET.sim=0;NET.lf=cfg.D;NET.loc={};NET.rem={};NET.acc=0;NET.stall=0;NET.hashes={};NET.peerH={};NET.snap=null;
+  for(let i=0;i<cfg.D;i++)NET.loc[i]=NET.rem[i]=0;frameNo=0;fade.a=0;fade.dir=0;fade.cb=null;setTwo(false);
+  RUN={mode:'online',p1:cfg.p1,ladder:[cfg.p2],idx:0,cont:0,score:NET.score||[0,0],skin:cfg.skin,alt:[false,false]};NET.score=RUN.score;go(VS)}
+// returns false when the opponent's input for this frame hasn't arrived yet (the game waits)
+function netStep(){NET.acc|=edgeBits();
+  if(NET.lf<=NET.sim+NET.D){const v=heldBits()|NET.acc;NET.acc=0;NET.loc[NET.lf]=v;netSend({t:'i',s:NET.sess,f:NET.lf,v});NET.lf++}
+  const f=NET.sim,a=NET.loc[f],b=NET.rem[f];if(a===undefined||b===undefined){if(++NET.stall>600)netLost();return false}
+  NET.stall=0;const host=NET.role==='host';applyIn(host?a:b,held,pressed);applyIn(host?b:a,held2,pressed2);
+  delete NET.loc[f-60];delete NET.rem[f-60];NET.sim++;return true}
+const SNAPF=['x','y','vx','vy','hp','trail','meter','face','stun','st','ast','inv','spCD','spCD2','spCD3','combo','comboT','cuffed','zap','buff','chain','crouch','jug','state','hitDone','dj','ko'];
+function snapState(){const one=f=>{const o={};for(const k of SNAPF)o[k]=f[k];return o};return{p:[one(F.p1),one(F.p2)],g:{time:F.time,tf:F.tf,pt:F.pt,phase:F.phase,wins:F.wins,round:F.round}}}
+function applySnap(d){if(!F||scene!==Fight||!d)return;[F.p1,F.p2].forEach((f,i)=>Object.assign(f,d.p[i]));Object.assign(F,d.g)}
+function hashState(){return[F.p1,F.p2].map(f=>[f.x,f.y,f.hp,f.meter].map(v=>Math.round(v*100)).join(',')+f.state).join('|')+'|'+F.time+'|'+F.round}
+function netCheck(f){const a=NET.hashes[f],b=NET.peerH[f];if(a===undefined||b===undefined)return;delete NET.hashes[f];delete NET.peerH[f];
+  if(a!==b){NET.desyncs++;if(NET.role==='guest')netSend({t:'rq'})}}
+function netAfter(){if(scene===Fight&&F&&NET.sim%60===0){const h=hashState();NET.hashes[NET.sim]=h;netSend({t:'h',s:NET.sess,f:NET.sim,h});netCheck(NET.sim)}
+  if(NET.snap&&NET.sim>=NET.snap.f){applySnap(NET.snap.d);NET.snap=null}}
+// room-code typing on a keyboard
+window.addEventListener('keydown',e=>{if(scene!==Online||Online.ph!=='join')return;
+  if(/^Key[A-Z]$/.test(e.code)){const L=e.code[3];const i=ONL.indexOf(L);if(i>=0){Online.code[Online.ci]=i;Online.ci=Math.min(3,Online.ci+1);SFX.move()}e.preventDefault();e.stopPropagation()}
+  else if(e.code==='Backspace'){Online.ci=Math.max(0,Online.ci-1);e.preventDefault();e.stopPropagation()}},true);
+const ONL='ABCDEFGHJKLMNPQRSTUVWXYZ';
+const Online={enter(){setTwo(false);this.ph=this.ph==='msg'?'msg':'menu';this.sel=0;this.code=[0,0,0,0];this.ci=0;playMusic('select')},
+  items:['HOST A GAME','JOIN A GAME','BACK'],
+  update(){const ph=this.ph;
+    if(ph==='menu'){const n=3;if(pressed.up){this.sel=(this.sel+n-1)%n;SFX.move()}if(pressed.down){this.sel=(this.sel+1)%n;SFX.move()}
+      if(pressed.b||((pressed.a||pressed.start)&&this.sel===2)){SFX.back();go(Title);Title.ph='menu';return}
+      if(pressed.a||pressed.start){SFX.ok();if(this.sel===0){this.ph='host';netHost()}else{this.ph='join';this.ci=0}}return}
+    if(ph==='join'){if(pressed.left){this.ci=Math.max(0,this.ci-1);SFX.move()}if(pressed.right){this.ci=Math.min(3,this.ci+1);SFX.move()}
+      if(pressed.up){this.code[this.ci]=(this.code[this.ci]+1)%ONL.length;SFX.move()}if(pressed.down){this.code[this.ci]=(this.code[this.ci]+ONL.length-1)%ONL.length;SFX.move()}
+      if(pressed.b){this.ph='menu';SFX.back();return}
+      if(pressed.start||(pressed.a&&this.ci===3)){SFX.ok();this.ph='wait';netJoin(this.code.map(i=>ONL[i]).join(''))}else if(pressed.a){this.ci=Math.min(3,this.ci+1);SFX.move()}return}
+    if(ph==='host'||ph==='wait'){if(NET.status==='connected'){SFX.start();goFade(()=>go(OnlineSelect));this.ph='done'}
+      else if(NET.status==='error'){this.ph='msg';this.msg=NET.err;netReset()}
+      if(pressed.b){SFX.back();netQuit();this.ph='menu'}return}
+    if(ph==='msg'&&(pressed.a||pressed.b||pressed.start)){SFX.back();this.ph='menu'}},
+  draw(){const t=this.t;stripes(t,'#101a38','#152048');drawText('ONLINE',128,8,'#fff',3,{align:'center',grad:FIRE,outline:'#300'});
+    box(24,40,208,118);const ph=this.ph;
+    if(ph==='menu'){this.items.forEach((it,i)=>drawText((i===this.sel?'> ':'  ')+it,70,62+i*16,i===this.sel?'#ffe66a':'#aab',1));
+      drawText('PLAY A FRIEND ON ANOTHER DEVICE.',128,118,'#9ad',1,{align:'center',shadow:false});drawText('THE HOST GETS A 4-LETTER CODE;',128,130,'#9ad',1,{align:'center',shadow:false});drawText('THE OTHER PLAYER TYPES IT IN.',128,142,'#9ad',1,{align:'center',shadow:false})}
+    else if(ph==='host'){drawText('YOUR ROOM CODE',128,52,'#9ad',1,{align:'center'});
+      if(NET.code){drawText(NET.code,128,72,'#fff',4,{align:'center',grad:FIRE,outline:'#200'});drawText('TELL YOUR FRIEND THIS CODE.',128,114,'#fff',1,{align:'center'});
+        drawText('WAITING FOR THEM TO JOIN'+'...'.slice(0,(t>>4)%4),128,130,'#ffe66a',1,{align:'center'})}
+      else drawText('CREATING ROOM'+'...'.slice(0,(t>>4)%4),128,80,'#ffe66a',1,{align:'center'});drawText('B: CANCEL',128,146,'#778',1,{align:'center',shadow:false})}
+    else if(ph==='join'){drawText('ENTER THE ROOM CODE',128,52,'#9ad',1,{align:'center'});
+      for(let i=0;i<4;i++){const x=68+i*32,on=i===this.ci;box(x,72,26,30,on?'rgba(60,40,10,.9)':'rgba(10,10,30,.82)',on?'#ffe66a':'#556');drawText(ONL[this.code[i]],x+13,79,on?'#ffe66a':'#fff',3,{align:'center'})}
+      drawText('UP/DOWN: LETTER  LEFT/RIGHT: MOVE',128,116,'#9ad',1,{align:'center',shadow:false});drawText('(OR TYPE IT)  START: JOIN  B: BACK',128,128,'#9ad',1,{align:'center',shadow:false})}
+    else if(ph==='wait'||ph==='done'){drawText('CONNECTING TO '+(NET.code||''),128,80,'#ffe66a',1,{align:'center'});drawText('...'.slice(0,(t>>4)%4),128,96,'#ffe66a',2,{align:'center'})}
+    else if(ph==='msg'){drawText(this.msg||'',128,82,'#ff9a6a',1,{align:'center'});drawText('A: OK',128,110,'#9ad',1,{align:'center'})}}};
+const OnlineSelect={enter(){this.cur=this.cur||0;this.done=false;this.skin=false;this.started=false;NET.lock=false;NET.pick=null;netSend({t:'pick',id:null});netPing();playMusic('select')},
+  update(){if(NET.status!=='connected')return;const N=ORDER.length,id=ORDER[this.cur];if(this.t%90===0)netPing();
+    if(!this.done){if(pressed.left||pressed.up){this.cur=(this.cur+N-1)%N;SFX.move()}if(pressed.right||pressed.down){this.cur=(this.cur+1)%N;SFX.move()}
+      if(pressed.select&&CH[id].skin2&&CH[CH[id].skin2]){this.skin=!this.skin;SFX.move()}
+      if(pressed.b){SFX.back();netQuit();go(Title);Title.ph='menu';return}
+      if(pressed.a||pressed.start){this.done=true;SFX.ok();sayName(id);NET.pick={id,skin:this.skin&&!!CH[id].skin2};netSend({t:'pick',...NET.pick})}}
+    else if(pressed.b){this.done=false;NET.pick=null;netSend({t:'pick',id:null});SFX.back()}
+    if(NET.role==='host'&&NET.pick&&NET.peerPick&&!this.started){this.started=true;
+      const cfg={t:'start',s:(NET.sess||0)+1,D:NET.D,p1:NET.pick.id,p2:NET.peerPick.id,skin:[NET.pick.skin,NET.peerPick.skin]};netSend(cfg);netBegin(cfg)}},
+  draw(){const t=this.t,id=ORDER[this.cur],me=CH[id],sk=this.skin&&me.skin2&&CH[me.skin2]?CH[me.skin2]:me;stripes(t,'#101a38','#152048');
+    drawText('ONLINE - ROOM '+(NET.code||''),128,5,'#fff',1,{align:'center',grad:FIRE,outline:'#300'});
+    ctx.save();ctx.beginPath();ctx.rect(0,16,128,140);ctx.clip();ctx.drawImage(sk.porm,4-(this.done?0:0),156-sk.porm.height);ctx.restore();
+    const pp=NET.peerPick,them=pp?(pp.skin&&CH[pp.id].skin2&&CH[CH[pp.id].skin2]?CH[CH[pp.id].skin2]:CH[pp.id]):null;
+    ctx.save();ctx.beginPath();ctx.rect(128,16,128,140);ctx.clip();if(them)drawMirror(them.porm,252-them.porm.width,156-them.porm.height);else{ctx.globalAlpha=.25;drawMirror(CH[ORDER[(t>>5)%ORDER.length]].porDark,160,44);ctx.globalAlpha=1}ctx.restore();
+    drawText('YOU',8,20,'#ff5a5a',1,{outline:'#000'});drawText(me.name,8,30,'#fff',1,{outline:'#000'});drawText(this.done?'READY!':'CHOOSING',8,40,this.done?'#7aff8a':'#ffe66a',1,{outline:'#000'});
+    drawText('OPPONENT',248,20,'#5ab4ff',1,{align:'right',outline:'#000'});drawText(pp?CH[pp.id].name:'???',248,30,'#fff',1,{align:'right',outline:'#000'});drawText(pp?'READY!':'CHOOSING',248,40,pp?'#7aff8a':'#ffe66a',1,{align:'right',outline:'#000'});
+    ORDER.forEach((oid,i)=>{const S=20,x=128-ORDER.length*(S+2)/2+i*(S+2),y=158;ctx.fillStyle='#000';ctx.fillRect(x-1,y-1,S+2,S+2);ctx.imageSmoothingEnabled=true;ctx.drawImage(CH[oid].head,x,y,S,S);ctx.imageSmoothingEnabled=false;
+      if(i===this.cur&&((t>>3)&1||this.done)){ctx.strokeStyle='#ff3a3a';ctx.lineWidth=2;ctx.strokeRect(x-2,y-2,S+4,S+4)}});
+    drawText((me.skin2&&CH[me.skin2]?'SELECT: COSTUME  ':'')+(this.done?'B: CHANGE':'A: READY  B: LEAVE')+(NET.rtt?'  PING '+NET.rtt+'MS':''),128,182,'#9ad',1,{align:'center',shadow:false})}};
 // ---------------- RECORDS ----------------
 const Records={enter(){playMusic('select')},
   update(){if(pressed.b||pressed.a||pressed.start){SFX.back();go(Title);Title.ph='menu';Title.sel=Title.items.indexOf('RECORDS')}},
@@ -1181,16 +1300,17 @@ const Ending={enter(){this.c=skinned(RUN.p1,0);playMusic('ending');setTimeout(()
 
 // ---------------- MAIN LOOP ----------------
 let ASSETS_READY=false;
-function step(){pollInput();frameNo++;CEL.update();if(TOAST&&--TOAST.l<=0)TOAST=null;
+function step(){pollInput();if(NET.lock&&!netStep()){CEL.update();return}frameNo++;CEL.update();if(TOAST&&--TOAST.l<=0)TOAST=null;
   if(fade.dir===1){fade.a+=fade.spd;if(fade.a>=1){fade.a=1;const cb=fade.cb;fade.cb=null;fade.dir=-1;cb&&cb()}return}
   if(fade.dir===-1){fade.a-=fade.spd;if(fade.a<=0){fade.a=0;fade.dir=0}}
-  if(scene.update)scene.update();scene.t++}
+  if(scene.update)scene.update();scene.t++;if(NET.lock)netAfter()}
 function drawToast(){if(!TOAST)return;const a=Math.max(0,Math.min(1,TOAST.l/20,(170-TOAST.l)/10));ctx.globalAlpha=a;box(52,150,152,22,'rgba(30,20,0,.9)','#ffd23a');
   drawText('BADGE UNLOCKED',128,153,'#ffd23a',1,{align:'center',shadow:false});drawText(TOAST.s,128,162,'#fff',1,{align:'center',shadow:false});ctx.globalAlpha=1}
-function render(){ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;scene.draw();drawToast();if(fade.a>0){ctx.fillStyle=`rgba(0,0,0,${fade.a})`;ctx.fillRect(0,0,W,H)}}
+function render(){ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;scene.draw();drawToast();
+  if(NET.lock&&NET.stall>20){box(58,86,140,18,'rgba(10,10,30,.9)','#5ab4ff');drawText('WAITING FOR OPPONENT'+'...'.slice(0,(performance.now()/300|0)%4),128,92,'#fff',1,{align:'center',shadow:false})}if(fade.a>0){ctx.fillStyle=`rgba(0,0,0,${fade.a})`;ctx.fillRect(0,0,W,H)}}
 let last=performance.now(),acc=0;
 function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=now;let n=0;while(acc>=1000/60&&n<4){step();acc-=1000/60;n++}if(n>=4)acc=0;render();musicTick()}
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
-window.__dbg={ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
+window.__dbg={NET,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
 
