@@ -57,7 +57,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Fighter | Type | Health | Trait |
 |---|---|---|---|
 | Papa-Léguas | Rushdown | 92 | fastest dash, 4-hit chains |
-| Ivan | Grappler | 118 | the start of his kick absorbs a hit |
+| Ivan | Grappler | 118 (10% damage reduction) | the start of his kick absorbs a hit |
 | Vizor | Zoner | 98 | long reach |
 | Samson | Powerhouse | 106 | counter-hit kicks knock down |
 | Zeke | High/low zoner | 100 | Spare: a blocked Strike Ball recharges his special to nearly ready |

@@ -216,7 +216,7 @@ const CH={
     col:{skin:'#e0965c',glove:'#2c2a44',leg:'#e9e7f3',foot:'#f6f6f6',aura:'#ffd23a'},sh:.72,hip:.5,
     quote:"TOO SLOW! THEY DON'T CALL ME PAPA-LÉGUAS FOR NOTHING!",lose:'I RAN OUT OF ROAD...',stageName:'CROSSROADS DOJO'},
   ivan:{id:'ivan',name:'IVAN',nick:'THE BEAR',style:'SAMBO',country:'RUSSIA',flag:'ru',ht:"6'2\" (188 CM)",wt:'215 LB (98 KG)',
-    speed:0.82,power:1.3,def:1.22,jump:0.88,stats:[2,5,4],special:'slam',spName:'BEAR SLAM',special2:'charge',sp2Name:'IRON CHARGE',tr:-5,
+    speed:0.82,power:1.3,def:1.1,jump:0.88,stats:[2,5,4],special:'slam',spName:'BEAR SLAM',special2:'charge',sp2Name:'IRON CHARGE',tr:-5,
     col:{skin:'#e3a272',glove:'#2e2f4a',leg:'#2b3168',foot:'#2c3a8a',aura:'#ff4a3a'},sh:.75,hip:.5,
     quote:'IN MY GYM, THE FLOOR IS MY FRIEND. SAY HELLO TO IT.',lose:'NEXT TIME... I BRING BIGGER BEAR.',stageName:'IRON GYM'},
   vizor:{id:'vizor',name:'VIZOR',nick:'THE WATCHER',style:'TECH BRAWLER',country:'UNKNOWN',countryLabel:'ORIGIN',flag:'unk',ht:"5'11\" (180 CM)",wt:'190 LB (86 KG)',
@@ -273,7 +273,7 @@ const TNAME={jab:'JAB',kick:'KICK',cjab:'LOW JAB',sweep:'SWEEP',jpunch:'JUMP PUN
 // bread-and-butter combos shown in the pause menu
 const BNB={karl:'JAB, JAB, KICK > SP',ivan:'JUMP KICK, JAB, KICK',vizor:'JAB, KICK > SP',padre:'JAB, KICK > SP (OVERHEAD)',zeke:'JAB, KICK > SP',hecky:'LOW JAB, JAB, KICK > SP',lawslie:'JAB, KICK > SP (TASER)',rex:'JAB, KICK > DN+SP'};
 // cooldown (frames) per special; second specials are stronger tools with longer cooldowns
-const SPCD={rush:75,shuriken:75,slam:75,spin:75,flash:110,tome:75,strike:75,split:120,takeover:70,powersuit:720,laser:130,taser:80,cuff:240,bassdrop:80,miccheck:150,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
+const SPCD={rush:75,shuriken:75,slam:110,spin:75,flash:110,tome:75,strike:75,split:120,takeover:70,powersuit:720,laser:130,taser:80,cuff:240,bassdrop:80,miccheck:150,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
 const IMG={};
 function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c}
 function silhouette(img,color){const c=mk(img.width,img.height),x=c.getContext('2d');x.drawImage(img,0,0);x.globalCompositeOperation='source-in';x.fillStyle=color;x.fillRect(0,0,c.width,c.height);return c}
@@ -671,9 +671,9 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
         const r=tryHit(f,o,hb,{dmg:fin?8:5,stun:22,bs:10,kb:fin?3:0.8,lv:'mid',chip:1,knock:fin,heavy:fin});if(r){s.hits++;s.last=t;if(r==='block'){s.hits=3;f.vx=-f.face*2;f.st=Math.max(t,24)}}}}
     else{f.vx*=.8;if(t>=36)endSpecial(f)}}
   else if(s.kind==='shuriken'){if(t===9){if(!F.proj.some(p=>p.owner===f)){F.proj.push({x:f.x+f.face*22,y:f.y+f.H*.66,vx:f.face*4.4,owner:f,rot:0,life:90});SFX.star()}}if(t>=30)endSpecial(f)}
-  else if(s.kind==='slam'){if(t>=5&&t<=10&&!s.hits){const hb={x1:f.face>0?f.x:f.x-54,x2:f.face>0?f.x+54:f.x,y1:f.y+10,y2:f.y+f.H*.9};
-      if(o.y<=2&&o.inv<=0&&!['down','rise','ko','knock','grabbed','hurt'].includes(o.state)&&overlap(hb,o.hurt())){s.hits=1;SFX.grab();f.state='slamming';f.st=0;f.slam={T:30,dmg:17,back:true,h:64,kind:'grab'};o.state='grabbed';o.st=0;o.atk=null;o.sp=null;o.crouch=false;f.grabbed=o;F.hitstop=6}}
-    if(t>=34)endSpecial(f)}
+  else if(s.kind==='slam'){if(t>=5&&t<=10&&!s.hits){const hb={x1:f.face>0?f.x:f.x-45,x2:f.face>0?f.x+45:f.x,y1:f.y+10,y2:f.y+f.H*.9};
+      if(o.y<=2&&o.inv<=0&&!['down','rise','ko','knock','grabbed','hurt'].includes(o.state)&&overlap(hb,o.hurt())){s.hits=1;SFX.grab();f.state='slamming';f.st=0;f.slam={T:30,dmg:14,back:true,h:64,kind:'grab'};o.state='grabbed';o.st=0;o.atk=null;o.sp=null;o.crouch=false;f.grabbed=o;F.hitstop=6}}
+    if(t>=44)endSpecial(f)}// a whiffed Bear Slam leaves Ivan open
   else if(s.kind==='spin'){f.y=Math.max(0,Math.sin(Math.min(1,t/36)*Math.PI)*10);f.vx=t>3&&t<32?f.face*3.1:f.vx*.8;
     if(t>3&&t<32&&s.hits<3&&t-s.last>=9){const hb={x1:f.x-48,x2:f.x+48,y1:f.y+f.H*.2,y2:f.y+f.H*.95};const fin=s.hits===2;
       const r=tryHit(f,o,hb,{dmg:fin?7:4,stun:20,bs:10,kb:fin?3:1,lv:'mid',chip:1,knock:fin,heavy:fin});if(r){s.hits++;s.last=t;if(r==='block')s.hits=3}}
@@ -1557,7 +1557,8 @@ const Brawl={
     if(Math.abs(dx)>4)o[dx>0?'r':'l']=1;if(Math.abs(dz)>3)o[dz>0?'d':'u']=1;
     const crowd=alive.filter(e=>Math.abs(e.x-P.x)<50&&Math.abs(e.z-P.z)<16).length;
     if(crowd>=2&&P.hp>20&&frameNo%40===0){o.a=o.b=1;return o}
-    if(Math.abs(t.x-P.x)<44&&Math.abs(dz)<6&&frameNo%7===0){o.l=o.r=0;if(Math.sign(t.x-P.x)!==P.face&&t.x!==P.x&&['idle','walk'].includes(P.state)){o[t.x>P.x?'r':'l']=1;return o}o.a=1}
+    if(Math.abs(t.x-P.x)<44&&Math.abs(dz)<6){o.l=o.r=0;// in range: hold position, face the target, punch
+      if(Math.sign(t.x-P.x)!==P.face&&t.x!==P.x&&['idle','walk'].includes(P.state)){o[t.x>P.x?'r':'l']=1;return o}if(frameNo%7===0)o.a=1}
     return o},
   // ---- the player ----
   control(){const P=this.P,i=this.input();if(i.a)P.lastA=frameNo;if(i.b)P.lastB=frameNo;

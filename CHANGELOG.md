@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.16.3
+
+- **Ivan toned down, still a top grappler:**
+  - **Bear Slam:** reach 54 → 45 px, damage 17 → 14, cooldown 75 → 110 frames, and a whiffed slam recovers 10 frames slower, so it can be punished.
+  - **Toughness:** damage reduction 22% → 10%. He keeps the most health (118) and stays the tankiest fighter, at about 130 effective health instead of about 145.
+  - **Balance test** (CPU vs CPU, Hard): Ivan's win rate goes from 84% to 76%, now near Lawslie (66%) and Hecky (65%) instead of 20+ points clear.
+- Story test autoplayer: holds position and faces its target when in range (it could dither against an enemy pinned at the screen edge).
+
 ## 1.16.2
 
 - **Hitboxes a little more generous:** 6 px of margin around each fist or foot instead of 4. They're still measured per fighter, per move.
