@@ -35,7 +35,7 @@ def main():
     html = html.replace("/*ASSETS*/", assets_js, 1).replace("/*GAME*/", game, 1)
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(html)
-    print(f"wrote {OUT.relative_to(ROOT)} v{version} ({OUT.stat().st_size/1024:.0f} KB, {len(imgs)} images, {len(data)} data files, {len(music)} songs)")
+    print(f"wrote {OUT.relative_to(ROOT)} v{version} ({OUT.stat().st_size/1024:.0f} KB, {len(imgs)} images, {len(data)} data files, {sum(1 for k in music if not k.startswith('voice_'))} songs, {sum(1 for k in music if k.startswith('voice_'))} voice clips)")
 
 
 if __name__ == "__main__":

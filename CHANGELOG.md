@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0
+
+- **Real voices** — a recorded arcade announcer (rounds, "Fight!", "K.O.", "Perfect!", fighter names, "versus", results) and a voice for every fighter: they shout their specials and super, say a line when they win, and another when they lose. Made with Kokoro, an open-source voice model (`tools/voices.py`); the browser's robot voice is only a fallback now.
+
 ## 1.1.0
 
 New features — the five most-loved fighting-game features from player and developer research:

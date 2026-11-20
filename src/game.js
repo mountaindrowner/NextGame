@@ -99,6 +99,7 @@ function unlockAudio(){
     AU.master=AU.ctx.createGain();AU.master.gain.value=0.55;AU.master.connect(AU.ctx.destination);
     AU.sfx=AU.ctx.createGain();AU.sfx.connect(AU.master);AU.mus=AU.ctx.createGain();AU.mus.gain.value=0.3;AU.mus.connect(AU.master);
     const len=AU.ctx.sampleRate,buf=AU.ctx.createBuffer(1,len,len),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;AU.noise=buf;
+    if(typeof MUSIC!=='undefined')setTimeout(()=>Object.keys(MUSIC).filter(k=>k.startsWith('voice_')).forEach(decodeVoice),0);
     if(window.speechSynthesis){const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u)}
   }catch(e){}
 }
@@ -138,7 +139,25 @@ const SFX={
   cheer:()=>{N(1.6,.22,900,2400,'bandpass');N(1.2,.12,2000,3500,'bandpass',.2);for(let i=0;i<10;i++)N(.035,.18,5000,2500,'highpass',.1+Math.random()*1.2)},
   bell:()=>{T('triangle',1318,.5,.2);T('triangle',1975,.5,.1,null,.02)},
 };
-function say(t,rate=0.95,pitch=0.6){if(!SET.voice||!window.speechSynthesis)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=rate;u.pitch=pitch;u.volume=1;speechSynthesis.speak(u)}catch(e){}}
+// ---------------- VOICE: recorded lines (assets/voice, made by tools/voices.py) ----------------
+// A line with a clip plays the clip; anything else falls back to the browser's speech.
+const VOX={buf:{},cur:{}};
+function decodeVoice(k){if(VOX.buf[k]||!AU.ctx||typeof MUSIC==='undefined'||!MUSIC[k])return VOX.buf[k];
+  const raw=atob(MUSIC[k].split(',')[1]),u=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)u[i]=raw.charCodeAt(i);
+  return VOX.buf[k]=AU.ctx.decodeAudioData(u.buffer).then(b=>VOX.buf[k]=b).catch(()=>null)}
+function playVoice(key,ch='ann',delay=0){const k='voice_'+key;if(!SET.voice||!AU.ctx||typeof MUSIC==='undefined'||!MUSIC[k])return false;
+  const go=b=>{if(!b||!b.duration)return;if(VOX.cur[ch]){try{VOX.cur[ch].stop()}catch(e){}}
+    if(!VOX.g){VOX.g=AU.ctx.createGain();VOX.g.gain.value=1.3;VOX.g.connect(AU.master)}
+    const src=AU.ctx.createBufferSource();src.buffer=b;src.connect(VOX.g);src.start(AU.ctx.currentTime+delay);VOX.cur[ch]=src;(VOX.log||(VOX.log=[])).push(key);if(VOX.log.length>60)VOX.log.shift()};
+  const b=VOX.buf[k]||decodeVoice(k);if(b&&b.duration)go(b);else Promise.resolve(b).then(go);return true}
+const vdur=k=>{const b=VOX.buf['voice_'+k];return b&&b.duration?b.duration:0.9};
+function sayName(id){if(!playVoice('ann_name_'+id))say(CH[id].name.replace('É','E').toLowerCase(),1,0.6)}
+function sayVs(a,b){if(!playVoice('ann_name_'+a,'vs1')){say(`${CH[a].name.toLowerCase()} versus ${CH[b].name.toLowerCase()}`,1,0.55);return}
+  const d1=vdur('ann_name_'+a)+0.05;playVoice('ann_versus','vs2',d1);playVoice('ann_name_'+b,'vs3',d1+vdur('ann_versus')+0.05)}
+function fighterVoice(f,line,delay=0){if(!playVoice(f.c.id+'_'+line,'f'+f.side,delay)&&line!=='win'&&line!=='ko'&&!f.cpu)
+  say((line==='super'?SUPER_NAME[f.c.id]:line==='sp2'?f.c.sp2Name:f.c.spName).replace('É','e').toLowerCase(),1.1,0.65)}
+function say(t,rate=0.95,pitch=0.6){if(playVoice('ann_'+String(t).toLowerCase().replace(/[^a-z ]/g,'').trim().replace(/ +/g,'_')))return;
+  if(!SET.voice||!window.speechSynthesis)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=rate;u.pitch=pitch;u.volume=1;speechSynthesis.speak(u)}catch(e){}}
 
 // ---------------- MUSIC ----------------
 const NI={C:0,'C#':1,D:2,'D#':3,E:4,F:5,'F#':6,G:7,'G#':8,A:9,'A#':10,B:11};
@@ -344,7 +363,7 @@ const Select={enter(mode){this.mode=mode;setTwo(mode==='2p');this.ph='p1';this.c
     if(P.left||P.up){this.cur=(this.cur+N-1)%N;this.slide=16;SFX.move()}if(P.right||P.down){this.cur=(this.cur+1)%N;this.slide=16;SFX.move()}
     if(P.select&&rc(ORDER[this.cur]).clear>0){this.alt[pi]=!this.alt[pi];SFX.move()}// unlocked by clearing arcade
     if(P.b){SFX.back();if(this.ph==='p2'){this.ph='p1';this.cur=ORDER.indexOf(this.p1)}else goFade(()=>{go(Title);Title.ph='menu'});return}
-    if(P.a||P.start){const id=ORDER[this.cur];SFX.ok();say(CH[id].name.toLowerCase(),1,0.6);
+    if(P.a||P.start){const id=ORDER[this.cur];SFX.ok();sayName(id);
       if(this.ph==='p1'){this.p1=id;if(!this.solo()){this.ph='p2';this.cur=(this.cur+1)%ORDER.length}else this.done=1}else{this.p2=id;this.done=1}}
     if(this.slide>0)this.slide-=2},
   finish(){const alt=[this.alt[0]&&rc(this.p1).clear>0,!!(this.p2&&this.alt[1]&&rc(this.p2).clear>0)];
@@ -378,7 +397,7 @@ const Select={enter(mode){this.mode=mode;setTwo(mode==='2p');this.ph='p1';this.c
     if(this.mode==='2p')drawText(this.ph==='p1'?'PLAYER 1 PICKS':'PLAYER 2 PICKS',52,22,this.ph==='p1'?'#ff5a5a':'#5ab4ff',1,{align:'center',outline:'#000'})}};
 
 // ---------------- VS SCREEN ----------------
-const VS={enter(){this.a=CH[RUN.p1];this.b=CH[RUN.ladder[RUN.idx]];playMusic('select');say(`${this.a.name.toLowerCase()} versus ${this.b.name.toLowerCase()}`,1,0.55)},
+const VS={enter(){this.a=CH[RUN.p1];this.b=CH[RUN.ladder[RUN.idx]];playMusic('select');sayVs(this.a.id,this.b.id)},
   update(){if(this.t===14)SFX.heavy();if(this.t===40)SFX.slam();if(this.t>190||(this.t>40&&anyPress()))goFade(()=>startFight())},
   draw(){const t=this.t;ctx.fillStyle='#5a0c12';ctx.fillRect(0,0,W,H);ctx.fillStyle='#0c1c5a';ctx.beginPath();ctx.moveTo(150,0);ctx.lineTo(W,0);ctx.lineTo(W,H);ctx.lineTo(106,H);ctx.fill();
     ctx.fillStyle='rgba(255,255,255,.06)';for(let y=(t*3)%10;y<H;y+=10)ctx.fillRect(0,y,W,3);
@@ -469,10 +488,10 @@ function startSpecial(f,o,which=1){if(which===3)return startSuper(f,o);const kin
   F.superFlash=10;F.superBy=f;SFX.special();addText(name+'!',f.x,GY-f.H-14,f.c.col.aura);
   if(kind==='step')f.inv=20;if(kind==='rising')f.inv=7;if(kind==='replay'){f.inv=24;f.sp.path=(f.rh||[]).slice(-90).reverse();SFX.rewind()}
   if(kind==='charge')f.sp.armor=1;
-  if(f.side===0&&!f.cpu)say(name.replace('É','e').toLowerCase(),1.15,0.7)}
+  fighterVoice(f,which===2?'sp2':'sp1')}
 // ---- SUPER: cinematic freeze, then a dash that locks into a 6-hit flurry ----
 function startSuper(f,o){f.meter=0;f.state='special';f.st=0;f.vx=0;f.crouch=false;f.atk=null;f.sp={kind:'super',hits:0,last:-99,id:++atkId};
-  F.cine={by:f,t:0,n:46};f.inv=18;SFX.superS();say(SUPER_NAME[f.c.id].replace('É','e').toLowerCase(),1.05,0.55)}
+  F.cine={by:f,t:0,n:46};f.inv=18;SFX.superS();fighterVoice(f,'super')}
 function trialHit(att,tag,id){const T=F.trial;if(!T||T.clear||T.done)return;const seq=TRIALS[att.c.id][T.i];if(!seq||id===T.lastId)return;T.lastId=id;
   if(att.combo<=1)T.step=0;
   if(seq[T.step]===tag){T.step++;if(T.step>=seq.length){T.clear=80;SFX.start();CEL.burst(30);addText('CLEAR!',att.x,GY-att.H-14,'#7aff8a')}}else T.step=seq[0]===tag?1:0}
@@ -709,9 +728,9 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     if(this.phase==='play'&&!this.training){if(++this.tf>=60){this.tf=0;this.time--;if(this.time<=10&&this.time>0)SFX.tick();if(this.time<=0){this.phase='time';this.pt=0;say('Time!');
       this.winner=p1.hp>p2.hp?0:p2.hp>p1.hp?1:-1}}}
     if(this.phase==='ko'){const w=this.koSide,wf=w?p2:p1;if(this.pt===70&&['idle','walk','crouch','land','block'].includes(wf.state)){wf.state='win';wf.st=0}
-      if(this.pt===72)this.celebrate(w);
-      if(this.pt===75&&wf.hp>=wf.mhp){say('Perfect!');if(!wf.cpu&&!this.training)badge('perfect')}if(this.pt>=170)this.endRound(w)}
-    if(this.phase==='time'){const w=this.winner;if(this.pt===60&&w>=0){const wf=w?p2:p1;wf.state='win';wf.st=0;this.celebrate(w)}if(this.pt>=160)this.endRound(w)}},
+      if(this.pt===72){this.celebrate(w);fighterVoice(wf,'win')}
+      if(this.pt===40&&wf.hp>=wf.mhp){say('Perfect!');if(!wf.cpu&&!this.training)badge('perfect')}if(this.pt>=170)this.endRound(w)}
+    if(this.phase==='time'){const w=this.winner;if(this.pt===60&&w>=0){const wf=w?p2:p1;wf.state='win';wf.st=0;this.celebrate(w);fighterVoice(wf,'win',0.5)}if(this.pt>=160)this.endRound(w)}},
   celebrate(w){if(this.training||w<0||(w!==0&&!this.two))return;if(this.wins[w]+1>=2)CEL.start(1);else CEL.burst(46)},
   // input display (training / trials): the last 12 directions and buttons, newest at the top
   logInput(pin){const f=this.p1,d=f.hist[f.hist.length-1]||5,L=this.inLog,top=L[0];
@@ -912,7 +931,7 @@ function drawHitFx(h){const r=(8-h.l)*(h.big?3:2)+3;ctx.strokeStyle=h.l>4?'#fff'
 
 // ---------------- RESULT / CONTINUE / ENDING ----------------
 const Result={enter(w,cfg){this.w=w;this.cfg=cfg;this.two=RUN.mode==='2p';this.win=this.two||w===0;this.wc=CH[w===0?cfg.p1:cfg.p2];this.lc=CH[w===0?cfg.p2:cfg.p1];
-    playMusic(this.win?'win':'lose');setTimeout(()=>say(this.two?`Player ${w?'two':'one'} wins`:this.win?'You win!':'You lose'),300);if(this.win)CEL.start(1.2);
+    playMusic(this.win?'win':'lose');setTimeout(()=>{say(this.two?`Player ${w?'two':'one'} wins`:this.win?'You win!':'You lose');playVoice(this.lc.id+'_ko','f1',1.2)},300);if(this.win)CEL.start(1.2);
     if(this.two)RUN.score[w]++;else{const r=rc(cfg.p1);if(w===0){r.w++;badge('first')}else r.l++;saveRec()}
     this.menu=(RUN.mode==='vs'||this.two)?['REMATCH','CHARACTER SELECT','MAIN MENU']:null;this.sel=0},
   update(){if(this.t<=50)return;
@@ -976,5 +995,5 @@ let last=performance.now(),acc=0;
 function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=now;let n=0;while(acc>=1000/60&&n<4){step();acc-=1000/60;n++}if(n>=4)acc=0;render();musicTick()}
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
-window.__dbg={rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
+window.__dbg={vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
 

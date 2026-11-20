@@ -71,7 +71,10 @@ then `tools/pixellab/takes.py` compares the takes, and `tools/pixellab/loopfind.
 bar-aligned seamless loop and writes `assets/music/<stage>.mp3` (mono 64 kbps) + `<stage>.json` (loop points).
 `node tools/music_check.js` checks every stage's song decodes and loops in the game.
 
-## Layout
+## Voices
+
+The announcer and the fighters' lines are recorded clips in `assets/voice/` made with [Kokoro](https://github.com/thewh1teagle/kokoro-onnx), an open-source text-to-speech model that runs locally (no account or cost). `tools/voices.py` lists every line, the voice for each fighter (announcer: `am_fenrir`) and phonetic spellings for the Portuguese names; edit it and rerun to change a voice or a line. `node tools/voice_check.js` plays through a match and lists the clips that played.
+
 
 - `src/template.html` — page shell, handheld styling and on-screen controls
 - `src/game.js` — the game
