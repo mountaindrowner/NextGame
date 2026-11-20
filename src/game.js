@@ -466,6 +466,7 @@ const Title={enter(){setTwo(false);this.ph='press';this.sel=0;if(!F)F={superFlas
     if(pressed.b){this.ph='press';SFX.back()}
     if(pressed.a||pressed.start){SFX.ok();const s=this.sel;const it=this.items[s];if(it==='OPTIONS')go(Options);else if(it==='RECORDS')go(Records);else if(it==='ONLINE'){Online.ph='menu';goFade(()=>go(Online))}else goFade(()=>go(Select,{STORY:'story',ARCADE:'arcade','VERSUS CPU':'vs',TRAINING:'training',TRIALS:'trials'}[it]))}},
   draw(){const t=this.t,st=CH[ORDER[this.pi||0]].stage;ctx.drawImage(st,0,0);ctx.fillStyle='rgba(8,6,24,.55)';ctx.fillRect(0,0,W,H);
+    if(this.ph==='menu'){this.drawMenu();return}
     ctx.fillStyle='#ffc0d8';for(const p of this.petals){p.y+=p.v;p.x+=Math.sin((t+p.s*30)/30)*0.4-0.2;if(p.y>H){p.y=-4;p.x=rnd(0,W)}ctx.fillRect(p.x|0,p.y|0,2,2)}
     for(const a of this.pair||[]){ctx.globalAlpha=.45;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(a.x,185,18,3,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;ctx.save();ctx.translate(0,184-GY);drawFighter(a);ctx.restore()}
     if(this.pt<6){ctx.fillStyle=`rgba(255,255,255,${(6-this.pt)/10})`;ctx.fillRect(0,0,W,H)}
@@ -476,7 +477,46 @@ const Title={enter(){setTwo(false);this.ph='press';this.sel=0;if(!F)F={superFlas
     drawText('PIXEL FIGHTERS',128,86,'#ffe66a',1,{align:'center'});
     if(this.ph==='press'){const v='VERSION '+VER,w=textW(v)+8;ctx.fillStyle='rgba(0,0,0,.65)';ctx.fillRect(128-w/2,H-12,w,11);drawText(v,128,H-10,'#ffe66a',1,{align:'center',shadow:false})}
     if(this.ph==='press'){if((t>>4)&1)drawText('PRESS START',128,100,'#fff',1,{align:'center',outline:'#000'})}
-    else{box(80,95,96,this.items.length*10+5);this.items.forEach((s,i)=>{const on=i===this.sel;drawText((on?'> ':'  ')+s,86,99+i*10,on?'#ffe66a':'#aab',1)})}}};
+},
+  // the main menu: grouped, slanted buttons on the left, an info card for the highlighted mode on the right
+  MENU:[{g:'PLAY',c:'#ff5a3a',items:[['STORY','FIGHT THROUGH BONFIRE CITY AND SAVE IT FROM VEX.','story'],['ARCADE','BEAT EVERY RIVAL IN A ROW AND WIN THE TROPHY.','trophy'],
+      ['VERSUS CPU','ONE FIGHT. ANY FIGHTER, ANY STAGE.','versus'],['ONLINE','JOIN THE LOBBY AND CHALLENGE PLAYERS.','globe']]},
+    {g:'PRACTICE',c:'#5ab4ff',items:[['TRAINING','A DUMMY TO PRACTISE COMBOS ON.','dummy'],['TRIALS','LEARN EACH FIGHTER\'S COMBOS STEP BY STEP.','star']]},
+    {g:'MORE',c:'#ffd23a',items:[['RECORDS','WINS, BEST COMBOS, TRIALS AND BADGES.','medal'],['OPTIONS','DIFFICULTY, MUSIC, SOUND, ANNOUNCER.','gear']]}],
+  drawMenu(){const t=this.t,b=this.pair&&this.pair[1];
+    // the featured fighter, bottom right
+    if(b){ctx.globalAlpha=.45;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(b.x,185,18,3,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;ctx.save();ctx.translate(0,184-GY);drawFighter(b);ctx.restore()}
+    // a dark slanted panel behind the buttons, and the top bar with the logo
+    ctx.fillStyle='rgba(4,3,12,.72)';ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(160,0);ctx.lineTo(130,H);ctx.lineTo(0,H);ctx.fill();
+    ctx.fillStyle='#d0301a';ctx.beginPath();ctx.moveTo(160,0);ctx.lineTo(162,0);ctx.lineTo(132,H);ctx.lineTo(130,H);ctx.fill();
+    drawText('BONFIRE BASH',8,6,'#fff',2,{grad:FIRE,outline:'#3a0808'});
+    let y=26,i=0,cur=null;this.mx=this.mx||0;
+    for(const G of this.MENU){drawText(G.g,8,y,G.c,1,{shadow:false});ctx.fillStyle=G.c;ctx.fillRect(8+textW(G.g)+4,y+3,40,1);y+=10;
+      for(const[name,desc,icon]of G.items){const on=i===this.sel,slant=4,w=on?118+Math.round(Math.sin(t/8))*0:104,x0=on?6:0;
+        ctx.fillStyle=on?G.c:'rgba(255,255,255,.07)';ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x0+w+slant,y);ctx.lineTo(x0+w,y+12);ctx.lineTo(x0,y+12);ctx.fill();
+        if(on){ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(x0,y,w+slant-1,1);ctx.fillStyle='#120e1e';ctx.fillRect(x0,y+12,w,1);cur={name,desc,icon,c:G.c};
+          if((t>>3)&1){ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(x0+w+6,y+2);ctx.lineTo(x0+w+11,y+6);ctx.lineTo(x0+w+6,y+10);ctx.fill()}}
+        drawText(name,x0+10,y+3,on?'#120e1e':'#c8c8d8',1,{shadow:false});y+=14;i++}
+      y+=4}
+    drawText('A: OK   B: BACK',8,182,'#8888a0',1,{shadow:false});
+    // info card for the highlighted mode
+    if(cur){const X=160,Y=26,Wc=92,Hc=74;ctx.fillStyle='rgba(8,6,20,.88)';ctx.fillRect(X,Y,Wc,Hc);ctx.fillStyle=cur.c;ctx.fillRect(X,Y,Wc,2);ctx.fillRect(X,Y+Hc-1,Wc,1);
+      ctx.fillStyle='rgba(255,255,255,.06)';ctx.fillRect(X+4,Y+6,24,24);menuIcon(cur.icon,X+16,Y+18,cur.c,t);
+      drawText(cur.name.split(' ')[0],X+32,Y+8,'#fff',1,{shadow:false});if(cur.name.includes(' '))drawText(cur.name.split(' ').slice(1).join(' '),X+32,Y+18,'#fff',1,{shadow:false});
+      wrap(cur.desc,14).slice(0,4).forEach((l,k)=>drawText(l,X+5,Y+36+k*9,'#c8c4e0',1,{shadow:false}))}}};
+// small pixel icons for the menu's info card (centred on cx, cy)
+function menuIcon(k,cx,cy,col,t){const R=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(cx+x,cy+y,w,h)},O='#120e1e';
+  if(k==='story'){R(-9,-8,18,16,O);R(-8,-7,7,14,'#e8e0d0');R(1,-7,7,14,'#e8e0d0');R(-1,-7,2,14,'#8a5a3a');R(3,-4,1,7,'#d02a2a');R(2,-2,3,1,'#d02a2a')}
+  else if(k==='trophy')drawTrophy(cx,cy+10);
+  else if(k==='versus'){R(-10,-4,8,8,O);R(-9,-3,6,6,'#ff9a6a');R(2,-4,8,8,O);R(3,-3,6,6,'#7ad8ff');R(-2,-7,4,14,O);R(-1,-6,2,12,'#ffe66a')}
+  else if(k==='globe'){ctx.fillStyle=O;ctx.beginPath();ctx.arc(cx,cy,9,0,Math.PI*2);ctx.fill();ctx.fillStyle='#3a8ad0';ctx.beginPath();ctx.arc(cx,cy,8,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#5ad86a';R(-5,-5,5,4,'#5ad86a');R(1,1,5,4,'#5ad86a');R(-3,3,3,2,'#5ad86a');const a=t/10;R(Math.round(Math.cos(a)*11)-1,Math.round(Math.sin(a)*11)-1,3,3,'#ffe66a')}
+  else if(k==='dummy'){R(-4,-10,8,8,O);R(-3,-9,6,6,'#c8a070');R(-6,-2,12,10,O);R(-5,-1,10,8,'#a07040');R(-1,8,2,3,O);R(-5,0,10,1,'#d02a2a');R(-5,4,10,1,'#d02a2a')}
+  else if(k==='star'){ctx.fillStyle=O;ctx.beginPath();for(let i=0;i<10;i++){const r=i%2?4:10,a=-Math.PI/2+i*Math.PI/5;ctx.lineTo(cx+Math.cos(a)*(r+1),cy+Math.sin(a)*(r+1))}ctx.fill();
+    ctx.fillStyle='#ffe66a';ctx.beginPath();for(let i=0;i<10;i++){const r=i%2?3:9,a=-Math.PI/2+i*Math.PI/5;ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r)}ctx.fill()}
+  else if(k==='medal'){R(-5,-10,4,8,'#d02a2a');R(1,-10,4,8,'#3a6ad0');ctx.fillStyle=O;ctx.beginPath();ctx.arc(cx,cy+3,7,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ffd23a';ctx.beginPath();ctx.arc(cx,cy+3,6,0,Math.PI*2);ctx.fill();R(-1,0,2,6,'#c8902a')}
+  else if(k==='gear'){ctx.save();ctx.translate(cx,cy);ctx.rotate(t/40);ctx.fillStyle=O;for(let i=0;i<8;i++){ctx.rotate(Math.PI/4);ctx.fillRect(-2,-11,4,5)}ctx.beginPath();ctx.arc(0,0,8,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#a0a8b8';for(let i=0;i<8;i++){ctx.rotate(Math.PI/4);ctx.fillRect(-1,-10,2,4)}ctx.beginPath();ctx.arc(0,0,7,0,Math.PI*2);ctx.fill();ctx.fillStyle=O;ctx.beginPath();ctx.arc(0,0,3,0,Math.PI*2);ctx.fill();ctx.restore()}}
 
 const Options={enter(){this.sel=0},
   rows(){return[['DIFFICULTY',['EASY','NORMAL','HARD'][SET.diff]],['MUSIC',SET.music?'ON':'OFF'],['SOUND FX',SET.sound?'ON':'OFF'],['ANNOUNCER',SET.voice?'ON':'OFF'],['BACK','']]},

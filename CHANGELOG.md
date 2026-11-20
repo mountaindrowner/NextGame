@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.27.0
+
+- **New main menu.** The plain list of eight options is now a fighting-game style menu:
+  - **Grouped, slanted buttons** on a dark panel: **PLAY** (Story, Arcade, Versus CPU, Online), **PRACTICE** (Training, Trials) and **MORE** (Records, Options). Each group has its own colour, and the highlighted button slides out and lights up.
+  - **An info card** for the highlighted mode, with a pixel icon and a one-line description. The icons are a book, a trophy, two fists, a spinning globe, a training dummy, a star, a medal and a turning gear.
+  - The **featured fighter** from the title screen stands bottom right, the logo runs across the top, and an "A: OK  B: BACK" hint sits at the bottom.
+- The text check covers every menu item (947 screens).
+
 ## 1.26.0
 
 - **New attract intro.** It no longer squeezes every fighter into thin slices:
