@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.15.0
+
+- **Four face buttons, one layout for both modes:** the handheld now has a classic diamond, with **A** punch, **B** kick, **SP** (top, gold) special and **JUMP** (bottom, blue).
+  - **In fights:** JUMP works like up.
+  - **In Story:** up and down move in depth and JUMP jumps, so A and B mean the same thing in every mode.
+  - **Keyboard:** X/K punch, Z/J kick, C/L special, V/I jump.
+  - **Gamepad:** A punch, B kick, Y/RB special, X/LB jump.
+- **Story controls:** **B is a kick** (it finishes a combo, so A, A, B knocks down), and JUMP jumps (then A or B for a jump kick).
+- **Fixed: twisted, wavy stage backgrounds** (Crossroads Dojo, Iron Gym and every other stage). The backdrop was being stretched 3% to hide the screen-shake edges, which doubled every 32nd pixel row and column and made straight lines kink and crawl. It's now drawn pixel-for-pixel, with a padded border for the shake.
+- **Fixed: text running out of boxes.**
+  - The story cards wrapped at 36 characters in a box that only fits 25.
+  - Endings now roll fully up the screen; the last lines used to fall off the bottom.
+  - Zeke's trait was too long for the select screen.
+  - A semicolon the pixel font doesn't have was missing from the online menu.
+  - New `tools/text_audit.js` draws 223 screens (every fighter on every screen) and fails if any text leaves the screen or its box, or uses a missing letter.
+- **Stage Dive (Marcus's super) can't be blocked any more.** Blocking used to stop it for 3 chip damage, so against a guarding CPU it looked broken. To keep it fair it tracks the target a little less, so dashing away escapes it (walking doesn't).
+- **Three new henchmen** (recoloured from the PixelLab ones, each with its own behaviour):
+  - **Blade:** a fast goon who lunges in.
+  - **Molotov:** throws bottles that leave fire burning on the floor.
+  - **Enforcer:** a white-suited bruiser with more health and a quicker charge.
+  - They appear from the Docks onward.
+
 ## 1.14.0
 
 - **New: STORY mode, a side-scrolling beat 'em up** (first on the title menu). The night before the finals the Bonfire Bash trophy is stolen by **Vex**, the promoter who runs the city's underground. Pick a fighter and take it back:

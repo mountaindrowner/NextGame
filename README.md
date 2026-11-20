@@ -6,7 +6,7 @@ A handheld-styled pixel fighting game ("Dojo Boy") with eight fighters — Papa-
 
 Open `dist/index.html` in a browser. It is a single self-contained file (also ready to upload to itch.io as an HTML game).
 
-Controls: arrows/WASD move, `X`/`K` = A (punch), `Z`/`J` = B (kick), Enter = Start (pause shows each fighter's moves and combo). On touch screens use the on-screen pad. Gamepads work (A/X = punch, B/Y = kick). A+B together, the **SP** button (on screen; `C`/`L` on a keyboard; Y/RB on a gamepad), or down→forward+A, fires the special move. SP is just A+B in one press, so down+SP, back+SP and forward+SP work too.
+Controls: four face buttons, the same in every mode — **A** punch (`X`/`K`), **B** kick (`Z`/`J`), **SP** special (`C`/`L`), **JUMP** (`V`/`I`; up also jumps in fights; in Story up/down is depth). Arrows/WASD move, Enter = Start (pause shows each fighter's moves and combo). On touch screens use the on-screen pad. Gamepads work (A punch, B kick, Y/RB special, X/LB jump). A+B together, the **SP** button (on screen; `C`/`L` on a keyboard; Y/RB on a gamepad), or down→forward+A, fires the special move. SP is just A+B in one press, so down+SP, back+SP and forward+SP work too.
 
 ## Fighting system
 
@@ -116,6 +116,7 @@ The announcer and the fighters' lines are recorded clips in `assets/voice/` made
 - `tools/itch_art.py`, `tools/shots.js` — itch.io cover, banner and screenshots (written to `release/itch/`)
 - `tools/itch_keyart.py`, `tools/stills.js`, `tools/super_gif.js` — key art, poster, cover, badges, feature card and the supers GIF (arena backdrops in `tools/pixellab/concept/` from PixelLab)
 - `tools/combos.js` — frame-exact combo checks; `tools/powers.js` — every special power; `tools/features.js` — super, throws, 2 players, trials, records; `tools/celebrate.js` — film the victory celebration
+- `tools/text_audit.js` — draws 223 screens (every fighter) and fails if any text leaves the screen or its box, or uses a letter the pixel font lacks
 - `tools/story.js` — Story mode: an autoplayer clears all four stages, then the boss hand-off and the shadow duel are checked
 - `tools/balance.js` — full balance test: CPU-vs-CPU round robin, win rates and matchup table (`node tools/balance.js 10 2`; add a fighter id to test only their matchups, and a JS snippet to try a change)
 - `tools/feel.js` — hit-stop by weight, hurt reactions, loop detection + burst, the SP key; `tools/ai.js` — CPU-vs-CPU matches: decks used, reaction time and execution by difficulty

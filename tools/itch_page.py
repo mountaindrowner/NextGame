@@ -120,7 +120,7 @@ def controls():  # how to play card
     im = panel(W, H)
     rows_l = [("MOVE", "ARROWS / WASD"), ("PUNCH (A)", "X OR K"), ("KICK (B)", "Z OR J"), ("SP (= A+B)", "C OR L"), ("PAUSE / MOVES", "ENTER"),
               ("BLOCK", "HOLD BACK"), ("DASH", "TAP FWD/BACK TWICE"),
-              ("STORY: JUMP", "B (THEN A = JUMP KICK)"), ("STORY: GRAB", "WALK INTO A DAZED FOE")]
+              ("JUMP BUTTON", "V OR I (OR UP)"), ("STORY: GRAB", "WALK INTO A DAZED FOE")]
     rows_r = [("SPECIAL 1", "SP OR A+B"), ("SPECIAL 2", "DOWN + SP"), ("CHAIN", "A > B, LOW A > LOW B"), ("CANCEL", "HIT > A+B"),
               ("LOW / SWEEP", "DOWN + A / B"), ("JUMP ATTACK", "UP, THEN A OR B"),
               ("SUPER (FULL BAR)", "FWD + SP"), ("THROW (CLOSE)", "FWD/BACK + B")]

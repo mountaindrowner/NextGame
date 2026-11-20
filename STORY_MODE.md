@@ -22,9 +22,8 @@ Bosses are picked at random from the roster (never your own fighter), so every r
 ## How it plays
 
 - **Moving:** walk in 8 directions. Up/down moves you into or out of the screen along a floor band (depth), like Final Fight or Streets of Rage.
-- **A (punch):** a 3-hit combo, jab, jab, kick, that knocks down on the last hit.
-- **B (kick):** a strong kick.
-- **Jump:** UP + A or B gives a jump attack.
+- **A (punch):** a 3-hit combo, jab, jab, kick, that knocks down on the last hit. **B (kick)** on its own pushes an enemy back, and after a hit it finishes the combo with a knockdown (A, A, B).
+- **JUMP button:** jump, then A or B for a jump kick. (Up/down is depth in this mode.)
 - **SP (A+B), desperation move:** your fighter's special pose plus a shockwave that hits everyone around you. It costs a little health, like the classics, and gets you out of a crowd.
 - **Super (FWD + SP, full meter):** the cinematic cut-in, then it hits every enemy on screen.
 - **Grab and throw:** walk into a reeling enemy to grab them, then B to throw them into their friends.
@@ -39,6 +38,8 @@ Bosses are picked at random from the roster (never your own fighter), so every r
 | **Goon** | rusher | 30 | lines up with you and throws punches; comes in palette swaps (red / green / blue) |
 | **Slinger** | ranged | 24 | keeps his distance and throws bottles along his depth line |
 | **Bruiser** | heavy | 70 | slow, shrugs off one hit, charges with a shoulder tackle |
+
+**Variants (v1.15):** Blade (fast goon, lunges in), Molotov (bottles leave fire on the floor) and Enforcer (white-suited bruiser, quicker charge), recoloured from the three PixelLab henchmen.
 
 **Crowd rule (the classic trick):** only two enemies may attack at once. The others circle and wait their turn.
 That keeps fights fair and readable.
