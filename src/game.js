@@ -129,9 +129,21 @@ const SONGS={
     bass:'A2 - - - A2 - - - F2 - - - G2 - - - A2 - - - A2 - - - E2 - - - E2 - - -',drum:'k.......s.......'},
 };
 const MUS={s:null,name:null};
-function playMusic(name,tr=0){if(MUS.name===name&&MUS.tr===tr&&MUS.s)return;const s=SONGS[name];MUS.name=name;MUS.tr=tr;MUS.step=0;MUS.next=AU.ctx?AU.ctx.currentTime+0.06:0;
+// Recorded stage songs (assets/music/<stage>.mp3 + loop points), played looped through the music bus.
+const TRACK={buf:{},src:null,id:null,gain:null};
+function trackData(id){return typeof MUSIC!=='undefined'&&MUSIC['music_'+id]&&typeof ASSET_DATA!=='undefined'&&ASSET_DATA['music_'+id]}
+function playTrack(id){if(TRACK.id===id&&TRACK.src)return true;if(!trackData(id))return false;stopTrack();stopMusic();TRACK.id=id;
+  const go=()=>{if(TRACK.id!==id||!AU.ctx)return;const L=ASSET_DATA['music_'+id],b=TRACK.buf[id];if(!b||TRACK.src)return;
+    if(!TRACK.gain){TRACK.gain=AU.ctx.createGain();TRACK.gain.connect(AU.master)}TRACK.gain.gain.value=SET.music?0.5:0;
+    const src=AU.ctx.createBufferSource();src.buffer=b;src.loop=true;src.loopStart=L.loopStart;src.loopEnd=Math.min(L.loopEnd,b.duration);src.connect(TRACK.gain);src.start();TRACK.src=src};
+  if(TRACK.buf[id])go();else if(AU.ctx){const raw=atob(MUSIC['music_'+id].split(',')[1]),u8=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)u8[i]=raw.charCodeAt(i);
+    AU.ctx.decodeAudioData(u8.buffer).then(b=>{TRACK.buf[id]=b;go()}).catch(()=>{})}
+  return true}
+function stopTrack(){if(TRACK.src){try{TRACK.src.stop()}catch(e){}TRACK.src.disconnect();TRACK.src=null}TRACK.id=null}
+function stageMusic(stage){if(!playTrack(stage))playMusic('fight',CH[stage].tr)}
+function playMusic(name,tr=0){if(MUS.name===name&&MUS.tr===tr&&MUS.s)return;stopTrack();const s=SONGS[name];MUS.name=name;MUS.tr=tr;MUS.step=0;MUS.next=AU.ctx?AU.ctx.currentTime+0.06:0;
   MUS.s={...s,L:s.lead.split(/\s+/),B:s.bass.split(/\s+/),D:s.drum.split('')}}
-function stopMusic(){MUS.s=null;MUS.name=null}
+function stopMusic(){MUS.s=null;MUS.name=null;stopTrack()}
 function drum(c,t){if(c==='k'){osc('sine',150,t,.12,.55,AU.mus,40)}else if(c==='s'){nz(t,.1,.32,2200,900,'bandpass',AU.mus)}else if(c==='h'){nz(t,.03,.12,9000,6000,'highpass',AU.mus)}}
 function musicTick(){if(!AU.ctx||!MUS.s)return;const s=MUS.s,sd=60/s.bpm/4,now=AU.ctx.currentTime;if(MUS.next<now-0.3)MUS.next=now+0.05;
   while(MUS.next<now+0.15){const i=MUS.step,t=MUS.next;
@@ -283,7 +295,7 @@ const Options={enter(){this.sel=0},
   update(){const n=5;if(pressed.up){this.sel=(this.sel+n-1)%n;SFX.move()}if(pressed.down){this.sel=(this.sel+1)%n;SFX.move()}
     const ch=pressed.left?-1:pressed.right||pressed.a?1:0;
     if(pressed.b||((pressed.a||pressed.start)&&this.sel===4)){saveSet();SFX.back();go(Title);Title.ph='menu';Title.sel=3;return}
-    if(ch){if(this.sel===0)SET.diff=(SET.diff+3+ch)%3;if(this.sel===1){SET.music=!SET.music}if(this.sel===2)SET.sound=!SET.sound;if(this.sel===3){SET.voice=!SET.voice;if(SET.voice)say('Announcer on')}SFX.move();saveSet()}},
+    if(ch){if(this.sel===0)SET.diff=(SET.diff+3+ch)%3;if(this.sel===1){SET.music=!SET.music;if(TRACK.gain)TRACK.gain.gain.value=SET.music?0.5:0}if(this.sel===2)SET.sound=!SET.sound;if(this.sel===3){SET.voice=!SET.voice;if(SET.voice)say('Announcer on')}SFX.move();saveSet()}},
   draw(){stripes(this.t,'#14123a','#1b1848');drawText('OPTIONS',128,16,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});box(30,46,196,108);
     this.rows().forEach(([k,v],i)=>{const on=i===this.sel,y=58+i*18;drawText((on?'> ':'  ')+k,40,y,on?'#ffe66a':'#aab');if(v)drawText((on?'< ':'')+v+(on?' >':''),214,y,on?'#fff':'#889',1,{align:'right'})});
     drawText('LEFT/RIGHT: CHANGE   B: BACK',128,172,'#778',1,{align:'center'})}};
@@ -570,7 +582,7 @@ function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0},ai=f.ai,d
 // ---- FIGHT SCENE ----
 function startFight(){const opp=RUN.ladder[RUN.idx];go(Fight,{p1:RUN.p1,p2:opp,stage:opp})}
 const DUMMY=['STAND','BLOCK','LOW BLOCK'];
-const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;F=this;playMusic('fight',CH[cfg.stage].tr);this.startRound()},
+const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;F=this;stageMusic(cfg.stage);this.startRound()},
   startRound(){const c=this.cfg;this.training=!!(RUN&&RUN.mode==='training');this.tDmg=0;this.tHits=0;this.tBest=this.tBest||0;this.p1=new Fighter(c.p1,0,false,false);this.p2=new Fighter(c.p2,1,true,c.p1===c.p2);this.proj=[];this.parts=[];this.texts=[];this.hitFx=[];
     this.time=60;this.tf=0;this.phase='intro';this.pt=0;this.hitstop=0;this.shake=0;this.slow=0;this.superFlash=0;this.camFlash=0;this.comboShow=null;this.paused=false;this.winner=-1;this.banner=null;
     const final=this.wins[0]===1&&this.wins[1]===1;setTimeout(()=>say(final?'Final round':`Round ${['one','two','three','four','five'][this.round-1]||this.round}`),200);SFX.bell()},
@@ -806,5 +818,5 @@ let last=performance.now(),acc=0;
 function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=now;let n=0;while(acc>=1000/60&&n<4){step();acc-=1000/60;n++}if(n>=4)acc=0;render();musicTick()}
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
-window.__dbg={inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
+window.__dbg={track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
 
