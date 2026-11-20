@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.12.0
+
+Playtest fixes:
+- **Rex is now called Marcus** (logo, announcer, select screen, ending and itch.io art).
+- **Hecky Xavier is a TECH RUSHDOWN** now. He keeps his parry, and he gets the tools to get in:
+  - **Hostile Takeover** dashes about 60 px forward into the uppercut and is **invincible for its first 9 frames**. It works as a gap-closer and as a reversal or anti-air. It's still punishable if blocked.
+  - **Power Suit** is invincible while he flexes and recovers faster.
+  - **Bigger hitboxes:** his punches and kicks reach 12% further and hit a 35% taller area. He also walks and dashes faster.
+  - **Laser Glare** is better: it fires faster, the beam is thicker, it hits 3 times (the last hit knocks back) and it has a shorter cooldown.
+- **Shutter Flash (Vizor) nerfed:** the flash fires later, so you can react to the reticle. It does 8 damage instead of 11, no longer knocks down, has a smaller target box and a longer cooldown.
+- **Diminishing returns:** using the same special again within 5 seconds does 15% less damage each time (down to 55%).
+- **Every special's cooldown is on the top bar now:** one segment per special under the health bar (orange = A+B, cyan = down + A+B, red = back + A+B). Each segment flashes when its special is ready.
+- **Trials explain themselves:** "LAND EVERY HIT IN ONE COMBO", with the buttons for each move shown under it (JAB = A, KICK = B, SPECIAL = A+B, …).
+
 ## 1.11.0
 
 - **Rex is now a LONG-RANGE fighter**: the slowest walker and dasher in the game, with the longest reach. Every punch and kick pushes a sound blast off the end of his bass (40% more reach), but his attacks start 2 frames slower. He keeps his beat trait: hits on the beat do +25%.

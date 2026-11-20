@@ -76,6 +76,18 @@ const path = require('path');
       let refl = false, zMin = r.F.p2.hp, rMin = r.F.p1.hp; for (let i = 0; i < 90; i++) { r.step(1); if (r.F.proj.some(q => q.kind === 'ball' && q.owner === r.F.p1)) refl = true; zMin = Math.min(zMin, r.F.p2.hp); rMin = Math.min(rMin, r.F.p1.hp); }
       const zDmg = r.F.p2.mhp - zMin, rexDmg = r.F.p1.mhp - rMin;
       check('REX       Mic Check (reflects)', refl && zDmg > 0 && rexDmg === 0, `ball reflected ${refl}, zeke took ${zDmg | 0}, rex took ${rexDmg | 0}`); }
+    { // playtest fixes: Hecky closes distance with an invincible Hostile Takeover; diminishing returns; Shutter Flash nerf; 3-hit Laser Glare
+      const lost = (r, n, who = 'p2') => { let m = r.F[who].hp; for (let i = 0; i < n; i++) { r.step(1); m = Math.min(m, r.F[who].hp); } return r.F[who].mhp - m; };
+      let r = setup('hecky', 'ivan', 60, 165); d.startSpecial(r.F.p1, r.F.p2, 1); const far = lost(r, 40);
+      r = setup('hecky', 'karl', 100, 140); r.F.p2.cpu = false; d.startSpecial(r.F.p1, r.F.p2, 1); d.startAtk(r.F.p2, 'jab'); const heckyHit = lost(r, 12, 'p1');
+      check('HECKY     Takeover gap-close + invincible', far > 0 && heckyHit === 0, `hit from 105px away ${far | 0} dmg, damage taken during start-up ${heckyHit | 0}`);
+      r = setup('zeke', 'ivan', 60, 190); const one = () => { r.F.p1.spCD = 0; r.F.p1.state = 'idle'; d.startSpecial(r.F.p1, r.F.p2, 1); const v = lost(r, 70); r.step(60); r.F.p2.hp = r.F.p2.mhp; return v; };
+      const d1 = one(), d2 = one(), d3 = one();
+      check('DIMINISHING returns (same special)', d2 < d1 && d3 < d2, `strike ball x3 in a row: ${d1.toFixed(1)}, ${d2.toFixed(1)}, ${d3.toFixed(1)}`);
+      r = setup('vizor', 'ivan', 80, 160); d.startSpecial(r.F.p1, r.F.p2, 1); let knocked = false, m = r.F.p2.hp; for (let i = 0; i < 40; i++) { r.step(1); m = Math.min(m, r.F.p2.hp); if (r.F.p2.state === 'knock') knocked = true; }
+      check('VIZOR     Shutter Flash (nerfed)', r.F.p2.mhp - m > 0 && r.F.p2.mhp - m < 8 && !knocked, `dmg ${(r.F.p2.mhp - m).toFixed(1)}, knockdown ${knocked}`);
+      r = setup('hecky', 'ivan', 50, 210); r.step(3); d.startSpecial(r.F.p1, r.F.p2, 4); let hits = 0; for (let i = 0; i < 80; i++) { r.step(1); hits = Math.max(hits, r.F.p1.sp ? r.F.p1.sp.hits : 0); }
+      check('HECKY     Laser Glare (3 hits)', hits === 3, `beam hits ${hits}`); }
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();

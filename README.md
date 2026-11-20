@@ -1,6 +1,6 @@
 # Bonfire Bash
 
-A handheld-styled pixel fighting game ("Dojo Boy") with eight fighters — Papa-Léguas, Ivan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie and Rex — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game ("Dojo Boy") with eight fighters — Papa-Léguas, Ivan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie and Marcus — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
@@ -22,18 +22,18 @@ Controls: arrows/WASD move, `X`/`K` = A (punch), `Z`/`J` = B (kick), Enter = Sta
 
 ## Powers
 
-Every fighter has two specials, and no two work alike. Special 1: **A+B** (or down, forward + A). Special 2: **down + A+B** (or down, back + B). The thin bar under each health bar is special 2's cooldown.
+Every fighter has two specials, and no two work alike. Special 1: **A+B** (or down, forward + A). Special 2: **down + A+B** (or down, back + B). The segmented bar under each health bar shows every special's cooldown (one segment per special). Using the same special again within 5 seconds does 15% less damage each time (down to 55%).
 
 | Fighter | Special 1 | Special 2 |
 |---|---|---|
 | Papa-Léguas | **Légua Rush** — dashing 3-hit punch flurry | **Légua Step** — invincible blur that goes through the opponent to their back |
 | Ivan | **Bear Slam** — command grab | **Iron Charge** — shoulder charge with armor that absorbs one hit |
-| Vizor | **Shutter Flash** — reticle lock-on at range, then a knockdown flash | **Instant Replay** — rewinds his position and up to 15 recent damage |
+| Vizor | **Shutter Flash** — reticle lock-on at range, then a flash (reactable) | **Instant Replay** — rewinds his position and up to 15 recent damage |
 | Samson | **Holy Tome** — overhead book smash (must be blocked standing) | **Benediction** — kneels and heals; any hit interrupts it |
 | Zeke | **Strike Ball** — bowling ball rolled along the floor (low, knocks down) | **Split Shot** — lobbed ball that drops from above (overhead) |
-| Hecky Xavier | **Hostile Takeover** — rising uppercut that launches for a juggle | **Power Suit** — 7-second power-up (+25% damage, faster). Plus a third special, **Laser Glare** (back + A+B): eye beams across the screen at head height |
+| Hecky Xavier | **Hostile Takeover** — dashing uppercut, invincible on start-up, that launches for a juggle | **Power Suit** — 7-second power-up (+25% damage, faster). Plus a third special, **Laser Glare** (back + A+B): eye beams across the screen at head height, 3 hits |
 | Lawslie | **Taser** — short-range prongs, a hit stuns 3× longer | **Cuff 'Em** — grab through blocks; cuffed opponents can't use specials or super for 5 s |
-| Rex | **Bass Drop** — twin low shockwaves roll along the floor both ways across the stage (block crouching, or jump them) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen |
+| Marcus | **Bass Drop** — twin low shockwaves roll along the floor both ways across the stage (block crouching, or jump them) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen |
 
 ## Supers
 
@@ -48,7 +48,7 @@ Forward + A+B with a full meter. Each fighter's super is unique (`SUPERS` in `sr
 | Zeke | Perfect Game | giant bowling ball, four low hits |
 | Hecky Xavier | Golden Parachute | launcher, sustained eye laser juggle, gold-coin finisher |
 | Lawslie | Full Arrest | charging grab, three taser zaps, takedown; cuffed for 8 s |
-| Rex | Stage Dive | homing leap that crashes down (overhead), then a five-note bass jam |
+| Marcus | Stage Dive | homing leap that crashes down (overhead), then a five-note bass jam |
 
 ## Fighting styles
 
@@ -61,9 +61,9 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Vizor | Zoner | 98 | long reach |
 | Samson | Powerhouse | 106 | counter-hit kicks knock down |
 | Zeke | High/low zoner | 104 | Spare: a blocked Strike Ball reloads his special instantly |
-| Hecky Xavier | Technician | 98 | parry: tap forward just as a hit lands (no damage, +meter) |
+| Hecky Xavier | Tech rushdown | 98 | parry: tap forward just as a hit lands (no damage, +meter); bigger hitboxes, fast dash |
 | Lawslie | Enforcer | 100 | no chip damage when blocking, and blocking builds meter; smallest body (sprites shrunk 20% by `SCALE` in `tools/pixellab/pack.py`), same reach |
-| Rex | Long-range | 104 | slowest walk and dash, longest reach (×1.4, a sound blast off his bass) but normals start 2 frames slower; hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
+| Marcus | Long-range | 104 | slowest walk and dash, longest reach (×1.4, a sound blast off his bass) but normals start 2 frames slower; hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
 
 Hecky has a second costume — an anthropomorphic fox — chosen with SELECT on the character select screen (`skin2` in his roster entry; sprites in `assets/fighters/heckyfox/`).
 
