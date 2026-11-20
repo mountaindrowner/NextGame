@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.16.2
+
+- **Hitboxes a little more generous:** 6 px of margin around each fist or foot instead of 4. They're still measured per fighter, per move.
+- **Marcus's long reach is now visible.** His hitbox runs past his fist or foot, so a pink sound wave now fills that gap on every punch and kick, standing, crouching or jumping. What you see is what hits.
+- **Tighter punch boxes** where the fist sits close to the body (for example Hecky's jump punch): the box covers the fist, not the torso.
+- All six attacks (jab, kick, low jab, sweep, jump punch, jump kick) were checked for every fighter with the hitbox view.
+
 ## 1.16.1
 
 - **Hitboxes match the sprites.** Every fighter's punches and kicks are measured from their own animation frames (`tools/hitboxes.py` → `assets/hitboxes.json`):

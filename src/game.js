@@ -556,7 +556,7 @@ function control(f,o,inp){
   f.crouch=false;
   if(fwd){setS(f,'walk');f.vx=f.face*1.35*f.c.speed*(f.buff>0?1.2:1)}else if(back){setS(f,'walk');f.vx=-f.face*1.05*f.c.speed}else{setS(f,'idle');f.vx=0}}
 function startAtk(f,n){f.atk={...ATK[n],name:n,id:++atkId};f.atk.reach*=arch(f.c).reach||1;f.atk.hh*=arch(f.c).hh||1;
-  {const m=HBX[f.c.id]&&HBX[f.c.id].moves[n];if(m){f.atk.reach=arch(f.c).amp?Math.max(m.reach,f.atk.reach):m.reach;f.atk.y1=m.y1;f.atk.y2=m.y2}}if(arch(f.c).slow){f.atk.s+=arch(f.c).slow;f.atk.r+=2}f.hitDone=false;if(f.atk.air)f.ast=0;else{f.state='attack';f.st=0;f.vx=0;f.crouch=!!f.atk.crouch}
+  {const m=HBX[f.c.id]&&HBX[f.c.id].moves[n];if(m){f.atk.tip=m.reach-6;f.atk.reach=arch(f.c).amp?Math.max(m.reach,f.atk.reach):m.reach;f.atk.y1=m.y1;f.atk.y2=m.y2}}if(arch(f.c).slow){f.atk.s+=arch(f.c).slow;f.atk.r+=2}f.hitDone=false;if(f.atk.air)f.ast=0;else{f.state='attack';f.st=0;f.vx=0;f.crouch=!!f.atk.crouch}
   (n==='kick'||n==='sweep'||n==='jkick'?SFX.whooshH:SFX.whoosh)()}
 const canThrow=(f,o)=>Math.abs(o.x-f.x)<48&&o.y<=0&&f.y<=0&&o.inv<=0&&!(o.throwInv>0)&&['idle','walk','crouch','attack','land','dash','prejump'].includes(o.state)&&!(o.state==='attack'&&phaseOf(o)==='active');
 function startThrow(f,o,back){f.state='throwing';f.st=0;f.vx=0;f.atk=null;f.crouch=false;f.thBack=back;f.thr=null;f.thrId=++atkId;SFX.whoosh()}
@@ -1080,9 +1080,11 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='laser')drawLaser(f);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='bless'&&f.st>6){const a=Math.min(.35,(f.st-6)/40)*(f.st>70?(78-f.st)/8:1);
       const g=ctx.createLinearGradient(0,0,0,GY);g.addColorStop(0,'rgba(255,230,140,0)');g.addColorStop(1,`rgba(255,230,140,${a})`);ctx.fillStyle=g;ctx.fillRect(Math.round(f.x-22),0,44,GY)}
-    for(const f of[this.p1,this.p2])if(arch(f.c).amp&&f.atk&&(f.state==='attack'||f.state==='jump')&&phaseOf(f)==='active'){const a=f.atk,h=f.H*(a.crouch?.7:1),
-      x=Math.round(f.x+f.face*(a.reach-6)),y=Math.round(GY-f.y-h*a.hy),r=4+((frameNo>>1)&1)*2;ctx.lineWidth=2;
-      for(let i=0;i<2;i++){ctx.strokeStyle=i?'#ff4a6a':'#ffffff';ctx.beginPath();ctx.arc(x-f.face*i*4,y,r+i*3,f.face>0?-1:Math.PI-1,f.face>0?1:Math.PI+1);ctx.stroke()}}
+    // LONG-RANGE (Marcus): a visible sound wave fills the gap from his fist/foot to the end of his reach
+    for(const f of[this.p1,this.p2])if(arch(f.c).amp&&f.atk&&(f.state==='attack'||f.state==='jump')&&phaseOf(f)==='active'&&f.atk.tip!=null){const a=f.atk,fc=f.face,
+      x0=f.x+fc*a.tip,x1=f.x+fc*a.reach,yc=GY-f.y-(a.y1+a.y2)/2,hh=Math.max(6,(a.y2-a.y1)/2),k=(frameNo>>1)&1;
+      ctx.fillStyle='rgba(255,74,106,.22)';ctx.beginPath();ctx.moveTo(x0,yc-3);ctx.lineTo(x1,yc-hh);ctx.lineTo(x1,yc+hh);ctx.lineTo(x0,yc+3);ctx.fill();
+      for(let i=0;i<3;i++){const p=(i+1+k*.5)/3.5,x=x0+(x1-x0)*p,r=3+p*(hh-2);ctx.lineWidth=2;ctx.strokeStyle=i===2?'#ffffff':'#ff4a6a';ctx.beginPath();ctx.arc(Math.round(x-fc*r),Math.round(yc),r,fc>0?-1.1:Math.PI-1.1,fc>0?1.1:Math.PI+1.1);ctx.stroke()}}
     if(SHOWBOX){ctx.lineWidth=1;for(const f of[this.p1,this.p2]){const h=f.hurt();ctx.strokeStyle='#3a8aff';ctx.strokeRect(Math.round(h.x1)+.5,Math.round(GY-h.y2)+.5,Math.round(h.x2-h.x1),Math.round(h.y2-h.y1))}
       ctx.strokeStyle='#ff3a3a';for(const f of[this.p1,this.p2])if(f.atk&&(f.state==='attack'||f.state==='jump')&&phaseOf(f)==='active'){const A=f.atk,h=f.H*(A.crouch?.7:1),cy=f.y+h*A.hy,x1=f.face>0?f.x:f.x-A.reach,y2=A.y1!=null?f.y+A.y2:cy+A.hh/2,y1=A.y1!=null?f.y+A.y1:cy-A.hh/2;
         ctx.strokeRect(Math.round(x1)+.5,Math.round(GY-y2)+.5,Math.round(A.reach),Math.round(y2-y1))}
