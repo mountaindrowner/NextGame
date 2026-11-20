@@ -94,9 +94,9 @@ const path = require('path');
       r.step(1, { up: 1, h: { up: 1 } }); let top2 = top1; for (let i = 0; i < 30; i++) { r.step(1); top2 = Math.max(top2, r.F.p1.y); }
       check('HIGH FLYER double jump', r.F.p1.dj === 1 && top2 > top1 + 10, `first jump ${top1 | 0}px, after the second ${top2 | 0}px`);
       r = setup('kai', 'ivan', 60, 170); d.startSpecial(r.F.p1, r.F.p2, 1); const dmg = lost(r, 90); const cd = r.F.p1.spCD;
-      check('KAI       Bounce Pass (caught = recharge)', dmg > 0 && cd <= 18, `hit for ${dmg | 0}, cooldown after the catch ${cd} (normal 80)`);
+      check('DEVANTE   Bounce Pass (caught = recharge)', dmg > 0 && cd <= 18, `hit for ${dmg | 0}, cooldown after the catch ${cd} (normal 80)`);
       r = setup('kai', 'ivan', 100, 140); d.startSpecial(r.F.p1, r.F.p2, 2); let stun = 0, crossed = false; for (let i = 0; i < 40; i++) { r.step(1); stun = Math.max(stun, r.F.p2.stun); if (r.F.p1.x > r.F.p2.x) crossed = true; }
-      check('KAI       Ankle Breaker (through + stumble)', crossed && stun >= 40, `went through ${crossed}, opponent stunned ${stun} frames`); }
+      check('DEVANTE   Ankle Breaker (through + stumble)', crossed && stun >= 40, `went through ${crossed}, opponent stunned ${stun} frames`); }
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();

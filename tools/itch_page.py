@@ -22,7 +22,7 @@ ROSTER = [  # id, name, style, special 1, special 2
     ("hecky", "HECKY XAVIER", "DAPPER BOXING", "HOSTILE TAKEOVER", "POWER SUIT"),
     ("lawslie", "LAWSLIE", "POLICE DEFENSE", "TASER", "CUFF 'EM"),
     ("rex", "MARCUS", "BASS BRAWLER", "BASS DROP", "MIC CHECK"),
-    ("kai", "KAI", "STREETBALL", "BOUNCE PASS", "ANKLE BREAKER"),
+    ("kai", "DEVANTÉ", "STREETBALL", "BOUNCE PASS", "ANKLE BREAKER"),
 ]
 
 

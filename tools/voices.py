@@ -24,7 +24,7 @@ ANN = {
     "player_one_wins": "Player one wins!", "player_two_wins": "Player two wins!", "game_over": "Game over.",
     "congratulations": "Congratulations!", "versus": "versus", "announcer_on": "Announcer on.",
     "name_karl": "Pah-pah Lay-gwahs!", "name_ivan": "Ivan!",
-    "name_vizor": "Vizor!", "name_padre": "Samson!", "name_zeke": "Zeke!", "name_hecky": "Heck-ee Zay-vee-er!", "name_lawslie": "Laws-lee!", "name_rex": "Marcus!", "name_kai": "Kai!",
+    "name_vizor": "Vizor!", "name_padre": "Samson!", "name_zeke": "Zeke!", "name_hecky": "Heck-ee Zay-vee-er!", "name_lawslie": "Laws-lee!", "name_rex": "Marcus!", "name_kai": "Deh-vahn-tay!",
 }
 # fighter -> (voice, speed, {line: text})
 CAST = {

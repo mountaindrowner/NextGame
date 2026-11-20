@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.1
+
+- **Kai is now Devanté** (logo, announcer, select screen, ending and itch.io art).
+
 ## 1.17.0
 
 - **New fighter: Kai "The Crown"**, a streetball player from the Courts. He's the first **HIGH FLYER**: the only fighter with a **double jump** (press up/JUMP again in the air), plus a higher jump and quick feet.
