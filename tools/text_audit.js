@@ -36,7 +36,7 @@ const path = require('path');
       d.go(d.Result, 1, { p1: a, p2: b, stage: b }); d.Result.t = 400; check(`result-lose-${a}`);
       d.go(d.Ending); for (const t of [100, 400, 900, 1600]) { d.Ending.t = t; check(`ending@${t}-${a}`); }
       d.startStory(a, [0, 0], [0, 0]); d.RUN.mercy = { kind: 'enforcer', name: 'BOULDER', hue: 0, sat: 1, whiten: true };
-      for (const k of Object.keys(d.SCENES)) { d.go(d.Cutscene, k); const C = d.Cutscene; if (C.card) { C.card = 60; check(`scene-${k}-card-${a}`); }
+      for (const k of [...Object.keys(d.SCENES), 'rival1', 'post1', 'rival3', 'post3']) { d.go(d.Cutscene, k); const C = d.Cutscene; if (C.card) { C.card = 60; check(`scene-${k}-card-${a}`); }
         for (let j = 0; C.i < C.S.beats.length && j < 40; j++) { C.card = 0; C.n = 9999; C.t = 400; check(`scene-${k}-${C.i}-${a}`); if (C.beat().choice) d.RUN.vexLit = true; C.i++; if (C.i < C.S.beats.length) C.prep(); } }
       d.go(d.StoryEnd); for (const t of [100, 500, 900, 1300]) { d.StoryEnd.t = t; check(`credits@${t}-${a}`); } d.StoryEnd.t = d.StoryEnd.stop + 90; check(`credits-end-${a}`); d.clearToast();
       d.RUN.level = 0; d.go(d.Brawl); const B = d.scene; check(`brawl-intro-${a}`); B.ph = 'play'; B.goT = 100; check(`brawl-${a}`); B.paused = true; check(`brawl-pause-${a}`); B.paused = false;

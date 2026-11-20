@@ -106,6 +106,10 @@ const path = require('path');
       check('KEKSAN    Tiger Knee (flies in, launches)', top > 20 && r.F.p1.x - x0 > 40 && dmg >= 8 && air > 10, `rose ${top | 0}px, moved ${(r.F.p1.x - x0) | 0}px, dmg ${dmg | 0}, lifted them ${air | 0}px`);
       r = setup('keksan', 'padre', 100, 132); r.F.p2.state = 'block'; r.F.p2.st = 0; d.startSpecial(r.F.p1, r.F.p2, 2); let held = 0; { let m = r.F.p2.hp; for (let i = 0; i < 80; i++) { r.step(1); if (r.F.p2.state === 'grabbed') held++; m = Math.min(m, r.F.p2.hp); } dmg = r.F.p2.mhp - m; }
       check('KEKSAN    Thai Clinch (grab, 3 knees)', held > 20 && dmg >= 12, `held ${held} frames, dmg ${dmg | 0} through a block`); }
+      r = setup('keksan', 'padre', 100, 150); const x2 = r.F.p2.x; d.startSpecial(r.F.p1, r.F.p2, 4); let far = 0; { let m = r.F.p2.hp; for (let i = 0; i < 40; i++) { r.step(1); far = Math.max(far, r.F.p2.x - x2); m = Math.min(m, r.F.p2.hp); } dmg = r.F.p2.mhp - m; }
+      check('KEKSAN    Teep (pushes them away)', far > 30 && dmg >= 5, `pushed ${far | 0}px, dmg ${dmg | 0}`);
+      r = setup('keksan', 'padre', 170, 210); d.startSpecial(r.F.p1, r.F.p2, 4); let air = 0, wb = false; for (let i = 0; i < 50; i++) { r.step(1); air = Math.max(air, r.F.p2.y); if (r.F.p1.sp && r.F.p1.sp.wb) wb = true; }
+      check('KEKSAN    Teep wall bounce (juggle)', wb && air > 10, `wall bounce ${wb}, lifted ${air | 0}px`);
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();

@@ -16,6 +16,8 @@ A = ROOT / "assets" / "fighters"
 MARGIN, TIPBAND = 6, 14  # px added around the limb; how far back from the tip counts as "the limb"
 # per-fighter bands where a move is not the usual limb (Keksan's jump attack is a knee, not a foot)
 BAND_FOR = {("keksan", "jkick"): (.3, .7)}
+# a knee sits close to the body; give it a fair reach
+MIN_REACH = {("keksan", "jkick"): 40}
 BAND = {"jab": (.45, 1), "kick": (.3, .95), "cjab": (.25, .8), "sweep": (0, .42), "jpunch": (0, 1.2), "jkick": (0, 1.2)}
 MOVES = {"jab": "punch", "kick": "kick", "cjab": "cpunch", "sweep": "lowkick", "jpunch": "airpunch", "jkick": "airkick"}
 FIGHTERS = ["karl", "ivan", "vizor", "padre", "zeke", "hecky", "heckyfox", "lawslie", "rex", "kai", "keksan"]
@@ -59,7 +61,7 @@ def main():
             if mv in ("jab", "cjab", "jpunch") and rr.max() - rr.min() > 30:  # a fist close to the body: measure just the fist
                 c0 = int(mm["ax"] + tip - 7); rr = np.where(sub[:, max(0, c0):].any(1))[0] + r0
             y1, y2 = mm["ay"] - rr.max(), mm["ay"] - rr.min()
-            rec["moves"][mv] = {"reach": int(tip + MARGIN), "y1": int(max(0, y1 - MARGIN)), "y2": int(y2 + MARGIN), "frame": int(i)}
+            rec["moves"][mv] = {"reach": max(MIN_REACH.get((fid, mv), 0), int(tip + MARGIN)), "y1": int(max(0, y1 - MARGIN)), "y2": int(y2 + MARGIN), "frame": int(i)}
         if fid == "heckyfox":  # a costume plays exactly like the base fighter
             rec = out["hecky"]
         out[fid] = rec

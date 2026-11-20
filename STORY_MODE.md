@@ -23,6 +23,22 @@ taking a little more of its hope back, and the fight is won in the end by mercy,
   3. One month later, the shops stay open after dark and kids play ball in the streets.
   4. Credits, then THE END.
 
+**Every fighter has their own story** (`ARCS` in `src/game.js`). Ivan is the Docks boss for everyone; the other two duels are fixed rivals whose stories cross yours.
+
+| Fighter | What they're carrying | Rival 1 | Rival 3 | Where they end up |
+|---|---|---|---|---|
+| Papa-Léguas | runs from everything, even his late father's dojo | Keksan | Hecky (sold the dojo) | opens the Crossroads Dojo every morning |
+| Keksan | fights in Vex's cage to keep the Tiger Gym open | Papa-Léguas | Lawslie (wants to arrest him) | a free gym for every kid; every class starts with a bow |
+| Vizor | sells what his cameras see to whoever pays | Zeke (wants his tape) | Lawslie (wants the evidence) | films the city's good news |
+| Samson | a prizefighter who swore off fighting; baptized Vex as a boy | Marcus | Hecky (sold the 5th Street buildings) | hangs up his gloves; Victor reads the lesson |
+| Zeke | bet on his own matches, then threw them | Vizor (has the tape) | Devanté (in debt too) | confesses, keeps his friends, no betting |
+| Hecky | sold his penthouse and 5th Street to Vex, didn't ask questions | Lawslie | Papa-Léguas | gives the buildings back to the families |
+| Lawslie | suspended for asking questions; afraid of her own anger | Hecky | Vizor | a judge, not a newspaper; walks the beat by choice |
+| Marcus | Vex owns his songs; the crown is all he has left | Devanté | Zeke | buys his songs back, plays free without the crown |
+| Devanté | Vex offers a way out if he throws games | Marcus | Zeke | runs a free league; the scouts come to him |
+
+Each arc has a talk with Samson at the chapel (Samson's own is a prayer), a face-off before each rival duel and a turn after it, a shadow that taunts them with their own temptation, a personal epilogue, and both rivals in the "one month later" scene.
+
 **Cutscenes are acted out on the stage:** the real characters walk in, taunt and kneel on the level's backdrop (rain in the prologue, dawn at the end). The dialogue box shows the speaker's face and name. Each scene opens on a title card and closes on its verse; START skips.
 
 | Level | Where | Waves | Boss |

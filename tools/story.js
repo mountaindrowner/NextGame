@@ -43,6 +43,11 @@ const OUT = process.argv[2];
       C('Docks boss: Ivan', s1 === 'Cutscene:ivan' && tk.n === tk.of && s2 === 'VS' && iv.boss === 'ivan' && !iv.roster && fb.boss && fb.hp > 118 && fb.cpu && fb.spr,
         `${s1}, ${tk.n}/${tk.of} beats, then ${s2}; boss ${iv.boss} (on roster: ${iv.roster}), hp ${fb.hp}, sprites ${fb.spr}`);
       await p.evaluate(() => { const d = window.__dbg; d.go(d.Brawl); }); }
+    if (lv === 0) { // your first rival: a face-off scene, then the duel
+      await p.evaluate(() => { const d = window.__dbg, B = d.scene; for (let i = 0; i < 80; i++) { d.tick(); B.update(); } }); await p.waitForTimeout(600);
+      const s1 = await sceneName(); const tk = await talk(); await p.waitForTimeout(600); const s2 = await sceneName(); const who = await p.evaluate(() => [window.__dbg.RUN.ladder[0], window.__dbg.ARCS.karl.r1]);
+      C('rival 1: face-off, then duel', s1 === 'Cutscene:rival1' && tk.n === tk.of && s2 === 'VS' && who[0] === who[1], `${s1}, ${tk.n}/${tk.of} beats, then ${s2} vs ${who[0]}`);
+      await p.evaluate(() => { const d = window.__dbg; d.go(d.Brawl); const B = d.scene; B.ph = 'clear'; }); }
     if (lv === 0) { const m = await p.evaluate(() => window.__dbg.RUN.mercy); C('mercy: helped the last man up', !!m && !!m.name, m ? `${m.name} the ${m.kind}` : 'nobody spared'); }
     C(`level ${lv + 1} cleared by autoplayer`, r.ph === 'clear' && r.waves === r.of, `${r.waves}/${r.of} waves, ${r.spawned} enemies (${Object.entries(r.kinds).map(([k, v]) => k + ' ' + v).join(', ')}), took ${r.pHit} hits, ${(r.frames / 60) | 0}s, score ${r.score}`);
   }
@@ -53,8 +58,14 @@ const OUT = process.argv[2];
   C('final boss = your shadow', b.boss === 'karl' && b.shadow && sc1 === 'Cutscene:shadow' && tk2.n === tk2.of && sc === 'VS', `boss ${b.boss}, shadow ${b.shadow}, ${sc1} then ${sc}, earlier bosses ${b.bosses.join(', ')}`);
   // every chapter cutscene plays between levels (Result -> next chapter)
   for (const lv of [1, 2, 3]) { await p.evaluate(lv => { const d = window.__dbg; d.RUN.level = lv - 1; d.go(d.Result, 0, { p1: 'karl', p2: 'padre', stage: 'karl' }); d.Result.next(); }, lv);
-    const s1 = await sceneName(); const t3 = await talk(); await p.waitForTimeout(500);
-    C(`chapter ${lv + 1} cutscene`, s1 === 'Cutscene:' + ['', 'ch2', 'ch3', 'final'][lv] && t3.n === t3.of && (await sceneName()) === 'Brawl', `${s1}, ${t3.n}/${t3.of} beats, then ${await sceneName()}`); }
+    const s1 = await sceneName(); const t3 = await talk(); await p.waitForTimeout(500); let s2 = await sceneName(), t4 = { n: 0, of: 0 };
+    if (s1.includes('post')) { t4 = await talk(); await p.waitForTimeout(500); }
+    const want = ['', 'Cutscene:post1', 'Cutscene:ch3', 'Cutscene:post3'][lv], next = ['', 'Cutscene:ch2', 'Brawl', 'Cutscene:final'][lv];
+    C(`after duel ${lv}: ${want.slice(9)}`, s1 === want && t3.n === t3.of && s2 === next && (await sceneName()) === 'Brawl', `${s1} (${t3.n}/${t3.of}) -> ${s2}${t4.of ? ` (${t4.n}/${t4.of})` : ''} -> ${await sceneName()}`); }
+  // every fighter has a story: two rivals of their own, a personal scene in every act
+  const arcs = await p.evaluate(() => { const d = window.__dbg, out = {}, keep = d.RUN; for (const id of d.ORDER) { const A = d.ARCS[id]; d.startStory(id, [0, 0], [0, 0]);
+      out[id] = { r: d.RUN.bosses.join('/'), ok: !!A && d.ORDER.includes(A.r1) && d.ORDER.includes(A.r3) && A.r1 !== id && A.r3 !== id && A.r1 !== A.r3 && A.why.length >= 2 && !!A.shadow && !!A.end }; } d.RUN = keep; return out; });
+  C('every fighter has an arc', Object.values(arcs).every(a => a.ok), Object.entries(arcs).map(([k, v]) => `${k} ${v.r}${v.ok ? '' : ' MISSING'}`).join(', '));
   // the ending: beat the shadow, offer your hand, the chapel, the credits
   await p.evaluate(() => { const d = window.__dbg; d.RUN.level = 3; d.RUN.vexLit = false; d.go(d.Result, 0, { p1: 'karl', p2: 'karl', stage: 'karl' }); d.Result.next(); });
   const s2 = await sceneName(); const t4 = await talk(); await p.waitForTimeout(600);

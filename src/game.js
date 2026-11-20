@@ -249,7 +249,7 @@ const CH={
     col:{skin:'#e0a070',glove:'#1c1a24',leg:'#24202e',foot:'#f0f0f0',aura:'#ffb43a'},sh:.72,hip:.5,
     quote:"THAT'S GAME. YOU NEVER HAD A CHANCE ON MY COURT.",lose:'FOUL... THAT WAS A FOUL...',stageName:'STREET COURT'},
   keksan:{id:'keksan',name:'KEKSAN',nick:'THE TIGER',style:'MUAY THAI',country:'TIGER GYM',countryLabel:'GYM',flag:'tiger',ht:"5'10\" (178 CM)",wt:'172 LB (78 KG)',
-    speed:1.02,power:1,def:1,jump:1,stats:[3,4,3],special:'knee',spName:'TIGER KNEE',special2:'clinch',sp2Name:'THAI CLINCH',tr:0,
+    speed:1.02,power:1,def:1,jump:1,stats:[3,4,3],special:'knee',spName:'TIGER KNEE',special2:'clinch',sp2Name:'THAI CLINCH',special3:'teep',sp3Name:'TEEP',tr:0,
     col:{skin:'#c88a5a',glove:'#d02a2a',leg:'#1a1a22',foot:'#c88a5a',aura:'#ff3a3a'},sh:.72,hip:.5,
     quote:"RESPECT THE RING. THEN RESPECT THE TIGER.",lose:'MY GUARD... DROPPED...',stageName:'TIGER GYM'},
 };
@@ -266,7 +266,7 @@ const ARCH={
   hecky:{type:'TECH RUSHDOWN',trait:'PARRY: TAP FWD ON HIT',hp:98,parry:true,reach:1.18,hh:1.35,dash:1.2},
   lawslie:{type:'ENFORCER',trait:'NO CHIP, BLOCK = METER',hp:100,enforcer:true,reach:1},
   kai:{type:'HIGH FLYER',trait:'DOUBLE JUMP, BIG HOPS',hp:96,dj:true,reach:1},
-  keksan:{type:'STRIKER',trait:'SHIN KICKS: HARDER KICKS',hp:100,shin:true,reach:1},
+  keksan:{type:'STRIKER',trait:'SHIN KICKS: HARDER KICKS',hp:94,shin:true,reach:1},
   rex:{type:'LONG-RANGE',trait:'HUGE REACH, BEAT = +DMG',hp:104,rhythm:true,amp:true,reach:1.4,slow:2,dash:.7}};
 const arch=c=>ARCH[c.id]||{};
 // RHYTHM trait: a steady 128-ish bpm beat on the shared frame counter (same on both sides online)
@@ -287,7 +287,7 @@ const TNAME={jab:'JAB',kick:'KICK',cjab:'LOW JAB',sweep:'SWEEP',jpunch:'JUMP PUN
 // bread-and-butter combos shown in the pause menu
 const BNB={karl:'JAB, JAB, KICK > SP',vizor:'JAB, KICK > SP',padre:'JAB, KICK > SP (OVERHEAD)',zeke:'JAB, KICK > SP',hecky:'LOW JAB, JAB, KICK > SP',lawslie:'JAB, KICK > SP (TASER)',rex:'JAB, KICK > DN+SP',kai:'JAB, KICK > SP',keksan:'JAB, KICK > SP (KNEE)'};
 // cooldown (frames) per special; second specials are stronger tools with longer cooldowns
-const SPCD={rush:75,shuriken:75,slam:110,spin:75,flash:110,tome:75,strike:75,split:120,takeover:70,powersuit:720,laser:130,taser:80,cuff:240,bassdrop:80,miccheck:150,bounce:80,crossover:200,knee:90,clinch:260,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
+const SPCD={rush:75,shuriken:75,slam:110,spin:75,flash:110,tome:75,strike:75,split:120,takeover:70,powersuit:720,laser:130,taser:80,cuff:240,bassdrop:80,miccheck:150,bounce:80,crossover:200,knee:90,clinch:260,teep:150,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
 const IMG={};
 function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c}
 function silhouette(img,color){const c=mk(img.width,img.height),x=c.getContext('2d');x.drawImage(img,0,0);x.globalCompositeOperation='source-in';x.fillStyle=color;x.fillRect(0,0,c.width,c.height);return c}
@@ -870,6 +870,14 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
         const r=tryHit(f,o,hb,{dmg:10,stun:22,bs:12,kb:2.2,lv:'mid',chip:2,knock:true,launch:true,heavy:true});if(r){s.hits=1;if(r==='hit'){F.shake=Math.max(F.shake,6);sparks(o.x,GY-o.y-o.H*.6,'#ff3a3a',12)}}}}
     else{f.y=0;f.vx*=.6}
     if(t>=36){f.y=0;endSpecial(f)}}
+  else if(s.kind==='teep'){// Teep: a long push kick that shoves them across the screen; near a wall they bounce off it into a juggle
+    if(t<7)f.vx=0;if(t===7)SFX.whooshH();
+    if(t>=7&&t<12&&!s.hits){const hb={x1:f.face>0?f.x:f.x-62,x2:f.face>0?f.x+62:f.x,y1:f.y+f.H*.3,y2:f.y+f.H*.72};
+      const r=tryHit(f,o,hb,{dmg:6,stun:24,bs:10,kb:6.5,lv:'mid',chip:1,tag:'sp3'});if(r){s.hits=1;if(r==='hit'){F.shake=Math.max(F.shake,5);dust(o.x,6)}}}
+    if(s.hits&&!s.wb&&t<34&&o.state==='hurt'&&(o.x<=XMIN+3||o.x>=XMAX-3)){s.wb=1;
+      applyHit(f,o,{dmg:3,stun:30,bs:8,kb:-2.6,lv:'mid',unblockable:true,knock:true,launch:true,heavy:true,tag:'sp3'},o.x,GY-o.H*.5);
+      F.shake=10;F.hitstop=10;SFX.slam();sparks(o.x,GY-o.H*.5,'#ffffff',14);addText('WALL BOUNCE!',o.x,GY-o.H-14,'#ff3a3a')}
+    if(t>=32)endSpecial(f)}
   else if(s.kind==='bounce'){// Bounce Pass: a bouncing basketball; on a hit it rebounds to Kai (catch it = quick recharge)
     if(t===10&&!F.proj.some(p=>p.owner===f&&p.kind==='bball')){F.proj.push({kind:'bball',x:f.x+f.face*20,y:f.H*.5,vx:f.face*4.1,vy:-1.2,owner:f,rot:0,life:150,lv:'mid',dmg:8,stun:22,kb:2.2,tag:'sp1',bounces:0});SFX.whoosh()}
     if(t>=28)endSpecial(f)}
@@ -1165,7 +1173,7 @@ function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:
     if(rdy&&sp==='takeover'&&dist<105&&O.state!=='attack')C.push([.03+.05*L,SPC('sp'),'takeover rush']);
     if(rdy2&&s2==='charge')C.push([.06+.1*L,SPC('sp2'),'iron charge']);if(rdy2&&s2==='split')C.push([(.08+.1*L)*(ai.lastBall==='strike'?3:1),()=>{SPC('sp2')();ai.lastBall='split'},'split shot']);
     if(rdy&&sp==='strike')C.push([(.1+.1*L)*(ai.lastBall==='split'?3:1),()=>{SPC('sp')();ai.lastBall='strike'},'strike ball']);
-    if(rdy3&&s3==='laser'&&O.state!=='crouch')C.push([.06+.08*L,SPC('sp3'),'laser glare']);
+    if(rdy3&&s3==='laser'&&O.state!=='crouch')C.push([.06+.08*L,SPC('sp3'),'laser glare']);if(rdy3&&s3==='teep'&&dist<90)C.push([.06+.08*L,SPC('sp3'),'teep']);
     return card('mid',C)}
   // CLOSE deck (pressure)
   C.push([.28,hold('aP'),'jab'],[.2,hold('bP'),'kick'],[.12,both('d','bP'),'sweep'],[.07,both('d','aP'),'low jab'],[.1,plan('walkB',12),'back off'],[.16,plan('guard',wait),'guard']);
@@ -1374,7 +1382,8 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
       if(s&&s.kind==='super'){if(!s.hits)return A.walk?P('walk',Math.floor(t/1.4)%n('walk')):null;
         if(s.hits>=99)return P('idle',0);if(s.hits>=6)return A.special?P('special',last('special')):null;
         const k=s.hits%2?'kick':'punch';return A[k]?P(k,akOf(f.c,k).pk):null}
-      if(s&&(s.two||s.kind==='laser')){const k=s.kind;
+      if(s&&(s.two||s.kind==='laser'||s.kind==='teep')){const k=s.kind;
+        if(k==='teep')return A.special3?P('special3',kf(t,[[0,0],[6,3],[8,4],[18,6],[30,8]])):null;
         if(k==='step'){if(!A.walk)return null;return t<4?(A.crouch?P('crouch',2):P('idle',0)):P('walk',Math.floor(t/1.5)%n('walk'))}
         if(k==='counter'){if(s.trig==null)return A.block?P('block',Math.min(t,last('block'))):null;const kk=t-s.trig;return A.kick?P('kick',kf(kk,[[0,1],[7,4],[16,5],[24,7]])):null}
         if(k==='charge')return A.special?P('special',t<8?t/8*5:t<30?7+((t>>2)&1):8):null;
@@ -1814,9 +1823,9 @@ const SCENES={
     {shot:{bg:'padre_stage',actors:[['sam','padre',176,-1],['P','P',84,1]]},skipIf:'padre'},
     {shot:{bg:'padre_stage',actors:[['P','P',128,1]]},onlyIf:'padre'},
     {s:'SAM',t:"THEY TOOK MORE THAN A TROPHY. THEY TOOK THIS CITY'S HOPE. PEOPLE ARE AFRAID TO WALK THEIR OWN STREETS.",skipIf:'padre'},
+    {arc:'why'},
     {s:'P',t:"THEN I'LL GIVE THE STREETS BACK TO THEM. ONE BLOCK AT A TIME.",skipIf:'padre'},
     {s:'SAM',t:"GO FOR THE PEOPLE, NOT FOR REVENGE. HATE CAN'T DRIVE OUT HATE. AND REMEMBER: EVEN VEX WAS SOMEBODY'S SON.",skipIf:'padre'},
-    {s:'N',t:"SAMSON KNEELS AND PRAYS FOR THE CITY: FOR THE AFRAID, FOR THE LOST, EVEN FOR VEX. THEN HE WALKS OUT INTO THE RAIN.",onlyIf:'padre',do:[['P','walk',300]]},
     {verse:"THE LIGHT SHINETH IN DARKNESS, AND THE DARKNESS COMPREHENDED IT NOT.",ref:'JOHN 1:5'}]},
   ch2:{title:'CHAPTER 2',sub:'THE DOCKS',beats:[
     {shot:{bg:'story_lvl2',cx:40,actors:[['P','P',70,1],['foe','FOE',300,-1]]}},
@@ -1861,6 +1870,7 @@ const SCENES={
     {shot:{bg:'hecky_stage',actors:[['P','P',72,1],['shd','SHD',140,-1,{hidden:1}],['vex','vex',204,-1,{state:'kneel'}]]}},
     {s:'VEX',t:"YOU THINK YOU'RE BETTER THAN ME? EVERYBODY HAS A DARK SIDE, CHAMP. LET'S SEE YOURS."},
     {s:'N',t:"A SHADOW STEPS OUT OF THE DARK. EVERY GRUDGE. EVERY LIE. IT MOVES LIKE {N}. IT FIGHTS LIKE {N}.",do:[['shd','fade']]},
+    {arc:'shadow'},
     {s:'N',t:"TO SAVE THIS CITY, {N} HAS TO BEAT THE ONE ENEMY NO FIST CAN REACH."},
     {verse:"FOR WE WRESTLE NOT AGAINST FLESH AND BLOOD, BUT AGAINST THE RULERS OF THE DARKNESS OF THIS WORLD.",ref:'EPHESIANS 6:12'}]},
   ending:{title:'EPILOGUE',sub:'THE LAST BLOW',beats:[
@@ -1881,15 +1891,111 @@ const SCENES={
     {s:'N',t:"VEX GAVE IT ALL BACK: THE MONEY, THE DEBTS, THE DEEDS TO HALF THE STREET. NOBODY CALLS HIM VEX ANY MORE."},
     {s:'VIC',t:"MY NAME IS VICTOR. ALL MY LIFE I SAID EVERY MAN HAS A PRICE. I WAS RIGHT. MINE WAS PAID FOR ME.",do:[['vex','anim','idle']]},
     {bg:'story_lvl1',title:'ONE MONTH LATER',sub:'BONFIRE CITY'},
-    {shot:{bg:'story_lvl1',cx:60,dawn:1,actors:[['foe','FOE',-30,1],['P','P',124,1],['vex','vex',300,-1],['ivan','ivan',330,-1]]}},
-    {s:'N',t:"THE SHOPS ON 5TH STREET STAY OPEN AFTER DARK NOW. KIDS PLAY BALL IN THE STREETS AGAIN. THE CITY IS WAKING UP.",do:[['foe','walk',80],['vex','walk',178]]},
-    {s:'N',t:"IVAN GOT HIS PASSPORT BACK, AND STAYED. HE TEACHES WRESTLING TO DOCK KIDS FOR FREE. NOBODY CALLS HIM AN ENFORCER NOW.",do:[['ivan','walk',224]]},
+    {shot:{bg:'story_lvl1',cx:60,dawn:1,rivals:1,actors:[['foe','FOE',-30,1],['P','P',106,1],['vex','vex',300,-1],['ivan','ivan',330,-1]]}},
+    {s:'N',t:"THE SHOPS ON 5TH STREET STAY OPEN AFTER DARK NOW. KIDS PLAY BALL IN THE STREETS AGAIN. THE CITY IS WAKING UP.",arc:'rivalsIn',do:[['foe','walk',62],['vex','walk',150]]},
+    {s:'N',t:"IVAN GOT HIS PASSPORT BACK, AND STAYED. HE TEACHES WRESTLING TO DOCK KIDS FOR FREE. NOBODY CALLS HIM AN ENFORCER NOW.",do:[['ivan','walk',238]]},
+    {arc:'end'},
     {s:'N',t:"NEXT WEEK, THE FINALS. TONIGHT, FOR THE FIRST TIME IN YEARS, BONFIRE CITY SLEEPS IN PEACE."},
     {verse:"FOR THIS MY SON WAS DEAD, AND IS ALIVE AGAIN. HE WAS LOST, AND IS FOUND.",ref:'LUKE 15:24'}]}};
-const SCENE_AT=['intro','ch2','ch3','final','ending'];// the scene before each level (and the ending after the shadow)
+const SCENE_AT=['intro','post1','ch3','post3','ending'];// the scene after each duel (post1/post3 lead into ch2/final), and the ending
+// Every fighter's own story: why they're in it (a talk with Samson at the chapel), the two rivals whose roads cross
+// theirs (a face-off before each duel, a turn after it), what their shadow knows about them, and where they end up.
+// Lines use speakers P (you), SAM (Samson), N (narration) or a fighter id ('keksan', 'hecky'...).
+const ARCS={
+  karl:{why:[['SAM',"PAPA-LÉGUAS. I HAVEN'T SEEN YOU SINCE YOUR FATHER'S FUNERAL."],['P',"I'VE BEEN BUSY. ONE CITY TO THE NEXT. I NEVER STAY ANYWHERE LONG."],
+      ['SAM',"HIS DOJO HAS BEEN EMPTY FOR TWO YEARS. VEX WANTS THE BUILDING. MAYBE IT'S TIME YOU STOPPED RUNNING."]],
+    r1:'keksan',pre1:[['keksan',"THEY SAY YOU RUN A THOUSAND LEAGUES, PAPA-LÉGUAS. TRY RUNNING FROM THIS."],['P',"KEKSAN? YOU FIGHT FOR VEX NOW?"],['keksan',"HE PAYS THE TIGER GYM'S RENT. SAME AS EVERYBODY."]],
+    post1:[['keksan',"...YOUR FATHER TAUGHT ME MY FIRST KICK, YOU KNOW."],['P',"THEN HELP ME OPEN HIS DOJO AGAIN. NO CAGE. NO VEX."],['keksan',"...I'D LIKE THAT."]],
+    r3:'hecky',pre3:[['hecky',"THE CROSSROADS DOJO? I SIGNED IT OVER TO VEX LAST MONTH. NOTHING PERSONAL. JUST BUSINESS."],['P',"MY FATHER BUILT THAT PLACE WITH HIS OWN HANDS."]],
+    post3:[['hecky',"...I'LL TEAR UP THE DEED. CALL IT A REFUND."],['P',"WHY?"],['hecky',"BECAUSE YOU STOPPED RUNNING. MAYBE I CAN STOP SELLING."]],
+    shadow:"RUN, LITTLE ROAD RUNNER. THAT'S ALL YOU HAVE EVER DONE.",
+    end:"PAPA-LÉGUAS STOPPED RUNNING. THE CROSSROADS DOJO OPENS AT SIX EVERY MORNING, AND HE'S ALWAYS THE FIRST ONE IN."},
+  keksan:{why:[['SAM',"KEKSAN. I SAW YOU FIGHT IN VEX'S CAGE LAST WEEK. YOU WON. YOU DIDN'T SMILE."],['P',"THE TIGER GYM NEEDED THE MONEY. THE KIDS NEED SOMEWHERE TO GO AT NIGHT."],
+      ['SAM',"THEN FIGHT FOR THEM IN THE OPEN, SON. NOT IN HIS CAGE."]],
+    r1:'karl',pre1:[['P',"PAPA-LÉGUAS? I THOUGHT YOU LEFT THIS CITY FOR GOOD."],['karl',"I CAME BACK FOR MY FATHER'S DOJO. VEX SAYS YOU GUARD HIS STREETS NOW."],['P',"I GUARD WHAT PAYS. MOVE."]],
+    post1:[['karl',"YOU'RE BETTER THAN HIS CAGE, KEKSAN. YOU ALWAYS WERE."],['P',"...THE KIDS AT MY GYM SAY THE SAME THING."]],
+    r3:'lawslie',pre3:[['lawslie',"KEKSAN. YOU'RE ON MY LIST: ILLEGAL CAGE FIGHTS, THREE COUNTS."],['P',"I'M DONE WITH THE CAGE. I'M HERE FOR VEX."],['lawslie',"TELL IT TO THE JUDGE."]],
+    post3:[['lawslie',"...YOU PULLED THAT LAST KNEE. YOU COULD HAVE HURT ME."],['P',"RESPECT FIRST. THEN FISTS."],['lawslie',"GO ON. I'LL WRITE IT UP AS A WARNING."]],
+    shadow:"YOU LOVED THE CAGE, TIGER. THE CROWD. THE MONEY. ADMIT IT.",
+    end:"KEKSAN NEVER WENT BACK TO THE CAGE. THE TIGER GYM IS FREE FOR EVERY KID IN THE CITY, AND EVERY CLASS STARTS WITH A BOW."},
+  vizor:{why:[['SAM',"VIZOR. YOUR CAMERAS ARE ON EVERY CORNER OF THIS CITY. WHO ARE YOU WATCHING FOR?"],['P',"WHOEVER PAYS. VEX PAID BEST. UNTIL HE STARTED WATCHING ME BACK."],
+      ['SAM',"THE TRUTH ISN'T A THING TO SELL, SON. IT'S A THING TO TELL."]],
+    r1:'zeke',pre1:[['zeke',"VIZOR! YOU'VE GOT FOOTAGE OF ME AT VEX'S TABLES. HAND IT OVER."],['P',"THAT TAPE IS WORTH A LOT TO SOME PEOPLE."]],
+    post1:[['P',"HERE. TAKE IT. I'M DONE SELLING PEOPLE'S WORST NIGHTS."],['zeke',"...THANKS, MAN. I THINK."]],
+    r3:'lawslie',pre3:[['lawslie',"I KNOW YOU HAVE THE TAPES ON VEX. EVERY DEAL HE MADE. EVERY COP HE PAID."],['P',"AND IF I DON'T WANT TO HAND THEM OVER?"],['lawslie',"THEN I TAKE THEM."]],
+    post3:[['P',"TAKE THEM. ALL OF THEM. EVEN THE ONES WITH ME IN THEM."],['lawslie',"THAT'S THE FIRST HONEST THING YOU EVER RECORDED."]],
+    shadow:"I'VE SEEN EVERYTHING YOU EVER DID, VIZOR. EVERY TAPE. EVERY LIE.",
+    end:"VIZOR TURNED THE CAMERAS AROUND. NOW HE FILMS THE CITY'S GOOD NEWS: OPEN SHOPS, FULL COURTS, THE CHAPEL CHOIR. EVERYBODY WATCHES."},
+  padre:{why:[['N',"SAMSON WAS A PRIZEFIGHTER ONCE, BEFORE HE WAS A PRIEST. HE SWORE HE WOULD NEVER FIGHT AGAIN."],
+      ['N',"FORTY YEARS AGO HE BAPTIZED A LITTLE BOY NAMED VICTOR IN THIS CHAPEL. TONIGHT THE CITY CALLS THAT BOY VEX."],
+      ['P',"LORD, I SAID I WAS DONE WITH FIGHTING. GIVE ME STRENGTH ENOUGH. AND MERCY ENOUGH."]],
+    r1:'rex',pre1:[['rex',"FATHER SAMSON? VEX BOOKED ME FOR HIS PARTY TONIGHT. HE'S PAYING TRIPLE."],['P',"AND WHAT IS HE REALLY PAYING YOU FOR, MARCUS?"]],
+    post1:[['rex',"...YOU USED TO LET ME PRACTISE BASS IN THE CHAPEL BASEMENT."],['P',"THE DOOR'S STILL UNLOCKED, SON."]],
+    r3:'hecky',pre3:[['hecky',"PADRE. I SOLD VEX THE BUILDINGS ON 5TH STREET. HALF YOUR FLOCK LIVES THERE."],['P',"THEN YOU SOLD HIM PEOPLE, HECKY."]],
+    post3:[['hecky',"...HOW MUCH WOULD IT COST TO BUY THEM BACK?"],['P',"LESS THAN YOU THINK. MORE THAN MONEY."]],
+    shadow:"REMEMBER THE RING, CHAMPION? THE ROAR WHEN THEY FELL? YOU MISSED IT.",
+    end:"SAMSON HUNG HIS GLOVES BACK ON THE CHAPEL WALL. THE DOORS STAY OPEN, AND ON SUNDAYS VICTOR READS THE FIRST LESSON."},
+  zeke:{why:[['SAM',"ZEKE. YOU OWE VEX, DON'T YOU?"],['P',"I BET ON MY OWN MATCHES. THEN I BET ON LOSING THEM. NOW HE OWNS THE STRIKE LANES."],
+      ['SAM',"THEN THE FIRST THING TO WIN BACK ISN'T THE ALLEY. IT'S THE TRUTH."]],
+    r1:'vizor',pre1:[['P',"VIZOR. YOU'VE GOT THE TAPE OF ME THROWING THE FINAL."],['vizor',"FIVE THOUSAND AND IT DISAPPEARS."],['P',"NAH. I'M DONE PAYING TO HIDE."]],
+    post1:[['vizor',"...THE TAPE IS YOURS. WHAT WILL YOU DO WITH IT?"],['P',"SHOW IT TO EVERYONE I LIED TO."]],
+    r3:'kai',pre3:[['kai',"ZEKE, VEX SAYS IF I BEAT YOU, MY DEBT IS GONE."],['P',"HE TOLD ME THE SAME ABOUT YOU, KID."]],
+    post3:[['P',"HE'LL NEVER CLEAR YOUR DEBT, DEVANTÉ. HE NEEDS YOU OWING."],['kai',"...THEN WE GO UP THERE TOGETHER."]],
+    shadow:"ONE MORE BET, ZEKE. JUST ONE. YOU'RE DUE.",
+    end:"ZEKE OWNED UP TO EVERY THROWN MATCH. HE LOST HIS TITLE AND KEPT HIS FRIENDS. THE LANES HAVE A NEW SIGN: NO BETTING."},
+  hecky:{why:[['SAM',"MR. XAVIER. YOU'RE A LONG WAY FROM YOUR PENTHOUSE."],['P',"VEX BOUGHT IT FROM ME. GOOD PRICE. I DIDN'T ASK WHERE THE MONEY CAME FROM."],
+      ['P',"NOW HE RUNS THE CITY FROM MY OLD LIVING ROOM. I'D LIKE IT BACK. AND I'D LIKE TO SLEEP AT NIGHT."]],
+    r1:'lawslie',pre1:[['lawslie',"HECKY XAVIER. YOUR SIGNATURE IS ON EVERY BUILDING VEX TOOK."],['P',"LEGALLY ACQUIRED, OFFICER. I HAVE VERY GOOD LAWYERS."]],
+    post1:[['P',"...FINE. EVERY CONTRACT WILL BE ON YOUR DESK BY MONDAY."],['lawslie',"AND?"],['P',"AND I'LL TESTIFY."]],
+    r3:'karl',pre3:[['karl',"YOU SOLD MY FATHER'S DOJO, XAVIER."],['P',"IT WAS A GOOD DEAL."],['karl',"FOR WHO?"]],
+    post3:[['P',"...I'LL BUY IT BACK AND GIVE IT TO YOU. NO CONTRACT."],['karl',"JUST LIKE THAT?"],['P',"JUST LIKE THAT. IT'S A NEW THING I'M TRYING."]],
+    shadow:"EVERYTHING HAS A PRICE, HECKY. YOU TAUGHT VEX THAT.",
+    end:"HECKY GAVE THE 5TH STREET BUILDINGS BACK TO THE FAMILIES WHO LIVED THERE. HE KEPT ONE SUIT, AND HE WEARS IT TO CHURCH."},
+  lawslie:{why:[['SAM',"OFFICER LAWSLIE. OFF DUTY?"],['P',"SUSPENDED. I ASKED WHY HALF THE PRECINCT DRIVES NEW CARS. THE CHIEF TOLD ME TO LOOK AWAY."],
+      ['P',"I CAN'T. BUT I'M SO ANGRY I'M SCARED OF WHAT I'LL DO."],['SAM',"AN ANGRY HEART THAT KNOWS IT'S ANGRY CAN STILL CHOOSE MERCY."]],
+    r1:'hecky',pre1:[['P',"XAVIER. YOUR NAME IS ON EVERY DEED VEX OWNS."],['hecky',"OFFICER, I HAVE VERY GOOD LAWYERS."]],
+    post1:[['hecky',"...ALL RIGHT. YOU'LL HAVE THE CONTRACTS."],['P',"AND YOUR TESTIMONY."],['hecky',"...AND MY TESTIMONY."]],
+    r3:'vizor',pre3:[['vizor',"I HAVE TAPES OF YOUR CHIEF TAKING VEX'S MONEY. WHAT ARE THEY WORTH TO YOU?"],['P',"NOTHING. EVIDENCE ISN'T FOR SALE."]],
+    post3:[['vizor',"TAKE THEM. ALL OF THEM."],['P',"...THANK YOU. I MEAN IT."]],
+    shadow:"YOU DON'T WANT JUSTICE. YOU WANT TO WATCH THEM SUFFER.",
+    end:"LAWSLIE TOOK THE TAPES TO A JUDGE, NOT A NEWSPAPER. THE CHIEF RESIGNED. SHE TURNED DOWN HIS JOB AND WALKS THE 5TH STREET BEAT."},
+  rex:{why:[['SAM',"MARCUS. STILL WEARING THE CROWN, I SEE."],['P',"VEX OWNS MY RECORD CONTRACT. EVERY SONG I WRITE, HE SELLS. EVERY SHOW I PLAY, HE TAKES THE DOOR."],
+      ['P',"SOMETIMES THE CROWN IS ALL I'VE GOT LEFT."],['SAM',"THE CROWN WAS NEVER WHAT MADE YOU WORTH SOMETHING, SON."]],
+    r1:'kai',pre1:[['kai',"MARCUS! VEX SAID HE'D SIGN ME IF I BRING YOU IN."],['P',"LITTLE BROTHER, HE SIGNED ME TOO. LOOK WHERE IT GOT ME."]],
+    post1:[['kai',"...SO WHAT DO WE DO?"],['P',"WE GO TAKE OUR NAMES BACK. TOGETHER."]],
+    r3:'zeke',pre3:[['zeke',"MARCUS! VEX WILL CLEAR MY DEBT IF I STOP YOU."],['P',"THEN HE'LL OWN YOU FOREVER, ZEKE. LIKE HE OWNS ME."]],
+    post3:[['zeke',"...YOU'RE RIGHT. I'M DONE."],['P',"COME TO THE SHOW. FRONT ROW."]],
+    shadow:"WITHOUT THE CROWN, YOU'RE NOBODY. AND YOU KNOW IT.",
+    end:"MARCUS BOUGHT BACK HIS SONGS AND PLAYED A FREE SHOW ON THE CHAPEL STEPS. HE PLAYED ALL NIGHT WITHOUT THE CROWN."},
+  kai:{why:[['SAM',"DEVANTÉ. THEY SAY A SCOUT CAME TO WATCH YOU PLAY."],['P',"A SCOUT FROM VEX. A WAY OUT OF HERE, IF I LOSE A FEW GAMES WHEN HE SAYS."],
+      ['SAM',"MAYBE THE COURTS NEED YOU MORE THAN YOU NEED A WAY OUT."]],
+    r1:'rex',pre1:[['P',"MARCUS? YOU'RE PLAYING VEX'S PARTY?"],['rex',"HE OWNS MY CONTRACT, LITTLE BROTHER. DON'T LET HIM OWN YOU TOO."]],
+    post1:[['rex',"...YOU GOT BETTER."],['P',"YOU TAUGHT ME. NOW COME WITH ME."]],
+    r3:'zeke',pre3:[['zeke',"KID, VEX SAYS IF I BEAT YOU, MY DEBT IS GONE."],['P',"HE SAID THE SAME TO ME ABOUT YOU."]],
+    post3:[['P',"HE'LL NEVER LET EITHER OF US GO, ZEKE."],['zeke',"THEN WE STOP PLAYING HIS GAME."]],
+    shadow:"TAKE THE DEAL, DEVANTÉ. LOSE A FEW GAMES. WHO WOULD EVER KNOW?",
+    end:"DEVANTÉ TURNED DOWN EVERY DEAL WITH STRINGS ON IT. HE RUNS A FREE LEAGUE ON THE STREET COURT, AND THE SCOUTS COME TO HIM NOW."}};
+// a fighter's scenes, built from their arc
+const beatsOf=lines=>lines.map(([s,t])=>({s,t}));
+function storyScene(k){const A=ARCS[RUN.p1],b=SCENES[k];
+  if(k==='rival1'||k==='rival3'){const r=k==='rival1'?A.r1:A.r3,lv=k==='rival1';
+    return{title:CH[r].name,sub:CH[r].nick?'"'+CH[r].nick+'"':CH[r].style,beats:[{shot:lv?{bg:'story_lvl1',cx:420,actors:[['P','P',70,1],['r',r,320,-1]]}:{bg:'story_lvl3',actors:[['P','P',70,1],['r',r,320,-1]]}},
+      {s:'N',t:lv?"AT THE END OF THE STREET, SOMEONE {N} KNOWS IS WAITING.":"ONE FLOOR FROM THE TOP, ONE MORE FAMILIAR FACE.",do:[['r','walk',178]]},...beatsOf(lv?A.pre1:A.pre3)]}}
+  if(k==='post1'||k==='post3'){const r=k==='post1'?A.r1:A.r3,lv=k==='post1';
+    return{beats:[{shot:lv?{bg:'story_lvl1',cx:420,actors:[['P','P',96,1],['r',r,178,-1,{state:'down'}]]}:{bg:'story_lvl3',actors:[['P','P',96,1],['r',r,178,-1,{state:'down'}]]}},
+      ...beatsOf(lv?A.post1:A.post3).map((x,i)=>i===0?{...x,do:[['r','anim','idle']]}:x)]}}
+  const out=[];for(const x of b.beats){
+    if(x.arc==='why')out.push(...beatsOf(A.why));
+    else if(x.arc==='shadow')out.push({s:'SHD',t:A.shadow});
+    else if(x.arc==='end')out.push({s:'N',t:A.end});
+    else if(x.shot&&x.shot.rivals)out.push({...x,shot:{...x.shot,actors:[...x.shot.actors,['r1',A.r1,-40,1],['r3',A.r3,300,-1]]}});
+    else if(x.arc==='rivalsIn')out.push({...x,do:[...(x.do||[]),['r1','walk',20],['r3','walk',194]]});
+    else out.push(x)}
+  return{...b,beats:out}}
+
 function foeData(id){const c=FOES[id];if(c.base){const b=foeData(c.base);return{...b,...c,anim:b.anim,H:b.H,spr:b.spr,alt:b.alt,white:b.white,sh:.72,hip:.5,col:{...b.col,...c.col}}}if(c.anim)return c;const b=CH[FALLBACK_FOE[id]];return{...b,...c,anim:b.anim,H:b.H,spr:b.spr,alt:b.alt,white:b.white,fake:true}}
 function startStory(p1,alt,skin){const pool=ORDER.filter(i=>i!==p1).sort(()=>Math.random()-.5);
-  RUN={mode:'story',p1,ladder:[],idx:0,cont:0,alt,skin,level:0,lives:3,score:0,bosses:[pool[0],'ivan',pool[1]],mercy:null,vexLit:false};go(Cutscene,'intro')}
+  RUN={mode:'story',p1,ladder:[],idx:0,cont:0,alt,skin,level:0,lives:3,score:0,bosses:ARCS[p1]?[ARCS[p1].r1,'ivan',ARCS[p1].r3]:[pool[0],'ivan',pool[1]],mercy:null,vexLit:false};go(Cutscene,'intro')}
 // a bust portrait (93x112) cut from an in-game sprite frame, for characters with no portrait art: the upper body, scaled up
 function bust(fr,key,eyes,rim){const m=fxCache(fr);if(m['bust'+key])return m['bust'+key];
   const w=fr.width,h=fr.height,t=mk(w,h),tx=t.getContext('2d');tx.drawImage(fr,0,0);const d=tx.getImageData(0,0,w,h).data,A=(x,y)=>d[(y*w+x)*4+3]>40;
@@ -1924,12 +2030,12 @@ function mkActor(id,who,x,face,o={}){let a;
     else if(C.hue!=null&&!C.fake){a.hue=C.hue;a.sat=C.sat||1;a.whiten=!!C.whiten}}
   Object.assign(a,{id,x,y:0,z:0,face,state:o.state||'idle',st:0,vx:0,vy:0,flash:0,inv:0,ghosts:[],atk:null,sp:null,alpha:o.hidden?0:1,to:null,prop:o.prop});return a}
 const Cutscene={
-  enter(k){this.k=k;const S=this.S=SCENES[k];this.i=0;this.title=S.title;this.sub=S.sub;this.flash=0;this.shot=null;this.actors=[];this.rain=[];
+  enter(k){this.k=k;const S=this.S=storyScene(k);this.i=0;this.title=S.title;this.sub=S.sub;this.flash=0;this.shot=null;this.actors=[];this.rain=[];
     if(!F)F={superFlash:0,cinema:false,superBy:null};this.card=S.title?110:0;this.n=0;this.prep();playMusic(k==='ending'?'ending':'select')},
   // speaker info: name, face, colour
   who(s){if(s==='SAM'&&RUN.p1==='padre')s='P';const c=CH[RUN.p1];
     return{P:{n:c.name,im:c.porm,c:c.col.aura},VEX:{n:'VEX',im:vexPor(RUN.vexLit),c:RUN.vexLit?'#ffd23a':'#e0a0ff'},VIC:{n:'VICTOR',im:vexPor(true),c:'#ffd23a'},
-      FOE:{n:(RUN.mercy&&RUN.mercy.name)||'SID',im:foePor(),c:'#ff9a6a'},SAM:{n:'SAMSON',im:CH.padre.porm,c:'#7ad8ff'},IVAN:{n:'IVAN',im:CH.ivan.porm,c:'#ff5a3a'},N:{}}[s]||{}},
+      FOE:{n:(RUN.mercy&&RUN.mercy.name)||'SID',im:foePor(),c:'#ff9a6a'},SAM:{n:'SAMSON',im:CH.padre.porm,c:'#7ad8ff'},IVAN:{n:'IVAN',im:CH.ivan.porm,c:'#ff5a3a'},SHD:{n:'SHADOW',im:shadowPor(c.porm),c:'#b04aff'},N:{}}[s]||(CH[s]?{n:CH[s].name,im:CH[s].porm,c:CH[s].col.aura}:{})},
   fill(s){const c=CH[RUN.p1];return s.replace(/\{N\}/g,c.name).replace(/\{F\}/g,(RUN.mercy&&RUN.mercy.name)||'SID')},
   skip(b){return!!b&&((b.skipIf&&b.skipIf===RUN.p1)||(b.onlyIf&&b.onlyIf!==RUN.p1))},
   shows(b){return!!b&&!b.bg&&!b.shot&&!this.skip(b)},// beats the player reads (the test counts these)
@@ -1944,7 +2050,8 @@ const Cutscene={
     this.lines=t?wrap(this.fill(t),this.sp(b)==='N'?38:31):b.verse?[...wrap(b.verse,38),'- '+b.ref]:[];if(!b.choice)this.act(b.do)},
   beat(){return this.S.beats[this.i]},
   len(){return this.lines.join(' ').length},
-  done(){const k=this.k;if(k==='ending')goFade(()=>go(StoryEnd));else if(k==='shadow'||k==='ivan')goFade(()=>go(VS));else goFade(()=>go(Brawl))},
+  done(){const k=this.k;if(k==='ending')goFade(()=>go(StoryEnd));else if(k==='shadow'||k==='ivan'||k==='rival1'||k==='rival3')goFade(()=>go(VS));
+    else if(k==='post1'||k==='post3')goFade(()=>go(Cutscene,k==='post1'?'ch2':'final'));else goFade(()=>go(Brawl))},
   next(){this.i++;if(this.i>=this.S.beats.length){this.done();return}this.prep();if(this.i>=this.S.beats.length)this.done()},
   update(){if(this.flash>0)this.flash--;
     for(const a of this.actors){a.st++;if(a.fadeIn)a.alpha=Math.min(1,a.alpha+.02);
@@ -2159,7 +2266,7 @@ const Brawl={
     if(this.ph==='intro'&&this.pt>80)this.ph='play';
     if(this.ph==='continue'){if(this.pt%60===0){this.contN--;SFX.tick();if(this.contN<0){goFade(()=>go(GameOver));this.ph='over'}}
       if(pressed.a||pressed.start){RUN.lives=3;RUN.cont++;RUN.score=0;this.respawn();SFX.start()}return}
-    if(this.ph==='clear'){if(++this.doneT===70){RUN.meter=P.meter;const boss=RUN.level===3?RUN.p1:RUN.bosses[RUN.level];RUN.shadow=RUN.level===3;RUN.ladder=[boss];RUN.idx=0;goFade(()=>RUN.shadow?go(Cutscene,'shadow'):boss==='ivan'?go(Cutscene,'ivan'):go(VS))}return}
+    if(this.ph==='clear'){if(++this.doneT===70){RUN.meter=P.meter;const boss=RUN.level===3?RUN.p1:RUN.bosses[RUN.level];RUN.shadow=RUN.level===3;RUN.ladder=[boss];RUN.idx=0;goFade(()=>RUN.shadow?go(Cutscene,'shadow'):boss==='ivan'?go(Cutscene,'ivan'):ARCS[RUN.p1]?go(Cutscene,RUN.level===0?'rival1':'rival3'):go(VS))}return}
     // player
     if(P.qA&&frameNo-P.qA<6){pressed.a=true;P.qA=0}
     P.st++;if(P.inv>0)P.inv--;if(P.flash>0)P.flash--;if(P.buff>0)P.buff--;P.trail=P.trail>P.hp?Math.max(P.hp,P.trail-0.4):P.hp;
@@ -2296,5 +2403,5 @@ const TICK=1000/54;
 function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=now;let n=0;while(acc>=TICK&&n<4){step();acc-=TICK;n++}if(n>=4)acc=0;render();musicTick()}
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
-window.__dbg={Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
+window.__dbg={Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,ARCS,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
 

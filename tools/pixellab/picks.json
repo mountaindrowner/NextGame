@@ -192,7 +192,7 @@
  },
  "keksan": {
   "airkick": {
-   "take": "airkick__k",
+   "take": "airkick__g",
    "pk": 3
   },
   "airpunch": {
@@ -205,6 +205,10 @@
   },
   "lowkick": {
    "take": "lowkick__a",
+   "pk": 4
+  },
+  "special3": {
+   "take": "special3__t",
    "pk": 4
   }
  }

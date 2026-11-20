@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.28.0
+
+- **Every fighter has their own story.** Story mode now follows the fighter you pick:
+  - **Why they're in it:** a personal talk with Samson at the chapel, about what they're carrying. Samson's own is a prayer about the boy he baptized forty years ago, now called Vex.
+  - **Two rivals of their own,** chosen for the story instead of at random. Each is another fighter whose road crosses theirs. A face-off scene plays before each duel, and a turn after it. For example:
+    - Keksan meets Papa-Léguas (whose father taught him his first kick), then Lawslie (who wants to arrest him for cage fighting).
+    - Zeke has to face Vizor, who has the tape of him throwing the final.
+    - Marcus faces his little brother Devanté.
+  - **Their shadow knows them:** it taunts each fighter with their own temptation ("You loved the cage, Tiger. Admit it.").
+  - **A personal epilogue,** and both rivals appear in the "one month later" scene.
+  - Ivan is still the Docks boss for everyone.
+- **Keksan:**
+  - **New jump attack:** a real flying knee from his jump pose. It replaces the standing knee frames, and its reach went from 26 to 40.
+  - **Third special, Teep (BK+SP):** a long Muay Thai push kick that shoves the opponent across the screen. Near a wall, they bounce off it into a juggle. He has a new voice line for it ("Teep!").
+  - **Balance:** with Ivan out of the field and the Teep added, he was winning 63% of CPU vs CPU matches. His health went from 100 to 94, the Teep has a long cooldown, and he's now at 56% over 224 rounds.
+- **PixelLab:** 10 generations (the Teep, plus two flying-knee takes). 9,709 left; the $0.07 credit wasn't touched.
+- **Tests:**
+  - New story checks: every fighter has a complete arc, the rival face-off leads into the duel, and the post-duel scenes lead into the next chapter.
+  - The text check covers every fighter's scenes (1,113 screens).
+  - New trait checks for the Teep and its wall bounce.
+
 ## 1.27.0
 
 - **New main menu.** The plain list of eight options is now a fighting-game style menu:

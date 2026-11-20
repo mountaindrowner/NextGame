@@ -35,7 +35,7 @@ CAST = {
     "lawslie": ("af_heart", 1.08, {"sp1": "Taser!", "sp2": "Cuff 'em! You're under arrest!", "super": "Full arrest!", "win": "You have the right to remain silent.", "ko": "Officer down..."}),
     "rex": ("am_adam", 1.0, {"sp1": "Bass drop!", "sp2": "Mic check!", "super": "Stage dive!", "win": "Thank you, good night!", "ko": "Encore... later..."}),
     "kai": ("am_liam", 1.05, {"sp1": "Bounce pass!", "sp2": "Ankles... broken!", "super": "Fast break!", "win": "That's game.", "ko": "That was a foul..."}),
-    "keksan": ("am_liam+am_eric", 1.02, {"sp1": "Tiger knee!", "sp2": "Clinch!", "super": "Eight limbs!", "win": "Respect the ring.", "ko": "My guard... dropped..."}),
+    "keksan": ("am_liam+am_eric", 1.02, {"sp1": "Tiger knee!", "sp2": "Clinch!", "sp3": "Teep!", "super": "Eight limbs!", "win": "Respect the ring.", "ko": "My guard... dropped..."}),
     "padre": ("bm_george", 0.9, {"sp1": "Holy tome!", "sp2": "Benediction!", "super": "Final sermon!", "win": "Go in peace, my son.", "ko": "Forgive me..."}),
 }
 TRIM = "silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse"

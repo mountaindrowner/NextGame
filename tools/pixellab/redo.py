@@ -30,12 +30,16 @@ ALT = {
     ("padre", "airkick"): ("jump", 5, 4, "in mid-air, holding the book tight under his left arm, he snaps his front leg out perfectly straight forward in a flying side kick, the sole of the boot leading at chest height, the other knee tucked up"),
     ("padre", "airpunch"): ("jump", 5, 4, "in mid-air, holding the book tight under his left arm, he throws a hard punch with his free right fist, the right arm fully extended forward and angled down, legs tucked"),
 }
+# a second per-fighter wording (CHAR:ANIM:alt2, takes g/h)
+ALT2 = {
+    ("keksan", "airkick"): ("jump", 5, 4, "in mid-air a Muay Thai flying knee: both feet off the ground, he drives his right knee forward and up hard at chest height, the left leg trailing straight back, both hands pulling down in front of him, body leaning into the knee"),
+}
 SRC_OVERRIDE = {("ivan", "crouch"): "crouch__a"}  # use the regenerated crouch as the start pose
 
 
 def body(name, anim, seed, preset=False, alt=False):
     if alt:
-        src, idx, n, action = ALT[(name, anim)]
+        src, idx, n, action = (ALT2 if alt == 2 else ALT)[(name, anim)]
         d = os.path.join(HERE, "raw", name, src); files = sorted(f for f in os.listdir(d) if f.endswith(".png"))
         return {"mode": "v3", "frame_count": n, "action_description": action, "keep_first_frame": True, "seed": seed,
                 "custom_start_frame": b64img(os.path.join(d, files[idx]))}
@@ -60,8 +64,8 @@ if __name__ == "__main__":
     log, ts = [], []
     for item in sys.argv[1:]:  # CHAR:ANIM (described motion, takes a/b) or CHAR:ANIM:preset (preset motion, takes c/d)
         name, anim, *mode = item.split(":")
-        pre, alt = bool(mode and mode[0] == "preset"), bool(mode and mode[0] == "alt")
-        tags = (("e", 505), ("f", 606)) if alt else (("c", 303), ("d", 404)) if pre else (("a", 101), ("b", 202))
+        pre, alt = bool(mode and mode[0] == "preset"), (2 if mode and mode[0] == "alt2" else 1 if mode and mode[0] == "alt" else 0)
+        tags = (("g", 707), ("h", 808)) if alt == 2 else (("e", 505), ("f", 606)) if alt else (("c", 303), ("d", 404)) if pre else (("a", 101), ("b", 202))
         for tag, seed in tags:
             t = threading.Thread(target=submit, args=(CHARS[name], f"{anim}__{tag}", body(name, anim, seed, pre, alt), log)); t.start(); ts.append(t)
     for t in ts: t.join()
