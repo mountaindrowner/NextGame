@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.2
+
+- **Lawslie is smaller** — 20% shorter than before (now the shortest fighter at 5'3"), with the same attack reach as everyone else. Her smaller body is also a little harder to hit.
+- **New voice for Lawslie** — a clearer, more assertive voice (Kokoro `af_heart`) instead of the breathy one.
+
 ## 1.7.1
 
 - **Lawslie redrawn** — a sharper, higher-contrast sprite (clearer face, brighter uniform, crisp badge and handcuffs) with a fully regenerated move set, including a proper crouch.

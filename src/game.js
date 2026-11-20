@@ -231,7 +231,7 @@ const CH={
     speed:1.06,power:1.0,def:0.98,jump:1.02,stats:[4,3,3],special:'takeover',spName:'HOSTILE TAKEOVER',special2:'powersuit',sp2Name:'POWER SUIT',special3:'laser',sp3Name:'LASER GLARE',tr:2,skin2:'heckyfox',
     col:{skin:'#e8a878',glove:'#e8a878',leg:'#f0eef6',foot:'#1a1820',aura:'#ffd23a'},sh:.72,hip:.5,
     quote:"DON'T TAKE IT PERSONALLY. IT'S JUST BUSINESS.",lose:"I'LL HAVE MY LAWYERS CALL YOU.",stageName:'PENTHOUSE'},
-  lawslie:{id:'lawslie',name:'LAWSLIE',nick:'THE LAW',style:'POLICE DEFENSE',country:'PRECINCT 9',countryLabel:'ORIGIN',flag:'badge',ht:"5'7\" (170 CM)",wt:'140 LB (64 KG)',
+  lawslie:{id:'lawslie',name:'LAWSLIE',nick:'THE LAW',style:'POLICE DEFENSE',country:'PRECINCT 9',countryLabel:'ORIGIN',flag:'badge',ht:"5'3\" (160 CM)",wt:'120 LB (54 KG)',
     speed:1.02,power:0.98,def:1.04,jump:1.0,stats:[3,3,5],special:'taser',spName:'TASER',special2:'cuff',sp2Name:"CUFF 'EM",tr:0,
     col:{skin:'#d89a6a',glove:'#1c1a24',leg:'#283068',foot:'#1a1820',aura:'#5ab4ff'},sh:.72,hip:.5,
     quote:'YOU HAVE THE RIGHT TO REMAIN SILENT. I SUGGEST YOU USE IT.',lose:'OFFICER DOWN... CALL IT IN.',stageName:'PRECINCT 9'},

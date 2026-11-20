@@ -46,7 +46,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Samson | Powerhouse | 106 | counter-hit kicks knock down |
 | Zeke | High/low zoner | 104 | Spare: a blocked Strike Ball reloads his special instantly |
 | Hecky Xavier | Technician | 98 | parry: tap forward just as a hit lands (no damage, +meter) |
-| Lawslie | Enforcer | 100 | no chip damage when blocking, and blocking builds meter |
+| Lawslie | Enforcer | 100 | no chip damage when blocking, and blocking builds meter; smallest body (sprites shrunk 20% by `SCALE` in `tools/pixellab/pack.py`), same reach |
 
 Hecky has a second costume — an anthropomorphic fox — chosen with SELECT on the character select screen (`skin2` in his roster entry; sprites in `assets/fighters/heckyfox/`).
 

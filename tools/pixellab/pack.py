@@ -43,6 +43,18 @@ def find_offset(base, frame0):
 # raw animation dir -> game animation name (None = not shipped)
 RENAME = {"fall2": "fall", "fall": None, "sweep": None, "falling-back-death": None, "throw": None}
 PER_CHAR = {"diego": {"spin2": "special", "special": None, "fall4": "fall", "fall2": None}}
+# per-fighter size: sprites are shrunk at pack time (attack reach is set in the game, so it is unchanged)
+SCALE = {"lawslie": 0.80}
+
+
+def shrink(im, w, h):
+    """Area-average downscale, then snap alpha so edges stay crisp pixel art."""
+    out = im.resize((w, h), Image.BOX)
+    a = out.getchannel("A").point(lambda v: 255 if v >= 110 else 0)
+    out.putalpha(a)
+    return out
+
+
 # picks.json: {char: {anim: {"take": "<raw dir>", "pk": strike frame}}} — the chosen regenerated take per move
 PICKS = json.load(open(os.path.join(HERE, "picks.json"))) if os.path.exists(os.path.join(HERE, "picks.json")) else {}
 
@@ -51,7 +63,8 @@ def pack(name):
     src = os.path.join(RAW, name)
     base = Image.open(os.path.join(src, "east.png")).convert("RGBA")
     bx0, by0, bx1, by1 = base.getbbox()
-    meta = {"H": by1 - by0, "W": bx1 - bx0, "anims": {}}
+    K = SCALE.get(name, 1)
+    meta = {"H": round((by1 - by0) * K), "W": round((bx1 - bx0) * K), "anims": {}}
     od = os.path.join(OUT, name)
     os.makedirs(od, exist_ok=True)
     anims = sorted(d for d in os.listdir(src) if os.path.isdir(os.path.join(src, d)))
@@ -76,11 +89,13 @@ def pack(name):
         ux0 = min(b[0] for b in boxes); uy0 = min(b[1] for b in boxes)
         ux1 = max(b[2] for b in boxes); uy1 = max(b[3] for b in boxes)
         w, h = ux1 - ux0, uy1 - uy0
-        strip = Image.new("RGBA", (w * len(frames), h), (0, 0, 0, 0))
+        w2, h2 = (round(w * K), round(h * K)) if K != 1 else (w, h)
+        strip = Image.new("RGBA", (w2 * len(frames), h2), (0, 0, 0, 0))
         for i, f in enumerate(frames):
-            strip.paste(f.crop((ux0, uy0, ux1, uy1)), (i * w, 0))
+            fr = f.crop((ux0, uy0, ux1, uy1))
+            strip.paste(shrink(fr, w2, h2) if K != 1 else fr, (i * w2, 0))
         strip.save(os.path.join(od, a + ".png"), optimize=True)
-        meta["anims"][a] = {"n": len(frames), "w": w, "h": h, "ax": round(ax - ux0, 1), "ay": round(ay - uy0)}
+        meta["anims"][a] = {"n": len(frames), "w": w2, "h": h2, "ax": round((ax - ux0) * K, 1), "ay": round((ay - uy0) * K)}
         if a in picks and picks[a].get("pk") is not None:
             meta["anims"][a]["pk"] = picks[a]["pk"]
         print(f"  {name}/{a}: {len(frames)}f {w}x{h} anchor {meta['anims'][a]['ax']},{meta['anims'][a]['ay']} (offset {ox},{oy})")
