@@ -50,12 +50,12 @@ const path = require('path'), fs = require('fs');
   await setup('zeke', 'vizor', '2p', 100, 136); await step(1, { b: 1, h: { right: 1 } }); const nob = await step(80);
   T('THROW BREAK', broke && r.hp2 === 100 && nob.hp2 < 100, `broken: ${broke}, hp ${r.hp2 | 0} (unbroken throw: ${nob.hp2 | 0})`);
 
-  // 5. 2 PLAYERS: player 2's inputs move and attack
+  // 5. player-2 input slots (what online play drives): player 2's inputs move and attack
   await setup('vizor', 'padre', '2p', 80, 180);
   r = await step(30, {}, { h: { left: 1 } }); const moved = r.x2 < 175;
   await p.evaluate(() => { const F = window.__dbg.F; F.p2.x = F.p1.x + 40; });
   await step(1, {}, { a: 1 }); r = await step(20);
-  T('2 PLAYERS', moved && r.hp1 < 100, `p2 walked to x ${r.x2 | 0}, p1 hp ${r.hp1 | 0}`);
+  T('P2 INPUT SLOTS', moved && r.hp1 < 100, `p2 walked to x ${r.x2 | 0}, p1 hp ${r.hp1 | 0}`);
   await shot('two-players');
 
   // 6. TRIALS: Papa-Leguas trial 1 = JAB > KICK

@@ -2,7 +2,11 @@
 
 Ideas parked for later. When you're looking for something to do, start here.
 
-## Bonfire Bash: beat 'em up mode (or spin-off)
+## ~~Bonfire Bash: beat 'em up mode~~: built as STORY mode in v1.14.0 (see STORY_MODE.md)
+
+Possible next steps: a real Vex boss character, 2-player co-op online, more enemy types, a weapon pickup (pipe / bat).
+
+### Original notes
 
 Theorize a side-scrolling beat 'em up using the Bonfire Bash cast — think classic arcade brawlers
 (walk right, waves of enemies, bosses), not a versus fighter.

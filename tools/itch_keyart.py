@@ -120,7 +120,7 @@ def chip(text, col_bg, col_bd, w=None):
 def badges():  # 960x? row of info chips
     chips = [chip("PLAY IN YOUR BROWSER", (150, 30, 30, 255), (255, 210, 58, 255)),
              chip("PHONE - KEYBOARD - GAMEPAD", (40, 40, 110, 255), (122, 216, 255, 255)),
-             chip("LOCAL 2 PLAYERS", (30, 90, 50, 255), (122, 255, 138, 255)),
+             chip("STORY MODE + ONLINE", (30, 90, 50, 255), (122, 255, 138, 255)),
              chip(f"V{VER}: 8 FIGHTERS", (90, 30, 110, 255), (255, 138, 216, 255))]
     W = 480; rows = [[]]; x = 0
     for c in chips:
@@ -138,7 +138,7 @@ def badges():  # 960x? row of info chips
 def features(stills, super_frame):  # 960 wide card: 4 rows of real gameplay + caption
     rows = [(super_frame, "SUPER MOVES", ["FILL YOUR METER, THEN", "FORWARD + A+B FOR A", "CINEMATIC 6-HIT SUPER.", "EVERY FIGHTER HAS ONE."]),
             (stills / "throw.png", "THROWS", ["GRAB A BLOCKER WITH", "FORWARD OR BACK + B.", "PRESS A OR B WHEN", "GRABBED TO BREAK IT."]),
-            (stills / "two-players.png", "2 PLAYERS", ["ONE KEYBOARD OR TWO", "GAMEPADS. REMATCH", "MENU AND A RUNNING", "SET SCORE."]),
+            (stills / "story.png", "STORY MODE", ["A BEAT 'EM UP: FIGHT", "VEX'S GANG THROUGH THE", "CITY, BEAT A RIVAL IN", "EACH STAGE, THEN YOU."]),
             (stills / "trials.png", "COMBO TRIALS", ["3 TRIALS PER FIGHTER,", "AN INPUT DISPLAY AND", "BADGES AND COLORS", "TO UNLOCK."])]
     W, RH = 480, 200
     im = Image.new("RGBA", (W, RH * len(rows) + 4), (14, 11, 34, 255)); d = ImageDraw.Draw(im)

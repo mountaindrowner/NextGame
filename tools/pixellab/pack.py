@@ -44,7 +44,7 @@ def find_offset(base, frame0):
 RENAME = {"fall2": "fall", "fall": None, "sweep": None, "falling-back-death": None, "throw": None}
 PER_CHAR = {"diego": {"spin2": "special", "special": None, "fall4": "fall", "fall2": None}}
 # per-fighter size: sprites are shrunk at pack time (attack reach is set in the game, so it is unchanged)
-SCALE = {"lawslie": 0.80}
+SCALE = {"lawslie": 0.80, "goon": 0.92, "slinger": 0.90}
 
 
 def shrink(im, w, h):

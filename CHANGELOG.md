@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.14.0
+
+- **New: STORY mode, a side-scrolling beat 'em up** (first on the title menu). The night before the finals the Bonfire Bash trophy is stolen by **Vex**, the promoter who runs the city's underground. Pick a fighter and take it back:
+  - **4 stages:** Bonfire Streets, The Docks, Vex Tower and Vex's Penthouse. The camera scrolls and locks for each wave, and a flashing GO / EXIT arrow appears when it's clear.
+  - **Vex's gang**, three new PixelLab enemies with names over their health bars:
+    - **Goons:** brawlers, in two colours.
+    - **Slingers:** mohawked punks who keep their distance and throw bottles along their lane.
+    - **Bruisers:** huge bouncers who shrug off every other hit and charge with a shoulder tackle.
+  - **Fair crowds:** only two enemies attack at once; the rest circle and wait their turn, like the classics.
+  - **Controls:** up/down moves in depth, A, A, A is a three-hit combo, B jumps (then A for a jump kick), SP is a desperation special that hits everyone around you for a little health, and FWD+SP with a full bar is your super. Walk into a dazed enemy to grab them: A knees, the third A (or BACK+A) throws them into their friends.
+  - **Crates** hold pizza, chicken (health) or cash.
+  - **Lives and score:** 3 lives, continues and a score.
+  - **Bosses:** each stage ends in a one-round duel against a rival fighter Vex hired, picked at random. The final boss is **your own shadow**: a dark copy of your fighter with more health and harder hits.
+  - **Story cards** between chapters, and your fighter's ending at the end.
+- **2 Players (local, shared keyboard) is removed.** Online play is unchanged.
+- New test: `tools/story.js`. An autoplayer clears every stage and checks the waves, enemies, boss hand-off and the shadow duel.
+
 ## 1.13.2
 
 Playtesters found Zeke the hardest fighter to face, so this targets what makes him hard for a person: the high/low guessing game from range.

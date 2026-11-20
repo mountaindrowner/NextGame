@@ -22,9 +22,11 @@ const path = require('path'), fs = require('fs');
   // throw, mid-air
   await setup('ivan', 'vizor', '2p', 110, 146, 'ivan'); await p.evaluate(() => { const F = window.__dbg.F; F.time = 52; F.p2.hp = F.p2.trail = 77; });
   await step(1, { b: 1, h: { left: 1 } }); await step(26); await settle(); await shot('throw');
-  // 2 players
-  await setup('vizor', 'lawslie', '2p', 100, 150, 'lawslie'); await p.evaluate(() => { const F = window.__dbg.F; F.time = 48; F.wins = [1, 0]; F.p1.hp = F.p1.trail = 58; F.p2.hp = F.p2.trail = 71; F.p1.meter = 60; F.p2.meter = 100; });
-  await step(1, {}, { b: 1 }); await step(9); await settle(); await shot('two-players');
+  // story mode: an autoplayer brawls through the first street
+  await p.evaluate(() => { const d = window.__dbg; d.SET.sound = false; d.startStory('hecky', [0, 0], [0, 0]); d.RUN.bot = true; d.go(d.Brawl); const B = d.scene;
+    for (let i = 0; i < 430; i++) { d.tick(); B.update(); } B.__u = B.update; B.update = () => {}; });
+  await settle(); await shot('story');
+  await p.evaluate(() => { const B = window.__dbg.scene; B.update = B.__u; });
   // trials
   await setup('karl', 'ivan', 'trials', 100, 140, 'karl'); await step(1, { a: 1 }); await step(9); await step(1, { a: 1 }); await step(9); await step(1, { b: 1 }); await step(4); await settle(); await shot('trials');
   console.log('ok'); await br.close();
