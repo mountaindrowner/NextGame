@@ -139,6 +139,7 @@ const SFX={
   zap:()=>{for(let i=0;i<6;i++)T('square',1200+Math.random()*1800,.03,.08,null,i*.04);N(.3,.2,7000,2500,'bandpass')},
   cuff:()=>{T('square',2200,.03,.14);T('square',1600,.04,.12,null,.06);N(.05,.25,9000,5000,'highpass',.06)},
   laser:()=>{T('sawtooth',880,.35,.12,1760);T('square',1320,.3,.08,2200,.02);N(.35,.18,6000,2000,'bandpass')},
+  coin:()=>{[1976,2637,3136,2637,3520].forEach((f,i)=>T('square',f,.06,.08,null,i*.05))},
   parry:()=>{T('square',1760,.06,.12,2600);T('triangle',2637,.25,.12,null,.03);N(.06,.2,9000,5000,'highpass')},
   rewind:()=>{T('sawtooth',1400,.5,.09,180);T('square',900,.45,.05,120,.05);N(.5,.12,4000,800,'bandpass')},
   bless:()=>{[523,659,784,1047,1319].forEach((f,i)=>T('sine',f,.9,.09,null,i*.07));T('triangle',262,1.2,.12)},
@@ -532,7 +533,71 @@ function startSuper(f,o){f.meter=0;f.state='special';f.st=0;f.vx=0;f.crouch=fals
 function trialHit(att,tag,id){const T=F.trial;if(!T||T.clear||T.done)return;const seq=TRIALS[att.c.id][T.i];if(!seq||id===T.lastId)return;T.lastId=id;
   if(att.combo<=1)T.step=0;
   if(seq[T.step]===tag){T.step++;if(T.step>=seq.length){T.clear=80;SFX.start();CEL.burst(30);addText('CLEAR!',att.x,GY-att.H-14,'#7aff8a')}}else T.step=seq[0]===tag?1:0}
-function updateSuper(f,o){const s=f.sp,t=f.st;
+// ---- per-fighter supers: each one has its own move, built from that fighter's kit ----
+const SH=(f,o,dmg,x={})=>applyHit(f,o,{dmg,stun:60,bs:12,kb:0,lv:'mid',tag:'super',minScale:.7,...x},o.x-f.face*8,GY-o.y-o.H*.6);
+const KO_D=o=>o.ko||['ko','knock','down','rise'].includes(o.state);
+const canGrab=o=>o.y<=2&&o.inv<=0&&!['down','rise','ko','knock','grabbed','hurt'].includes(o.state);
+function grab(f,o,s,t){s.ph='hold';s.t0=t;o.state='grabbed';o.st=0;o.atk=null;o.sp=null;o.crouch=false;o.vx=0;f.vx=0;f.inv=240;SFX.grab();F.hitstop=6}
+function supEnd(f,s,t,n=24){if(s.ph!=='end'){s.ph='end';s.t0=t}if(t-s.t0>=n){f.inv=0;endSpecial(f)}}
+const SUPERS={
+  karl(f,o,s,t){const fc=f.face;// MIL LEGUAS: dash in, then afterimage blinks through the opponent from both sides
+    if(!s.ph){s.pa='walk';s.loop=1;s.pf=Math.floor(t/1.4);if(t<22){f.vx=fc*7;if(t%2===0)f.ghosts.push({x:f.x,y:f.y,l:12});
+        const r=tryHit(f,o,{x1:fc>0?f.x:f.x-48,x2:fc>0?f.x+48:f.x,y1:f.y+f.H*.15,y2:f.y+f.H*.95},{dmg:4,stun:60,bs:16,kb:0,lv:'mid',chip:3,tag:'super',minScale:.7});
+        if(r==='hit'){s.ph='blink';s.t0=t;s.hits=1;f.vx=0;f.inv=90}else if(r==='block'){f.vx=-fc*2;supEnd(f,s,t)}}else supEnd(f,s,t);return}
+    if(s.ph==='blink'){f.vx=0;o.vx=0;s.loop=0;s.pa=s.hits%2?'kick':'punch';s.pf=akOf(f.c,s.pa).pk;const k=t-s.t0;
+      if(k>0&&k%7===0&&s.hits<6){f.ghosts.push({x:f.x,y:f.y,l:16});const side=f.x<o.x?1:-1;let nx=clamp(o.x+side*30,XMIN,XMAX);if(Math.abs(nx-o.x)<20)nx=clamp(o.x-side*30,XMIN,XMAX);
+        f.x=nx;f.face=o.x>f.x?1:-1;const fin=s.hits===5;SH(f,o,fin?12:4,fin?{knock:true,heavy:true,kb:3.6}:{});SFX.whoosh();s.hits++;
+        if(fin){F.shake=10;F.camFlash=5;supEnd(f,s,t)}else if(KO_D(o))supEnd(f,s,t)}return}
+    s.pa='punch';s.pf=99;f.vx*=.8;supEnd(f,s,t)},
+  ivan(f,o,s,t){const fc=f.face;// SIBERIAN STORM: grab, then three slams side to side
+    if(!s.ph){s.pa='special';s.pf=Math.min(8,t);f.vx=t<8?fc*2.5:0;
+      if(t>=2&&t<=12&&canGrab(o)&&overlap({x1:fc>0?f.x:f.x-56,x2:fc>0?f.x+56:f.x,y1:f.y+10,y2:f.y+f.H*.9},o.hurt()))grab(f,o,s,t);else if(t>34)supEnd(f,s,t,0);return}
+    if(s.ph==='hold'){const T=22,e=t-s.t0,k=Math.floor(e/T),p=(e%T)/T,dir=k%2?-1:1;f.vx=0;
+      if(k<3){o.x=f.x+fc*dir*30*Math.cos(Math.PI*p);o.y=Math.sin(Math.PI*p)*(k===2?92:64);o.rot=-fc*dir*Math.PI*p*1.2;s.pa='win';s.pf=Math.round(p*8);
+        if(e%T===T-1){o.y=0;o.rot=0;o.x=clamp(o.x,XMIN,XMAX);const fin=k===2;SH(f,o,fin?12:7,{unblockable:true,...(fin?{knock:true,heavy:true,kb:3}:{})});
+          F.shake=fin?12:7;F.hitstop=fin?12:6;SFX.slam();dust(o.x,10);sparks(o.x,GY-6,'#fff',fin?16:8);
+          if(fin||KO_D(o)){o.rot=0;supEnd(f,s,t)}else{o.state='grabbed';o.st=0}}}return}
+    s.pa='win';s.pf=8;supEnd(f,s,t)},
+  vizor(f,o,s,t){// FULL EXPOSURE: reticle locks on wherever the opponent is, five camera-flash shots
+    if(!s.ph){s.ph='shoot';s.t0=t;s.hits=0}
+    if(s.ph==='shoot'){const k=t-s.t0;s.pa='special';s.pf=k%8<3&&k>5?5:4;s.tx=o.x;s.ty=GY-o.y-o.h*.55;
+      if(k>=6&&(k-6)%8===0&&s.hits<5){const fin=s.hits===4;if(!(o.inv>0)&&!['down','rise','ko'].includes(o.state)){
+          applyHit(f,o,{dmg:fin?12:4,stun:30,bs:10,kb:fin?3:0.2,lv:'mid',chip:2,tag:'super',minScale:.7,...(fin?{knock:true,heavy:true}:{})},o.x,GY-o.y-o.H*.6)}
+        F.camFlash=fin?8:3;SFX.flash();s.hits++;if(fin)supEnd(f,s,t)}return}
+    s.pa='special';s.pf=8;supEnd(f,s,t,20)},
+  padre(f,o,s,t){const fc=f.face;// FINAL SERMON: kneel and pray while pillars of light fall on the opponent, then heal
+    s.pa='special2';s.pf=kf(t,[[0,0],[10,4],[52,7],[62,8]]);s.pil=s.pil||[];
+    for(let i=0;i<4;i++)if(t===6+i*9){const x=clamp(lerp(f.x+fc*36,o.x,(i+1)/4),XMIN,XMAX);s.pil.push({x,t0:t,i});SFX.lock()}
+    for(const P of s.pil){const k=t-P.t0;if(k===7){SFX.flash();F.shake=Math.max(F.shake,P.i===3?6:2)}
+      if(k>=7&&k<12&&!P.hit){const fin=P.i===3;if(tryHit(f,o,{x1:P.x-15,x2:P.x+15,y1:-4,y2:220},{dmg:fin?12:7,stun:30,bs:12,kb:fin?3:0.4,lv:'high',chip:2,tag:'super',minScale:.7,...(fin?{knock:true,heavy:true}:{})}))P.hit=1}}
+    if(t===58){const g=Math.min(10,f.mhp-f.hp);if(g>0){f.hp+=g;f.trail=Math.max(f.trail,f.hp);addText('+'+Math.round(g),f.x,GY-f.H-6,'#ffe66a')}SFX.bless()}
+    if(t>=66)endSpecial(f)},
+  zeke(f,o,s,t){const fc=f.face;// PERFECT GAME: a giant bowling ball that rolls through for four hits
+    s.pa='special';s.pf=kf(t,[[0,0],[10,7],[30,8]]);
+    if(t===10){F.proj.push({kind:'giant',x:f.x+fc*24,y:15,r:15,vx:fc*4.4,owner:f,rot:0,life:160,lv:'low',multi:4,hits:0,tag:'super'});SFX.whooshH();F.shake=4;dust(f.x+fc*26,8)}
+    if(t>=32)endSpecial(f)},
+  hecky(f,o,s,t){const fc=f.face;// GOLDEN PARACHUTE: launch, hold them up with an eye laser, cash out
+    if(!s.ph){s.pa='special';s.pf=kf(t,[[0,0],[5,2],[7,3],[11,4],[30,7]]);f.vx=t<9?fc*3.6:f.vx*.6;
+      if(t>=6&&t<14){const r=tryHit(f,o,{x1:fc>0?f.x-4:f.x-44,x2:fc>0?f.x+44:f.x+4,y1:f.y+f.H*.2,y2:f.y+f.H*1.25},{dmg:8,stun:30,bs:12,kb:1,lv:'mid',knock:true,launch:true,heavy:true,tag:'super',minScale:.7});
+        if(r==='hit'){s.ph='laser';s.t0=t+8;s.hits=0;f.inv=120}else if(r==='block')supEnd(f,s,t)}else if(t>30)supEnd(f,s,t,0);return}
+    if(s.ph==='laser'){f.vx=0;s.pa=f.c.anim&&f.c.anim.special3?'special3':'special';s.pf=7;const k=t-s.t0;s.lx=o.x;s.ly=GY-o.y-o.H*.5;
+      if(k>=0&&k%5===0&&s.hits<6){if(k===0)SFX.laser();if(o.hp>0){const fin=s.hits===5;
+          SH(f,o,fin?10:3,{unblockable:true,...(fin?{knock:true,heavy:true,kb:3}:{kb:0})});
+          if(fin){for(let i=0;i<30;i++)F.parts.push({x:o.x+rnd(-10,10),y:GY-o.y-o.H*.5,vx:rnd(-3,3),vy:rnd(-4,0),l:rnd(20,34)|0,c:i%3?'#ffd23a':'#fff3a0',g:.15});SFX.coin();F.camFlash=4;F.shake=8;addText('CASHED OUT!',o.x,GY-o.y-o.H-14,'#ffd23a');supEnd(f,s,t)}
+          else{o.state='knock';o.vy=Math.max(o.vy,1.5);o.vx=0;o.y=Math.max(o.y,8)}}s.hits++}
+      if(KO_D(o)&&o.ko)supEnd(f,s,t);return}
+    s.pa=f.c.anim&&f.c.anim.special3?'special3':'special';s.pf=8;supEnd(f,s,t,20)},
+  lawslie(f,o,s,t){const fc=f.face;// FULL ARREST: charging grab, three taser zaps, takedown, cuffed for 8 seconds
+    if(!s.ph){s.pa='walk';s.loop=1;s.pf=Math.floor(t/1.4);if(t<16){f.vx=fc*6.5;if(t%3===0)f.ghosts.push({x:f.x,y:f.y,l:10});
+        if(canGrab(o)&&overlap({x1:fc>0?f.x:f.x-44,x2:fc>0?f.x+44:f.x,y1:f.y+8,y2:f.y+f.H},o.hurt())){grab(f,o,s,t);SFX.cuff()}}else{f.vx*=.7;if(t>30)supEnd(f,s,t,0)}return}
+    if(s.ph==='hold'){const k=t-s.t0;s.loop=0;o.x=clamp(f.x+fc*28,XMIN,XMAX);o.y=0;
+      if(k<10){s.pa='special2';s.pf=kf(k,[[0,2],[10,6]])}else{s.pa='special';s.pf=(k>>2)&1?7:6}
+      if(k===10||k===18||k===26){SH(f,o,4,{unblockable:true});o.zap=24;SFX.zap();if(!KO_D(o)){o.state='grabbed';o.st=0}}
+      if(k===40){SH(f,o,12,{unblockable:true,knock:true,heavy:true,kb:3});if(o.hp>0){o.cuffed=480;addText('ARRESTED!',o.x,GY-o.H-16,'#c8d0e0')}SFX.cuff();F.shake=8;supEnd(f,s,t)}
+      else if(o.ko)supEnd(f,s,t);return}
+    s.pa='special2';s.pf=99;s.loop=0;supEnd(f,s,t)}};
+function updateSuper(f,o){const S=SUPERS[f.c.id];if(S)return S(f,o,f.sp,f.st);return updateSuperGeneric(f,o)}
+function updateSuperGeneric(f,o){const s=f.sp,t=f.st;
   if(!s.hits){if(t<22){f.vx=f.face*6.4;if(t%2===0)f.ghosts.push({x:f.x,y:f.y,l:12});
       const hb={x1:f.face>0?f.x:f.x-48,x2:f.face>0?f.x+48:f.x,y1:f.y+f.H*.15,y2:f.y+f.H*.95};
       const r=tryHit(f,o,hb,{dmg:5,stun:40,bs:16,kb:0.3,lv:'mid',chip:3,tag:'super',minScale:.7});
@@ -706,13 +771,20 @@ const passing=f=>f.state==='special'&&f.sp&&(f.sp.kind==='step'||(f.sp.kind==='c
 function separate(a,b){if(a.state==='grabbed'||b.state==='grabbed'||a.state==='slamming'||b.state==='slamming'||passing(a)||passing(b))return;if(Math.abs(a.y-b.y)>a.H*.7)return;
   const minD=40,dx=b.x-a.x;if(Math.abs(dx)>=minD)return;const s=dx===0?a.face:Math.sign(dx),ov=(minD-Math.abs(dx))/2;
   a.x-=s*ov;b.x+=s*ov;if(a.x<XMIN){b.x+=XMIN-a.x;a.x=XMIN}if(a.x>XMAX){b.x-=a.x-XMAX;a.x=XMAX}if(b.x<XMIN){a.x+=XMIN-b.x;b.x=XMIN}if(b.x>XMAX){a.x-=b.x-XMAX;b.x=XMAX}}
-function updateProj(){for(const p of F.proj){p.x+=p.vx;p.rot+=p.kind?p.vx*0.14:0.5;p.life--;const o=p.owner===F.p1?F.p2:F.p1;
+function updateGiant(p,o){p.x+=p.vx;p.rot+=p.vx*0.07;p.life--;if(frameNo%4===0)dust(p.x,1);
+  if(frameNo-(p.last??-99)>=6&&p.hits<p.multi){const fin=p.hits===p.multi-1,R2=p.r;
+    const r=tryHit(p.owner,o,{x1:p.x-R2,x2:p.x+R2,y1:p.y-R2,y2:p.y+R2},{dmg:fin?12:5,stun:34,bs:10,kb:fin?3.4:0.5,lv:'low',chip:2,tag:'super',minScale:.7,...(fin?{knock:true,heavy:true}:{})});
+    if(r){p.hits++;p.last=frameNo;SFX.thud();if(r==='hit')o.vx=p.vx*.9;
+      if(fin){p.life=0;F.shake=9;addText('STRIKE!',o.x,GY-o.H-16,'#d04aff');SFX.slam();
+        for(let i=0;i<10;i++)F.parts.push({x:p.x+rnd(-6,6),y:GY-rnd(4,20),vx:rnd(-3.5,3.5),vy:rnd(-5,-2),l:rnd(26,40)|0,c:i%3?'#ffffff':'#e02a2a',g:.18,pin:1})}}}}
+function updateProj(){for(const p of F.proj){if(p.kind==='giant'){updateGiant(p,p.owner===F.p1?F.p2:F.p1);continue}p.x+=p.vx;p.rot+=p.kind?p.vx*0.14:0.5;p.life--;const o=p.owner===F.p1?F.p2:F.p1;
     if(p.g){p.y+=p.vy;p.vy-=p.g;if(p.y<=4&&p.vy<0){p.life=0;dust(p.x,8);SFX.land();F.shake=Math.max(F.shake,2)}}
     const R2=p.kind?7:6,r=tryHit(p.owner,o,{x1:p.x-R2,x2:p.x+R2,y1:p.y-R2,y2:p.y+R2},{dmg:p.dmg||9,stun:p.stun||18,bs:12,kb:p.kb||2.4,lv:p.lv||'mid',chip:2,knock:!!p.knock,heavy:!!p.knock,tag:p.tag||'sp1',tid:p.id||(p.id=++atkId)});
     if(r==='block'&&p.kind==='ball'&&arch(p.owner.c).spare){p.owner.spCD=0;addText('SPARE!',p.owner.x,GY-p.owner.H-14,'#d04aff');SFX.ok()}
     if(r&&p.kind==='prong'){p.life=0;if(r==='hit'){o.zap=46;SFX.zap()}}
     else if(r){p.life=0;if(r==='hit'&&p.kind){SFX.thud();for(let i=0;i<6;i++)F.parts.push({x:p.x,y:GY-p.y,vx:rnd(-2,2),vy:rnd(-3,-1),l:rnd(12,20)|0,c:i%2?'#ffffff':'#e02a2a',g:.15})}}}
-  if(F.proj.length===2&&Math.abs(F.proj[0].x-F.proj[1].x)<10&&Math.abs(F.proj[0].y-F.proj[1].y)<14){sparks(F.proj[0].x,GY-F.proj[0].y,'#fff',10);SFX.block();
+  if(F.proj.length===2&&F.proj.some(p=>p.kind==='giant')){const g=F.proj.find(p=>p.kind==='giant'),q=F.proj.find(p=>p!==g);if(q&&Math.abs(g.x-q.x)<g.r+6&&Math.abs(g.y-q.y)<g.r+8){q.life=0;sparks(q.x,GY-q.y,'#fff',8)}}
+  else if(F.proj.length===2&&Math.abs(F.proj[0].x-F.proj[1].x)<10&&Math.abs(F.proj[0].y-F.proj[1].y)<14){sparks(F.proj[0].x,GY-F.proj[0].y,'#fff',10);SFX.block();
     // HIGH/LOW ZONER trait: a bowling ball smashes through any other projectile
     F.proj.forEach(p=>{const other=F.proj.find(q=>q!==p);if(!(arch(p.owner.c).heavyBalls&&p.kind&&!(other&&other.kind)))p.life=0})}
   F.proj=F.proj.filter(p=>p.life>0&&p.x>-10&&p.x<W+10)}
@@ -727,14 +799,14 @@ function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:
   const L=clamp([0.15,0.45,0.75][SET.diff]+(RUN&&RUN.mode==='arcade'?RUN.idx*0.1:0),0,1);
   if(f.state==='grabbed'){if(o.state==='throwing'&&ai.tg!==o.thrId){ai.tg=o.thrId;ai.tech=Math.random()<lerp(.08,.6,L);ai.tdel=1+((Math.random()*7)|0)}
     if(ai.tech&&--ai.tdel===0)inp.aP=1;return inp}
-  if(f.meter>=100&&f.state==='attack'&&f.hitDone&&cancelOk(f)&&o.state==='hurt'&&Math.random()<lerp(.2,.8,L)){inp.sup=1;return inp}
+  if(f.meter>=100&&!['ivan','lawslie'].includes(f.c.id)&&f.state==='attack'&&f.hitDone&&cancelOk(f)&&o.state==='hurt'&&Math.random()<lerp(.2,.8,L)){inp.sup=1;return inp}
   // hit-confirm into a combo: chain/cancel when the last normal connected
   if(f.state==='attack'&&f.hitDone&&cancelOk(f)&&o.state==='hurt'){const n=f.atk.name;
     if(ai.cid!==f.atk.id){ai.cid=f.atk.id;ai.go=Math.random()<lerp(0.15,0.9,L)}
     if(ai.go){if(n==='jab'){if((f.chain||0)<1&&Math.random()<.35)inp.aP=1;else inp.bP=1}else if(n==='cjab'){inp.d=1;if(Math.random()<.5)inp.aP=1;else inp.bP=1}
       else if(n==='kick'&&f.spCD<=0&&f.c.special!=='slam')inp.sp=1}
     return inp}
-  if(canAct(f)&&f.meter>=100&&Math.abs(o.x-f.x)<90&&o.state!=='jump'&&Math.random()<.004+.02*L){inp.sup=1;return inp}
+  if(canAct(f)&&f.meter>=100&&Math.abs(o.x-f.x)<({ivan:50,lawslie:110,vizor:230,zeke:220,padre:230,karl:130}[f.c.id]||90)&&o.state!=='jump'&&o.state!=='hurt'&&Math.random()<.004+.02*L){inp.sup=1;return inp}
   if(canAct(f)&&canThrow(f,o)&&Math.random()<(o.state==='crouch'||o.state==='idle'?.05:.02)*(0.4+L)){inp.bP=1;inp[o.x>f.x?'r':'l']=1;return inp}
   // second specials, each used for what it is good at
   const s2=f.c.special2,r2=Math.random();
@@ -851,6 +923,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     const order=(this.p2.state==='attack'||this.p2.state==='special'||this.p2.state==='slamming')?[this.p1,this.p2]:[this.p2,this.p1];
     order.forEach(drawFighter);
     for(const p of this.proj)p.kind==='prong'?drawProng(p):p.kind?drawBall(p):drawStar(p);
+    for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='super')drawSuperFx(f);
     for(const f of[this.p1,this.p2])if(f.cuffed>0)drawCuffs(f);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='flash'&&f.sp.lx!=null&&f.st<20)drawReticle(f);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='laser')drawLaser(f);
@@ -938,7 +1011,8 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
     case'down':case'ko':return A.fall?P('fall',Math.min(akOf(f.c,'fall').air+(f.state==='ko'?t:t)/3,last('fall'))):null;
     case'rise':return A.fall?P('fall',last('fall')*(1-t/12)):null;
     case'win':return A.win?P('win',t<n('win')*7?t/7:last('win')-(Math.floor(t/12)%2)):P('idle',(frameNo/7)%n('idle'));
-    case'special':{const s=f.sp;if(s&&s.kind==='super'){if(!s.hits)return A.walk?P('walk',Math.floor(t/1.4)%n('walk')):null;
+    case'special':{const s=f.sp;if(s&&s.kind==='super'&&s.pa&&A[s.pa])return P(s.pa,s.loop?s.pf%n(s.pa):s.pf);
+      if(s&&s.kind==='super'){if(!s.hits)return A.walk?P('walk',Math.floor(t/1.4)%n('walk')):null;
         if(s.hits>=99)return P('idle',0);if(s.hits>=6)return A.special?P('special',last('special')):null;
         const k=s.hits%2?'kick':'punch';return A[k]?P(k,akOf(f.c,k).pk):null}
       if(s&&(s.two||s.kind==='laser')){const k=s.kind;
@@ -968,7 +1042,7 @@ function drawFighter(f){const P=pose(f);if(!P)return drawFighterLegacy(f);
   const B=(im,x,y)=>blitA(im,x,y,fc,a.ax,a.ay,rot,pivotC,ox,0,f.H);
   for(const g of f.ghosts){ctx.globalAlpha=g.l/20;B(sil(fr,c.col.aura),g.x,g.y);ctx.globalAlpha=1}
   if(f.state==='special'&&t<10||F.superFlash>0&&F.superBy===f){const p=(frameNo&2)?2:1;ctx.globalAlpha=.6;for(const[dx,dy]of[[-p,0],[p,0],[0,-p]])B(sil(fr,c.col.aura),f.x+dx,f.y-dy);ctx.globalAlpha=1}
-  if(f.inv>0&&f.state!=='down'&&(frameNo&2))ctx.globalAlpha=.55;
+  if(f.inv>0&&f.state!=='down'&&!(f.sp&&f.sp.kind==='super')&&(frameNo&2))ctx.globalAlpha=.55;
   B(img,f.x,f.y);ctx.globalAlpha=1;
   if(f.state==='block'){ctx.globalAlpha=.22;B(sil(fr,'#5aa8ff'),f.x,f.y);ctx.globalAlpha=1}
   if(f.zap>0&&(frameNo&2)){ctx.globalAlpha=.5;B(sil(fr,'#9ad8ff'),f.x,f.y);ctx.globalAlpha=1}
@@ -1018,14 +1092,26 @@ function drawProng(p){const o=p.owner,hx=Math.round(o.x+o.face*20),hy=Math.round
 function drawCuffs(f){const x=Math.round(f.x),y=Math.round(GY-f.y-f.H-10),b=(frameNo>>4)&1;ctx.strokeStyle='#000';ctx.lineWidth=3;
   for(const dx of[-4,4]){ctx.beginPath();ctx.arc(x+dx,y+b,3,0,Math.PI*2);ctx.stroke()}ctx.strokeStyle='#d8dce8';ctx.lineWidth=1.5;for(const dx of[-4,4]){ctx.beginPath();ctx.arc(x+dx,y+b,3,0,Math.PI*2);ctx.stroke()}
   ctx.fillStyle='#d8dce8';ctx.fillRect(x-1,y+b,2,1);ctx.fillStyle='#000';ctx.fillRect(x-10,y+7,20,3);ctx.fillStyle='#c8d0e0';ctx.fillRect(x-9,y+8,Math.round(18*f.cuffed/300),1)}
-function drawBall(p){const x=Math.round(p.x),y=Math.round(GY-p.y),r=6;
+function drawBall(p){const x=Math.round(p.x),y=Math.round(GY-p.y),r=p.r||6,q=r/6;
   if(p.kind==='ball'){ctx.fillStyle='rgba(208,74,255,.35)';ctx.fillRect(x-p.vx*4-3,y+2,5,1);ctx.fillRect(x-p.vx*6-2,y-1,3,1)}
   ctx.fillStyle='#120e1e';ctx.beginPath();ctx.arc(x,y,r+1,0,Math.PI*2);ctx.fill();ctx.fillStyle='#7a1a8a';ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
   ctx.fillStyle='#b03ad0';ctx.beginPath();ctx.arc(x-1,y-1,r-2,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ffd0ff';ctx.fillRect(x-3,y-4,2,2);
-  ctx.fillStyle='#120e1e';for(let i=0;i<3;i++){const a=p.rot+i*0.55;ctx.fillRect(Math.round(x+Math.cos(a)*3)-1,Math.round(y+Math.sin(a)*3)-1,2,2)}}
+  ctx.fillStyle='#120e1e';for(let i=0;i<3;i++){const a=p.rot+i*0.55,h=Math.max(2,Math.round(2*q));ctx.fillRect(Math.round(x+Math.cos(a)*3*q)-1,Math.round(y+Math.sin(a)*3*q)-1,h,h)}
+  if(q>1){ctx.fillStyle='#ffd0ff';ctx.fillRect(x-Math.round(4*q),y-Math.round(5*q),Math.round(3*q),Math.round(2*q))}}
 function drawStar(p){const x=Math.round(p.x),y=Math.round(GY-p.y);ctx.save();ctx.translate(x,y);ctx.rotate(p.rot);ctx.fillStyle='#120e1e';ctx.fillRect(-8,-2,16,4);ctx.fillRect(-2,-8,4,16);
   ctx.fillStyle='#c8c8e0';ctx.fillRect(-7,-1,14,2);ctx.fillRect(-1,-7,2,14);ctx.fillStyle='#fff';ctx.fillRect(-2,-2,4,4);ctx.fillStyle='#120e1e';ctx.fillRect(-1,-1,2,2);ctx.restore();
   ctx.fillStyle='rgba(180,140,255,.5)';ctx.fillRect(x-p.vx*3-4,y,6,1);ctx.fillRect(x-p.vx*5-3,y-2,4,1)}
+function drawSuperFx(f){const s=f.sp,t=f.st;
+  if(s.pil)for(const P of s.pil){const k=t-P.t0,x=Math.round(P.x);if(k<0||k>16)continue;
+    if(k<7){ctx.fillStyle=`rgba(255,230,140,${.25+.1*(k&1)})`;ctx.fillRect(x-1,0,2,GY);ctx.fillStyle='rgba(255,230,140,.25)';ctx.beginPath();ctx.ellipse(x,GY,10,3,0,0,Math.PI*2);ctx.fill()}
+    else{const w=k<12?15:Math.max(1,15-(k-12)*3),a=k<12?.9:Math.max(0,.9-(k-12)*.2);ctx.globalAlpha=a;ctx.fillStyle='rgba(255,220,110,.45)';ctx.fillRect(x-w-4,0,w*2+8,GY+2);
+      ctx.fillStyle='#ffe66a';ctx.fillRect(x-w,0,w*2,GY+2);ctx.fillStyle='#fffbe0';ctx.fillRect(x-Math.ceil(w/3),0,Math.ceil(w/3)*2,GY+2);ctx.globalAlpha=1}}
+  if(s.ph==='shoot'&&s.tx!=null){const x=Math.round(s.tx),y=Math.round(s.ty),r=12,L=5;ctx.fillStyle='#3ae8ff';
+    for(const[a,b]of[[-1,-1],[1,-1],[-1,1],[1,1]]){ctx.fillRect(x+a*r-(a>0?L:0),y+b*r,L,1);ctx.fillRect(x+a*r,y+b*r-(b>0?L:0),1,L)}
+    if((frameNo>>2)&1){ctx.fillRect(x-1,y,3,1);ctx.fillRect(x,y-1,1,3)}drawText('REC',x+r+3,y-r,'#ff3a3a',1,{shadow:false})}
+  if(s.ph==='laser'&&s.lx!=null&&t>=s.t0){const ex=Math.round(f.x+f.face*9),ey=Math.round(GY-f.y-f.H*.86),lx=Math.round(s.lx),ly=Math.round(s.ly);
+    ctx.lineCap='round';ctx.strokeStyle='rgba(255,40,60,.45)';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(lx,ly);ctx.stroke();
+    ctx.strokeStyle='#ff2a3a';ctx.lineWidth=3;ctx.stroke();ctx.strokeStyle='#ffe0e0';ctx.lineWidth=1;ctx.stroke();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(lx,ly,3+((frameNo>>1)&1)*2,0,Math.PI*2);ctx.fill()}}
 function drawLaser(f){const s=f.sp,t=f.st,ex=Math.round(f.x+f.face*9),ey=Math.round(GY-f.y-f.H*.86);
   if(t>=4&&t<12){const r=1+((t>>1)&1);ctx.fillStyle='#ff3a3a';ctx.fillRect(ex-r,ey-r-1,r*2,r);ctx.fillRect(ex-r-4*f.face,ey-r-1,r*2,r);ctx.fillStyle='#fff';ctx.fillRect(ex,ey-1,1,1)}
   if(t<12||t>=26||s.end==null)return;const x2=Math.round(s.end),a=t<24?1:(26-t)/2,w=t<14||t>21?3:5;ctx.globalAlpha=a;

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.8.0
+
+- **Every fighter has their own super now** (forward + A+B with a full bar) instead of one shared flurry:
+  - **Papa-Léguas — Mil Léguas:** dash in, then afterimage blinks through the opponent from both sides, 6 hits.
+  - **Ivan — Siberian Storm:** an unblockable grab into three slams, side to side, the last one highest.
+  - **Vizor — Full Exposure:** a reticle locks on wherever the opponent is on screen; five camera-flash shots.
+  - **Samson — Final Sermon:** kneels in prayer while four pillars of light fall toward the opponent (overhead), then heals.
+  - **Zeke — Perfect Game:** a giant bowling ball rolls through for four hits and a "STRIKE!" with flying pins.
+  - **Hecky Xavier — Golden Parachute:** uppercut launch, a sustained eye laser keeps them in the air, then a gold-coin cash-out.
+  - **Lawslie — Full Arrest:** charging grab, three taser zaps, a takedown, and the opponent stays cuffed for 8 seconds.
+- CPU fighters use each super where it works (grabs up close, Vizor/Zeke/Samson from range).
+
 ## 1.7.2
 
 - **Lawslie is smaller** — 20% shorter than before (now the shortest fighter at 5'3"), with the same attack reach as everyone else. Her smaller body is also a little harder to hit.

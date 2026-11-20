@@ -14,7 +14,7 @@ Controls: arrows/WASD move, `X`/`K` = A (punch), `Z`/`J` = B (kick), Enter = Sta
 - **Chains** — on hit or block: jab → jab / kick / low jab / sweep, low jab → low jab / jab / sweep / kick, jump punch → jump kick (max 3 chained normals).
 - **Special cancel** — any connected normal except the sweep cancels into the special (A+B). A+B pressed together cancels the first button's normal straight into the special.
 - **Dash** — double-tap forward or back; the back-dash has brief invincibility.
-- **Super meter** — fills when you hit (+7, heavy +10), get hit (+5) or block; forward + A+B with a full bar fires your super (cinematic freeze, then a 6-hit flurry). The meter carries between rounds.
+- **Super meter** — fills when you hit (+7, heavy +10), get hit (+5) or block; forward + A+B with a full bar fires your fighter's unique super (see Supers). The meter carries between rounds.
 - **Throws** — forward/back + B right next to a grounded opponent; press A or B during the grab to break it. Back throws switch sides. Ivan's Bear Slam is an unbreakable command grab.
 - **Counter hits** — hitting a move in its start-up does +20% damage and extra hit-stun.
 - **Juggles & scaling** — at most 2 extra hits on a falling opponent; damage scales down from the 3rd hit (85%, 75%, … 50%).
@@ -33,6 +33,20 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Zeke | **Strike Ball** — bowling ball rolled along the floor (low, knocks down) | **Split Shot** — lobbed ball that drops from above (overhead) |
 | Hecky Xavier | **Hostile Takeover** — rising uppercut that launches for a juggle | **Power Suit** — 7-second power-up (+25% damage, faster). Plus a third special, **Laser Glare** (back + A+B): eye beams across the screen at head height |
 | Lawslie | **Taser** — short-range prongs, a hit stuns 3× longer | **Cuff 'Em** — grab through blocks; cuffed opponents can't use specials or super for 5 s |
+
+## Supers
+
+Forward + A+B with a full meter. Each fighter's super is unique (`SUPERS` in `src/game.js`, checked by `node tools/supers.js`):
+
+| Fighter | Super | What it does |
+|---|---|---|
+| Papa-Léguas | Mil Léguas | dash in, then afterimage blinks through the opponent from both sides (6 hits) |
+| Ivan | Siberian Storm | unblockable short-range grab into three slams |
+| Vizor | Full Exposure | full-screen lock-on, five camera-flash shots |
+| Samson | Final Sermon | four pillars of light walk toward the opponent (overhead), then he heals |
+| Zeke | Perfect Game | giant bowling ball, four low hits |
+| Hecky Xavier | Golden Parachute | launcher, sustained eye laser juggle, gold-coin finisher |
+| Lawslie | Full Arrest | charging grab, three taser zaps, takedown; cuffed for 8 s |
 
 ## Fighting styles
 
