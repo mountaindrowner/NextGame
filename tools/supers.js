@@ -16,7 +16,7 @@ const path = require('path');
       F.p1.meter = 100; d.startSpecial(F.p1, F.p2, 3); const info = { minHp: 100, maxY: 0, giant: false, pillars: 0, cuffed: 0, healed: false };
       const hp0 = F.p1.hp; F.p1.hp = 80; F.p1.trail = 80;
       for (let i = 0; i < 260; i++) { d.tick(); upd(); info.minHp = Math.min(info.minHp, F.p2.hp); info.maxY = Math.max(info.maxY, F.p2.y); if (F.proj.some(q => q.kind === 'giant')) info.giant = true;
-        if (F.p1.sp && F.p1.sp.pil) info.pillars = F.p1.sp.pil.length; info.cuffed = Math.max(info.cuffed, F.p2.cuffed || 0); if (F.p1.hp > 80) info.healed = true; }
+        if (F.p1.sp && F.p1.sp.pil) info.pillars = F.p1.sp.pil.length; info.cuffed = Math.max(info.cuffed, F.p2.cuffed || 0); if (F.p1.hp > 80) info.healed = true; if (F.p1.sp && F.p1.sp.ph === 'jam') info.landed = true; }
       return { dmg: Math.round(100 - info.minHp), ...info, end: F.p1.state };
     };
     const C = (n, ok, info) => out.push(`${ok ? 'OK  ' : 'FAIL'} ${n.padEnd(34)} ${info}`);
@@ -28,6 +28,7 @@ const path = require('path');
     r = run('zeke', 60, 200); C('ZEKE Perfect Game (giant ball)', r.dmg >= 18 && r.giant, `dmg ${r.dmg}, giant ball ${r.giant}`);
     r = run('hecky', 100, 140); C('HECKY Golden Parachute (juggle)', r.dmg >= 18 && r.maxY > 40, `dmg ${r.dmg}, held ${r.maxY | 0}px up`);
     r = run('lawslie', 70, 170); C('LAWSLIE Full Arrest (cuffed 8s)', r.dmg >= 15 && r.cuffed > 400, `dmg ${r.dmg}, cuffed ${r.cuffed} frames`);
+    r = run('rex', 60, 180); C('REX Stage Dive (homing leap + jam)', r.dmg >= 18 && r.landed, `dmg ${r.dmg} from 120px away`);
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();

@@ -1,6 +1,6 @@
 # Bonfire Bash
 
-A handheld-styled pixel fighting game ("Dojo Boy") with seven fighters — Papa-Léguas, Ivan, Vizor, Samson, Zeke, Hecky Xavier and Lawslie — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game ("Dojo Boy") with eight fighters — Papa-Léguas, Ivan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie and Rex — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
@@ -33,6 +33,7 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Zeke | **Strike Ball** — bowling ball rolled along the floor (low, knocks down) | **Split Shot** — lobbed ball that drops from above (overhead) |
 | Hecky Xavier | **Hostile Takeover** — rising uppercut that launches for a juggle | **Power Suit** — 7-second power-up (+25% damage, faster). Plus a third special, **Laser Glare** (back + A+B): eye beams across the screen at head height |
 | Lawslie | **Taser** — short-range prongs, a hit stuns 3× longer | **Cuff 'Em** — grab through blocks; cuffed opponents can't use specials or super for 5 s |
+| Rex | **Bass Drop** — a low shockwave on both sides of him (block crouching, or jump it) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen |
 
 ## Supers
 
@@ -47,6 +48,7 @@ Forward + A+B with a full meter. Each fighter's super is unique (`SUPERS` in `sr
 | Zeke | Perfect Game | giant bowling ball, four low hits |
 | Hecky Xavier | Golden Parachute | launcher, sustained eye laser juggle, gold-coin finisher |
 | Lawslie | Full Arrest | charging grab, three taser zaps, takedown; cuffed for 8 s |
+| Rex | Stage Dive | homing leap that crashes down (overhead), then a five-note bass jam |
 
 ## Fighting styles
 
@@ -61,6 +63,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Zeke | High/low zoner | 104 | Spare: a blocked Strike Ball reloads his special instantly |
 | Hecky Xavier | Technician | 98 | parry: tap forward just as a hit lands (no damage, +meter) |
 | Lawslie | Enforcer | 100 | no chip damage when blocking, and blocking builds meter; smallest body (sprites shrunk 20% by `SCALE` in `tools/pixellab/pack.py`), same reach |
+| Rex | Rhythm | 102 | hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
 
 Hecky has a second costume — an anthropomorphic fox — chosen with SELECT on the character select screen (`skin2` in his roster entry; sprites in `assets/fighters/heckyfox/`).
 

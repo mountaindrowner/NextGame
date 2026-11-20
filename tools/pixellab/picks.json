@@ -147,5 +147,26 @@
    "take": "airkick__f",
    "pk": 4
   }
+ },
+ "rex": {
+  "airkick": {
+   "take": "airkick__f",
+   "pk": 3
+  },
+  "airpunch": {
+   "take": "airpunch__b",
+   "pk": 4
+  },
+  "cpunch": {
+   "take": "cpunch__b",
+   "pk": 4
+  },
+  "hurt": {
+   "take": "hurt__b"
+  },
+  "lowkick": {
+   "take": "lowkick__d",
+   "pk": 3
+  }
  }
 }

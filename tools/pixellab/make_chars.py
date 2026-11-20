@@ -21,6 +21,8 @@ DESC = {
     "heckyfox": "an anthropomorphic red fox fighter standing upright like a man: orange-red fur, white muzzle and chest fur, pointed black-tipped ears, a big fluffy fox tail with a white tip, thin silver rectangular glasses, smug smirk, wearing an open white double-breasted suit jacket, black dress shirt and black tie, white suit trousers, black dress shoes, fists raised in a loose stylish boxing stance. 16-bit arcade fighting game character",
     # Lawslie: concept tools/pixellab/concept/lawslie.png, style_character_id = karl's id
     "lawslie": "Lawslie, a police officer fighter woman: long wavy dark brown hair, confident smile, navy blue police uniform shirt with short sleeves, a gold badge on the chest and a POLICE shoulder patch, a radio on her shoulder, black fingerless gloves, black duty belt with holster pouches and silver handcuffs hanging on it, navy blue cargo pants, black combat boots, fists raised in a boxing stance. 16-bit arcade fighting game character",
+    # Rex: concept tools/pixellab/concept/rex.png on a dark background, style_character_id = vizor's id
+    "rex": "Rex, a rock bass player fighter: stocky young man with short dark curly twisted hair and a small gold crown with red jewels on his head, a black headset microphone, serious confident face, maroon t-shirt with a white logo, black fingerless wrist gloves, a cream white electric bass guitar with a maple neck worn on a black strap across his body, baggy blue jeans, black and white skate sneakers, fighting stance holding the bass. Crisp 16-bit arcade fighting game sprite with strong contrast",
 }
 out = {}
 for k in sys.argv[1:]:

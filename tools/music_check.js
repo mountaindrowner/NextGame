@@ -9,7 +9,7 @@ const path = require('path');
   await p.keyboard.press('Enter'); await p.waitForTimeout(300);
   const r = await p.evaluate(async () => {
     const d = window.__dbg, out = [];
-    for (const id of ['karl', 'ivan', 'vizor', 'padre', 'zeke', 'hecky', 'lawslie']) {
+    for (const id of ['karl', 'ivan', 'vizor', 'padre', 'zeke', 'hecky', 'lawslie', 'rex']) {
       d.RUN = { mode: 'vs', p1: 'ivan', ladder: [id], idx: 0, cont: 0 }; d.go(d.Fight, { p1: 'ivan', p2: id, stage: id });
       for (let i = 0; i < 40 && !d.track.src && d.track.id; i++) await new Promise(r => setTimeout(r, 100));
       const t = d.track;

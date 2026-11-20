@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.10.0
+
+- **New fighter: Rex "The Low End"** — a crowned bass player from the Main Stage. Style: **RHYTHM** — hits that land on the beat do 25% more damage (watch the ring pulse at his feet).
+  - **Bass Drop** (A+B): slams a power note and a low shockwave bursts out on *both* sides of him. Block it crouching or jump it.
+  - **Mic Check** (down + A+B): shouts into his headset mic; the sound wave knocks enemy projectiles back at their owner and blasts the opponent across the screen.
+  - Super: **Stage Dive** — a homing leap that crashes down on the opponent (overhead), then a five-note bass jam with an "ENCORE!" finish.
+  - His own concert stage, song, voice, trials and ending.
+- Eight-fighter select screen, intro, title, records and itch.io art.
+
 ## 1.9.0
 
 - **Online multiplayer** — ONLINE on the title menu. One player picks HOST A GAME and gets a 4-letter room code; the other picks JOIN A GAME and types it in (or picks the letters with the d-pad). Both choose fighters on their own device (Hecky's fox costume works too), then fight. Rematch, back to character select, or leave the room after each match; the set score carries over.

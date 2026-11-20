@@ -57,6 +57,20 @@ const path = require('path');
       check('LAWSLIE   Cuffed! (beats block, locks specials)', cuffed && hpAfter < r.F.p2.mhp && lockedOut && freeAgain, `cuffed ${frames} frames through a block, specials locked ${lockedOut}, unlocked after ${freeAgain}`);
       r = setup('karl', 'lawslie', 100, 136); r.F.p2.holdBack = true; r.F.p2.cpu = false; r.F.dummy = 'BLOCK'; r.step(3); d.startSpecial(r.F.p1, r.F.p2, 1); r.step(50);
       check('ENFORCER  no chip, meter on block', r.F.p2.hp === r.F.p2.mhp && r.F.p2.meter > 5, `hp ${r.F.p2.hp | 0}/${r.F.p2.mhp}, meter ${r.F.p2.meter | 0}`); }
+    { // RHYTHM: on-beat hits do more; Bass Drop hits both sides and is low; Mic Check reflects projectiles
+      const lost = (r, n, who = 'p2') => { let m = r.F[who].hp; for (let i = 0; i < n; i++) { r.step(1); m = Math.min(m, r.F[who].hp); } return r.F[who].mhp - m; };
+      const hit = beat => { const r = setup('rex', 'ivan', 100, 140); for (let i = 0; i < 40 && d.onBeat() !== beat; i++) r.step(1);
+        r.F.p2.hp = r.F.p2.mhp; d.applyHit(r.F.p1, r.F.p2, { dmg: 10, stun: 10, bs: 5, kb: 1, lv: 'mid' }, 140, 100); return r.F.p2.mhp - r.F.p2.hp; };
+      const on = hit(true), off = hit(false);
+      check('RHYTHM    on-beat +25%', on > off * 1.2, `on beat ${on.toFixed(1)}, off beat ${off.toFixed(1)}`);
+      let r = setup('rex', 'ivan', 140, 100); r.F.p1.face = 1; r.F.p2.face = 1; d.startSpecial(r.F.p1, r.F.p2, 1); const behind = lost(r, 40);
+      r = setup('rex', 'ivan', 100, 150, 'BLOCK'); r.step(3); d.startSpecial(r.F.p1, r.F.p2, 1); const stBlock = lost(r, 40);
+      r = setup('rex', 'ivan', 100, 150, 'LOW BLOCK'); r.step(3); d.startSpecial(r.F.p1, r.F.p2, 1); const lowBlock = lost(r, 40);
+      check('REX       Bass Drop (both sides, low)', behind >= 8 && stBlock >= 8 && lowBlock < 4, `behind ${behind | 0}, vs stand block ${stBlock | 0}, vs low block ${lowBlock | 0}`);
+      r = setup('rex', 'zeke', 50, 210); r.step(3); d.startSpecial(r.F.p2, r.F.p1, 1); r.step(14); d.startSpecial(r.F.p1, r.F.p2, 2);
+      let refl = false, zMin = r.F.p2.hp, rMin = r.F.p1.hp; for (let i = 0; i < 90; i++) { r.step(1); if (r.F.proj.some(q => q.kind === 'ball' && q.owner === r.F.p1)) refl = true; zMin = Math.min(zMin, r.F.p2.hp); rMin = Math.min(rMin, r.F.p1.hp); }
+      const zDmg = r.F.p2.mhp - zMin, rexDmg = r.F.p1.mhp - rMin;
+      check('REX       Mic Check (reflects)', refl && zDmg > 0 && rexDmg === 0, `ball reflected ${refl}, zeke took ${zDmg | 0}, rex took ${rexDmg | 0}`); }
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();

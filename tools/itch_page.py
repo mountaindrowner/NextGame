@@ -21,6 +21,7 @@ ROSTER = [  # id, name, style, special 1, special 2
     ("zeke", "ZEKE", "BOWLING BRAWLER", "STRIKE BALL", "SPLIT SHOT"),
     ("hecky", "HECKY XAVIER", "DAPPER BOXING", "HOSTILE TAKEOVER", "POWER SUIT"),
     ("lawslie", "LAWSLIE", "POLICE DEFENSE", "TASER", "CUFF 'EM"),
+    ("rex", "REX", "BASS BRAWLER", "BASS DROP", "MIC CHECK"),
 ]
 
 
@@ -56,7 +57,7 @@ def header():  # 960x320 (480x160 x2)
     im = stage("zeke", W, H, 0.45)
     draw_text(im, "BONFIRE BASH", W // 2, 12, 5, grad=FIRE, outline="#3a0808", center=True)
     bar(im, 51, 260, RED)
-    draw_text(im, f"{len(ROSTER)} FIGHTERS - {len(ROSTER) * 2} POWERS - 1 CHAMPION", W // 2, 57, 1, col=GOLD, center=True)
+    draw_text(im, f"{len(ROSTER)} FIGHTERS - {len(ROSTER) * 2 + 1} POWERS - 1 CHAMPION", W // 2, 57, 1, col=GOLD, center=True)
     for i, (id_, *_rest) in enumerate(ROSTER):
         place(im, id_, round(W / len(ROSTER) * (i + .5)), H - 6 - (i % 2) * 4, anim="idle", flip=i >= len(ROSTER) // 2)
     save(im, "header-960x320.png", 2)

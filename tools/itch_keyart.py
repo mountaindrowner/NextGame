@@ -53,7 +53,7 @@ def logo(im, cx, y, k, two_lines=False, sub=True):
     w = text_w("BONFIRE BASH" if not two_lines else "BONFIRE", k) + 4 * k
     ImageDraw.Draw(im).rectangle((cx - w // 2, y2 + k // 2, cx + w // 2, y2 + k // 2 + max(2, k // 3)), fill=RED)
     if sub:
-        s = "7 FIGHTERS - 15 POWERS - 1 CHAMPION"
+        s = "8 FIGHTERS - 17 POWERS - 1 CHAMPION"
         sk = max(1, k // 3)
         while sk > 1 and text_w(s, sk) > im.width - 24:
             sk -= 1
@@ -63,7 +63,7 @@ def logo(im, cx, y, k, two_lines=False, sub=True):
 
 # poses that show each fighter's style; left side faces right, right side faces left
 POSE = {"lawslie": ("special", 8), "hecky": ("special", 5), "zeke": ("special", 7), "karl": ("punch", 4), "vizor": ("special", 4),
-        "padre": ("special", 6), "ivan": ("kick", 4)}
+        "padre": ("special", 6), "ivan": ("kick", 4), "rex": ("special", 6)}
 
 
 def keyart():  # 1376x768
@@ -71,12 +71,13 @@ def keyart():  # 1376x768
     vignette(im, 170)
     logo(im, im.width // 2, 28, 11)
     g = im.height - 34
-    for id_, x in (("karl", 140), ("vizor", 330)):
+    for id_, x in (("karl", 110), ("vizor", 270)):
         put(im, id_, x, g, *POSE[id_], flip=False)
-    put(im, "lawslie", 510, g, "special", 8, flip=False)
-    put(im, "zeke", 690, g - 22, "win", 8, flip=False)
-    put(im, "hecky", 880, g - 14, "special", 5, flip=True)
-    for id_, x in (("padre", 1060), ("ivan", 1240)):
+    put(im, "lawslie", 430, g, "special", 8, flip=False)
+    put(im, "zeke", 585, g - 22, "win", 8, flip=False)
+    put(im, "rex", 740, g, "win", 8, flip=True)
+    put(im, "hecky", 995, g - 14, "special", 5, flip=True)
+    for id_, x in (("padre", 1140), ("ivan", 1285)):
         put(im, id_, x, g, *POSE[id_], flip=True)
     draw_text(im, f"PLAY IN YOUR BROWSER  -  V{VER}", im.width // 2, im.height - 22, 2, col="#ffffff", outline="#000", center=True)
     im.convert("RGB").save(OUT / "keyart-1376x768.png")
@@ -89,7 +90,7 @@ def poster():  # 768x1024
     back, front = im.height - 190, im.height - 26
     for id_, x, anim, fr, fl in (("karl", 120, "win", 8, False), ("ivan", 300, "win", 8, False), ("zeke", 478, "win", 8, False), ("vizor", 660, "idle", 0, True)):
         put(im, id_, x, back, anim, fr, fl, k=3)
-    for id_, x, an, fr, fl in (("lawslie", 150, "special", 8, False), ("padre", 384, "special", 6, False), ("hecky", 620, "special", 5, True)):
+    for id_, x, an, fr, fl in (("lawslie", 110, "special", 8, False), ("padre", 290, "special", 6, False), ("rex", 480, "special", 6, True), ("hecky", 670, "special", 5, True)):
         put(im, id_, x, front, an, fr, flip=fl, k=3)
     im.convert("RGB").save(OUT / "poster-768x1024.png")
 
@@ -102,8 +103,8 @@ def cover():  # 630x500, new cover on the arena backdrop
     draw_text(im, "BASH", 157, 52, 6, grad=FIRE, outline="#3a0808", center=True)
     ImageDraw.Draw(im).rectangle((93, 99, 221, 100), fill=RED)
     draw_text(im, "PIXEL FIGHTERS", 157, 105, 1, col=GOLD, center=True)
-    for i, (id_, flip) in enumerate([("karl", False), ("vizor", False), ("lawslie", False), ("zeke", False), ("hecky", True), ("padre", True), ("ivan", True)]):
-        put(im, id_, 26 + i * 44, 238 - (i % 2) * 7, "idle", 0, flip, k=1)
+    for i, (id_, flip) in enumerate([("karl", False), ("vizor", False), ("lawslie", False), ("zeke", False), ("rex", True), ("hecky", True), ("padre", True), ("ivan", True)]):
+        put(im, id_, 24 + i * 38, 238 - (i % 2) * 7, "idle", 0, flip, k=1)
     im.resize((630, 500), Image.NEAREST).convert("RGB").save(OUT / "cover-arena-630x500.png")
 
 
@@ -120,7 +121,7 @@ def badges():  # 960x? row of info chips
     chips = [chip("PLAY IN YOUR BROWSER", (150, 30, 30, 255), (255, 210, 58, 255)),
              chip("PHONE - KEYBOARD - GAMEPAD", (40, 40, 110, 255), (122, 216, 255, 255)),
              chip("LOCAL 2 PLAYERS", (30, 90, 50, 255), (122, 255, 138, 255)),
-             chip(f"V{VER}: 7 FIGHTERS", (90, 30, 110, 255), (255, 138, 216, 255))]
+             chip(f"V{VER}: 8 FIGHTERS", (90, 30, 110, 255), (255, 138, 216, 255))]
     W = 480; rows = [[]]; x = 0
     for c in chips:
         if x + c.width > W - 8 and rows[-1]:
