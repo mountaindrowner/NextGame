@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.13.1
+
+- **Zeke nerfed a little:**
+  - Strike Ball and Split Shot do 9 damage instead of 10.
+  - **Spare** (a blocked Strike Ball) now cuts his cooldown to 25 frames instead of resetting it, so it's a fast reload, not an instant one.
+  - Health is 100 instead of 104.
+  - His jab, kick > Strike Ball combo still works.
+- **New balance test:** `tools/balance.js` runs CPU-vs-CPU rounds for every matchup from both sides. It prints each fighter's win rate, a matchup table, average damage and round length.
+
 ## 1.13.0
 
 Five fighting-game systems players and developers rate highest, filled in where the game was missing them:

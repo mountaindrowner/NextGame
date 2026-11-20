@@ -60,7 +60,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Ivan | Grappler | 118 | the start of his kick absorbs a hit |
 | Vizor | Zoner | 98 | long reach |
 | Samson | Powerhouse | 106 | counter-hit kicks knock down |
-| Zeke | High/low zoner | 104 | Spare: a blocked Strike Ball reloads his special instantly |
+| Zeke | High/low zoner | 100 | Spare: a blocked Strike Ball recharges his special to nearly ready |
 | Hecky Xavier | Tech rushdown | 98 | parry: tap forward just as a hit lands (no damage, +meter); bigger hitboxes, fast dash |
 | Lawslie | Enforcer | 100 | no chip damage when blocking, and blocking builds meter; smallest body (sprites shrunk 20% by `SCALE` in `tools/pixellab/pack.py`), same reach |
 | Marcus | Long-range | 104 | slowest walk and dash, longest reach (×1.4, a sound blast off his bass) but normals start 2 frames slower; hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
@@ -116,6 +116,7 @@ The announcer and the fighters' lines are recorded clips in `assets/voice/` made
 - `tools/itch_art.py`, `tools/shots.js` — itch.io cover, banner and screenshots (written to `release/itch/`)
 - `tools/itch_keyart.py`, `tools/stills.js`, `tools/super_gif.js` — key art, poster, cover, badges, feature card and the supers GIF (arena backdrops in `tools/pixellab/concept/` from PixelLab)
 - `tools/combos.js` — frame-exact combo checks; `tools/powers.js` — every special power; `tools/features.js` — super, throws, 2 players, trials, records; `tools/celebrate.js` — film the victory celebration
+- `tools/balance.js` — full balance test: CPU-vs-CPU round robin, win rates and matchup table (`node tools/balance.js 10 2`; add a fighter id to test only their matchups, and a JS snippet to try a change)
 - `tools/feel.js` — hit-stop by weight, hurt reactions, loop detection + burst, the SP key; `tools/ai.js` — CPU-vs-CPU matches: decks used, reaction time and execution by difficulty
 - `tools/make_logo.py` — draw a name logo in the game's style
 - `tools/anim_sheet.py` — labeled sheet of every animation a fighter uses (to check each move looks like what it does)

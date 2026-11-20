@@ -256,7 +256,7 @@ const ARCH={
   ivan:{type:'GRAPPLER',trait:'ARMORED KICK, MOST HP',hp:118,dash:.8,armor:true,reach:1},
   vizor:{type:'ZONER',trait:'LONG REACH',hp:98,reach:1.25},
   padre:{type:'POWERHOUSE',trait:'COUNTERS KNOCK DOWN',hp:106,heavy:true,reach:1.05},
-  zeke:{type:'HIGH/LOW ZONER',trait:'BLOCKED BALL = RELOAD',hp:104,spare:true,reach:1},
+  zeke:{type:'HIGH/LOW ZONER',trait:'BLOCKED BALL = FAST RELOAD',hp:100,spare:true,reach:1},
   hecky:{type:'TECH RUSHDOWN',trait:'PARRY: TAP FWD ON HIT',hp:98,parry:true,reach:1.18,hh:1.35,dash:1.2},
   lawslie:{type:'ENFORCER',trait:'NO CHIP, BLOCK = METER',hp:100,enforcer:true,reach:1},
   rex:{type:'LONG-RANGE',trait:'HUGE REACH, BEAT = +DMG',hp:104,rhythm:true,amp:true,reach:1.4,slow:2,dash:.7}};
@@ -668,7 +668,7 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
     if(t===14&&!s.hits){F.shake=Math.max(F.shake,2);dust(f.x+f.face*40,6)}
     if(t>=34)endSpecial(f)}
   else if(s.kind==='strike'){// Strike Ball: a bowling ball rolled along the floor (low: block crouching)
-    if(t===10&&!F.proj.some(p=>p.owner===f)){F.proj.push({kind:'ball',x:f.x+f.face*22,y:5,vx:f.face*3.6,owner:f,rot:0,life:110,lv:'low',dmg:10,kb:2.6,knock:true,tag:'sp1'});SFX.whooshH();dust(f.x+f.face*22,4)}
+    if(t===10&&!F.proj.some(p=>p.owner===f)){F.proj.push({kind:'ball',x:f.x+f.face*22,y:5,vx:f.face*3.6,owner:f,rot:0,life:110,lv:'low',dmg:9,kb:2.6,knock:true,tag:'sp1'});SFX.whooshH();dust(f.x+f.face*22,4)}
     if(t>=28)endSpecial(f)}
   else if(s.kind==='takeover'){// Hostile Takeover: rising uppercut that LAUNCHES the opponent for a juggle
     if(t<3)f.vx=0;else if(t<13&&!s.hits){f.vx=f.face*6.4;if(t%2===0)f.ghosts.push({x:f.x,y:f.y,l:10})}else f.vx*=.6;if(t===3)SFX.whooshH();
@@ -719,7 +719,7 @@ function updateSpecial2(f,o){const s=f.sp,t=f.st;
     if(t>=26)endSpecial(f)}
   else if(s.kind==='split'){// Split Shot: a ball lobbed high that drops from above (overhead: block standing)
     if(t===12&&!F.proj.some(p=>p.owner===f)){const x0=f.x+f.face*16,y0=f.H*.6,vy=4.6,g=0.2,T=(vy+Math.sqrt(vy*vy+2*g*(y0-4)))/g,d=clamp(Math.abs(o.x-x0),40,150);
-      F.proj.push({kind:'lob',x:x0,y:y0,vx:f.face*d/T,vy,g,owner:f,rot:0,life:140,lv:'high',dmg:10,stun:24,kb:2,tag:'sp2'});SFX.whoosh()}
+      F.proj.push({kind:'lob',x:x0,y:y0,vx:f.face*d/T,vy,g,owner:f,rot:0,life:140,lv:'high',dmg:9,stun:24,kb:2,tag:'sp2'});SFX.whoosh()}
     if(t>=32)endSpecial(f)}
   else if(s.kind==='cuff'){// Cuffed!: a lunging grab; cuffed opponents can't use specials or super for 5 seconds
     if(t<4)f.vx=0;else if(t<12)f.vx=f.face*3.4;else f.vx*=.6;
@@ -839,7 +839,7 @@ function updateProj(){for(const p of F.proj){if(p.dim==null)p.dim=(p.owner.sp&&p
     p.x+=p.vx;if(p.kind==='quake'&&frameNo%4===0)dust(p.x,1);p.rot+=p.kind?p.vx*0.14:0.5;p.life--;const o=p.owner===F.p1?F.p2:F.p1;
     if(p.g){p.y+=p.vy;p.vy-=p.g;if(p.y<=4&&p.vy<0){p.life=0;dust(p.x,8);SFX.land();F.shake=Math.max(F.shake,2)}}
     const R2=p.kind?7:6,RY=p.kind==='wave'?15:p.kind==='quake'?10:R2,r=tryHit(p.owner,o,{x1:p.x-R2,x2:p.x+R2,y1:p.y-RY,y2:p.y+RY},{dmg:p.dmg||9,stun:p.stun||18,bs:12,kb:p.kb||2.4,lv:p.lv||'mid',chip:2,knock:!!p.knock,heavy:!!p.knock,tag:p.tag||'sp1',dim:p.dim,tid:p.id||(p.id=++atkId)});
-    if(r==='block'&&p.kind==='ball'&&arch(p.owner.c).spare){p.owner.spCD=0;addText('SPARE!',p.owner.x,GY-p.owner.H-14,'#d04aff');SFX.ok()}
+    if(r==='block'&&p.kind==='ball'&&arch(p.owner.c).spare){p.owner.spCD=Math.min(p.owner.spCD,25);addText('SPARE!',p.owner.x,GY-p.owner.H-14,'#d04aff');SFX.ok()}
     if(r&&p.kind==='quake'){p.life=0;if(r==='hit')sparks(p.x,GY-p.y-4,'#5ae0ff',8)}
     else if(r&&p.kind==='wave'){p.life=0;if(r==='hit')o.vx=Math.sign(p.vx)*5.2}
     else if(r&&p.kind==='prong'){p.life=0;if(r==='hit'){o.zap=46;SFX.zap()}}

@@ -33,7 +33,7 @@ const path = require('path');
       const { F, step } = setup('padre', 'karl', 100, 150); d.startAtk(F.p2, 'kick'); d.startAtk(F.p1, 'kick'); F.p1.st = 6; F.p2.st = 1; step(3);
       check('POWERHOUSE counter knockdown', ['knock', 'down'].includes(F.p2.state), `karl state ${F.p2.state}`); }
     { // HIGH/LOW ZONER: a blocked Strike Ball reloads the special
-      const { F, step } = setup('zeke', 'ivan', 60, 190, 'LOW BLOCK'); step(3); d.startSpecial(F.p1, F.p2, 1); let reloaded = false; for (let i = 0; i < 80; i++) { step(1); if (F.p1.spCD === 0 && i < 70) reloaded = true; }
+      const { F, step } = setup('zeke', 'ivan', 60, 190, 'LOW BLOCK'); step(3); d.startSpecial(F.p1, F.p2, 1); let reloaded = false; for (let i = 0; i < 100; i++) { step(1); if (F.p1.spCD === 0 && i < 90) reloaded = true; }
       check('HIGH/LOW  spare (blocked ball reloads)', reloaded, `special ready again after a blocked ball: ${reloaded}`); }
     { // TECHNICIAN: tapping forward right before a hit parries it (no damage, meter gain)
       const { F, step } = setup('hecky', 'ivan', 100, 140); F.p2.cpu = false; d.startAtk(F.p2, 'jab'); step(1, { right: 1, h: { right: 1 } }); step(12);
