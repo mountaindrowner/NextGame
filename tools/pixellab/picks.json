@@ -1,0 +1,8 @@
+{
+ "karl":  {"airpunch": {"take": "airpunch__b", "pk": 3}, "cpunch": {"take": "cpunch__a", "pk": 4}, "lowkick": {"take": "lowkick__d", "pk": 5}},
+ "akira": {"airpunch": {"take": "airpunch__a", "pk": 4}, "cpunch": {"take": "cpunch__a", "pk": 4}, "hurt": {"take": "hurt__b"}, "lowkick": {"take": "lowkick__a", "pk": 5}},
+ "ivan":  {"airkick": {"take": "airkick__a", "pk": 4}, "airpunch": {"take": "airpunch__b", "pk": 4}, "crouch": {"take": "crouch__a"}, "hurt": {"take": "hurt__b"}, "cpunch": {"take": "cpunch__a", "pk": 4}, "lowkick": {"take": "lowkick__d", "pk": 5}},
+ "diego": {"crouch": {"take": "crouch__b"}, "hurt": {"take": "hurt__a"}},
+ "vizor": {"airpunch": {"take": "airpunch__b", "pk": 3}, "hurt": {"take": "hurt__b"}, "lowkick": {"take": "lowkick__b", "pk": 4}},
+ "padre": {"airkick": {"take": "airkick__e", "pk": 4}, "airpunch": {"take": "airpunch__f", "pk": 4}, "hurt": {"take": "hurt__a"}, "lowkick": {"take": "lowkick__d", "pk": 5}}
+}

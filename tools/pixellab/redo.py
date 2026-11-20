@@ -1,0 +1,62 @@
+"""Regenerate animations that don't match their move, two takes each (<anim>__a, <anim>__b).
+usage: redo.py CHAR:ANIM [CHAR:ANIM ...]
+Moves that start from another pose (crouch / jump apex) use that pose from raw/<char>/ as the start frame."""
+import os, sys, threading
+from pl import b64img
+from moves import CHARS, submit, HERE
+
+SPEC = {  # anim -> (start pose, start frame, frames, action)
+    "crouch": (None, 0, 4, "drops straight down into a deep crouch: knees fully bent, hips low near the floor, back slightly hunched, both fists up guarding the face"),
+    "hurt": (None, 0, 4, "gets punched hard in the face: the head snaps back, the upper body bends backward, the arms fly out to the sides and he staggers half a step back"),
+    "cpunch": ("crouch", -1, 6, "stays in a deep crouch with knees bent and hips low the whole time and throws a fast straight punch forward with the front arm fully extended at waist height, then pulls it back"),
+    "lowkick": ("crouch", -1, 6, "stays low to the ground leaning on one hand and sweeps the front leg forward along the floor at ankle height in a wide arc, a leg sweep with the leg fully straight and close to the ground, then pulls it back"),
+    "airpunch": ("jump", 5, 4, "in mid-air with the legs tucked, throws a powerful diving punch forward and downward at a 45 degree angle with the front arm fully extended and the fist leading"),
+    "airkick": ("jump", 5, 4, "in mid-air, a flying side kick: the front leg shoots out fully straight forward with the heel leading at chest height, the other leg tucked under, body leaning back; not a knee strike"),
+}
+# PixelLab preset motions (pixminimax), started from a pose: anim -> (start pose, start frame, template action)
+PRESET = {
+    "lowkick": (None, 0, "swoop kick"),
+    "airkick": ("jump", 5, "high kick"),
+    "airpunch": ("jump", 5, "punch"),
+}
+# per-fighter wording (e.g. Samson holds a book under one arm), used as CHAR:ANIM:alt, takes e/f
+ALT = {
+    ("padre", "airkick"): ("jump", 5, 4, "in mid-air, holding the book tight under his left arm, he snaps his front leg out perfectly straight forward in a flying side kick, the sole of the boot leading at chest height, the other knee tucked up"),
+    ("padre", "airpunch"): ("jump", 5, 4, "in mid-air, holding the book tight under his left arm, he throws a hard punch with his free right fist, the right arm fully extended forward and angled down, legs tucked"),
+}
+SRC_OVERRIDE = {("ivan", "crouch"): "crouch__a"}  # use the regenerated crouch as the start pose
+
+
+def body(name, anim, seed, preset=False, alt=False):
+    if alt:
+        src, idx, n, action = ALT[(name, anim)]
+        d = os.path.join(HERE, "raw", name, src); files = sorted(f for f in os.listdir(d) if f.endswith(".png"))
+        return {"mode": "v3", "frame_count": n, "action_description": action, "keep_first_frame": True, "seed": seed,
+                "custom_start_frame": b64img(os.path.join(d, files[idx]))}
+    if preset:
+        src, idx, action = PRESET[anim]
+        b = {"mode": "pixminimax", "template_action": action, "seed": seed}
+        if src:
+            d = os.path.join(HERE, "raw", name, SRC_OVERRIDE.get((name, src), src))
+            files = sorted(f for f in os.listdir(d) if f.endswith(".png"))
+            b["custom_start_frame"] = b64img(os.path.join(d, files[idx]))
+        return b
+    src, idx, n, action = SPEC[anim]
+    b = {"mode": "v3", "frame_count": n, "action_description": action, "keep_first_frame": True, "seed": seed}
+    if src:
+        d = os.path.join(HERE, "raw", name, SRC_OVERRIDE.get((name, src), src))
+        files = sorted(f for f in os.listdir(d) if f.endswith(".png"))
+        b["custom_start_frame"] = b64img(os.path.join(d, files[idx]))
+    return b
+
+
+if __name__ == "__main__":
+    log, ts = [], []
+    for item in sys.argv[1:]:  # CHAR:ANIM (described motion, takes a/b) or CHAR:ANIM:preset (preset motion, takes c/d)
+        name, anim, *mode = item.split(":")
+        pre, alt = bool(mode and mode[0] == "preset"), bool(mode and mode[0] == "alt")
+        tags = (("e", 505), ("f", 606)) if alt else (("c", 303), ("d", 404)) if pre else (("a", 101), ("b", 202))
+        for tag, seed in tags:
+            t = threading.Thread(target=submit, args=(CHARS[name], f"{anim}__{tag}", body(name, anim, seed, pre, alt), log)); t.start(); ts.append(t)
+    for t in ts: t.join()
+    print("total usd", round(sum(x[2] or 0 for x in log), 3), len(log), "jobs", [x for x in log if x[1] != "completed"])

@@ -43,6 +43,8 @@ def find_offset(base, frame0):
 # raw animation dir -> game animation name (None = not shipped)
 RENAME = {"fall2": "fall", "fall": None, "sweep": None, "falling-back-death": None, "throw": None}
 PER_CHAR = {"diego": {"spin2": "special", "special": None, "fall4": "fall", "fall2": None}}
+# picks.json: {char: {anim: {"take": "<raw dir>", "pk": strike frame}}} — the chosen regenerated take per move
+PICKS = json.load(open(os.path.join(HERE, "picks.json"))) if os.path.exists(os.path.join(HERE, "picks.json")) else {}
 
 
 def pack(name):
@@ -55,8 +57,15 @@ def pack(name):
     anims = sorted(d for d in os.listdir(src) if os.path.isdir(os.path.join(src, d)))
     for o in os.listdir(od):
         os.remove(os.path.join(od, o))
+    picks = PICKS.get(name, {})
+    chosen = {v["take"]: k for k, v in picks.items()}
     for raw in anims:
-        a = {**RENAME, **PER_CHAR.get(name, {})}.get(raw, raw)
+        if raw in chosen:
+            a = chosen[raw]
+        elif "__" in raw or raw in picks:
+            continue  # an unpicked take, or a move replaced by a picked take
+        else:
+            a = {**RENAME, **PER_CHAR.get(name, {})}.get(raw, raw)
         if a is None:
             continue
         files = sorted(glob.glob(os.path.join(src, raw, "*.png")))
@@ -72,6 +81,8 @@ def pack(name):
             strip.paste(f.crop((ux0, uy0, ux1, uy1)), (i * w, 0))
         strip.save(os.path.join(od, a + ".png"), optimize=True)
         meta["anims"][a] = {"n": len(frames), "w": w, "h": h, "ax": round(ax - ux0, 1), "ay": round(ay - uy0)}
+        if a in picks and picks[a].get("pk") is not None:
+            meta["anims"][a]["pk"] = picks[a]["pk"]
         print(f"  {name}/{a}: {len(frames)}f {w}x{h} anchor {meta['anims'][a]['ax']},{meta['anims'][a]['ay']} (offset {ox},{oy})")
     json.dump(meta, open(os.path.join(od, "meta.json"), "w"), indent=1)
 

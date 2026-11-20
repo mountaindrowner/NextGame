@@ -111,12 +111,14 @@ def roster():  # 960x? roster card, 3 x 2 fighter cards (drawn at 1x, scaled x2)
 
 
 def controls():  # how to play card
-    W, H = 480, 202
+    W, H = 480, 226
     im = panel(W, H)
     rows_l = [("MOVE", "ARROWS / WASD"), ("PUNCH (A)", "X OR K"), ("KICK (B)", "Z OR J"), ("PAUSE / MOVES", "ENTER"),
-              ("BLOCK", "HOLD BACK"), ("DASH", "TAP FWD/BACK TWICE")]
+              ("BLOCK", "HOLD BACK"), ("DASH", "TAP FWD/BACK TWICE"),
+              ("2 PLAYERS P1", "WASD + F / G"), ("2 PLAYERS P2", "ARROWS + K / L")]
     rows_r = [("SPECIAL 1", "A+B"), ("SPECIAL 2", "DOWN + A+B"), ("CHAIN", "A > B, LOW A > LOW B"), ("CANCEL", "HIT > A+B"),
-              ("LOW / SWEEP", "DOWN + A / B"), ("JUMP ATTACK", "UP, THEN A OR B")]
+              ("LOW / SWEEP", "DOWN + A / B"), ("JUMP ATTACK", "UP, THEN A OR B"),
+              ("SUPER (FULL BAR)", "FWD + A+B"), ("THROW (CLOSE)", "FWD/BACK + B")]
     draw_text(im, "KEYBOARD", 120, 8, 2, grad=FIRE, outline="#200", center=True)
     draw_text(im, "FIGHTING", 360, 8, 2, grad=FIRE, outline="#200", center=True)
     for col, rows in ((0, rows_l), (1, rows_r)):
@@ -124,10 +126,10 @@ def controls():  # how to play card
             y = 30 + j * 12
             draw_text(im, k, 10 + col * 240, y, 1, col="#ff9a6a")
             draw_text(im, v, 230 + col * 240 - text_w(v, 1), y, 1, col="#ffffff")
-    ImageDraw.Draw(im).line([(240, 28), (240, 100)], fill=(60, 50, 110, 255))
+    ImageDraw.Draw(im).line([(240, 28), (240, 124)], fill=(60, 50, 110, 255))
     # touch: a mini drawing of the handheld controls
-    y0 = 112
-    draw_text(im, "ON PHONES: THE ON-SCREEN PAD AND A / B BUTTONS", W // 2, y0, 1, col=GOLD, center=True)
+    y0 = 136
+    draw_text(im, "PHONES: ON-SCREEN PAD + A / B.  GAMEPADS WORK TOO.", W // 2, y0, 1, col=GOLD, center=True)
     d = ImageDraw.Draw(im)
     cx, cy = 150, y0 + 42
     d.ellipse((cx - 30, cy - 30, cx + 30, cy + 30), fill=(196, 189, 205, 255))
@@ -185,5 +187,5 @@ if __name__ == "__main__":
     for t, n in (("THE FIGHTERS", "title-fighters.png"), ("HOW TO PLAY", "title-how-to-play.png"),
                  ("POWERS & COMBOS", "title-powers.png"), ("GAME MODES", "title-modes.png")):
         title(t, n)
-    for p in sorted(OUT.iterdir()):
+    for p in sorted(x for x in OUT.iterdir() if x.suffix in (".png", ".gif")):
         print(f"{p.name:28s} {Image.open(p).size}  {p.stat().st_size // 1024} KB")

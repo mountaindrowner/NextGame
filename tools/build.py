@@ -28,12 +28,14 @@ def main():
         data[key] = json.loads(p.read_text())
     assets_js = ("const ASSETS=" + json.dumps(imgs) + ";\nconst ASSET_DATA=" + json.dumps(data) + ";\nconst MUSIC="
                  + json.dumps(music) + ";")
+    version = (ROOT / "VERSION").read_text().strip()
+    assets_js += "\nconst GAME_VERSION=" + json.dumps(version) + ";"
     html = (ROOT / "src" / "template.html").read_text()
     game = (ROOT / "src" / "game.js").read_text()
     html = html.replace("/*ASSETS*/", assets_js, 1).replace("/*GAME*/", game, 1)
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(html)
-    print(f"wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size/1024:.0f} KB, {len(imgs)} images, {len(data)} data files, {len(music)} songs)")
+    print(f"wrote {OUT.relative_to(ROOT)} v{version} ({OUT.stat().st_size/1024:.0f} KB, {len(imgs)} images, {len(data)} data files, {len(music)} songs)")
 
 
 if __name__ == "__main__":

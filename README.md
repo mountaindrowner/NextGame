@@ -1,12 +1,12 @@
 # World Dojo
 
-A handheld-styled pixel fighting game ("Dojo Boy") with six fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor and Samson — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU and Training.
+A handheld-styled pixel fighting game ("Dojo Boy") with six fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor and Samson — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
 Open `dist/index.html` in a browser. It is a single self-contained file (also ready to upload to itch.io as an HTML game).
 
-Controls: arrows/WASD move, `X`/`K` = A (punch), `Z`/`J` = B (kick), Enter = Start (pause shows each fighter's moves and combo). On touch screens use the on-screen pad. A+B together, or down→forward+A, fires the special move.
+Controls: arrows/WASD move, `X`/`K` = A (punch), `Z`/`J` = B (kick), Enter = Start (pause shows each fighter's moves and combo). On touch screens use the on-screen pad. Gamepads work (A/X = punch, B/Y = kick). In 2 Players mode the keyboard splits: P1 = WASD + F/G, P2 = arrows + K/L; a single gamepad goes to P2. A+B together, or down→forward+A, fires the special move.
 
 ## Fighting system
 
@@ -14,6 +14,8 @@ Controls: arrows/WASD move, `X`/`K` = A (punch), `Z`/`J` = B (kick), Enter = Sta
 - **Chains** — on hit or block: jab → jab / kick / low jab / sweep, low jab → low jab / jab / sweep / kick, jump punch → jump kick (max 3 chained normals).
 - **Special cancel** — any connected normal except the sweep cancels into the special (A+B). A+B pressed together cancels the first button's normal straight into the special.
 - **Dash** — double-tap forward or back; the back-dash has brief invincibility.
+- **Super meter** — fills when you hit (+7, heavy +10), get hit (+5) or block; forward + A+B with a full bar fires your super (cinematic freeze, then a 6-hit flurry). The meter carries between rounds.
+- **Throws** — forward/back + B right next to a grounded opponent; press A or B during the grab to break it. Back throws switch sides. Ivan's Bear Slam is an unbreakable command grab.
 - **Counter hits** — hitting a move in its start-up does +20% damage and extra hit-stun.
 - **Juggles & scaling** — at most 2 extra hits on a falling opponent; damage scales down from the 3rd hit (85%, 75%, … 50%).
 - Ivan's Bear Slam is a command grab: it can't grab an opponent in hit-stun, but it can grab out of a blocked string.
@@ -79,8 +81,10 @@ bar-aligned seamless loop and writes `assets/music/<stage>.mp3` (mono 64 kbps) +
 - `tools/smoke.js` — headless Playwright smoke test (boots the game, runs fights, screenshots)
 - `tools/poses.js`, `tools/play.js`, `tools/special.js` — render every pose, mash through a fight, or film a special move as a contact sheet
 - `tools/itch_art.py`, `tools/shots.js` — itch.io cover, banner and screenshots (written to `release/itch/`)
-- `tools/combos.js` — frame-exact combo checks; `tools/celebrate.js` — film the victory celebration
+- `tools/combos.js` — frame-exact combo checks; `tools/powers.js` — every special power; `tools/features.js` — super, throws, 2 players, trials, records; `tools/celebrate.js` — film the victory celebration
 - `tools/make_logo.py` — draw a name logo in the game's style
+- `tools/anim_sheet.py` — labeled sheet of every animation a fighter uses (to check each move looks like what it does)
+- `tools/pixellab/redo.py` + `picks.json` — regenerate a mismatched move as two takes and choose one (with its strike frame)
 - `tools/pixellab/` — scripts that generated the fighters with the PixelLab API
 
 ## Fighters (PixelLab)
