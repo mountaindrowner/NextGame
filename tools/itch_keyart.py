@@ -53,7 +53,7 @@ def logo(im, cx, y, k, two_lines=False, sub=True):
     w = text_w("BONFIRE BASH" if not two_lines else "BONFIRE", k) + 4 * k
     ImageDraw.Draw(im).rectangle((cx - w // 2, y2 + k // 2, cx + w // 2, y2 + k // 2 + max(2, k // 3)), fill=RED)
     if sub:
-        s = "9 FIGHTERS - 19 POWERS - 1 CHAMPION"
+        s = "10 FIGHTERS - 21 POWERS - 1 CHAMPION"
         sk = max(1, k // 3)
         while sk > 1 and text_w(s, sk) > im.width - 24:
             sk -= 1
@@ -71,14 +71,15 @@ def keyart():  # 1376x768
     vignette(im, 170)
     logo(im, im.width // 2, 28, 11)
     g = im.height - 34
-    for id_, x in (("karl", 95), ("vizor", 240)):
+    for id_, x in (("karl", 85), ("vizor", 215)):
         put(im, id_, x, g, *POSE[id_], flip=False)
-    put(im, "lawslie", 385, g, "special", 8, flip=False)
-    put(im, "kai", 530, g - 26, "jump", 5, flip=False)
-    put(im, "zeke", 675, g - 22, "win", 8, flip=False)
-    put(im, "rex", 815, g, "win", 8, flip=True)
-    put(im, "hecky", 1005, g - 14, "special", 5, flip=True)
-    for id_, x in (("padre", 1150), ("ivan", 1290)):
+    put(im, "lawslie", 345, g, "special", 8, flip=False)
+    put(im, "kai", 475, g - 26, "jump", 5, flip=False)
+    put(im, "keksan", 610, g, "kick", 5, flip=False)
+    put(im, "zeke", 745, g - 22, "win", 8, flip=False)
+    put(im, "rex", 880, g, "win", 8, flip=True)
+    put(im, "hecky", 1035, g - 14, "special", 5, flip=True)
+    for id_, x in (("padre", 1165), ("ivan", 1295)):
         put(im, id_, x, g, *POSE[id_], flip=True)
     draw_text(im, f"PLAY IN YOUR BROWSER  -  V{VER}", im.width // 2, im.height - 22, 2, col="#ffffff", outline="#000", center=True)
     im.convert("RGB").save(OUT / "keyart-1376x768.png")
@@ -104,8 +105,8 @@ def cover():  # 630x500, new cover on the arena backdrop
     draw_text(im, "BASH", 157, 52, 6, grad=FIRE, outline="#3a0808", center=True)
     ImageDraw.Draw(im).rectangle((93, 99, 221, 100), fill=RED)
     draw_text(im, "PIXEL FIGHTERS", 157, 105, 1, col=GOLD, center=True)
-    for i, (id_, flip) in enumerate([("karl", False), ("vizor", False), ("kai", False), ("lawslie", False), ("zeke", False), ("rex", True), ("hecky", True), ("padre", True), ("ivan", True)]):
-        put(im, id_, 22 + i * 34, 238 - (i % 2) * 7, "idle", 0, flip, k=1)
+    for i, (id_, flip) in enumerate([("karl", False), ("vizor", False), ("kai", False), ("lawslie", False), ("keksan", False), ("zeke", False), ("rex", True), ("hecky", True), ("padre", True), ("ivan", True)]):
+        put(im, id_, 17 + i * 31, 238 - (i % 2) * 7, "idle", 0, flip, k=1)
     im.resize((630, 500), Image.NEAREST).convert("RGB").save(OUT / "cover-arena-630x500.png")
 
 
@@ -122,7 +123,7 @@ def badges():  # 960x? row of info chips
     chips = [chip("PLAY IN YOUR BROWSER", (150, 30, 30, 255), (255, 210, 58, 255)),
              chip("PHONE - KEYBOARD - GAMEPAD", (40, 40, 110, 255), (122, 216, 255, 255)),
              chip("STORY MODE + ONLINE", (30, 90, 50, 255), (122, 255, 138, 255)),
-             chip(f"V{VER}: 9 FIGHTERS", (90, 30, 110, 255), (255, 138, 216, 255))]
+             chip(f"V{VER}: 10 FIGHTERS", (90, 30, 110, 255), (255, 138, 216, 255))]
     W = 480; rows = [[]]; x = 0
     for c in chips:
         if x + c.width > W - 8 and rows[-1]:

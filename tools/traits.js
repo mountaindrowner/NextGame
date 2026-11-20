@@ -97,6 +97,15 @@ const path = require('path');
       check('DEVANTE   Bounce Pass (caught = recharge)', dmg > 0 && cd <= 18, `hit for ${dmg | 0}, cooldown after the catch ${cd} (normal 80)`);
       r = setup('kai', 'ivan', 100, 140); d.startSpecial(r.F.p1, r.F.p2, 2); let stun = 0, crossed = false; for (let i = 0; i < 40; i++) { r.step(1); stun = Math.max(stun, r.F.p2.stun); if (r.F.p1.x > r.F.p2.x) crossed = true; }
       check('DEVANTE   Ankle Breaker (through + stumble)', crossed && stun >= 40, `went through ${crossed}, opponent stunned ${stun} frames`); }
+    { // STRIKER: shin kicks hit 20% harder; Tiger Knee flies in and launches; Thai Clinch grabs (unblockable) for three knees
+      const lost = (r, n) => { let m = r.F.p2.hp; for (let i = 0; i < n; i++) { r.step(1); m = Math.min(m, r.F.p2.hp); } return r.F.p2.mhp - m; };
+      const kick = (id) => { const r = setup(id, 'ivan', 100, 140); r.F.p1.c = { ...r.F.p1.c, power: 1 }; d.startAtk(r.F.p1, 'kick'); return lost(r, 40); };
+      const kk = kick('keksan'), kz = kick('zeke');
+      check('STRIKER   shin kicks (+15%)', kk > kz * 1.1, `kick ${kk.toFixed(1)} vs ${kz.toFixed(1)} for a fighter without the trait`);
+      let r = setup('keksan', 'ivan', 60, 150); d.startSpecial(r.F.p1, r.F.p2, 1); let top = 0, x0 = r.F.p1.x, dmg = 0, air = 0; { let m = r.F.p2.hp; for (let i = 0; i < 40; i++) { r.step(1); top = Math.max(top, r.F.p1.y); air = Math.max(air, r.F.p2.y); m = Math.min(m, r.F.p2.hp); } dmg = r.F.p2.mhp - m; }
+      check('KEKSAN    Tiger Knee (flies in, launches)', top > 20 && r.F.p1.x - x0 > 40 && dmg >= 8 && air > 10, `rose ${top | 0}px, moved ${(r.F.p1.x - x0) | 0}px, dmg ${dmg | 0}, lifted them ${air | 0}px`);
+      r = setup('keksan', 'ivan', 100, 132); r.F.p2.state = 'block'; r.F.p2.st = 0; d.startSpecial(r.F.p1, r.F.p2, 2); let held = 0; { let m = r.F.p2.hp; for (let i = 0; i < 80; i++) { r.step(1); if (r.F.p2.state === 'grabbed') held++; m = Math.min(m, r.F.p2.hp); } dmg = r.F.p2.mhp - m; }
+      check('KEKSAN    Thai Clinch (grab, 3 knees)', held > 20 && dmg >= 12, `held ${held} frames, dmg ${dmg | 0} through a block`); }
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();

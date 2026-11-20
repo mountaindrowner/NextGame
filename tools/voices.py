@@ -24,7 +24,7 @@ ANN = {
     "player_one_wins": "Player one wins!", "player_two_wins": "Player two wins!", "game_over": "Game over.",
     "congratulations": "Congratulations!", "versus": "versus", "announcer_on": "Announcer on.",
     "name_karl": "Pah-pah Lay-gwahs!", "name_ivan": "Ivan!",
-    "name_vizor": "Vizor!", "name_padre": "Samson!", "name_zeke": "Zeke!", "name_hecky": "Heck-ee Zay-vee-er!", "name_lawslie": "Laws-lee!", "name_rex": "Marcus!", "name_kai": "Deh-vahn-tay!",
+    "name_vizor": "Vizor!", "name_padre": "Samson!", "name_zeke": "Zeke!", "name_hecky": "Heck-ee Zay-vee-er!", "name_lawslie": "Laws-lee!", "name_rex": "Marcus!", "name_kai": "Deh-vahn-tay!", "name_keksan": "Kek-sahn!",
 }
 # fighter -> (voice, speed, {line: text})
 CAST = {
@@ -36,6 +36,7 @@ CAST = {
     "lawslie": ("af_heart", 1.08, {"sp1": "Taser!", "sp2": "Cuff 'em! You're under arrest!", "super": "Full arrest!", "win": "You have the right to remain silent.", "ko": "Officer down..."}),
     "rex": ("am_adam", 1.0, {"sp1": "Bass drop!", "sp2": "Mic check!", "super": "Stage dive!", "win": "Thank you, good night!", "ko": "Encore... later..."}),
     "kai": ("am_liam", 1.05, {"sp1": "Bounce pass!", "sp2": "Ankles... broken!", "super": "Fast break!", "win": "That's game.", "ko": "That was a foul..."}),
+    "keksan": ("am_liam+am_eric", 1.02, {"sp1": "Tiger knee!", "sp2": "Clinch!", "super": "Eight limbs!", "win": "Respect the ring.", "ko": "My guard... dropped..."}),
     "padre": ("bm_george", 0.9, {"sp1": "Holy tome!", "sp2": "Benediction!", "super": "Final sermon!", "win": "Go in peace, my son.", "ko": "Forgive me..."}),
 }
 TRIM = "silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse"
@@ -46,12 +47,14 @@ FX_FIGHTER = TRIM + ",acompressor=threshold=-20dB:ratio=3:attack=5:release=80,vo
 def render(K, key, text, voice, speed, fx):
     if ONLY and key not in ONLY:
         return
+    if "+" in voice:  # a blend of two voices, for a fighter who needs his own sound
+        a1, a2 = voice.split("+"); voice = (K.get_voice_style(a1) + K.get_voice_style(a2)) / 2
     a, sr = K.create(text, voice=voice, speed=speed, lang="en-us")
     with tempfile.NamedTemporaryFile(suffix=".wav") as tmp:
         sf.write(tmp.name, a, sr)
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp.name, "-af", fx, "-ac", "1", "-ar", "24000", "-b:a", "40k",
                         str(OUT / f"{key}.mp3")], check=True)
-    print(f"{key:22s} {voice:10s} {len(a) / sr:4.2f}s  {text}")
+    print(f"{key:22s} {voice if isinstance(voice, str) else 'blend':10s} {len(a) / sr:4.2f}s  {text}")
 
 
 if __name__ == "__main__":

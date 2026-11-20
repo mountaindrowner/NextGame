@@ -1,7 +1,7 @@
 // Film every fighter's super from the real game: node super_gif.js OUTDIR  (PNG frames; itch_page.py --gif turns them into a GIF)
 const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs');
-const CAST = [['karl', 'ivan'], ['lawslie', 'hecky'], ['ivan', 'vizor'], ['zeke', 'padre'], ['vizor', 'lawslie'], ['padre', 'karl'], ['hecky', 'zeke'], ['rex', 'ivan'], ['kai', 'zeke']];
+const CAST = [['karl', 'ivan'], ['lawslie', 'hecky'], ['ivan', 'vizor'], ['zeke', 'padre'], ['vizor', 'lawslie'], ['padre', 'karl'], ['hecky', 'zeke'], ['rex', 'ivan'], ['kai', 'zeke'], ['keksan', 'ivan']];
 (async () => {
   const out = process.argv[2]; fs.mkdirSync(out, { recursive: true }); for (const f of fs.readdirSync(out)) fs.unlinkSync(path.join(out, f));
   const br = await chromium.launch(); const p = await br.newPage();

@@ -13,6 +13,7 @@ const COMBOS = {
   lawslie: [['a'], ['b'], ['a', 'b']],
   rex: [['a'], ['b'], ['a', 'b', { down: 1 }]],
   kai: [['a'], ['b'], ['a', 'b']],
+  keksan: [['a'], ['b'], ['a', 'b']],
 };
 (async () => {
   const br = await chromium.launch();

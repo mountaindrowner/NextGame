@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.23.0
+
+- **New fighter: Keksan "The Tiger"**, a Muay Thai fighter from the Tiger Gym, made from the owner's character art. He's the first **STRIKER**: shin kicks, so his kicks, sweeps and jumping knee hit 15% harder.
+  - **Normals:** a spinning shin roundhouse for his kick, and a jumping knee as his jump attack.
+  - **Tiger Knee** (SP): a leaping flying knee. It clears low attacks, works as an anti-air, and launches on a hit for a juggle.
+  - **Thai Clinch** (DN+SP): a short-range command grab that goes through blocks. Three knees in the clinch, and the last shoves them away. It leaves him open if it whiffs.
+  - **Super, Eight Limbs:** he dashes in, then lands eight strikes with fists, knees, elbows and shins, and finishes with a flying knee that launches.
+  - **Made for him:**
+    - A PixelLab sprite with 16 animations.
+    - Portraits cut from the supplied art.
+    - The **Tiger Gym** stage: a ring, heavy bags and lanterns.
+    - A Thai-fight-music-meets-rock theme.
+    - Voice lines, trials and an ending.
+- **Balance:** his first version won 71% of CPU vs CPU matches, so I toned it down before release. Power went to 1.0, shin kicks from +20% to +15%, Tiger Knee from 11 to 10, and the clinch knees from 5/5/9 to 4/4/8 with a longer cooldown. He now wins 53–56%, mid-pack.
+- **10-fighter roster** on the select screen (a 3×4 grid), records, story bosses and itch.io art.
+- **PixelLab:** 80 generations, out of the 110 budgeted. Voice lines are local (Kokoro: a blend of two voices, so he sounds like nobody else).
+
 ## 1.22.0
 
 - **Vex is real now.** He has his own PixelLab character: silver hair, a purple pinstripe suit and a gold-handled cane, with walk, cane strike, cane slam, hurt, fall, kneel and taunt animations.

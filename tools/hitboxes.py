@@ -14,9 +14,11 @@ from PIL import Image
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 A = ROOT / "assets" / "fighters"
 MARGIN, TIPBAND = 6, 14  # px added around the limb; how far back from the tip counts as "the limb"
+# per-fighter bands where a move is not the usual limb (Keksan's jump attack is a knee, not a foot)
+BAND_FOR = {("keksan", "jkick"): (.3, .7)}
 BAND = {"jab": (.45, 1), "kick": (.3, .95), "cjab": (.25, .8), "sweep": (0, .42), "jpunch": (0, 1.2), "jkick": (0, 1.2)}
 MOVES = {"jab": "punch", "kick": "kick", "cjab": "cpunch", "sweep": "lowkick", "jpunch": "airpunch", "jkick": "airkick"}
-FIGHTERS = ["karl", "ivan", "vizor", "padre", "zeke", "hecky", "heckyfox", "lawslie", "rex", "kai"]
+FIGHTERS = ["karl", "ivan", "vizor", "padre", "zeke", "hecky", "heckyfox", "lawslie", "rex", "kai", "keksan"]
 
 
 def frames(fid, anim):
@@ -42,7 +44,7 @@ def main():
             fr, mm = frames(fid, anim)
             if not fr:
                 continue
-            lo, hi = BAND[mv]  # where this kind of strike can be, as a fraction of standing height above the feet
+            lo, hi = BAND_FOR.get((fid, mv), BAND[mv])  # where this kind of strike can be, as a fraction of standing height above the feet
             best = None
             for i, g in enumerate(fr):
                 rows = [r for r in range(g.shape[0]) if lo * H <= mm["ay"] - r <= hi * H]

@@ -189,5 +189,23 @@
    "take": "lowkick__d",
    "pk": 3
   }
+ },
+ "keksan": {
+  "airkick": {
+   "take": "airkick__k",
+   "pk": 3
+  },
+  "airpunch": {
+   "take": "airpunch__a",
+   "pk": 3
+  },
+  "cpunch": {
+   "take": "cpunch__a",
+   "pk": 4
+  },
+  "lowkick": {
+   "take": "lowkick__a",
+   "pk": 4
+  }
  }
 }
