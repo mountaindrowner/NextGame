@@ -5,9 +5,17 @@ henchmen, fight a boss at the end of each level.
 
 ## Story
 
-The night before the Bonfire Bash finals the trophy disappears. A card is left on the pedestal:
-*"Come and take it back. — V."* V is **Vex**, the promoter who owns the city's underground fight circuit and wants
-the tournament for himself. His henchmen are everywhere, and he has hired the other Bonfire Bash fighters to stop you.
+A gritty Christian story about temptation, the fight against your own sin, and mercy. Bonfire City is rotting under
+**Vex**, who owns the streets, the fights and the people. On the eve of the finals he steals the Bonfire Bash trophy
+and leaves a card: *"Every man has a price."* Your fighter doesn't.
+
+- **Chapter 1, Bonfire Streets:** you walk into the dark. *"The light shineth in darkness." (John 1:5)*
+- **Chapter 2, The Docks:** you help up a beaten goon instead of finishing him, and he points the way. Nobody is too far gone. *(Luke 19:10)*
+- **Chapter 3, Vex Tower:** the elevator is easy, the stairs are narrow; you take the stairs. *(Matthew 7:14)*
+- **Final Chapter, the Penthouse:** Vex offers you the whole city if you'll kneel. You won't. Then your shadow steps out: every grudge and sin you've carried. *"We wrestle not against flesh and blood." (Ephesians 6:12)*
+- **Epilogue:** you spare Vex and offer him a hand. By Sunday the trophy is back and Vex sits in the front pew of the Old Chapel. *"He was lost, and is found." (Luke 15:24)*
+
+Each story card shows its King James verse under the text.
 
 | Level | Where | Waves | Boss |
 |---|---|---|---|

@@ -1548,25 +1548,29 @@ const LEVELS=[
     waves:[{at:60,foes:['blade','goon','molotov','goon']},{at:290,foes:['enforcer','slinger','molotov','blade']},{at:512,foes:['bruiser','blade','enforcer','molotov','goon','blade']}]},
   {name:"VEX'S PENTHOUSE",bg:'hecky_stage',alt:'hecky',song:'rex',len:256,crates:[],
     waves:[{at:0,foes:['enforcer','blade','molotov','goon']}]}];
+// a gritty Christian story: temptation, the fight against your own sin, mercy instead of revenge (KJV verses)
 const STORY=[
-  "THE NIGHT BEFORE THE BONFIRE BASH FINALS, THE TROPHY VANISHED. ON THE PEDESTAL, A CARD: 'COME AND TAKE IT BACK. - V.' VEX OWNS THESE STREETS. {N} HITS THE PAVEMENT.",
-  "A BEATEN GOON TALKS: 'THE TROPHY'S AT THE DOCKS... VEX SHIPS IT OUT AT DAWN.' {N} RUNS FOR THE HARBOR.",
-  "THE SHIP WAS A DECOY. IN THE CAPTAIN'S COAT, A KEY CARD: VEX TOWER, TOP FLOOR. {N} TAKES THE STAIRS.",
-  "THE PENTHOUSE. THE TROPHY SHINES ON VEX'S DESK. 'I STUDIED EVERY FIGHT YOU EVER HAD,' HE SMILES. 'MEET THE ONE FIGHTER WHO KNOWS ALL YOUR MOVES.' A SHADOW STEPS OUT... IT'S YOU.",
-  "THE SHADOW FADES. VEX RUNS FOR THE ELEVATOR. {N} WALKS INTO THE BONFIRE BASH FINALS WITH THE TROPHY UNDER ONE ARM, AND THE CROWD GOES WILD."];
+  "BONFIRE CITY IS ROTTING. VEX OWNS THE STREETS, THE FIGHTS AND THE PEOPLE. ON FINALS EVE HE STEALS THE TROPHY AND LEAVES A CARD: 'EVERY MAN HAS A PRICE.' {N} DOESN'T.",
+  "A BEATEN GOON BEGS FOR MERCY. {N} HELPS HIM UP INSTEAD. 'VEX OWNS THE DOCKS,' HE WHISPERS. 'HE OWNS ME TOO.' NOBODY IS TOO FAR GONE TO BE FOUND.",
+  "AT THE DOCKS: STOLEN CARGO AND BROKEN MEN. A KEY CARD READS VEX TOWER, TOP FLOOR. THE ELEVATOR IS EASY. THE STAIRS ARE NARROW. {N} TAKES THE STAIRS.",
+  "VEX LOOKS DOWN ON THE CITY. 'ALL OF THIS IS YOURS IF YOU KNEEL.' {N} WON'T. THEN A SHADOW STEPS OUT: EVERY GRUDGE, EVERY SIN {N} EVER CARRIED. IT'S YOU.",
+  "THE SHADOW FALLS. VEX KNEELS, WAITING FOR THE LAST BLOW. IT NEVER COMES. {N} OFFERS A HAND. BY SUNDAY THE TROPHY IS BACK AND VEX SITS IN THE FRONT PEW."];
+const VERSES=["THE LIGHT SHINETH IN DARKNESS. - JOHN 1:5","THE SON OF MAN IS COME TO SAVE THAT WHICH WAS LOST. - LUKE 19:10",
+  "NARROW IS THE WAY, WHICH LEADETH UNTO LIFE. - MATT. 7:14","WE WRESTLE NOT AGAINST FLESH AND BLOOD. - EPH. 6:12","HE WAS LOST, AND IS FOUND. - LUKE 15:24"];
 function foeData(id){const c=FOES[id];if(c.base){const b=foeData(c.base);return{...b,...c,anim:b.anim,H:b.H,spr:b.spr,alt:b.alt,white:b.white,sh:.72,hip:.5,col:{...b.col,...c.col}}}if(c.anim)return c;const b=CH[FALLBACK_FOE[id]];return{...b,...c,anim:b.anim,H:b.H,spr:b.spr,alt:b.alt,white:b.white,fake:true}}
 function startStory(p1,alt,skin){const pool=ORDER.filter(i=>i!==p1).sort(()=>Math.random()-.5);
   RUN={mode:'story',p1,ladder:[],idx:0,cont:0,alt,skin,level:0,lives:3,score:0,bosses:pool.slice(0,3)};go(StoryCard)}
-const StoryCard={enter(){this.i=Math.min(RUN.level,STORY.length-1);this.txt=wrap(STORY[this.i].replace(/\{N\}/g,CH[RUN.p1].name),25);this.n=0;playMusic('select')},
+const StoryCard={enter(){this.i=Math.min(RUN.level,STORY.length-1);this.txt=wrap(STORY[this.i].replace(/\{N\}/g,CH[RUN.p1].name),25);this.verse=wrap(VERSES[this.i]||'',25);this.n=0;playMusic('select')},
   update(){this.n+=0.7;if(this.t>20&&(pressed.a||pressed.start)){if(this.n<this.txt.join(' ').length){this.n=999;return}SFX.ok();
       goFade(()=>{if(RUN.level>=LEVELS.length)go(Ending);else go(Brawl)})}},
   draw(){const L=LEVELS[Math.min(RUN.level,LEVELS.length-1)],bg=IMG[L.bg]||CH[L.alt].stage;ctx.drawImage(bg,0,0,bg.width*H/bg.height,H);ctx.fillStyle='rgba(6,4,18,.78)';ctx.fillRect(0,0,W,H);
     const c=CH[RUN.p1];ctx.drawImage(c.porm,-6,H-c.porm.height);
     drawText(RUN.level>=LEVELS.length?'EPILOGUE':RUN.level===3?'FINAL CHAPTER':'CHAPTER '+(RUN.level+1),170,14,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});
     if(RUN.level<LEVELS.length)drawText(L.name,170,34,'#ffe66a',1,{align:'center'});
-    const bh=this.txt.length*9+10,by=Math.round(48+(118-bh)/3);box(84,by,166,bh,'rgba(10,8,30,.9)','#d04aff');let left=Math.floor(this.n);
+    const vh=this.verse.length?this.verse.length*9+6:0,bh=this.txt.length*9+10+vh,by=Math.max(44,Math.round(48+(124-bh)/3));box(84,by,166,bh,'rgba(10,8,30,.9)','#d04aff');let left=Math.floor(this.n);
     this.txt.forEach((l,i)=>{const s=l.slice(0,Math.max(0,left));left-=l.length+1;drawText(s,90,by+6+i*9,'#e8e6f0',1,{shadow:false})});
-    if(this.n>=this.txt.join(' ').length&&(this.t>>4)&1)drawText('PRESS A',244,170,'#ffe66a',1,{align:'right',outline:'#000'})}};
+    if(this.n>=this.txt.join(' ').length){const vy=by+8+this.txt.length*9;ctx.fillStyle='#5a3a7a';ctx.fillRect(90,vy-2,154,1);this.verse.forEach((l,i)=>drawText(l,90,vy+2+i*9,'#ffd96a',1,{shadow:false}))}
+    if(this.n>=this.txt.join(' ').length&&(this.t>>4)&1)drawText('PRESS A',248,182,'#ffe66a',1,{align:'right',outline:'#000'})}};
 
 const Brawl={
   enter(){const L=this.L=LEVELS[RUN.level];F=this;Object.assign(this,{cinema:false,superFlash:0,superBy:null,parts:[],texts:[],hitFx:[],proj:[],items:[],foes:[],cx:0,wi:0,wave:null,q:[],qT:0,goT:0,

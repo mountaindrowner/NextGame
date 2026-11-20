@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.18.0
+
+- **Story mode is now a gritty Christian story.** Vex doesn't just steal the trophy; he tempts ("every man has a price"). You help up a beaten goon instead of finishing him, take the narrow stairs instead of the easy elevator, refuse to kneel for the whole city, and face your own shadow: every grudge and sin you've carried. The ending is mercy: you spare Vex, and by Sunday he's in the front pew of the Old Chapel.
+- **A King James verse on every story card:** John 1:5, Luke 19:10, Matthew 7:14, Ephesians 6:12 and Luke 15:24.
+
 ## 1.17.1
 
 - **Kai is now Devanté** (logo, announcer, select screen, ending and itch.io art).
