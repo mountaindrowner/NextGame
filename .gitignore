@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 release/
 voice-samples/
+tools/pixellab/.spend_job.json
+tools/pixellab/spend_log.jsonl
