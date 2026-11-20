@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.1
+
+- **Lawslie redrawn** — a sharper, higher-contrast sprite (clearer face, brighter uniform, crisp badge and handcuffs) with a fully regenerated move set, including a proper crouch.
+
 ## 1.7.0
 
 - **Diego and Akira are retired** from the roster (with their stages, songs and voices) — seven fighters now. They're still in the git history if they ever come back.

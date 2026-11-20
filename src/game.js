@@ -914,7 +914,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
 // Key frames per animation: pk = frame where the strike lands; jump = [prep, rise, apex, fall, land];
 // special = [[tick,frame],...] piecewise map over the move's own timeline. Per-fighter overrides in CH[id].ak.
 const AK={punch:{pk:4},kick:{pk:4},sweep:{pk:4},lowkick:{pk:3},cpunch:{pk:2},airkick:{pk:2},airpunch:{pk:2},jump:{prep:2,rise:3,apex:5,fall:6,land:7},fall:{air:4},
-  special:{rush:[[0,0],[7,3]],shuriken:[[0,0],[9,6],[18,8]],slam:[[0,0],[10,8]],spin:[[0,0],[40,99]],flash:[[0,0],[13,3],[14,4],[22,7],[32,8]],tome:[[0,0],[13,6],[14,7],[22,7],[34,8]],taser:[[0,0],[7,6],[8,7],[22,8],[30,8]],strike:[[0,0],[10,7],[28,8]],takeover:[[0,0],[5,2],[7,3],[11,4],[30,7]]}};
+  special:{rush:[[0,0],[7,3]],shuriken:[[0,0],[9,6],[18,8]],slam:[[0,0],[10,8]],spin:[[0,0],[40,99]],flash:[[0,0],[13,3],[14,4],[22,7],[32,8]],tome:[[0,0],[13,6],[14,7],[22,7],[34,8]],taser:[[0,0],[7,5],[8,6],[14,7],[30,8]],strike:[[0,0],[10,7],[28,8]],takeover:[[0,0],[5,2],[7,3],[11,4],[30,7]]}};
 function akOf(c,k){const o=(c.ak&&c.ak[k])||AK[k],m=c.anim&&c.anim[k];return m&&m.pk!=null?{...o,pk:m.pk}:o}
 function kf(t,pts){if(t<=pts[0][0])return pts[0][1];for(let i=1;i<pts.length;i++){const[a,fa]=pts[i-1],[b,fb]=pts[i];if(t<=b)return Math.round(fa+(fb-fa)*(t-a)/(b-a))}return pts[pts.length-1][1]}
 function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>A[k].n,last=k=>A[k].n-1,P=(k,i)=>A[k]?{k,i:clamp(Math.floor(i),0,last(k))}:null;
