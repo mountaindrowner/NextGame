@@ -646,7 +646,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;F
     ctx.fillStyle='#000';ctx.fillRect(114,2,28,20);ctx.fillStyle='#ffd23a';ctx.fillRect(115,3,26,18);ctx.fillStyle='#1a1430';ctx.fillRect(116,4,24,16);
     drawText(String(Math.max(0,this.time)).padStart(2,'0'),128,6,this.time<=10?'#ff5a4a':'#fff',2,{align:'center',shadow:false});
     if(this.training){box(60,26,136,14,'rgba(10,10,30,.75)','#3ae8ff');drawText(`HITS ${this.tHits}  DMG ${Math.round(this.tDmg)}  BEST ${this.tBest}`,128,29,'#fff',1,{align:'center',shadow:false});
-      drawText('SELECT: DUMMY '+(this.dummy||'STAND'),128,184,'#9ad',1,{align:'center',outline:'#000'})}
+      if(!this.cinema)drawText('SELECT: DUMMY '+(this.dummy||'STAND'),128,184,'#9ad',1,{align:'center',outline:'#000'})}
     if(this.comboShow){const c=this.comboShow;const x=c.side?248:8;drawText(c.n+' HITS!',x,44,'#fff',1,{align:c.side?'right':'left',grad:FIRE,outline:'#300'})}},
   drawBanner(){const pt=this.pt;let s=null,sc=3,grad=FIRE;
     if(this.phase==='intro'){const fin=this.wins[0]===1&&this.wins[1]===1;if(pt<78)s=fin?'FINAL ROUND':'ROUND '+this.round;else s='FIGHT!';sc=pt<78?(fin?2:3):4}
