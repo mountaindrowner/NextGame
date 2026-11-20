@@ -55,6 +55,16 @@ const path = require('path');
       const run = crouch => { const { F, step } = setup('hecky', 'ivan', 50, 210, crouch ? 'CROUCH' : 'STAND'); step(4); d.startSpecial(F.p1, F.p2, 4); step(50); return F.p2.mhp - F.p2.hp; };
       const stand = run(false), duck = run(true);
       check('HECKY     Laser Glare (eye beams)', stand > 5 && duck === 0, `damage to standing Ivan ${stand.toFixed(1)}, to crouching ${duck.toFixed(1)}`); }
+    { // Taser: long stun; Cuffed!: no specials for a while; Enforcer: no chip, meter from blocking
+      let r = setup('lawslie', 'ivan', 80, 160); d.startSpecial(r.F.p1, r.F.p2, 1); let maxStun = 0; for (let i = 0; i < 40; i++) { r.step(1); maxStun = Math.max(maxStun, r.F.p2.stun); }
+      check('LAWSLIE   Taser (long stun)', maxStun >= 40 && r.F.p2.zap >= 0, `stun ${maxStun} frames (a jab stuns 15)`);
+      r = setup('lawslie', 'akira', 100, 136, 'BLOCK'); r.step(3); d.startSpecial(r.F.p1, r.F.p2, 2); r.step(40);
+      const cuffed = r.F.p2.cuffed > 0, frames = r.F.p2.cuffed, hpAfter = r.F.p2.hp;
+      const q = setup('akira', 'ivan', 80, 200); q.F.p1.cuffed = 300; q.step(1, { a: 1, b: 1 }); const lockedOut = q.F.p1.state !== 'special';
+      q.F.p1.cuffed = 0; q.step(30); q.step(1, { a: 1, b: 1 }); const freeAgain = q.F.p1.state === 'special';
+      check('LAWSLIE   Cuffed! (beats block, locks specials)', cuffed && hpAfter < r.F.p2.mhp && lockedOut && freeAgain, `cuffed ${frames} frames through a block, specials locked ${lockedOut}, unlocked after ${freeAgain}`);
+      r = setup('karl', 'lawslie', 100, 136); r.F.p2.holdBack = true; r.F.p2.cpu = false; r.F.dummy = 'BLOCK'; r.step(3); d.startSpecial(r.F.p1, r.F.p2, 1); r.step(50);
+      check('ENFORCER  no chip, meter on block', r.F.p2.hp === r.F.p2.mhp && r.F.p2.meter > 5, `hp ${r.F.p2.hp | 0}/${r.F.p2.mhp}, meter ${r.F.p2.meter | 0}`); }
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();

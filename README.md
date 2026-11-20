@@ -1,6 +1,6 @@
 # Bonfire Bash
 
-A handheld-styled pixel fighting game ("Dojo Boy") with eight fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor, Samson, Zeke and Hecky Xavier — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game ("Dojo Boy") with nine fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor, Samson, Zeke, Hecky Xavier and Lawslie — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
@@ -34,6 +34,7 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Samson | **Holy Tome** — overhead book smash (must be blocked standing) | **Benediction** — kneels and heals; any hit interrupts it |
 | Zeke | **Strike Ball** — bowling ball rolled along the floor (low, knocks down) | **Split Shot** — lobbed ball that drops from above (overhead) |
 | Hecky Xavier | **Hostile Takeover** — rising uppercut that launches for a juggle | **Power Suit** — 7-second power-up (+25% damage, faster). Plus a third special, **Laser Glare** (back + A+B): eye beams across the screen at head height |
+| Lawslie | **Taser** — short-range prongs, a hit stuns 3× longer | **Cuff 'Em** — grab through blocks; cuffed opponents can't use specials or super for 5 s |
 
 ## Fighting styles
 
@@ -49,6 +50,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Samson | Powerhouse | 106 | counter-hit kicks knock down |
 | Zeke | High/low zoner | 104 | bowling balls smash through other projectiles |
 | Hecky Xavier | Technician | 98 | parry: tap forward just as a hit lands (no damage, +meter) |
+| Lawslie | Enforcer | 100 | no chip damage when blocking, and blocking builds meter |
 
 Hecky has a second costume — an anthropomorphic fox — chosen with SELECT on the character select screen (`skin2` in his roster entry; sprites in `assets/fighters/heckyfox/`).
 

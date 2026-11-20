@@ -151,5 +151,23 @@
    "take": "airkick__b",
    "pk": 4
   }
+ },
+ "lawslie": {
+  "cpunch": {
+   "take": "cpunch__b",
+   "pk": 4
+  },
+  "lowkick": {
+   "take": "lowkick__d",
+   "pk": 4
+  },
+  "airpunch": {
+   "take": "airpunch__b",
+   "pk": 3
+  },
+  "airkick": {
+   "take": "airkick__f",
+   "pk": 4
+  }
  }
 }

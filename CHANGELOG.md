@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.0
+
+- **New fighter: Officer Lawslie "The Law"** — an Enforcer from Precinct 9. **Taser** (A+B) fires short-range prongs on a wire; a hit stuns for three times as long as a normal hit, so you get a free follow-up. **Cuff 'Em** (down + A+B) is a lunging grab that goes through blocks and handcuffs the opponent: no specials or super for 5 seconds (cuffs and a timer show over their head). Super: **Full Arrest**. Trait: blocking costs her no chip damage and builds meter. Precinct 9 stage, cop-show funk song, voice, trials and ending.
+- Nine-fighter select screen, intro, title, records and itch.io art.
+
 ## 1.5.0
 
 - **The game is now called Bonfire Bash** — new title screen logo, boot and power-on screens, announcer ("Bonfire… Bash!"), ending, page title and itch.io art. (Saved records carry over.)

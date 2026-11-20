@@ -24,7 +24,7 @@ ANN = {
     "player_one_wins": "Player one wins!", "player_two_wins": "Player two wins!", "game_over": "Game over.",
     "congratulations": "Congratulations!", "versus": "versus", "announcer_on": "Announcer on.",
     "name_karl": "Pah-pah Lay-gwahs!", "name_akira": "Akira!", "name_ivan": "Ivan!", "name_diego": "Diego!",
-    "name_vizor": "Vizor!", "name_padre": "Samson!", "name_zeke": "Zeke!", "name_hecky": "Heck-ee Zay-vee-er!",
+    "name_vizor": "Vizor!", "name_padre": "Samson!", "name_zeke": "Zeke!", "name_hecky": "Heck-ee Zay-vee-er!", "name_lawslie": "Laws-lee!",
 }
 # fighter -> (voice, speed, {line: text})
 CAST = {
@@ -35,6 +35,7 @@ CAST = {
     "vizor": ("am_eric", 1.0, {"sp1": "Shutter flash!", "sp2": "Instant replay!", "super": "Full exposure!", "win": "Smile. You're on camera.", "ko": "Signal... lost."}),
     "zeke": ("am_michael", 1.0, {"sp1": "Strike ball!", "sp2": "Split shot!", "super": "Perfect game!", "win": "That's a strike, baby!", "ko": "Gutter ball..."}),
     "hecky": ("am_echo", 1.0, {"sp1": "Hostile takeover!", "sp2": "Power suit.", "sp3": "Laser glare!", "super": "Golden parachute!", "win": "Don't take it personally.", "ko": "Call my lawyer..."}),
+    "lawslie": ("af_nicole", 1.0, {"sp1": "Taser!", "sp2": "Cuff 'em! You're under arrest!", "super": "Full arrest!", "win": "You have the right to remain silent.", "ko": "Officer down..."}),
     "padre": ("bm_george", 0.9, {"sp1": "Holy tome!", "sp2": "Benediction!", "super": "Final sermon!", "win": "Go in peace, my son.", "ko": "Forgive me..."}),
 }
 TRIM = "silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse"
