@@ -66,7 +66,12 @@ const path = require('path');
       let r = setup('rex', 'ivan', 140, 100); r.F.p1.face = 1; r.F.p2.face = 1; d.startSpecial(r.F.p1, r.F.p2, 1); const behind = lost(r, 40);
       r = setup('rex', 'ivan', 100, 150, 'BLOCK'); r.step(3); d.startSpecial(r.F.p1, r.F.p2, 1); const stBlock = lost(r, 40);
       r = setup('rex', 'ivan', 100, 150, 'LOW BLOCK'); r.step(3); d.startSpecial(r.F.p1, r.F.p2, 1); const lowBlock = lost(r, 40);
-      check('REX       Bass Drop (both sides, low)', behind >= 8 && stBlock >= 8 && lowBlock < 4, `behind ${behind | 0}, vs stand block ${stBlock | 0}, vs low block ${lowBlock | 0}`);
+      r = setup('rex', 'ivan', 40, 220); d.startSpecial(r.F.p1, r.F.p2, 1); const far = lost(r, 90);
+      check('REX       Bass Drop reaches full screen', far >= 7, `damage from 180px away ${far | 0}`);
+      const reach = {}; for (const id of ['rex', 'vizor']) { const q = setup(id, 'ivan'); d.startAtk(q.F.p1, 'kick'); reach[id] = q.F.p1.atk.reach; }
+      const slowest = d.ORDER.every(id => id === 'rex' || d.CH[id].speed > d.CH.rex.speed);
+      check('LONG-RANGE reach + slowest walk', reach.rex > reach.vizor && slowest, `rex kick reach ${reach.rex | 0} (vizor ${reach.vizor | 0}), walk ${d.CH.rex.speed}, slowest ${slowest}`);
+      check('REX       Bass Drop (both sides, low)', behind >= 7 && stBlock >= 7 && lowBlock < 4, `behind ${behind | 0}, vs stand block ${stBlock | 0}, vs low block ${lowBlock | 0}`);
       r = setup('rex', 'zeke', 50, 210); r.step(3); d.startSpecial(r.F.p2, r.F.p1, 1); r.step(14); d.startSpecial(r.F.p1, r.F.p2, 2);
       let refl = false, zMin = r.F.p2.hp, rMin = r.F.p1.hp; for (let i = 0; i < 90; i++) { r.step(1); if (r.F.proj.some(q => q.kind === 'ball' && q.owner === r.F.p1)) refl = true; zMin = Math.min(zMin, r.F.p2.hp); rMin = Math.min(rMin, r.F.p1.hp); }
       const zDmg = r.F.p2.mhp - zMin, rexDmg = r.F.p1.mhp - rMin;

@@ -195,7 +195,7 @@ function playTrack(id){if(TRACK.id===id&&TRACK.src)return true;if(!trackData(id)
   return true}
 function stopTrack(){if(TRACK.src){try{TRACK.src.stop()}catch(e){}TRACK.src.disconnect();TRACK.src=null}TRACK.id=null}
 function stageMusic(stage){if(!playTrack(stage))playMusic('fight',CH[stage].tr)}
-function playMusic(name,tr=0){if(name==='title'&&playTrack('title'))return;if(MUS.name===name&&MUS.tr===tr&&MUS.s)return;stopTrack();const s=SONGS[name];MUS.name=name;MUS.tr=tr;MUS.step=0;MUS.next=AU.ctx?AU.ctx.currentTime+0.06:0;
+function playMusic(name,tr=0){if((name==='title'||name==='select')&&playTrack(name))return;if(MUS.name===name&&MUS.tr===tr&&MUS.s)return;stopTrack();const s=SONGS[name];MUS.name=name;MUS.tr=tr;MUS.step=0;MUS.next=AU.ctx?AU.ctx.currentTime+0.06:0;
   MUS.s={...s,L:s.lead.split(/\s+/),B:s.bass.split(/\s+/),D:s.drum.split('')}}
 function stopMusic(){MUS.s=null;MUS.name=null;stopTrack()}
 function drum(c,t){if(c==='k'){osc('sine',150,t,.12,.55,AU.mus,40)}else if(c==='s'){nz(t,.1,.32,2200,900,'bandpass',AU.mus)}else if(c==='h'){nz(t,.03,.12,9000,6000,'highpass',AU.mus)}}
@@ -239,7 +239,7 @@ const CH={
     col:{skin:'#d89a6a',glove:'#1c1a24',leg:'#283068',foot:'#1a1820',aura:'#5ab4ff'},sh:.72,hip:.5,
     quote:'YOU HAVE THE RIGHT TO REMAIN SILENT. I SUGGEST YOU USE IT.',lose:'OFFICER DOWN... CALL IT IN.',stageName:'PRECINCT 9'},
   rex:{id:'rex',name:'REX',nick:'THE LOW END',style:'BASS BRAWLER',country:'MAIN STAGE',countryLabel:'ORIGIN',flag:'crown',ht:"5'8\" (173 CM)",wt:'200 LB (91 KG)',
-    speed:0.98,power:1.08,def:1.04,jump:0.96,stats:[3,4,4],special:'bassdrop',spName:'BASS DROP',special2:'miccheck',sp2Name:'MIC CHECK',tr:0,
+    speed:0.78,power:1.1,def:1.04,jump:0.92,stats:[1,4,4],special:'bassdrop',spName:'BASS DROP',special2:'miccheck',sp2Name:'MIC CHECK',tr:0,
     col:{skin:'#c98a5e',glove:'#1c1a24',leg:'#3d5a96',foot:'#f0f0f0',aura:'#ff4a6a'},sh:.72,hip:.5,
     quote:"THANK YOU, GOOD NIGHT! YOU'VE BEEN A GREAT OPENING ACT.",lose:'ENCORE... LATER...',stageName:'MAIN STAGE'},
 };
@@ -248,12 +248,12 @@ const ORDER=['karl','ivan','vizor','padre','zeke','hecky','lawslie','rex'];
 const ARCH={
   karl:{type:'RUSHDOWN',trait:'FAST DASH, 4-HIT CHAINS',hp:92,chain:4,dash:1.3,reach:1},
   ivan:{type:'GRAPPLER',trait:'ARMORED KICK, MOST HP',hp:118,dash:.8,armor:true,reach:1},
-  vizor:{type:'ZONER',trait:'LONGEST REACH',hp:98,reach:1.25},
+  vizor:{type:'ZONER',trait:'LONG REACH',hp:98,reach:1.25},
   padre:{type:'POWERHOUSE',trait:'COUNTERS KNOCK DOWN',hp:106,heavy:true,reach:1.05},
   zeke:{type:'HIGH/LOW ZONER',trait:'BLOCKED BALL = RELOAD',hp:104,spare:true,reach:1},
   hecky:{type:'TECHNICIAN',trait:'PARRY: TAP FWD ON HIT',hp:98,parry:true,reach:1.05},
   lawslie:{type:'ENFORCER',trait:'NO CHIP, BLOCK = METER',hp:100,enforcer:true,reach:1},
-  rex:{type:'RHYTHM',trait:'ON-BEAT HITS: BONUS DMG',hp:102,rhythm:true,reach:1}};
+  rex:{type:'LONG-RANGE',trait:'HUGE REACH, BEAT = +DMG',hp:104,rhythm:true,amp:true,reach:1.4,slow:2,dash:.7}};
 const arch=c=>ARCH[c.id]||{};
 // RHYTHM trait: a steady 128-ish bpm beat on the shared frame counter (same on both sides online)
 const BEAT=28,onBeat=()=>{const m=frameNo%BEAT;return m<4||m>BEAT-4};
@@ -266,10 +266,10 @@ const TRIALS={karl:[['jab','kick'],['jab','jab','kick','sp1'],['jab','kick','sup
   zeke:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],
   hecky:[['jab','kick'],['cjab','jab','kick','sp1'],['jab','kick','super']],
   lawslie:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],
-  rex:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']]};
+  rex:[['jab','kick'],['jab','kick','sp2'],['jab','kick','super']]};
 const TNAME={jab:'JAB',kick:'KICK',cjab:'LOW JAB',sweep:'SWEEP',jpunch:'JUMP PUNCH',jkick:'JUMP KICK',sp1:'SPECIAL',sp2:'SPECIAL 2',super:'SUPER',throw:'THROW'};
 // bread-and-butter combos shown in the pause menu
-const BNB={karl:'JAB, JAB, KICK > A+B',ivan:'JUMP KICK, JAB, KICK',vizor:'JAB, KICK > A+B',padre:'JAB, KICK > A+B (OVERHEAD)',zeke:'JAB, KICK > A+B',hecky:'LOW JAB, JAB, KICK > A+B',lawslie:'JAB, KICK > A+B (TASER)',rex:'JAB, KICK > A+B (HIT ON THE BEAT)'};
+const BNB={karl:'JAB, JAB, KICK > A+B',ivan:'JUMP KICK, JAB, KICK',vizor:'JAB, KICK > A+B',padre:'JAB, KICK > A+B (OVERHEAD)',zeke:'JAB, KICK > A+B',hecky:'LOW JAB, JAB, KICK > A+B',lawslie:'JAB, KICK > A+B (TASER)',rex:'JAB, KICK > DN+A+B (ON THE BEAT)'};
 // cooldown (frames) per special; second specials are stronger tools with longer cooldowns
 const SPCD={rush:75,shuriken:75,slam:75,spin:75,flash:75,tome:75,strike:75,split:90,takeover:70,powersuit:720,laser:150,taser:80,cuff:240,bassdrop:80,miccheck:150,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
 const IMG={};
@@ -525,7 +525,7 @@ function control(f,o,inp){
   if(inp.d){f.crouch=true;setS(f,'crouch');f.vx=0;return}
   f.crouch=false;
   if(fwd){setS(f,'walk');f.vx=f.face*1.35*f.c.speed*(f.buff>0?1.2:1)}else if(back){setS(f,'walk');f.vx=-f.face*1.05*f.c.speed}else{setS(f,'idle');f.vx=0}}
-function startAtk(f,n){f.atk={...ATK[n],name:n,id:++atkId};f.atk.reach*=arch(f.c).reach||1;f.hitDone=false;if(f.atk.air)f.ast=0;else{f.state='attack';f.st=0;f.vx=0;f.crouch=!!f.atk.crouch}
+function startAtk(f,n){f.atk={...ATK[n],name:n,id:++atkId};f.atk.reach*=arch(f.c).reach||1;if(arch(f.c).slow){f.atk.s+=arch(f.c).slow;f.atk.r+=2}f.hitDone=false;if(f.atk.air)f.ast=0;else{f.state='attack';f.st=0;f.vx=0;f.crouch=!!f.atk.crouch}
   (n==='kick'||n==='sweep'||n==='jkick'?SFX.whooshH:SFX.whoosh)()}
 const canThrow=(f,o)=>Math.abs(o.x-f.x)<48&&o.y<=0&&f.y<=0&&o.inv<=0&&!(o.throwInv>0)&&['idle','walk','crouch','attack','land','dash','prejump'].includes(o.state)&&!(o.state==='attack'&&phaseOf(o)==='active');
 function startThrow(f,o,back){f.state='throwing';f.st=0;f.vx=0;f.atk=null;f.crouch=false;f.thBack=back;f.thr=null;f.thrId=++atkId;SFX.whoosh()}
@@ -670,10 +670,10 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
   else if(s.kind==='taser'){// Taser: short-range prongs; a hit stuns for a long time (free follow-up)
     if(t===8&&!F.proj.some(p=>p.owner===f)){F.proj.push({kind:'prong',x:f.x+f.face*24,y:f.H*.6,vx:f.face*6.2,owner:f,rot:0,life:17,lv:'mid',dmg:7,stun:46,kb:0.6,tag:'sp1'});SFX.taser()}
     if(t>=30)endSpecial(f)}
-  else if(s.kind==='bassdrop'){// Bass Drop: slams a power note; a low shockwave bursts out on BOTH sides (block crouching, or jump it)
-    if(t===10){SFX.bass();F.shake=Math.max(F.shake,5);dust(f.x-26,5);dust(f.x+26,5)}
-    if(t>=10&&t<16&&!s.hits){const R=22+(t-10)*9,r=tryHit(f,o,{x1:f.x-R,x2:f.x+R,y1:-2,y2:f.H*.4},{dmg:10,stun:22,bs:12,kb:2.6,lv:'low',chip:2,knock:true,heavy:true});if(r)s.hits=1}
-    if(t>=34)endSpecial(f)}
+  else if(s.kind==='bassdrop'){// Bass Drop: slams a power note; twin shockwaves roll along the floor BOTH ways across the stage (low: block crouching, or jump)
+    if(t===10&&!F.proj.some(p=>p.owner===f&&p.kind==='quake')){SFX.bass();F.shake=Math.max(F.shake,5);dust(f.x-20,5);dust(f.x+20,5);
+      for(const d of[1,-1])F.proj.push({kind:'quake',x:f.x+d*20,y:4,vx:d*3,owner:f,rot:0,life:80,lv:'low',dmg:10,stun:22,kb:2.4,knock:true,tag:'sp1'})}
+    if(t>=38)endSpecial(f)}
   else if(s.kind==='flash'){// Shutter Flash: lock a reticle on the target zone, then the flash hits whatever is inside it
     if(t===4){const d=(o.x-f.x)*f.face;s.lx=f.x+f.face*clamp(d>20?d:80,34,128);SFX.lock()}
     if(t===14){SFX.flash();F.camFlash=7;const hb={x1:s.lx-22,x2:s.lx+22,y1:4,y2:f.H*1.05};
@@ -811,11 +811,12 @@ function updateGiant(p,o){p.x+=p.vx;p.rot+=p.vx*0.07;p.life--;if(frameNo%4===0)d
 function updateProj(){for(const p of F.proj){if(p.kind==='giant'){updateGiant(p,p.owner===F.p1?F.p2:F.p1);continue}
     if(p.kind==='wave')for(const q of F.proj)if(q.owner!==p.owner&&q.kind!=='giant'&&q.kind!=='wave'&&q.life>0&&Math.abs(q.x-p.x)<16&&q.y<p.y+24){// Mic Check bats it back
       if(q.kind==='prong')q.life=0;else{q.owner=p.owner;q.vx=-q.vx*1.2;q.id=null;q.life=Math.max(q.life,60)}sparks(q.x,GY-q.y,'#ff4a6a',10);SFX.parry();addText('REFLECT!',q.x,GY-q.y-14,'#ff4a6a')}
-    p.x+=p.vx;p.rot+=p.kind?p.vx*0.14:0.5;p.life--;const o=p.owner===F.p1?F.p2:F.p1;
+    p.x+=p.vx;if(p.kind==='quake'&&frameNo%4===0)dust(p.x,1);p.rot+=p.kind?p.vx*0.14:0.5;p.life--;const o=p.owner===F.p1?F.p2:F.p1;
     if(p.g){p.y+=p.vy;p.vy-=p.g;if(p.y<=4&&p.vy<0){p.life=0;dust(p.x,8);SFX.land();F.shake=Math.max(F.shake,2)}}
-    const R2=p.kind?7:6,RY=p.kind==='wave'?15:R2,r=tryHit(p.owner,o,{x1:p.x-R2,x2:p.x+R2,y1:p.y-RY,y2:p.y+RY},{dmg:p.dmg||9,stun:p.stun||18,bs:12,kb:p.kb||2.4,lv:p.lv||'mid',chip:2,knock:!!p.knock,heavy:!!p.knock,tag:p.tag||'sp1',tid:p.id||(p.id=++atkId)});
+    const R2=p.kind?7:6,RY=p.kind==='wave'?15:p.kind==='quake'?10:R2,r=tryHit(p.owner,o,{x1:p.x-R2,x2:p.x+R2,y1:p.y-RY,y2:p.y+RY},{dmg:p.dmg||9,stun:p.stun||18,bs:12,kb:p.kb||2.4,lv:p.lv||'mid',chip:2,knock:!!p.knock,heavy:!!p.knock,tag:p.tag||'sp1',tid:p.id||(p.id=++atkId)});
     if(r==='block'&&p.kind==='ball'&&arch(p.owner.c).spare){p.owner.spCD=0;addText('SPARE!',p.owner.x,GY-p.owner.H-14,'#d04aff');SFX.ok()}
-    if(r&&p.kind==='wave'){p.life=0;if(r==='hit')o.vx=Math.sign(p.vx)*5.2}
+    if(r&&p.kind==='quake'){p.life=0;if(r==='hit')sparks(p.x,GY-p.y-4,'#5ae0ff',8)}
+    else if(r&&p.kind==='wave'){p.life=0;if(r==='hit')o.vx=Math.sign(p.vx)*5.2}
     else if(r&&p.kind==='prong'){p.life=0;if(r==='hit'){o.zap=46;SFX.zap()}}
     else if(r){p.life=0;if(r==='hit'&&p.kind){SFX.thud();for(let i=0;i<6;i++)F.parts.push({x:p.x,y:GY-p.y,vx:rnd(-2,2),vy:rnd(-3,-1),l:rnd(12,20)|0,c:i%2?'#ffffff':'#e02a2a',g:.15})}}}
   if(F.proj.length===2&&F.proj.some(p=>p.kind==='giant')){const g=F.proj.find(p=>p.kind==='giant'),q=F.proj.find(p=>p!==g);if(q&&Math.abs(g.x-q.x)<g.r+6&&Math.abs(g.y-q.y)<g.r+8){q.life=0;sparks(q.x,GY-q.y,'#fff',8)}}
@@ -871,6 +872,11 @@ function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:
   const r=Math.random(),sp=f.c.special,ready=f.spCD<=0,wait=Math.round(lerp(26,6,L)),plan=(p,d)=>{ai.plan=p;ai.dur=d};
   if(o.state==='down'||o.state==='rise'){if(dist>60)plan('walkF',10);else plan('guard',12);return inp}
   if(sp==='flash'&&ready&&dist>60&&dist<125&&r<.3){inp.sp=1;return inp}
+  if(arch(f.c).amp){// long-range: poke at max reach, zone with Bass Drop, back off when they get in
+    if(sp==='bassdrop'&&ready&&dist>90&&r<.05+.08*L){inp.sp=1;return inp}
+    if(dist>64&&dist<88&&o.y<=0&&r<.12+.15*L){inp.bP=1;return inp}
+    if(dist<50&&r<.06+.06*L){inp.dash=-1;return inp}
+    if(dist>130&&r<.6){plan('guard',8+wait/2);return inp}}
   if(dist>110&&r<.07*(0.5+L)){inp.dash=1;return inp}
   if(dist<50&&o.state==='attack'&&r<.05*L){inp.dash=-1;return inp}
   if(sp==='taser'&&ready&&dist>50&&dist<115&&r<.06+.08*L){inp.sp=1;return inp}
@@ -959,7 +965,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     for(const f of[this.p1,this.p2]){const s=Math.max(.35,1-f.y/110);ctx.fillStyle='rgba(0,0,0,.32)';ctx.beginPath();ctx.ellipse(f.x,GY+1,22*s,3.5*s,0,0,Math.PI*2);ctx.fill()}
     const order=(this.p2.state==='attack'||this.p2.state==='special'||this.p2.state==='slamming')?[this.p1,this.p2]:[this.p2,this.p1];
     order.forEach(drawFighter);
-    for(const p of this.proj)p.kind==='prong'?drawProng(p):p.kind==='wave'?drawWave(p):p.kind?drawBall(p):drawStar(p);
+    for(const p of this.proj)p.kind==='prong'?drawProng(p):p.kind==='wave'?drawWave(p):p.kind==='quake'?drawQuake(p):p.kind?drawBall(p):drawStar(p);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='bassdrop'&&f.st>=10&&f.st<24)drawRing(f.x,f.st-10,f.c.col.aura,14);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='super')drawSuperFx(f);
     for(const f of[this.p1,this.p2])if(f.cuffed>0)drawCuffs(f);
@@ -967,6 +973,9 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='laser')drawLaser(f);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='bless'&&f.st>6){const a=Math.min(.35,(f.st-6)/40)*(f.st>70?(78-f.st)/8:1);
       const g=ctx.createLinearGradient(0,0,0,GY);g.addColorStop(0,'rgba(255,230,140,0)');g.addColorStop(1,`rgba(255,230,140,${a})`);ctx.fillStyle=g;ctx.fillRect(Math.round(f.x-22),0,44,GY)}
+    for(const f of[this.p1,this.p2])if(arch(f.c).amp&&f.atk&&(f.state==='attack'||f.state==='jump')&&phaseOf(f)==='active'){const a=f.atk,h=f.H*(a.crouch?.7:1),
+      x=Math.round(f.x+f.face*(a.reach-6)),y=Math.round(GY-f.y-h*a.hy),r=4+((frameNo>>1)&1)*2;ctx.lineWidth=2;
+      for(let i=0;i<2;i++){ctx.strokeStyle=i?'#ff4a6a':'#ffffff';ctx.beginPath();ctx.arc(x-f.face*i*4,y,r+i*3,f.face>0?-1:Math.PI-1,f.face>0?1:Math.PI+1);ctx.stroke()}}
     for(const h of this.hitFx)drawHitFx(h);
     for(const p of this.parts){ctx.fillStyle=p.c;ctx.globalAlpha=p.dust?Math.min(1,p.l/12)*.7:1;const s=p.dust?3:2;ctx.fillRect(p.x|0,p.y|0,s,s)}ctx.globalAlpha=1;
     ctx.restore();
@@ -1146,6 +1155,11 @@ function drawWave(p){const x=Math.round(p.x),y=Math.round(GY-p.y),d=Math.sign(p.
   for(let i=0;i<3;i++){const r=8+i*5+pul,c=i===0?'#ffffff':i===1?'#ffb0c4':'#ff4a6a',a0=d>0?-1.05:Math.PI-1.05,a1=d>0?1.05:Math.PI+1.05,cx=x-d*(i*6+r-8);
     ctx.strokeStyle='#120e1e';ctx.lineWidth=4.5;ctx.beginPath();ctx.arc(cx,y,r,a0,a1);ctx.stroke();ctx.strokeStyle=c;ctx.lineWidth=2.5;ctx.stroke()}
   ctx.fillStyle='#ffe66a';if(pul){ctx.fillRect(x-d*18,y-12,2,2);ctx.fillRect(x-d*22,y+9,2,2)}else{ctx.fillRect(x-d*14,y+12,2,2);ctx.fillRect(x-d*24,y-6,2,2)}}
+function drawQuake(p){const x=Math.round(p.x),d=Math.sign(p.vx),f=(frameNo>>1)&1,h=15+f*2;
+  ctx.fillStyle='#120e1e';ctx.beginPath();ctx.moveTo(x-d*14,GY);ctx.quadraticCurveTo(x-d*2,GY-h-4,x+d*7,GY);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#5ae0ff';ctx.beginPath();ctx.moveTo(x-d*12,GY);ctx.quadraticCurveTo(x-d*2,GY-h,x+d*5,GY);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#ffffff';ctx.beginPath();ctx.moveTo(x-d*6,GY);ctx.quadraticCurveTo(x,GY-h*.6,x+d*3,GY);ctx.closePath();ctx.fill();
+  ctx.fillStyle='rgba(255,74,106,.8)';ctx.fillRect(x-d*(18+f*2),GY-3,3,2);ctx.fillRect(x-d*(24-f*2),GY-6,2,2)}
 function drawRing(x,k,col,n){if(k<0||k>n)return;const R=20+k*5,a=1-k/n;ctx.globalAlpha=a;ctx.lineWidth=3;ctx.strokeStyle='#120e1e';ctx.beginPath();ctx.ellipse(x,GY-2,R,5+k*.5,0,0,Math.PI*2);ctx.stroke();
   ctx.lineWidth=2;ctx.strokeStyle=col;ctx.stroke();ctx.lineWidth=1;ctx.strokeStyle='#fff';ctx.beginPath();ctx.ellipse(x,GY-2,R*.7,3+k*.3,0,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}
 function drawSuperFx(f){const s=f.sp,t=f.st;

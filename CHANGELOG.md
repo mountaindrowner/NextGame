@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.11.0
+
+- **Rex is now a LONG-RANGE fighter**: the slowest walker and dasher in the game, with the longest reach. Every punch and kick pushes a sound blast off the end of his bass (40% more reach), but his attacks start 2 frames slower. He keeps his beat trait: hits on the beat do +25%.
+  - **Bass Drop** now sends twin shockwaves rolling along the floor *both ways* across the whole stage. They're low, so block crouching or jump them.
+  - **Mic Check** is his combo ender: jab, kick > down + A+B.
+  - CPU Rex plays keep-away: he pokes at the tip of his reach, zones with Bass Drop and backs off when you get close.
+- **New character select song**: "Choose Your Fighter", a funk-rock track made with PixelLab. It replaces the old chiptune on the select screen, the online menu, the versus screen and Records.
+- Vizor's trait now reads "LONG REACH" (Rex has the longest).
+
 ## 1.10.0
 
 - **New fighter: Rex "The Low End"** — a crowned bass player from the Main Stage. Style: **RHYTHM** — hits that land on the beat do 25% more damage (watch the ring pulse at his feet).

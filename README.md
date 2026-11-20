@@ -33,7 +33,7 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Zeke | **Strike Ball** — bowling ball rolled along the floor (low, knocks down) | **Split Shot** — lobbed ball that drops from above (overhead) |
 | Hecky Xavier | **Hostile Takeover** — rising uppercut that launches for a juggle | **Power Suit** — 7-second power-up (+25% damage, faster). Plus a third special, **Laser Glare** (back + A+B): eye beams across the screen at head height |
 | Lawslie | **Taser** — short-range prongs, a hit stuns 3× longer | **Cuff 'Em** — grab through blocks; cuffed opponents can't use specials or super for 5 s |
-| Rex | **Bass Drop** — a low shockwave on both sides of him (block crouching, or jump it) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen |
+| Rex | **Bass Drop** — twin low shockwaves roll along the floor both ways across the stage (block crouching, or jump them) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen |
 
 ## Supers
 
@@ -58,12 +58,12 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 |---|---|---|---|
 | Papa-Léguas | Rushdown | 92 | fastest dash, 4-hit chains |
 | Ivan | Grappler | 118 | the start of his kick absorbs a hit |
-| Vizor | Zoner | 98 | longest reach |
+| Vizor | Zoner | 98 | long reach |
 | Samson | Powerhouse | 106 | counter-hit kicks knock down |
 | Zeke | High/low zoner | 104 | Spare: a blocked Strike Ball reloads his special instantly |
 | Hecky Xavier | Technician | 98 | parry: tap forward just as a hit lands (no damage, +meter) |
 | Lawslie | Enforcer | 100 | no chip damage when blocking, and blocking builds meter; smallest body (sprites shrunk 20% by `SCALE` in `tools/pixellab/pack.py`), same reach |
-| Rex | Rhythm | 102 | hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
+| Rex | Long-range | 104 | slowest walk and dash, longest reach (×1.4, a sound blast off his bass) but normals start 2 frames slower; hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
 
 Hecky has a second costume — an anthropomorphic fox — chosen with SELECT on the character select screen (`skin2` in his roster entry; sprites in `assets/fighters/heckyfox/`).
 

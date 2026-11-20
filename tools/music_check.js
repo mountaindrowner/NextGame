@@ -15,6 +15,10 @@ const path = require('path');
       const t = d.track;
       out.push(t.src ? `${id.padEnd(6)} song  ${t.buf[id].duration.toFixed(1)}s, loops ${t.src.loopStart.toFixed(2)}-${t.src.loopEnd.toFixed(2)}s` : `${id.padEnd(6)} chiptune (${d.mus.name})`);
     }
+    for (const [name, go] of [['select screen', () => d.go(d.Select, 'arcade')], ['online menu', () => d.go(d.Online)]]) {
+      d.go(d.Title); go(); for (let i = 0; i < 40 && !d.track.src; i++) await new Promise(r => setTimeout(r, 100));
+      const t = d.track; out.push(t.src && t.id === 'select' ? `${name.padEnd(13)} song "select" ${t.buf.select.duration.toFixed(1)}s, loops ${t.src.loopStart.toFixed(2)}-${t.src.loopEnd.toFixed(2)}s` : `${name.padEnd(13)} FAIL: ${t.id || d.mus.name}`);
+    }
     return out;
   });
   console.log(r.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();
