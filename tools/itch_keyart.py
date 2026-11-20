@@ -44,13 +44,13 @@ def vignette(im, strength=150):
 
 def logo(im, cx, y, k, two_lines=False, sub=True):
     if two_lines:
-        draw_text(im, "WORLD", cx, y, k, grad=FIRE, outline="#3a0808", center=True)
-        draw_text(im, "DOJO", cx, y + 8 * k + k, int(k * 1.2), grad=FIRE, outline="#3a0808", center=True)
+        draw_text(im, "BONFIRE", cx, y, k, grad=FIRE, outline="#3a0808", center=True)
+        draw_text(im, "BASH", cx, y + 8 * k + k, int(k * 1.2), grad=FIRE, outline="#3a0808", center=True)
         y2 = y + 8 * k + k + 8 * int(k * 1.2)
     else:
-        draw_text(im, "WORLD DOJO", cx, y, k, grad=FIRE, outline="#3a0808", center=True)
+        draw_text(im, "BONFIRE BASH", cx, y, k, grad=FIRE, outline="#3a0808", center=True)
         y2 = y + 8 * k
-    w = text_w("WORLD DOJO" if not two_lines else "WORLD", k) + 4 * k
+    w = text_w("BONFIRE BASH" if not two_lines else "BONFIRE", k) + 4 * k
     ImageDraw.Draw(im).rectangle((cx - w // 2, y2 + k // 2, cx + w // 2, y2 + k // 2 + max(2, k // 3)), fill=RED)
     if sub:
         s = "8 FIGHTERS - 16 POWERS - 1 CHAMPION"
@@ -98,8 +98,8 @@ def cover():  # 630x500, new cover on the arena backdrop
     b = Image.open(CON / "arena_wide.png").convert("RGBA")
     im = b.crop((186, 134, 501, 384))
     vignette(im, 120)
-    draw_text(im, "WORLD", 157, 12, 5, grad=FIRE, outline="#3a0808", center=True)
-    draw_text(im, "DOJO", 157, 52, 6, grad=FIRE, outline="#3a0808", center=True)
+    draw_text(im, "BONFIRE", 157, 12, 5, grad=FIRE, outline="#3a0808", center=True)
+    draw_text(im, "BASH", 157, 52, 6, grad=FIRE, outline="#3a0808", center=True)
     ImageDraw.Draw(im).rectangle((93, 99, 221, 100), fill=RED)
     draw_text(im, "PIXEL FIGHTERS", 157, 105, 1, col=GOLD, center=True)
     for i, (id_, flip) in enumerate([("karl", False), ("akira", False), ("vizor", False), ("zeke", False), ("hecky", True), ("padre", True), ("ivan", True), ("diego", True)]):

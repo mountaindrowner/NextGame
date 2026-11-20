@@ -1,4 +1,4 @@
-# World Dojo
+# Bonfire Bash
 
 A handheld-styled pixel fighting game ("Dojo Boy") with eight fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor, Samson, Zeke and Hecky Xavier — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
@@ -33,7 +33,7 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Vizor | **Shutter Flash** — reticle lock-on at range, then a knockdown flash | **Instant Replay** — rewinds his position and up to 15 recent damage |
 | Samson | **Holy Tome** — overhead book smash (must be blocked standing) | **Benediction** — kneels and heals; any hit interrupts it |
 | Zeke | **Strike Ball** — bowling ball rolled along the floor (low, knocks down) | **Split Shot** — lobbed ball that drops from above (overhead) |
-| Hecky Xavier | **Hostile Takeover** — rising uppercut that launches for a juggle | **Power Suit** — 7-second power-up (+25% damage, faster) |
+| Hecky Xavier | **Hostile Takeover** — rising uppercut that launches for a juggle | **Power Suit** — 7-second power-up (+25% damage, faster). Plus a third special, **Laser Glare** (back + A+B): eye beams across the screen at head height |
 
 ## Fighting styles
 
@@ -65,7 +65,7 @@ Bread-and-butter combos (checked frame by frame by `tools/combos.js`):
 | Vizor | jab, kick > Shutter Flash | 3 |
 | Samson | jab, kick > Holy Tome | 3 |
 
-Training mode: the dummy stands still (SELECT switches it to standing or low block), health refills, and the top of the screen shows hits, damage and your best combo.
+Training mode: the dummy stands still (SELECT switches it to block, low block or crouch), health refills, and the top of the screen shows hits, damage and your best combo.
 
 Winning a match sets off confetti, fireworks and a crowd cheer; the result and ending screens celebrate too.
 

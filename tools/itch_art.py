@@ -95,8 +95,8 @@ def main():
     # --- cover 630x500 (drawn at 315x250, x2) ---
     W, H = 315, 250
     c = stage("akira", W, H, 0.5)
-    draw_text(c, "WORLD", W // 2, 14, 5, grad=FIRE, outline="#3a0808", center=True)
-    draw_text(c, "DOJO", W // 2, 54, 6, grad=FIRE, outline="#3a0808", center=True)
+    draw_text(c, "BONFIRE", W // 2, 14, 5, grad=FIRE, outline="#3a0808", center=True)
+    draw_text(c, "BASH", W // 2, 54, 6, grad=FIRE, outline="#3a0808", center=True)
     bar(c, 101, 150, (208, 48, 26, 255))
     draw_text(c, "PIXEL FIGHTERS", W // 2, 108, 1, col="#ffe66a", center=True)
     ground = H - 12
@@ -107,7 +107,7 @@ def main():
     # --- banner 960x240 (drawn at 480x120, x2) ---
     W, H = 480, 120
     b = stage("karl", W, H, 0.45)
-    draw_text(b, "WORLD DOJO", W // 2, 26, 4, grad=FIRE, outline="#3a0808", center=True)
+    draw_text(b, "BONFIRE BASH", W // 2, 26, 4, grad=FIRE, outline="#3a0808", center=True)
     bar(b, 63, 200, (208, 48, 26, 255))
     draw_text(b, "8 FIGHTERS - 16 POWERS - 1 CHAMPION", W // 2, 70, 1, col="#ffe66a", center=True)
     place(b, "karl", 52, H - 6, anim="punch", frame=4)

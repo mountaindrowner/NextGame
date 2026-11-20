@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.0
+
+- **The game is now called Bonfire Bash** — new title screen logo, boot and power-on screens, announcer ("Bonfire… Bash!"), ending, page title and itch.io art. (Saved records carry over.)
+- **Hecky Xavier gets eye lasers: Laser Glare** (back + A+B) — his eyes flare red, then twin beams fire across the screen at head height for 2 hits. Crouch under it or block standing. Works in both costumes.
+- Training dummy: new **CROUCH** setting.
+- Back burner: beat 'em up idea parked in `IDEAS.md`.
+
 ## 1.4.0
 
 - **New fighter: Hecky Xavier "The Closer"** — a smug technician in a white suit from the Penthouse. **Hostile Takeover** is a rising uppercut that launches the opponent for a juggle; **Power Suit** powers him up for 7 seconds (+25% damage, faster walk). Super: **Golden Parachute**. Stage, song, voice, trials and ending.

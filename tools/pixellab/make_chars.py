@@ -1,4 +1,4 @@
-"""Create the World Dojo fighters on PixelLab (side view, from the original portraits)."""
+"""Create the Bonfire Bash fighters on PixelLab (side view, from the original portraits)."""
 import json, sys
 from pl import call, b64img
 

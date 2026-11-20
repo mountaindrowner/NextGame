@@ -55,7 +55,7 @@ def stripes(w, h, c1=(18, 15, 48), c2=(25, 21, 64), step=16):
 def header():  # 960x320 (480x160 x2)
     W, H = 480, 160
     im = stage("akira", W, H, 0.45)
-    draw_text(im, "WORLD DOJO", W // 2, 12, 5, grad=FIRE, outline="#3a0808", center=True)
+    draw_text(im, "BONFIRE BASH", W // 2, 12, 5, grad=FIRE, outline="#3a0808", center=True)
     bar(im, 51, 260, RED)
     draw_text(im, f"{len(ROSTER)} FIGHTERS - {len(ROSTER) * 2} POWERS - 1 CHAMPION", W // 2, 57, 1, col=GOLD, center=True)
     for i, (id_, *_rest) in enumerate(ROSTER):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build World Dojo into one self-contained HTML file.
+"""Build Bonfire Bash into one self-contained HTML file.
 
 Inlines every PNG in assets/ (and any JSON in assets/, as ASSET_DATA) into
 src/template.html together with src/game.js, writing dist/index.html.

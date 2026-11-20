@@ -51,6 +51,10 @@ const path = require('path');
       check('HECKY     Hostile Takeover launch', top > 50, `launch height ${top | 0}px`);
       const dmg = buff => { const r = setup('hecky', 'ivan', 100, 140); r.F.p1.buff = buff; d.startAtk(r.F.p1, 'jab'); r.step(30); return r.F.p2.mhp - r.F.p2.hp; };
       const plain = dmg(0), suit = dmg(300); check('HECKY     Power Suit +damage', suit > plain * 1.2, `jab ${plain.toFixed(1)} -> ${suit.toFixed(1)}`); }
+    { // Laser Glare: hits a standing opponent across the screen, a crouching one ducks it
+      const run = crouch => { const { F, step } = setup('hecky', 'ivan', 50, 210, crouch ? 'CROUCH' : 'STAND'); step(4); d.startSpecial(F.p1, F.p2, 4); step(50); return F.p2.mhp - F.p2.hp; };
+      const stand = run(false), duck = run(true);
+      check('HECKY     Laser Glare (eye beams)', stand > 5 && duck === 0, `damage to standing Ivan ${stand.toFixed(1)}, to crouching ${duck.toFixed(1)}`); }
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();

@@ -18,7 +18,7 @@ ONLY = [a for a in sys.argv[1:] if not os.path.isdir(a)]
 ANNOUNCER = ("am_fenrir", 0.85)
 # key -> spoken text (phonetic spelling where English TTS would mangle a name)
 ANN = {
-    "world_dojo": "World... Dojo!", "round_one": "Round one!", "round_two": "Round two!", "round_three": "Round three!",
+    "bonfire_bash": "Bonfire... Bash!", "round_one": "Round one!", "round_two": "Round two!", "round_three": "Round three!",
     "round_four": "Round four!", "round_five": "Round five!", "final_round": "Final round!", "fight": "Fight!",
     "ko": "K. O.!", "perfect": "Perfect!", "time": "Time!", "you_win": "You win!", "you_lose": "You lose.",
     "player_one_wins": "Player one wins!", "player_two_wins": "Player two wins!", "game_over": "Game over.",
@@ -34,7 +34,7 @@ CAST = {
     "diego": ("am_adam", 1.05, {"sp1": "May-ah loo-ah!", "sp2": "Mar-teh-lo!", "super": "Beh-reem-bow fury!", "win": "The roda never stops!", "ko": "Lost the rhythm..."}),
     "vizor": ("am_eric", 1.0, {"sp1": "Shutter flash!", "sp2": "Instant replay!", "super": "Full exposure!", "win": "Smile. You're on camera.", "ko": "Signal... lost."}),
     "zeke": ("am_michael", 1.0, {"sp1": "Strike ball!", "sp2": "Split shot!", "super": "Perfect game!", "win": "That's a strike, baby!", "ko": "Gutter ball..."}),
-    "hecky": ("am_echo", 1.0, {"sp1": "Hostile takeover!", "sp2": "Power suit.", "super": "Golden parachute!", "win": "Don't take it personally.", "ko": "Call my lawyer..."}),
+    "hecky": ("am_echo", 1.0, {"sp1": "Hostile takeover!", "sp2": "Power suit.", "sp3": "Laser glare!", "super": "Golden parachute!", "win": "Don't take it personally.", "ko": "Call my lawyer..."}),
     "padre": ("bm_george", 0.9, {"sp1": "Holy tome!", "sp2": "Benediction!", "super": "Final sermon!", "win": "Go in peace, my son.", "ko": "Forgive me..."}),
 }
 TRIM = "silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse"

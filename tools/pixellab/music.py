@@ -26,7 +26,7 @@ def get(url, path):
 if __name__ == "__main__":
     sid = sys.argv[1]; s = SONGS[sid]
     r = call("POST", "/music", {"style": s["style"], "instrumental": True, "bpm": s["bpm"], "length_s": 100,
-                               "exclude": "fade out, vocals, singing", "name": "World Dojo - " + s["name"]})
+                               "exclude": "fade out, vocals, singing", "name": "Bonfire Bash - " + s["name"]})
     print(json.dumps(r)[:600], flush=True)
     ids = [t.get("id") or t.get("song_id") for t in (r.get("songs") or r.get("takes") or [])] or [r.get("song_id") or r.get("id")]
     ids = [i for i in ids if i]
