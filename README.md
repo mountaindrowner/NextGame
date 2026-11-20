@@ -1,6 +1,6 @@
 # Bonfire Bash
 
-A handheld-styled pixel fighting game ("Dojo Boy") with nine fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor, Samson, Zeke, Hecky Xavier and Lawslie — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game ("Dojo Boy") with seven fighters — Papa-Léguas, Ivan, Vizor, Samson, Zeke, Hecky Xavier and Lawslie — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
@@ -27,9 +27,7 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Fighter | Special 1 | Special 2 |
 |---|---|---|
 | Papa-Léguas | **Légua Rush** — dashing 3-hit punch flurry | **Légua Step** — invincible blur that goes through the opponent to their back |
-| Akira | **Shuriken** — projectile | **Shadow Counter** — counter stance: get hit and he vanishes, reappears behind and kicks (grabs beat it) |
 | Ivan | **Bear Slam** — command grab | **Iron Charge** — shoulder charge with armor that absorbs one hit |
-| Diego | **Meia-Lua** — advancing 3-hit spin kick | **Martelo** — invincible rising kick, the anti-air |
 | Vizor | **Shutter Flash** — reticle lock-on at range, then a knockdown flash | **Instant Replay** — rewinds his position and up to 15 recent damage |
 | Samson | **Holy Tome** — overhead book smash (must be blocked standing) | **Benediction** — kneels and heals; any hit interrupts it |
 | Zeke | **Strike Ball** — bowling ball rolled along the floor (low, knocks down) | **Split Shot** — lobbed ball that drops from above (overhead) |
@@ -43,12 +41,10 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Fighter | Type | Health | Trait |
 |---|---|---|---|
 | Papa-Léguas | Rushdown | 92 | fastest dash, 4-hit chains |
-| Akira | Ninja | 94 | double jump |
 | Ivan | Grappler | 118 | the start of his kick absorbs a hit |
-| Diego | Mix-up | 96 | very low crouch: ducks under projectiles and high hits |
 | Vizor | Zoner | 98 | longest reach |
 | Samson | Powerhouse | 106 | counter-hit kicks knock down |
-| Zeke | High/low zoner | 104 | bowling balls smash through other projectiles |
+| Zeke | High/low zoner | 104 | Spare: a blocked Strike Ball reloads his special instantly |
 | Hecky Xavier | Technician | 98 | parry: tap forward just as a hit lands (no damage, +meter) |
 | Lawslie | Enforcer | 100 | no chip damage when blocking, and blocking builds meter |
 
@@ -61,9 +57,7 @@ Bread-and-butter combos (checked frame by frame by `tools/combos.js`):
 | Fighter | Combo | Hits |
 |---|---|---|
 | Papa-Léguas | jab, jab, kick > Légua Rush | 6 |
-| Akira | jab, kick > Shuriken | 3 |
 | Ivan | jump kick, jab, kick | 3 |
-| Diego | low jab, jab, kick > Meia-Lua | 6 |
 | Vizor | jab, kick > Shutter Flash | 3 |
 | Samson | jab, kick > Holy Tome | 3 |
 
@@ -116,7 +110,7 @@ The announcer and the fighters' lines are recorded clips in `assets/voice/` made
 
 The four fighters were redrawn with [PixelLab](https://www.pixellab.ai) as side-view characters (`create-character-pro`, using the original portraits as concept art and the original sprites as style reference), then animated move by move facing east; the game mirrors them for the other side.
 
-Moves per fighter: idle, walk, crouch, jump, punch, kick, crouch punch, low kick, air punch, air kick, block, hurt, knockdown, win and a special (Papa-Léguas's Légua Rush, Akira's Shuriken, Ivan's Bear Slam, Diego's Meia-Lua, Vizor's Shutter Flash, Samson's Holy Tome, plus Samson's Benediction prayer).
+Moves per fighter: idle, walk, crouch, jump, punch, kick, crouch punch, low kick, air punch, air kick, block, hurt, knockdown, win and a special (Papa-Léguas's Légua Rush, Ivan's Bear Slam, Vizor's Shutter Flash, Samson's Holy Tome, plus Samson's Benediction prayer).
 
 Vizor was made from the concept art in `tools/pixellab/concept/vizor.png` (with Papa-Léguas as the PixelLab style reference); his portraits and logo are cut from that art, and his stage was generated with PixelLab's image generator using Ivan's stage as the style image. Samson (internal id `padre`) was made the same way from `tools/pixellab/concept/padre.png` (his logo is drawn with `tools/make_logo.py`), with an Old Chapel stage.
 

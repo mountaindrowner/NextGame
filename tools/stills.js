@@ -20,10 +20,10 @@ const path = require('path'), fs = require('fs');
   await setup('padre', 'ivan', 'vs', 96, 150, 'padre'); await p.evaluate(() => { const F = window.__dbg.F; F.p2.cpu = false; F.p1.meter = 100; F.p2.meter = 40; F.time = 37; F.p2.hp = F.p2.trail = 64; F.p1.hp = F.p1.trail = 81; });
   await step(1, { a: 1, b: 1, h: { right: 1 } }); await step(18); await settle(); await shot('super');
   // throw, mid-air
-  await setup('ivan', 'akira', '2p', 110, 146, 'ivan'); await p.evaluate(() => { const F = window.__dbg.F; F.time = 52; F.p2.hp = F.p2.trail = 77; });
+  await setup('ivan', 'vizor', '2p', 110, 146, 'ivan'); await p.evaluate(() => { const F = window.__dbg.F; F.time = 52; F.p2.hp = F.p2.trail = 77; });
   await step(1, { b: 1, h: { left: 1 } }); await step(26); await settle(); await shot('throw');
   // 2 players
-  await setup('vizor', 'diego', '2p', 100, 150, 'diego'); await p.evaluate(() => { const F = window.__dbg.F; F.time = 48; F.wins = [1, 0]; F.p1.hp = F.p1.trail = 58; F.p2.hp = F.p2.trail = 71; F.p1.meter = 60; F.p2.meter = 100; });
+  await setup('vizor', 'lawslie', '2p', 100, 150, 'lawslie'); await p.evaluate(() => { const F = window.__dbg.F; F.time = 48; F.wins = [1, 0]; F.p1.hp = F.p1.trail = 58; F.p2.hp = F.p2.trail = 71; F.p1.meter = 60; F.p2.meter = 100; });
   await step(1, {}, { b: 1 }); await step(9); await settle(); await shot('two-players');
   // trials
   await setup('karl', 'ivan', 'trials', 100, 140, 'karl'); await step(1, { a: 1 }); await step(9); await step(1, { a: 1 }); await step(9); await step(1, { b: 1 }); await step(4); await settle(); await shot('trials');

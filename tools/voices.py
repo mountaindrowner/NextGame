@@ -23,15 +23,13 @@ ANN = {
     "ko": "K. O.!", "perfect": "Perfect!", "time": "Time!", "you_win": "You win!", "you_lose": "You lose.",
     "player_one_wins": "Player one wins!", "player_two_wins": "Player two wins!", "game_over": "Game over.",
     "congratulations": "Congratulations!", "versus": "versus", "announcer_on": "Announcer on.",
-    "name_karl": "Pah-pah Lay-gwahs!", "name_akira": "Akira!", "name_ivan": "Ivan!", "name_diego": "Diego!",
+    "name_karl": "Pah-pah Lay-gwahs!", "name_ivan": "Ivan!",
     "name_vizor": "Vizor!", "name_padre": "Samson!", "name_zeke": "Zeke!", "name_hecky": "Heck-ee Zay-vee-er!", "name_lawslie": "Laws-lee!",
 }
 # fighter -> (voice, speed, {line: text})
 CAST = {
     "karl": ("am_puck", 1.05, {"sp1": "Lay-gwah rush!", "sp2": "Lay-gwah step!", "super": "Meel Lay-gwahs!", "win": "Too slow!", "ko": "I ran out of road..."}),
-    "akira": ("am_liam", 1.0, {"sp1": "Shuriken!", "sp2": "Shadow counter!", "super": "Thousand shadows!", "win": "You never saw me coming.", "ko": "The shadow... fades."}),
     "ivan": ("am_onyx", 0.9, {"sp1": "Bear slam!", "sp2": "Iron charge!", "super": "Siberian storm!", "win": "Say hello to the floor.", "ko": "Next time... bigger bear."}),
-    "diego": ("am_adam", 1.05, {"sp1": "May-ah loo-ah!", "sp2": "Mar-teh-lo!", "super": "Beh-reem-bow fury!", "win": "The roda never stops!", "ko": "Lost the rhythm..."}),
     "vizor": ("am_eric", 1.0, {"sp1": "Shutter flash!", "sp2": "Instant replay!", "super": "Full exposure!", "win": "Smile. You're on camera.", "ko": "Signal... lost."}),
     "zeke": ("am_michael", 1.0, {"sp1": "Strike ball!", "sp2": "Split shot!", "super": "Perfect game!", "win": "That's a strike, baby!", "ko": "Gutter ball..."}),
     "hecky": ("am_echo", 1.0, {"sp1": "Hostile takeover!", "sp2": "Power suit.", "sp3": "Laser glare!", "super": "Golden parachute!", "win": "Don't take it personally.", "ko": "Call my lawyer..."}),

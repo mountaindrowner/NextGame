@@ -32,22 +32,22 @@ const path = require('path'), fs = require('fs');
   T('SUPER', cine && r.hp2 < 85, `cinematic ${cine}, ivan hp ${r.hp2 | 0}, meter after ${r.m1 | 0} (refills in training)`);
 
   // 2. meter builds from hits
-  await setup('akira', 'ivan', 'vs', 100, 140);
+  await setup('vizor', 'ivan', 'vs', 100, 140);
   await p.evaluate(() => { const F = window.__dbg.F; F.p2.cpu = false; });
   await step(1, { a: 1 }); r = await step(20);
   T('METER GAIN', r.m1 > 0, `meter after one hit: ${r.m1}`);
 
   // 3. THROW: forward + B next to the opponent
-  await setup('diego', 'akira', '2p', 100, 136);
+  await setup('zeke', 'vizor', '2p', 100, 136);
   await step(1, { b: 1, h: { right: 1 } }); r = await step(60);
-  T('THROW', r.hp2 < 100 && r.s1 !== 'throwing', `akira hp ${r.hp2 | 0}`);
+  T('THROW', r.hp2 < 100 && r.s1 !== 'throwing', `vizor hp ${r.hp2 | 0}`);
 
   // 4. THROW BREAK: player 2 presses A right after being grabbed
-  await setup('diego', 'akira', '2p', 100, 136);
+  await setup('zeke', 'vizor', '2p', 100, 136);
   await step(1, { b: 1, h: { right: 1 } }); await step(5); await step(1, {}, { a: 1 });
   let broke = false; for (let i = 0; i < 70; i++) { const q = await step(1); if (q.s2 === 'block') broke = true; } r = await step(1);
   // and without the break, the throw lands
-  await setup('diego', 'akira', '2p', 100, 136); await step(1, { b: 1, h: { right: 1 } }); const nob = await step(80);
+  await setup('zeke', 'vizor', '2p', 100, 136); await step(1, { b: 1, h: { right: 1 } }); const nob = await step(80);
   T('THROW BREAK', broke && r.hp2 === 100 && nob.hp2 < 100, `broken: ${broke}, hp ${r.hp2 | 0} (unbroken throw: ${nob.hp2 | 0})`);
 
   // 5. 2 PLAYERS: player 2's inputs move and attack

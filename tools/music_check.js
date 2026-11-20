@@ -9,8 +9,8 @@ const path = require('path');
   await p.keyboard.press('Enter'); await p.waitForTimeout(300);
   const r = await p.evaluate(async () => {
     const d = window.__dbg, out = [];
-    for (const id of ['karl', 'akira', 'ivan', 'diego', 'vizor', 'padre', 'zeke', 'hecky', 'lawslie']) {
-      d.RUN = { mode: 'vs', p1: 'akira', ladder: [id], idx: 0, cont: 0 }; d.go(d.Fight, { p1: 'akira', p2: id, stage: id });
+    for (const id of ['karl', 'ivan', 'vizor', 'padre', 'zeke', 'hecky', 'lawslie']) {
+      d.RUN = { mode: 'vs', p1: 'ivan', ladder: [id], idx: 0, cont: 0 }; d.go(d.Fight, { p1: 'ivan', p2: id, stage: id });
       for (let i = 0; i < 40 && !d.track.src && d.track.id; i++) await new Promise(r => setTimeout(r, 100));
       const t = d.track;
       out.push(t.src ? `${id.padEnd(6)} song  ${t.buf[id].duration.toFixed(1)}s, loops ${t.src.loopStart.toFixed(2)}-${t.src.loopEnd.toFixed(2)}s` : `${id.padEnd(6)} chiptune (${d.mus.name})`);

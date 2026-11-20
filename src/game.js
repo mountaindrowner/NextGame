@@ -211,19 +211,10 @@ const CH={
     speed:1.25,power:1.0,def:1.0,jump:1.0,stats:[5,3,3],special:'rush',spName:'LÉGUA RUSH',special2:'step',sp2Name:'LÉGUA STEP',tr:0,
     col:{skin:'#e0965c',glove:'#2c2a44',leg:'#e9e7f3',foot:'#f6f6f6',aura:'#ffd23a'},sh:.72,hip:.5,
     quote:"TOO SLOW! THEY DON'T CALL ME PAPA-LÉGUAS FOR NOTHING!",lose:'I RAN OUT OF ROAD...',stageName:'CROSSROADS DOJO'},
-  akira:{id:'akira',name:'AKIRA',nick:'THE SHADOW',style:'NINJUTSU',country:'JAPAN',flag:'jp',ht:"5'8\" (173 CM)",wt:'145 LB (66 KG)',
-    speed:1.12,power:0.92,def:0.92,jump:1.15,stats:[4,2,5],special:'shuriken',spName:'SHURIKEN',special2:'counter',sp2Name:'SHADOW COUNTER',tr:-3,
-    col:{skin:'#e8a878',glove:'#3b3356',leg:'#3a3262',foot:'#25212f',aura:'#b48cff'},sh:.78,hip:.55,
-    quote:'YOU NEVER SAW ME COMING. NOBODY EVER DOES.',lose:'THE SHADOW... FADES.',stageName:'MOONLIT TEMPLE'},
   ivan:{id:'ivan',name:'IVAN',nick:'THE BEAR',style:'SAMBO',country:'RUSSIA',flag:'ru',ht:"6'2\" (188 CM)",wt:'215 LB (98 KG)',
     speed:0.82,power:1.3,def:1.22,jump:0.88,stats:[2,5,4],special:'slam',spName:'BEAR SLAM',special2:'charge',sp2Name:'IRON CHARGE',tr:-5,
     col:{skin:'#e3a272',glove:'#2e2f4a',leg:'#2b3168',foot:'#2c3a8a',aura:'#ff4a3a'},sh:.75,hip:.5,
     quote:'IN MY GYM, THE FLOOR IS MY FRIEND. SAY HELLO TO IT.',lose:'NEXT TIME... I BRING BIGGER BEAR.',stageName:'IRON GYM'},
-  diego:{id:'diego',name:'DIEGO',nick:'THE RHYTHM',style:'CAPOEIRA',country:'BRAZIL',flag:'br',ht:"5'10\" (178 CM)",wt:'160 LB (73 KG)',
-    speed:1.1,power:1.02,def:0.96,jump:1.1,stats:[4,3,4],special:'spin',spName:'MEIA-LUA',special2:'rising',sp2Name:'MARTELO',tr:2,
-    col:{skin:'#b8743f',glove:'#f0eee8',leg:'#efedf7',foot:'#b8743f',aura:'#3fd06a'},sh:.8,hip:.55,
-    ak:{fall:{air:6,hurtAir:true}},
-    quote:'THE RODA NEVER STOPS, AND NEITHER DO I!',lose:'LOST THE RHYTHM... FOR NOW.',stageName:'RIO PLAZA'},
   vizor:{id:'vizor',name:'VIZOR',nick:'THE WATCHER',style:'TECH BRAWLER',country:'UNKNOWN',countryLabel:'ORIGIN',flag:'unk',ht:"5'11\" (180 CM)",wt:'190 LB (86 KG)',
     speed:1.04,power:1.06,def:1.0,jump:1.0,stats:[3,4,4],special:'flash',spName:'SHUTTER FLASH',special2:'replay',sp2Name:'INSTANT REPLAY',tr:1,
     col:{skin:'#c98a5e',glove:'#25232f',leg:'#3d5a96',foot:'#f0f0f0',aura:'#3ae8ff'},sh:.72,hip:.5,
@@ -245,31 +236,29 @@ const CH={
     col:{skin:'#d89a6a',glove:'#1c1a24',leg:'#283068',foot:'#1a1820',aura:'#5ab4ff'},sh:.72,hip:.5,
     quote:'YOU HAVE THE RIGHT TO REMAIN SILENT. I SUGGEST YOU USE IT.',lose:'OFFICER DOWN... CALL IT IN.',stageName:'PRECINCT 9'},
 };
-const ORDER=['karl','akira','ivan','diego','vizor','padre','zeke','hecky','lawslie'];
+const ORDER=['karl','ivan','vizor','padre','zeke','hecky','lawslie'];
 // ---- archetypes: every fighter plays differently (health, reach, movement, chains) and has one unique trait ----
 const ARCH={
   karl:{type:'RUSHDOWN',trait:'FAST DASH, 4-HIT CHAINS',hp:92,chain:4,dash:1.3,reach:1},
-  akira:{type:'NINJA',trait:'DOUBLE JUMP',hp:94,dj:true,reach:1},
   ivan:{type:'GRAPPLER',trait:'ARMORED KICK, MOST HP',hp:118,dash:.8,armor:true,reach:1},
-  diego:{type:'MIX-UP',trait:'DUCKS UNDER HIGH HITS',hp:96,crouchH:.48,reach:1},
   vizor:{type:'ZONER',trait:'LONGEST REACH',hp:98,reach:1.25},
   padre:{type:'POWERHOUSE',trait:'COUNTERS KNOCK DOWN',hp:106,heavy:true,reach:1.05},
-  zeke:{type:'HIGH/LOW ZONER',trait:'BALLS BEAT PROJECTILES',hp:104,heavyBalls:true,reach:1},
+  zeke:{type:'HIGH/LOW ZONER',trait:'BLOCKED BALL = RELOAD',hp:104,spare:true,reach:1},
   hecky:{type:'TECHNICIAN',trait:'PARRY: TAP FWD ON HIT',hp:98,parry:true,reach:1.05},
   lawslie:{type:'ENFORCER',trait:'NO CHIP, BLOCK = METER',hp:100,enforcer:true,reach:1}};
 const arch=c=>ARCH[c.id]||{};
-const SUPER_NAME={"karl": "MIL LÉGUAS", "akira": "THOUSAND SHADOWS", "ivan": "SIBERIAN STORM", "diego": "BERIMBAU FURY", "vizor": "FULL EXPOSURE", "padre": "FINAL SERMON", "zeke": "PERFECT GAME", "hecky": "GOLDEN PARACHUTE", "lawslie": "FULL ARREST"};
-const ENDING={"lawslie": "OFFICER LAWSLIE CLOSED THE BONFIRE BASH CASE FILE: EVERY FIGHTER BOOKED, EVERY TROPHY ACCOUNTED FOR. THE CHIEF MADE HER DETECTIVE BY MORNING.", "hecky": "HECKY XAVIER BOUGHT THE BONFIRE BASH TOURNAMENT THE NEXT MORNING. NEXT YEAR'S TROPHY IS GOLD-PLATED, AND SO IS THE PENTHOUSE.", "zeke": "ZEKE BOWLED A PERFECT 300 AT THE CHAMPIONS PARTY, THEN BOUGHT EVERYONE NACHOS. THE STRIKE LANES ARE NOW THE MOST FAMOUS ALLEY ON EARTH.", "karl": "PAPA-LEGUAS RAN STRAIGHT FROM THE FINAL FIGHT TO HIS DOJO AND HUNG UP A SIGN: EVERYONE WELCOME. JUST KEEP UP.", "akira": "THE SHADOW VANISHED BEFORE THE TROPHY CEREMONY. ONLY A SINGLE SHURIKEN WAS LEFT ON THE PODIUM.", "ivan": "IVAN CARRIED THE TROPHY HOME ON ONE SHOULDER. THE IRON GYM HAS A NEW RULE: NOBODY LEAVES WITHOUT A BEAR HUG.", "diego": 'THE RODA IN RIO PLAZA PLAYED UNTIL SUNRISE. THE WHOLE WORLD IS MOVING TO DIEGO"S RHYTHM NOW.', "vizor": "VIZOR REPLAYED EVERY FIGHT FRAME BY FRAME. THE FOOTAGE BECAME THE MOST WATCHED VIDEO ON EARTH.", "padre": "SAMSON RANG THE OLD CHAPEL BELL FOR THE FIRST TIME IN YEARS. EVEN HIS RIVALS CAME TO LISTEN."};
+const SUPER_NAME={"karl": "MIL LÉGUAS", "ivan": "SIBERIAN STORM", "vizor": "FULL EXPOSURE", "padre": "FINAL SERMON", "zeke": "PERFECT GAME", "hecky": "GOLDEN PARACHUTE", "lawslie": "FULL ARREST"};
+const ENDING={"lawslie": "OFFICER LAWSLIE CLOSED THE BONFIRE BASH CASE FILE: EVERY FIGHTER BOOKED, EVERY TROPHY ACCOUNTED FOR. THE CHIEF MADE HER DETECTIVE BY MORNING.", "hecky": "HECKY XAVIER BOUGHT THE BONFIRE BASH TOURNAMENT THE NEXT MORNING. NEXT YEAR'S TROPHY IS GOLD-PLATED, AND SO IS THE PENTHOUSE.", "zeke": "ZEKE BOWLED A PERFECT 300 AT THE CHAMPIONS PARTY, THEN BOUGHT EVERYONE NACHOS. THE STRIKE LANES ARE NOW THE MOST FAMOUS ALLEY ON EARTH.", "karl": "PAPA-LEGUAS RAN STRAIGHT FROM THE FINAL FIGHT TO HIS DOJO AND HUNG UP A SIGN: EVERYONE WELCOME. JUST KEEP UP.", "ivan": "IVAN CARRIED THE TROPHY HOME ON ONE SHOULDER. THE IRON GYM HAS A NEW RULE: NOBODY LEAVES WITHOUT A BEAR HUG.", "vizor": "VIZOR REPLAYED EVERY FIGHT FRAME BY FRAME. THE FOOTAGE BECAME THE MOST WATCHED VIDEO ON EARTH.", "padre": "SAMSON RANG THE OLD CHAPEL BELL FOR THE FIRST TIME IN YEARS. EVEN HIS RIVALS CAME TO LISTEN."};
 // combo trials: each step is the move that must hit, in order, inside one combo
-const TRIALS={karl:[['jab','kick'],['jab','jab','kick','sp1'],['jab','kick','super']],akira:[['jab','kick'],['jab','kick','sp1'],['jkick','jab','kick']],
-  ivan:[['jab','kick'],['jkick','jab','kick'],['cjab','sweep']],diego:[['cjab','jab','kick'],['cjab','jab','kick','sp1'],['jab','kick','super']],
+const TRIALS={karl:[['jab','kick'],['jab','jab','kick','sp1'],['jab','kick','super']],
+  ivan:[['jab','kick'],['jkick','jab','kick'],['cjab','sweep']],
   vizor:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],padre:[['jab','kick'],['jab','kick','sp1'],['cjab','cjab','sweep']],
   zeke:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],
   hecky:[['jab','kick'],['cjab','jab','kick','sp1'],['jab','kick','super']],
   lawslie:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']]};
 const TNAME={jab:'JAB',kick:'KICK',cjab:'LOW JAB',sweep:'SWEEP',jpunch:'JUMP PUNCH',jkick:'JUMP KICK',sp1:'SPECIAL',sp2:'SPECIAL 2',super:'SUPER',throw:'THROW'};
 // bread-and-butter combos shown in the pause menu
-const BNB={karl:'JAB, JAB, KICK > A+B',akira:'JAB, KICK > A+B',ivan:'JUMP KICK, JAB, KICK',diego:'LOW JAB, JAB, KICK > A+B',vizor:'JAB, KICK > A+B',padre:'JAB, KICK > A+B (OVERHEAD)',zeke:'JAB, KICK > A+B',hecky:'LOW JAB, JAB, KICK > A+B',lawslie:'JAB, KICK > A+B (TASER)'};
+const BNB={karl:'JAB, JAB, KICK > A+B',ivan:'JUMP KICK, JAB, KICK',vizor:'JAB, KICK > A+B',padre:'JAB, KICK > A+B (OVERHEAD)',zeke:'JAB, KICK > A+B',hecky:'LOW JAB, JAB, KICK > A+B',lawslie:'JAB, KICK > A+B (TASER)'};
 // cooldown (frames) per special; second specials are stronger tools with longer cooldowns
 const SPCD={rush:75,shuriken:75,slam:75,spin:75,flash:75,tome:75,strike:75,split:90,takeover:70,powersuit:720,laser:150,taser:80,cuff:240,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
 const IMG={};
@@ -720,6 +709,7 @@ function separate(a,b){if(a.state==='grabbed'||b.state==='grabbed'||a.state==='s
 function updateProj(){for(const p of F.proj){p.x+=p.vx;p.rot+=p.kind?p.vx*0.14:0.5;p.life--;const o=p.owner===F.p1?F.p2:F.p1;
     if(p.g){p.y+=p.vy;p.vy-=p.g;if(p.y<=4&&p.vy<0){p.life=0;dust(p.x,8);SFX.land();F.shake=Math.max(F.shake,2)}}
     const R2=p.kind?7:6,r=tryHit(p.owner,o,{x1:p.x-R2,x2:p.x+R2,y1:p.y-R2,y2:p.y+R2},{dmg:p.dmg||9,stun:p.stun||18,bs:12,kb:p.kb||2.4,lv:p.lv||'mid',chip:2,knock:!!p.knock,heavy:!!p.knock,tag:p.tag||'sp1',tid:p.id||(p.id=++atkId)});
+    if(r==='block'&&p.kind==='ball'&&arch(p.owner.c).spare){p.owner.spCD=0;addText('SPARE!',p.owner.x,GY-p.owner.H-14,'#d04aff');SFX.ok()}
     if(r&&p.kind==='prong'){p.life=0;if(r==='hit'){o.zap=46;SFX.zap()}}
     else if(r){p.life=0;if(r==='hit'&&p.kind){SFX.thud();for(let i=0;i<6;i++)F.parts.push({x:p.x,y:GY-p.y,vx:rnd(-2,2),vy:rnd(-3,-1),l:rnd(12,20)|0,c:i%2?'#ffffff':'#e02a2a',g:.15})}}}
   if(F.proj.length===2&&Math.abs(F.proj[0].x-F.proj[1].x)<10&&Math.abs(F.proj[0].y-F.proj[1].y)<14){sparks(F.proj[0].x,GY-F.proj[0].y,'#fff',10);SFX.block();

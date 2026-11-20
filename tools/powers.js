@@ -21,16 +21,10 @@ const path = require('path');
     { // Légua Step goes through the opponent untouched
       const { F, step } = setup('karl', 'ivan'); step(1, { a: 1, b: 1, h: { down: 1 } }); step(6); d.startAtk(F.p2, 'jab'); step(30);
       check('PAPA-LEGUAS  Légua Step', F.p1.x > F.p2.x && F.p1.hp === 100, `x ${F.p1.x | 0} vs ${F.p2.x | 0}, hp ${F.p1.hp | 0}`); }
-    { // Shadow Counter: struck in the stance -> appears behind and knocks down
-      const { F, step } = setup('akira', 'ivan', 100, 150); step(1, { a: 1, b: 1, h: { down: 1 } }); step(2); F.p2.x = 135; d.startAtk(F.p2, 'kick'); step(50);
-      check('AKIRA        Shadow Counter', F.p1.hp === 100 && F.p2.hp < 100, `akira hp ${F.p1.hp | 0}, ivan hp ${F.p2.hp | 0}, akira x ${F.p1.x | 0} ivan x ${F.p2.x | 0}`); }
     { // Iron Charge absorbs a hit and keeps going
       const { F, step } = setup('ivan', 'karl', 80, 170); step(1, { a: 1, b: 1, h: { down: 1 } }); step(12); F.p2.x = F.p1.x + 38; d.startAtk(F.p2, 'jab'); step(5);
       const armored = F.p1.state === 'special'; step(30);
       check('IVAN         Iron Charge', armored && F.p2.hp < 100, `still charging after hit: ${armored}, ivan hp ${F.p1.hp | 0}, karl hp ${F.p2.hp | 0}`); }
-    { // Martelo anti-airs a jump-in
-      const { F, step } = setup('diego', 'karl', 100, 175); F.p2.state = 'jump'; F.p2.y = 30; F.p2.vy = -1; F.p2.vx = -1.8; F.p2.x = 135; step(1, { a: 1, b: 1, h: { down: 1 } }); step(40);
-      check('DIEGO        Martelo', F.p2.hp < 100 && F.p1.hp === 100, `karl hp ${F.p2.hp | 0}, diego hp ${F.p1.hp | 0}`); }
     { // Instant Replay: rewinds position and recent damage
       const { F, step } = setup('vizor', 'ivan', 100, 140); step(60); const x0 = F.p1.x;
       for (let i = 0; i < 3; i++) { d.applyHit(F.p2, F.p1, { dmg: 6, stun: 6, kb: 2, lv: 'mid' }, 120, 100); step(10); }

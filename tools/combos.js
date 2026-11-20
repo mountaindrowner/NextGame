@@ -5,9 +5,7 @@ const { chromium } = require('playwright');
 const path = require('path');
 const COMBOS = {
   karl:  [['a'], ['a'], ['b'], ['a', 'b']],
-  akira: [['a'], ['b'], ['a', 'b']],
   ivan:  [['jump'], ['b', { wait: 'air' }], ['a', { wait: 'land' }], ['b']],
-  diego: [['a', { down: 1 }], ['a'], ['b'], ['a', 'b']],
   vizor: [['a'], ['b'], ['a', 'b']],
   padre: [['a'], ['b'], ['a', 'b']],
   zeke: [['a'], ['b'], ['a', 'b']],

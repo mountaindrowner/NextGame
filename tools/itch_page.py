@@ -15,9 +15,7 @@ GOLD = "#ffe66a"
 
 ROSTER = [  # id, name, style, special 1, special 2
     ("karl", "PAPA-LÉGUAS", "KARATE", "LÉGUA RUSH", "LÉGUA STEP"),
-    ("akira", "AKIRA", "NINJUTSU", "SHURIKEN", "SHADOW COUNTER"),
     ("ivan", "IVAN", "SAMBO", "BEAR SLAM", "IRON CHARGE"),
-    ("diego", "DIEGO", "CAPOEIRA", "MEIA-LUA", "MARTELO"),
     ("vizor", "VIZOR", "TECH BRAWLER", "SHUTTER FLASH", "INSTANT REPLAY"),
     ("padre", "SAMSON", "SACRED BOXING", "HOLY TOME", "BENEDICTION"),
     ("zeke", "ZEKE", "BOWLING BRAWLER", "STRIKE BALL", "SPLIT SHOT"),
@@ -55,7 +53,7 @@ def stripes(w, h, c1=(18, 15, 48), c2=(25, 21, 64), step=16):
 
 def header():  # 960x320 (480x160 x2)
     W, H = 480, 160
-    im = stage("akira", W, H, 0.45)
+    im = stage("zeke", W, H, 0.45)
     draw_text(im, "BONFIRE BASH", W // 2, 12, 5, grad=FIRE, outline="#3a0808", center=True)
     bar(im, 51, 260, RED)
     draw_text(im, f"{len(ROSTER)} FIGHTERS - {len(ROSTER) * 2} POWERS - 1 CHAMPION", W // 2, 57, 1, col=GOLD, center=True)
@@ -161,7 +159,7 @@ def gif_frames(frames, colors=256):
 
 def lineup_gif():  # animated idle line-up, 960x320
     W, H = 480, 160
-    bg = stage("diego", W, H, 0.5)
+    bg = stage("lawslie", W, H, 0.5)
     draw_text(bg, "CHOOSE YOUR FIGHTER", W // 2, 10, 2, grad=FIRE, outline="#3a0808", center=True)
     metas = {id_: json.loads((A / "fighters" / id_ / "meta.json").read_text())["anims"]["idle"]["n"] for id_, *_ in ROSTER}
     frames = []

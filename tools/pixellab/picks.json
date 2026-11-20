@@ -13,23 +13,6 @@
    "pk": 5
   }
  },
- "akira": {
-  "airpunch": {
-   "take": "airpunch__a",
-   "pk": 4
-  },
-  "cpunch": {
-   "take": "cpunch__a",
-   "pk": 4
-  },
-  "hurt": {
-   "take": "hurt__b"
-  },
-  "lowkick": {
-   "take": "lowkick__a",
-   "pk": 5
-  }
- },
  "ivan": {
   "airkick": {
    "take": "airkick__a",
@@ -52,14 +35,6 @@
   "lowkick": {
    "take": "lowkick__d",
    "pk": 5
-  }
- },
- "diego": {
-  "crouch": {
-   "take": "crouch__b"
-  },
-  "hurt": {
-   "take": "hurt__a"
   }
  },
  "vizor": {

@@ -4,7 +4,7 @@ const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs');
 const CLIPS = [
   { p1: 'karl', p2: 'ivan', stage: 'karl', seq: [['a'], ['a'], ['b'], ['a', 'b']] },
-  { p1: 'vizor', p2: 'diego', stage: 'vizor', seq: [['a'], ['b'], ['a', 'b']] },
+  { p1: 'vizor', p2: 'zeke', stage: 'vizor', seq: [['a'], ['b'], ['a', 'b']] },
 ];
 (async () => {
   const out = process.argv[2]; fs.mkdirSync(out, { recursive: true });

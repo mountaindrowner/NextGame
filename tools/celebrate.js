@@ -15,7 +15,7 @@ const path = require('path');
   for (let i = 0; i < 8; i++) { await p.waitForTimeout(450); await g(); }
   await p.evaluate(() => { const d = window.__dbg; d.go(d.Result, 0, { p1: 'vizor', p2: 'ivan', stage: 'vizor' }); });
   await p.waitForTimeout(1500); await g(); await p.waitForTimeout(1200); await g();
-  await p.evaluate(() => { const d = window.__dbg; d.RUN = { mode: 'arcade', p1: 'diego', ladder: [], idx: 0, cont: 0 }; d.go(d.Ending); });
+  await p.evaluate(() => { const d = window.__dbg; d.RUN = { mode: 'arcade', p1: 'lawslie', ladder: [], idx: 0, cont: 0 }; d.go(d.Ending); });
   await p.waitForTimeout(2500); await g(); await p.waitForTimeout(1500); await g();
   await p.setContent('<canvas id=c></canvas>');
   await p.evaluate(async (shots) => { const c = document.getElementById('c'); c.width = 256 * 4; c.height = 192 * Math.ceil(shots.length / 4); const x = c.getContext('2d');

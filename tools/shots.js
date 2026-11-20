@@ -21,7 +21,7 @@ const path = require('path');
   await run(() => { const d = window.__dbg; d.go(d.Select, 'arcade'); d.Select.cur = 5; });
   await p.waitForTimeout(700); await grab('shot-2-select.png');
   // 3 versus screen
-  await run(() => { const d = window.__dbg; d.RUN = { mode: 'arcade', p1: 'diego', ladder: ['akira'], idx: 0, cont: 0 }; d.go(d.VS); });
+  await run(() => { const d = window.__dbg; d.RUN = { mode: 'arcade', p1: 'lawslie', ladder: ['hecky'], idx: 0, cont: 0 }; d.go(d.VS); });
   await p.waitForTimeout(1600); await grab('shot-3-versus.png');
   // fight poses: freeze the scene and set both fighters by hand
   const pose = (cfg) => run((c) => new Promise(res => {
@@ -39,11 +39,11 @@ const path = require('path');
   await grab('shot-4-fight.png');
   await pose({ a: 'ivan', b: 'karl', x1: 110, x2: 150, hp1: 58, hp2: 33, g: 'hurt', gst: 20, gstun: 60, sp: 26, time: 21, stage: 'ivan' });
   await grab('shot-5-bear-slam.png');
-  await pose({ a: 'diego', b: 'akira', x1: 100, x2: 150, hp1: 64, hp2: 52, sp: 16, time: 35, stage: 'diego' });
-  await grab('shot-6-meia-lua.png');
-  await pose({ a: 'vizor', b: 'diego', x1: 96, x2: 176, hp1: 77, hp2: 61, g: 'hurt', gst: 20, gstun: 60, sp: 9, time: 52, stage: 'vizor' });
+  await pose({ a: 'lawslie', b: 'zeke', x1: 90, x2: 165, hp1: 64, hp2: 52, sp: 22, time: 35, stage: 'lawslie' });
+  await grab('shot-6-taser.png');
+  await pose({ a: 'vizor', b: 'zeke', x1: 96, x2: 176, hp1: 77, hp2: 61, g: 'hurt', gst: 20, gstun: 60, sp: 9, time: 52, stage: 'vizor' });
   await grab('shot-7-shutter-flash.png');
-  await pose({ a: 'padre', b: 'akira', x1: 104, x2: 150, hp1: 69, hp2: 48, g: 'crouch', gst: 4, sp: 27, time: 33, stage: 'padre' });
+  await pose({ a: 'padre', b: 'hecky', x1: 104, x2: 150, hp1: 69, hp2: 48, g: 'crouch', gst: 4, sp: 27, time: 33, stage: 'padre' });
   await grab('shot-8-holy-tome.png');
   console.log('errors:', errs.length ? errs : 'none');
   await br.close();
