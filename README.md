@@ -84,6 +84,7 @@ The announcer and the fighters' lines are recorded clips in `assets/voice/` made
 - `tools/smoke.js` — headless Playwright smoke test (boots the game, runs fights, screenshots)
 - `tools/poses.js`, `tools/play.js`, `tools/special.js` — render every pose, mash through a fight, or film a special move as a contact sheet
 - `tools/itch_art.py`, `tools/shots.js` — itch.io cover, banner and screenshots (written to `release/itch/`)
+- `tools/itch_keyart.py`, `tools/stills.js`, `tools/super_gif.js` — key art, poster, cover, badges, feature card and the supers GIF (arena backdrops in `tools/pixellab/concept/` from PixelLab)
 - `tools/combos.js` — frame-exact combo checks; `tools/powers.js` — every special power; `tools/features.js` — super, throws, 2 players, trials, records; `tools/celebrate.js` — film the victory celebration
 - `tools/make_logo.py` — draw a name logo in the game's style
 - `tools/anim_sheet.py` — labeled sheet of every animation a fighter uses (to check each move looks like what it does)

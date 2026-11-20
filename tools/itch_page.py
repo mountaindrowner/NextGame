@@ -170,6 +170,15 @@ def lineup_gif():  # animated idle line-up, 960x320
     frames[0].save(OUT / "lineup.gif", save_all=True, append_images=frames[1:], duration=110, loop=0, optimize=True)
 
 
+def frames_gif(src, name, scale=2, colors=96, ms=33):
+    import glob
+    files = sorted(glob.glob(str(src) + "/*.png"))
+    frames = [Image.open(f).convert("RGB") for f in files]
+    frames = [f.resize((f.width * scale, f.height * scale), Image.NEAREST) for f in frames]
+    frames = gif_frames(frames, colors)
+    frames[0].save(OUT / name, save_all=True, append_images=frames[1:], duration=ms, loop=0, optimize=True)
+
+
 def combo_gif(src):
     """Combo GIF from frames filmed by tools/combo_gif.js (256x192 each, shown at 2x)."""
     import glob
@@ -181,6 +190,8 @@ def combo_gif(src):
 
 if __name__ == "__main__":
     import sys
+    if len(sys.argv) > 3 and sys.argv[1] == "--gif":
+        frames_gif(sys.argv[2], sys.argv[3], ms=50); sys.exit()
     if len(sys.argv) > 2 and sys.argv[1] == "--combo":
         combo_gif(sys.argv[2]); sys.exit()
     header(); background(); roster(); controls(); lineup_gif()
