@@ -5,7 +5,6 @@ const { chromium } = require('playwright');
 const path = require('path');
 const COMBOS = {
   karl:  [['a'], ['a'], ['b'], ['a', 'b']],
-  ivan:  [['jump'], ['b', { wait: 'air' }], ['a', { wait: 'land' }], ['b']],
   vizor: [['a'], ['b'], ['a', 'b']],
   padre: [['a'], ['b'], ['a', 'b']],
   zeke: [['a'], ['b'], ['a', 'b']],
@@ -25,8 +24,8 @@ const COMBOS = {
   for (const [id, seq] of Object.entries(COMBOS)) {
     const r = await p.evaluate(([id, seq]) => {
       const d = window.__dbg, { held, pressed } = d.inp;
-      d.RUN = { mode: 'training', p1: id, ladder: ['ivan'], idx: 0, cont: 0 };
-      d.go(d.Fight, { p1: id, p2: 'ivan', stage: 'ivan' });
+      d.RUN = { mode: 'training', p1: id, ladder: ['padre'], idx: 0, cont: 0 };
+      d.go(d.Fight, { p1: id, p2: 'padre', stage: 'padre' });
       const F = d.F, sc = d.scene, orig = d.Fight.__u || (d.Fight.__u = d.Fight.update), upd = orig.bind(sc); sc.update = () => {};
       F.phase = 'play'; F.tBest = 0; F.p1.x = 100; F.p2.x = seq[0][0] === 'jump' ? 168 : 146; F.p2.hp = F.p2.mhp;
       const K = ['up', 'down', 'left', 'right', 'a', 'b', 'start', 'select', 'tap'];

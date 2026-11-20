@@ -21,8 +21,6 @@ const path = require('path');
     };
     const C = (n, ok, info) => out.push(`${ok ? 'OK  ' : 'FAIL'} ${n.padEnd(34)} ${info}`);
     let r = run('karl', 90, 160); C('PAPA-LEGUAS Mil Leguas (blinks)', r.dmg >= 18, `dmg ${r.dmg}`);
-    r = run('ivan', 110, 150); C('IVAN Siberian Storm (3 slams)', r.dmg >= 20 && r.maxY > 80, `dmg ${r.dmg}, top slam ${r.maxY | 0}px`);
-    r = run('ivan', 110, 150, 'BLOCK'); C('IVAN  ...unblockable', r.dmg >= 20, `dmg vs blocking ${r.dmg}`);
     r = run('vizor', 40, 220); C('VIZOR Full Exposure (full screen)', r.dmg >= 18, `dmg from 180px away ${r.dmg}`);
     r = run('padre', 60, 200); C('SAMSON Final Sermon (pillars+heal)', r.dmg >= 18 && r.pillars === 4 && r.healed, `dmg ${r.dmg}, pillars ${r.pillars}, healed ${r.healed}`);
     r = run('zeke', 60, 200); C('ZEKE Perfect Game (giant ball)', r.dmg >= 18 && r.giant, `dmg ${r.dmg}, giant ball ${r.giant}`);

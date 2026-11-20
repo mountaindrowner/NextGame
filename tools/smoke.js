@@ -11,7 +11,7 @@ const path = require('path');
   await p.goto('file://' + path.resolve(__dirname, '../dist/index.html'));
   await p.waitForFunction(() => window.__dbg && window.__dbg.CH.karl.spr, null, { timeout: 15000 });
   const shots = [];
-  for (const [p1, p2] of [['karl', 'ivan'], ['lawslie', 'hecky']]) {
+  for (const [p1, p2] of [['karl', 'padre'], ['lawslie', 'hecky']]) {
     await p.evaluate(([a, c]) => { const d = window.__dbg; d.RUN = { mode: 'vs', p1: a, ladder: [c], idx: 0, cont: 0 }; d.go(d.Fight, { p1: a, p2: c, stage: c }); }, [p1, p2]);
     await p.waitForTimeout(2200);
     const seq = ['KeyD', 'KeyD', 'KeyX', 'KeyZ', 'KeyS', 'KeyZ', 'KeyW', 'KeyX'];

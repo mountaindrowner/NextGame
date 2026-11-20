@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.24.0
+
+- **Keksan replaces Ivan.** Ivan "The Bear" has left the roster, and Keksan takes his slot, second on the select grid. The roster is back to nine and the grid back to 3×3.
+  - Ivan is gone from arcade ladders, story bosses, versus, training, trials and online.
+  - His art, song and voice lines moved to `assets_retired/ivan/`, which isn't bundled, so the game download is 2 MB smaller. His kit code stays in the game, so he can come back with a two-step restore.
+- **Online safety:** if an opponent on an older version picks Ivan, the pick is ignored instead of crashing the match.
+- **Odds and ends:**
+  - The story's bruiser fallback sprite is now Samson.
+  - The Docks level plays Zeke's song instead of Ivan's.
+  - The trials dummy is Papa-Léguas (Vizor when you play him).
+- **Tests:** Samson is now the stand-in opponent. The Ivan-only checks are gone, and the online test expects Keksan as the second pick.
+
 ## 1.23.0
 
 - **New fighter: Keksan "The Tiger"**, a Muay Thai fighter from the Tiger Gym, made from the owner's character art. He's the first **STRIKER**: shin kicks, so his kicks, sweeps and jumping knee hit 15% harder.

@@ -15,7 +15,6 @@ GOLD = "#ffe66a"
 
 ROSTER = [  # id, name, style, special 1, special 2
     ("karl", "PAPA-LÉGUAS", "KARATE", "LÉGUA RUSH", "LÉGUA STEP"),
-    ("ivan", "IVAN", "SAMBO", "BEAR SLAM", "IRON CHARGE"),
     ("vizor", "VIZOR", "TECH BRAWLER", "SHUTTER FLASH", "INSTANT REPLAY"),
     ("padre", "SAMSON", "SACRED BOXING", "HOLY TOME", "BENEDICTION"),
     ("zeke", "ZEKE", "BOWLING BRAWLER", "STRIKE BALL", "SPLIT SHOT"),

@@ -19,32 +19,28 @@ const path = require('path');
     };
     const check = (name, ok, info) => out.push(`${ok ? 'OK  ' : 'FAIL'} ${name.padEnd(30)} ${info}`);
     { // Légua Step goes through the opponent untouched
-      const { F, step } = setup('karl', 'ivan'); step(1, { a: 1, b: 1, h: { down: 1 } }); step(6); d.startAtk(F.p2, 'jab'); step(30);
+      const { F, step } = setup('karl', 'padre'); step(1, { a: 1, b: 1, h: { down: 1 } }); step(6); d.startAtk(F.p2, 'jab'); step(30);
       check('PAPA-LEGUAS  Légua Step', F.p1.x > F.p2.x && F.p1.hp === 100, `x ${F.p1.x | 0} vs ${F.p2.x | 0}, hp ${F.p1.hp | 0}`); }
-    { // Iron Charge absorbs a hit and keeps going
-      const { F, step } = setup('ivan', 'karl', 80, 170); step(1, { a: 1, b: 1, h: { down: 1 } }); step(12); F.p2.x = F.p1.x + 38; d.startAtk(F.p2, 'jab'); step(5);
-      const armored = F.p1.state === 'special'; step(30);
-      check('IVAN         Iron Charge', armored && F.p2.hp < 100, `still charging after hit: ${armored}, ivan hp ${F.p1.hp | 0}, karl hp ${F.p2.hp | 0}`); }
     { // Instant Replay: rewinds position and recent damage
-      const { F, step } = setup('vizor', 'ivan', 100, 140); step(60); const x0 = F.p1.x;
+      const { F, step } = setup('vizor', 'padre', 100, 140); step(60); const x0 = F.p1.x;
       for (let i = 0; i < 3; i++) { d.applyHit(F.p2, F.p1, { dmg: 6, stun: 6, kb: 2, lv: 'mid' }, 120, 100); step(10); }
       F.p1.state = 'idle'; F.p1.stun = 0; step(2); const hp1 = F.p1.hp, x1 = F.p1.x; step(1, { a: 1, b: 1, h: { down: 1 } }); step(40);
       check('VIZOR        Instant Replay', F.p1.hp > hp1 && Math.abs(F.p1.x - x0) < Math.abs(x1 - x0), `hp ${hp1 | 0} -> ${F.p1.hp | 0}, x ${x1 | 0} -> ${F.p1.x | 0} (was ${x0 | 0})`); }
     { // Benediction heals over time
-      const { F, step } = setup('padre', 'ivan', 60, 200); F.p1.hp = 50; step(1, { a: 1, b: 1, h: { down: 1 } }); step(85);
+      const { F, step } = setup('padre', 'padre', 60, 200); F.p1.hp = 50; step(1, { a: 1, b: 1, h: { down: 1 } }); step(85);
       check('SAMSON       Benediction', F.p1.hp > 60, `hp 50 -> ${F.p1.hp | 0}`); }
     { // Holy Tome is an overhead: beats a crouching block, loses to a standing one
-      let r = setup('padre', 'ivan', 100, 140), F = r.F; F.dummy = 'LOW BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2); r.step(34);
+      let r = setup('padre', 'padre', 100, 140), F = r.F; F.dummy = 'LOW BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2); r.step(34);
       const crouchHit = F.p2.hp < 100;
-      r = setup('padre', 'ivan', 100, 140); F = r.F; F.dummy = 'BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2); r.step(34);
+      r = setup('padre', 'padre', 100, 140); F = r.F; F.dummy = 'BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2); r.step(34);
       const standBlocked = F.p2.hp > 95;
       check('SAMSON       Holy Tome (overhead)', crouchHit && standBlocked, `hits crouch-block: ${crouchHit}, blocked standing: ${standBlocked}`); }
     for (const [kind, which, lowOk, label] of [['strike', 1, true, 'ZEKE         Strike Ball (low)'], ['split', 2, false, 'ZEKE         Split Shot (overhead)']]) {
       // low: hits a standing block, blocked crouching. overhead: hits a crouching block, blocked standing.
-      let r = setup('zeke', 'ivan', 70, 170), F = r.F; F.dummy = 'BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2, which); r.step(90); const vsStand = F.p2.hp;
-      r = setup('zeke', 'ivan', 70, 170); F = r.F; F.dummy = 'LOW BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2, which); r.step(90); const vsLow = F.p2.hp;
+      let r = setup('zeke', 'padre', 70, 170), F = r.F; F.dummy = 'BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2, which); r.step(90); const vsStand = F.p2.hp;
+      r = setup('zeke', 'padre', 70, 170); F = r.F; F.dummy = 'LOW BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2, which); r.step(90); const vsLow = F.p2.hp;
       const ok = lowOk ? (vsStand < 95 && vsLow > 95) : (vsLow < 95 && vsStand > 95);
-      check(label, ok, `vs standing block: ivan hp ${vsStand | 0}, vs crouching block: ${vsLow | 0}`);
+      check(label, ok, `vs standing block: samson hp ${vsStand | 0}, vs crouching block: ${vsLow | 0}`);
     }
     return out;
   });

@@ -2,7 +2,7 @@
 const { chromium } = require('playwright');
 const path = require('path');
 (async () => {
-  const [out, a = 'ivan', b = 'karl', which = '1'] = process.argv.slice(2);
+  const [out, a = 'keksan', b = 'karl', which = '1'] = process.argv.slice(2);
   const br = await chromium.launch();
   const p = await br.newPage({ viewport: { width: 460, height: 860 } });
   const errs = []; p.on('pageerror', e => errs.push(e.message));

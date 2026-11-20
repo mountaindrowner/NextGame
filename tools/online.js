@@ -35,6 +35,6 @@ const path = require('path'), fs = require('fs');
   const picks = await A.evaluate(() => [window.__dbg.F.p1.c.id, window.__dbg.F.p2.c.id]); console.log('fighters', picks);
   await B.context().close(); let lost = ''; for (let i = 0; i < 20 && !lost; i++) { await A.waitForTimeout(500); lost = await A.evaluate(() => { const d = window.__dbg; return d.scene === d.Online ? d.Online.msg : ''; }); }
   console.log('host after guest left:', lost || '(still waiting)');
-  const ok = lost === 'OPPONENT DISCONNECTED' && picks[0] === 'ivan' && picks[1] === 'lawslie' && a.scene !== '?' && a.sim > 300 && b.sim > 300 && a.desyncs === 0 && b.desyncs === 0 && !A.errs.length && !B.errs.length;
+  const ok = lost === 'OPPONENT DISCONNECTED' && picks[0] === 'keksan' && picks[1] === 'lawslie' && a.scene !== '?' && a.sim > 300 && b.sim > 300 && a.desyncs === 0 && b.desyncs === 0 && !A.errs.length && !B.errs.length;
   console.log(ok ? 'ONLINE OK' : 'ONLINE FAIL'); await br.close(); process.exit(ok ? 0 : 1);
 })();

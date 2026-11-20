@@ -215,10 +215,6 @@ const CH={
     speed:1.25,power:1.0,def:1.0,jump:1.0,stats:[5,3,3],special:'rush',spName:'LÉGUA RUSH',special2:'step',sp2Name:'LÉGUA STEP',tr:0,
     col:{skin:'#e0965c',glove:'#2c2a44',leg:'#e9e7f3',foot:'#f6f6f6',aura:'#ffd23a'},sh:.72,hip:.5,
     quote:"TOO SLOW! THEY DON'T CALL ME PAPA-LÉGUAS FOR NOTHING!",lose:'I RAN OUT OF ROAD...',stageName:'CROSSROADS DOJO'},
-  ivan:{id:'ivan',name:'IVAN',nick:'THE BEAR',style:'SAMBO',country:'RUSSIA',flag:'ru',ht:"6'2\" (188 CM)",wt:'215 LB (98 KG)',
-    speed:0.82,power:1.3,def:1.1,jump:0.88,stats:[2,5,4],special:'slam',spName:'BEAR SLAM',special2:'charge',sp2Name:'IRON CHARGE',tr:-5,
-    col:{skin:'#e3a272',glove:'#2e2f4a',leg:'#2b3168',foot:'#2c3a8a',aura:'#ff4a3a'},sh:.75,hip:.5,
-    quote:'IN MY GYM, THE FLOOR IS MY FRIEND. SAY HELLO TO IT.',lose:'NEXT TIME... I BRING BIGGER BEAR.',stageName:'IRON GYM'},
   vizor:{id:'vizor',name:'VIZOR',nick:'THE WATCHER',style:'TECH BRAWLER',country:'UNKNOWN',countryLabel:'ORIGIN',flag:'unk',ht:"5'11\" (180 CM)",wt:'190 LB (86 KG)',
     speed:1.04,power:1.06,def:1.0,jump:1.0,stats:[3,4,4],special:'flash',spName:'SHUTTER FLASH',special2:'replay',sp2Name:'INSTANT REPLAY',tr:1,
     col:{skin:'#c98a5e',glove:'#25232f',leg:'#3d5a96',foot:'#f0f0f0',aura:'#3ae8ff'},sh:.72,hip:.5,
@@ -252,11 +248,10 @@ const CH={
     col:{skin:'#c88a5a',glove:'#d02a2a',leg:'#1a1a22',foot:'#c88a5a',aura:'#ff3a3a'},sh:.72,hip:.5,
     quote:"RESPECT THE RING. THEN RESPECT THE TIGER.",lose:'MY GUARD... DROPPED...',stageName:'TIGER GYM'},
 };
-const ORDER=['karl','ivan','vizor','padre','zeke','hecky','lawslie','rex','kai','keksan'];
+const ORDER=['karl','keksan','vizor','padre','zeke','hecky','lawslie','rex','kai'];
 // ---- archetypes: every fighter plays differently (health, reach, movement, chains) and has one unique trait ----
 const ARCH={
   karl:{type:'RUSHDOWN',trait:'FAST DASH, 4-HIT CHAINS',hp:92,chain:4,dash:1.3,reach:1},
-  ivan:{type:'GRAPPLER',trait:'ARMORED KICK, MOST HP',hp:118,dash:.8,armor:true,reach:1},
   vizor:{type:'ZONER',trait:'LONG REACH',hp:98,reach:1.25},
   padre:{type:'POWERHOUSE',trait:'COUNTERS KNOCK DOWN',hp:106,heavy:true,reach:1.05},
   zeke:{type:'HIGH/LOW ZONER',trait:'BLOCKED BALL: RELOAD',hp:100,spare:true,reach:1},
@@ -268,11 +263,10 @@ const ARCH={
 const arch=c=>ARCH[c.id]||{};
 // RHYTHM trait: a steady 128-ish bpm beat on the shared frame counter (same on both sides online)
 const BEAT=28,onBeat=()=>{const m=frameNo%BEAT;return m<4||m>BEAT-4};
-const SUPER_NAME={"karl": "MIL LÉGUAS", "ivan": "SIBERIAN STORM", "vizor": "FULL EXPOSURE", "padre": "FINAL SERMON", "zeke": "PERFECT GAME", "hecky": "GOLDEN PARACHUTE", "lawslie": "FULL ARREST", "rex": "STAGE DIVE", "kai": "FAST BREAK", "keksan": "EIGHT LIMBS"};
-const ENDING={"keksan": "KEKSAN HUNG THE BONFIRE BASH TROPHY OVER THE TIGER GYM DOOR AND OPENED IT TO EVERY KID IN THE CITY. FREE CLASSES EVERY NIGHT. RESPECT FIRST, THEN FISTS.", "kai": "DEVANTE TOOK THE BONFIRE BASH TROPHY TO THE STREET COURT AND RAN A MIDNIGHT TOURNAMENT. NOBODY COULD GUARD HIM. NOBODY EVER WILL.", "rex": "MARCUS PLAYED THE BONFIRE BASH VICTORY SHOW TO A SOLD-OUT CROWD. THE CROWN STAYED ON FOR THE ENCORE, AND THE ENCORE, AND THE ENCORE.", "lawslie": "OFFICER LAWSLIE CLOSED THE BONFIRE BASH CASE FILE: EVERY FIGHTER BOOKED, EVERY TROPHY ACCOUNTED FOR. THE CHIEF MADE HER DETECTIVE BY MORNING.", "hecky": "HECKY XAVIER BOUGHT THE BONFIRE BASH TOURNAMENT THE NEXT MORNING. NEXT YEAR'S TROPHY IS GOLD-PLATED, AND SO IS THE PENTHOUSE.", "zeke": "ZEKE BOWLED A PERFECT 300 AT THE CHAMPIONS PARTY, THEN BOUGHT EVERYONE NACHOS. THE STRIKE LANES ARE NOW THE MOST FAMOUS ALLEY ON EARTH.", "karl": "PAPA-LEGUAS RAN STRAIGHT FROM THE FINAL FIGHT TO HIS DOJO AND HUNG UP A SIGN: EVERYONE WELCOME. JUST KEEP UP.", "ivan": "IVAN CARRIED THE TROPHY HOME ON ONE SHOULDER. THE IRON GYM HAS A NEW RULE: NOBODY LEAVES WITHOUT A BEAR HUG.", "vizor": "VIZOR REPLAYED EVERY FIGHT FRAME BY FRAME. THE FOOTAGE BECAME THE MOST WATCHED VIDEO ON EARTH.", "padre": "SAMSON RANG THE OLD CHAPEL BELL FOR THE FIRST TIME IN YEARS. EVEN HIS RIVALS CAME TO LISTEN."};
+const SUPER_NAME={"karl": "MIL LÉGUAS", "vizor": "FULL EXPOSURE", "padre": "FINAL SERMON", "zeke": "PERFECT GAME", "hecky": "GOLDEN PARACHUTE", "lawslie": "FULL ARREST", "rex": "STAGE DIVE", "kai": "FAST BREAK", "keksan": "EIGHT LIMBS"};
+const ENDING={"keksan": "KEKSAN HUNG THE BONFIRE BASH TROPHY OVER THE TIGER GYM DOOR AND OPENED IT TO EVERY KID IN THE CITY. FREE CLASSES EVERY NIGHT. RESPECT FIRST, THEN FISTS.", "kai": "DEVANTE TOOK THE BONFIRE BASH TROPHY TO THE STREET COURT AND RAN A MIDNIGHT TOURNAMENT. NOBODY COULD GUARD HIM. NOBODY EVER WILL.", "rex": "MARCUS PLAYED THE BONFIRE BASH VICTORY SHOW TO A SOLD-OUT CROWD. THE CROWN STAYED ON FOR THE ENCORE, AND THE ENCORE, AND THE ENCORE.", "lawslie": "OFFICER LAWSLIE CLOSED THE BONFIRE BASH CASE FILE: EVERY FIGHTER BOOKED, EVERY TROPHY ACCOUNTED FOR. THE CHIEF MADE HER DETECTIVE BY MORNING.", "hecky": "HECKY XAVIER BOUGHT THE BONFIRE BASH TOURNAMENT THE NEXT MORNING. NEXT YEAR'S TROPHY IS GOLD-PLATED, AND SO IS THE PENTHOUSE.", "zeke": "ZEKE BOWLED A PERFECT 300 AT THE CHAMPIONS PARTY, THEN BOUGHT EVERYONE NACHOS. THE STRIKE LANES ARE NOW THE MOST FAMOUS ALLEY ON EARTH.", "karl": "PAPA-LEGUAS RAN STRAIGHT FROM THE FINAL FIGHT TO HIS DOJO AND HUNG UP A SIGN: EVERYONE WELCOME. JUST KEEP UP.", "vizor": "VIZOR REPLAYED EVERY FIGHT FRAME BY FRAME. THE FOOTAGE BECAME THE MOST WATCHED VIDEO ON EARTH.", "padre": "SAMSON RANG THE OLD CHAPEL BELL FOR THE FIRST TIME IN YEARS. EVEN HIS RIVALS CAME TO LISTEN."};
 // combo trials: each step is the move that must hit, in order, inside one combo
 const TRIALS={karl:[['jab','kick'],['jab','jab','kick','sp1'],['jab','kick','super']],
-  ivan:[['jab','kick'],['jkick','jab','kick'],['cjab','sweep']],
   vizor:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],padre:[['jab','kick'],['jab','kick','sp1'],['cjab','cjab','sweep']],
   zeke:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],
   hecky:[['jab','kick'],['cjab','jab','kick','sp1'],['jab','kick','super']],
@@ -283,7 +277,7 @@ const TRIALS={karl:[['jab','kick'],['jab','jab','kick','sp1'],['jab','kick','sup
 const TKEY={jab:'A',kick:'B',cjab:'DN+A',sweep:'DN+B',jpunch:'JUMP+A',jkick:'JUMP+B',sp1:'SP',sp2:'DN+SP',sp3:'BK+SP',super:'FWD+SP',throw:'FWD+B'};
 const TNAME={jab:'JAB',kick:'KICK',cjab:'LOW JAB',sweep:'SWEEP',jpunch:'JUMP PUNCH',jkick:'JUMP KICK',sp1:'SPECIAL',sp2:'SPECIAL 2',super:'SUPER',throw:'THROW'};
 // bread-and-butter combos shown in the pause menu
-const BNB={karl:'JAB, JAB, KICK > SP',ivan:'JUMP KICK, JAB, KICK',vizor:'JAB, KICK > SP',padre:'JAB, KICK > SP (OVERHEAD)',zeke:'JAB, KICK > SP',hecky:'LOW JAB, JAB, KICK > SP',lawslie:'JAB, KICK > SP (TASER)',rex:'JAB, KICK > DN+SP',kai:'JAB, KICK > SP',keksan:'JAB, KICK > SP (KNEE)'};
+const BNB={karl:'JAB, JAB, KICK > SP',vizor:'JAB, KICK > SP',padre:'JAB, KICK > SP (OVERHEAD)',zeke:'JAB, KICK > SP',hecky:'LOW JAB, JAB, KICK > SP',lawslie:'JAB, KICK > SP (TASER)',rex:'JAB, KICK > DN+SP',kai:'JAB, KICK > SP',keksan:'JAB, KICK > SP (KNEE)'};
 // cooldown (frames) per special; second specials are stronger tools with longer cooldowns
 const SPCD={rush:75,shuriken:75,slam:110,spin:75,flash:110,tome:75,strike:75,split:120,takeover:70,powersuit:720,laser:130,taser:80,cuff:240,bassdrop:80,miccheck:150,bounce:80,crossover:200,knee:90,clinch:260,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
 const IMG={};
@@ -479,7 +473,7 @@ const Select={enter(mode){this.mode=mode;setTwo(mode==='2p');this.ph='p1';this.d
   finish(){const alt=[this.alt[0]&&rc(this.p1).clear>0,!!(this.p2&&this.alt[1]&&rc(this.p2).clear>0)],skin=[this.skin[0]&&!!CH[this.p1].skin2,!!(this.p2&&this.skin[1]&&CH[this.p2].skin2)];
     if(this.mode==='story'){startStory(this.p1,alt,skin);return}
     if(this.mode==='arcade'){const opp=ORDER.filter(i=>i!==this.p1).sort(()=>Math.random()-.5);RUN={mode:'arcade',p1:this.p1,ladder:opp,idx:0,cont:0,alt,skin}}
-    else if(this.mode==='trials')RUN={mode:'trials',p1:this.p1,ladder:[this.p1==='ivan'?'karl':'ivan'],idx:0,cont:0,alt,skin};
+    else if(this.mode==='trials')RUN={mode:'trials',p1:this.p1,ladder:[this.p1==='karl'?'vizor':'karl'],idx:0,cont:0,alt,skin};
     else RUN={mode:this.mode,p1:this.p1,ladder:[this.p2],idx:0,cont:0,alt,skin,score:[0,0]};
     if(this.mode==='training'||this.mode==='trials')startFight();else go(VS)},
   draw(){const t=this.t,id=ORDER[this.cur],c=CH[id],pi=this.ph==='p1'?0:1,sk=c.skin2&&this.skin[pi]&&CH[c.skin2]?CH[c.skin2]:c,A=arch(c);stripes(t,'#120f30','#191540');
@@ -994,7 +988,7 @@ function addCombo(att){F.comboShow={side:att.side,n:att.combo,l:70}}
 //    then draws one card from that deck by weight; difficulty shifts the weights.
 // 3. Execution ability: tricky cards (specials, combos, anti-airs) are rolled; a fumbled special comes out as a jab.
 // 4. Pressure: getting hit and falling behind raises an internal meter that makes its execution sloppier.
-const SUP_RANGE={keksan:100,kai:120,ivan:50,lawslie:110,vizor:230,zeke:220,padre:230,karl:130,rex:190};
+const SUP_RANGE={keksan:100,kai:120,lawslie:110,vizor:230,zeke:220,padre:230,karl:130,rex:190};
 function aiSnap(o){return{x:o.x,y:o.y,vy:o.vy,state:o.state,st:o.st,atk:o.atk,ph:phaseOf(o),sp:o.sp,crouch:o.crouch}}
 function drawCard(cards){let t=0;for(const c of cards)if(c[0]>0)t+=c[0];let r=Math.random()*t;for(const c of cards){if(c[0]<=0)continue;if((r-=c[0])<=0){c[1]();return c[2]}}return null}
 function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:0},ai=f.ai;
@@ -1517,8 +1511,8 @@ function netQuit(){netSend({t:'bye'});NET.gone=true;netReset()}
 function netMsg(m){switch(m.t){
   case'ping':netSend({t:'pong',at:m.at});break;
   case'pong':NET.rtt=Math.round(performance.now()-m.at);NET.D=clamp(Math.ceil(NET.rtt/2/16.7)+2,3,9);break;
-  case'pick':NET.peerPick=m.id?{id:m.id,skin:!!m.skin}:null;break;
-  case'start':netBegin(m);break;
+  case'pick':NET.peerPick=m.id&&CH[m.id]&&ORDER.includes(m.id)?{id:m.id,skin:!!m.skin}:null;break;// ignore fighters this version doesn't have
+  case'start':if(CH[m.p1]&&CH[m.p2])netBegin(m);break;
   case'i':if(m.s===NET.sess)NET.rem[m.f]=m.v;break;
   case'h':if(m.s===NET.sess){NET.peerH[m.f]=m.h;netCheck(m.f)}break;
   case'rq':if(NET.role==='host'&&scene===Fight&&NET.lock)netSend({t:'snap',s:NET.sess,f:NET.sim,d:snapState()});break;
@@ -1711,11 +1705,11 @@ Object.assign(FOES,{
     names:['JADE','ROXY','NIKKI','KAT','VIOLET','REN'],vary:{sc:[.95,1,1.04],outfit:true}},
   // the boss of Bonfire City: cane strikes and a ground shockwave; beaten, he kneels instead of falling
   vex:{id:'vex',name:'VEX',hp:240,speed:.75,power:1.6,def:1,jump:1,dmg:12,reach:58,windupA:4,heavy:true,boss:true,score:5000,col:{aura:'#b04aff',skin:'#d8a070',glove:'#222',leg:'#3a1a4a',foot:'#111'},sh:.72,hip:.5,names:['VEX']}});
-const FALLBACK_FOE={goon:'karl',slinger:'vizor',bruiser:'ivan',chain:'zeke',kicker:'lawslie',vex:'hecky'};// used until a foe's own sprites exist
+const FALLBACK_FOE={goon:'karl',slinger:'vizor',bruiser:'padre',chain:'zeke',kicker:'lawslie',vex:'hecky'};// used until a foe's own sprites exist
 const LEVELS=[
   {name:'BONFIRE STREETS',bg:'story_lvl1',bgY:-38,floor:{kind:'slabs',c1:'#3c3650',c2:'#1c1828',line:'#2a2438',edge:'#8a82a0'},alt:'vizor',song:'vizor',len:768,crates:[[236,8],[476,28]],
     waves:[{at:70,foes:['goon','goon']},{at:300,foes:['goon','slinger','goon']},{at:512,foes:['goon','bruiser','chain','goon']}]},
-  {name:'THE DOCKS',bg:'story_lvl2',bgY:-38,floor:{kind:'boards',c1:'#6a5034',c2:'#2e2216',line:'#3a2a18',edge:'#a07a4a'},alt:'zeke',song:'ivan',len:768,crates:[[200,22],[430,6],[650,28]],
+  {name:'THE DOCKS',bg:'story_lvl2',bgY:-38,floor:{kind:'boards',c1:'#6a5034',c2:'#2e2216',line:'#3a2a18',edge:'#a07a4a'},alt:'zeke',song:'zeke',len:768,crates:[[200,22],[430,6],[650,28]],
     waves:[{at:50,foes:['goon','slinger','blade']},{at:290,foes:['bruiser','chain','blade','slinger']},{at:512,foes:['molotov','bruiser','kicker','blade','goon']}]},
   {name:'VEX TOWER',bg:'story_lvl3',alt:'vizor',song:'hecky',len:768,crates:[[180,14],[420,26],[620,10]],
     waves:[{at:60,foes:['blade','kicker','molotov','goon']},{at:290,foes:['enforcer','chain','molotov','blade']},{at:512,foes:['bruiser','kicker','enforcer','molotov','chain','blade']}]},

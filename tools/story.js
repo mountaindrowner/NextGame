@@ -44,7 +44,7 @@ const OUT = process.argv[2];
   const sc1 = await sceneName(); const tk2 = await talk(); await p.waitForTimeout(600); const sc = await sceneName();
   C('final boss = your shadow', b.boss === 'karl' && b.shadow && sc1 === 'Cutscene:shadow' && tk2.n === tk2.of && sc === 'VS', `boss ${b.boss}, shadow ${b.shadow}, ${sc1} then ${sc}, earlier bosses ${b.bosses.join(', ')}`);
   // every chapter cutscene plays between levels (Result -> next chapter)
-  for (const lv of [1, 2, 3]) { await p.evaluate(lv => { const d = window.__dbg; d.RUN.level = lv - 1; d.go(d.Result, 0, { p1: 'karl', p2: 'ivan', stage: 'karl' }); d.Result.next(); }, lv);
+  for (const lv of [1, 2, 3]) { await p.evaluate(lv => { const d = window.__dbg; d.RUN.level = lv - 1; d.go(d.Result, 0, { p1: 'karl', p2: 'padre', stage: 'karl' }); d.Result.next(); }, lv);
     const s1 = await sceneName(); const t3 = await talk(); await p.waitForTimeout(500);
     C(`chapter ${lv + 1} cutscene`, s1 === 'Cutscene:' + ['', 'ch2', 'ch3', 'final'][lv] && t3.n === t3.of && (await sceneName()) === 'Brawl', `${s1}, ${t3.n}/${t3.of} beats, then ${await sceneName()}`); }
   // the ending: beat the shadow, offer your hand, the chapel, the credits

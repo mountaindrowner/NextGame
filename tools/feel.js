@@ -13,11 +13,11 @@ const path = require('path');
       const F = d.F, sc = d.scene, upd = (d.Fight.__u || (d.Fight.__u = d.Fight.update)).bind(sc); sc.update = () => {}; F.phase = 'play'; F.dummy = dummy; F.p1.x = 100; F.p2.x = 140; F.p1.face = 1; F.p2.face = -1;
       const step = (n = 1) => { for (let i = 0; i < n; i++) { d.tick(); upd(); } }; step(3); return { F, step }; };
     // hitstop by weight + hurt reaction by height
-    const hit = (mv, dummy) => { const { F, step } = setup('karl', 'ivan', dummy); d.startAtk(F.p1, mv); let hs = 0, k = null; for (let i = 0; i < 30; i++) { step(); if (F.hitstop > hs) { hs = F.hitstop; k = F.p2.hurtK; } } return { hs, k }; };
+    const hit = (mv, dummy) => { const { F, step } = setup('karl', 'padre', dummy); d.startAtk(F.p1, mv); let hs = 0, k = null; for (let i = 0; i < 30; i++) { step(); if (F.hitstop > hs) { hs = F.hitstop; k = F.p2.hurtK; } } return { hs, k }; };
     R.jab = hit('jab'); R.kick = hit('kick'); R.sweep = hit('cjab'); R.cjab = hit('jab', 'CROUCH');
-    { const { F, step } = setup('ivan', 'karl'); d.startSpecial(F.p1, F.p2, 2); let hs = 0; for (let i = 0; i < 60; i++) { step(); hs = Math.max(hs, F.hitstop); } R.heavy = hs; }
+    { const { F, step } = setup('keksan', 'karl'); d.startSpecial(F.p1, F.p2, 1); let hs = 0; for (let i = 0; i < 60; i++) { step(); hs = Math.max(hs, F.hitstop); } R.heavy = hs; }
     // infinite protection: the same move landing a 4th time in one combo -> burst available
-    { const { F, step } = setup('karl', 'ivan'); const a = F.p2, def = F.p1; a.state = 'idle'; const B = [];
+    { const { F, step } = setup('karl', 'padre'); const a = F.p2, def = F.p1; a.state = 'idle'; const B = [];
       for (let i = 0; i < 4; i++) { a.atk = { name: 'jab', id: 9000 + i }; a.state = 'attack'; d.applyHit(a, def, { dmg: 2, stun: 30, bs: 5, kb: 0, lv: 'mid' }, def.x, 100); B.push(!!def.burstOK); }
       R.ipsAt = B; R.def = def.state; }
     return R;
@@ -27,7 +27,7 @@ const path = require('path');
   C('LOOP detected on 4th repeat', r.ipsAt.join() === 'false,false,false,true', `burst available after hits 1-4: ${r.ipsAt.join(', ')}`);
   // burst with a real key press, then SP key = A+B, through the real game loop
   const live = async (fn) => p.evaluate(fn);
-  await live(() => { const d = window.__dbg; if (d.Fight.__u) d.Fight.update = d.Fight.__u; d.RUN = { mode: 'training', p1: 'karl', ladder: ['ivan'], idx: 0, cont: 0 }; d.go(d.Fight, { p1: 'karl', p2: 'ivan', stage: 'ivan' }); });
+  await live(() => { const d = window.__dbg; if (d.Fight.__u) d.Fight.update = d.Fight.__u; d.RUN = { mode: 'training', p1: 'karl', ladder: ['padre'], idx: 0, cont: 0 }; d.go(d.Fight, { p1: 'karl', p2: 'padre', stage: 'padre' }); });
   await p.waitForTimeout(2600);
   await live(() => { const d = window.__dbg, F = d.F; F.p1.x = 100; F.p2.x = 140; const a = F.p2, def = F.p1;
     for (let i = 0; i < 4; i++) { a.atk = { name: 'jab', id: 9100 + i }; a.state = 'attack'; d.applyHit(a, def, { dmg: 1, stun: 60, bs: 5, kb: 0, lv: 'mid' }, def.x, 100); } a.atk = null; a.state = 'idle'; });

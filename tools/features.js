@@ -24,15 +24,15 @@ const path = require('path'), fs = require('fs');
   }, [n, o1, o2]);
 
   // 1. SUPER: full meter, forward + A+B -> cinematic, then a big multi-hit
-  await setup('karl', 'ivan', 'training', 100, 150);
+  await setup('karl', 'padre', 'training', 100, 150);
   await p.evaluate(() => { const F = window.__dbg.F; F.p1.meter = 100; F.dummy = 'STAND'; });
   let r = await step(1, { a: 1, b: 1, h: { right: 1 } });
   const cine = r.cine; await step(20); await shot('super-cinematic');
   r = await step(120);
-  T('SUPER', cine && r.hp2 < 85, `cinematic ${cine}, ivan hp ${r.hp2 | 0}, meter after ${r.m1 | 0} (refills in training)`);
+  T('SUPER', cine && r.hp2 < 85, `cinematic ${cine}, samson hp ${r.hp2 | 0}, meter after ${r.m1 | 0} (refills in training)`);
 
   // 2. meter builds from hits
-  await setup('vizor', 'ivan', 'vs', 100, 140);
+  await setup('vizor', 'padre', 'vs', 100, 140);
   await p.evaluate(() => { const F = window.__dbg.F; F.p2.cpu = false; });
   await step(1, { a: 1 }); r = await step(20);
   T('METER GAIN', r.m1 > 0, `meter after one hit: ${r.m1}`);
@@ -59,7 +59,7 @@ const path = require('path'), fs = require('fs');
   await shot('two-players');
 
   // 6. TRIALS: Papa-Leguas trial 1 = JAB > KICK
-  await setup('karl', 'ivan', 'trials', 100, 140);
+  await setup('karl', 'padre', 'trials', 100, 140);
   await step(1, { a: 1 }); for (let i = 0; i < 40; i++) { const q = await p.evaluate(() => { const F = window.__dbg.F; return F.p1.hitDone && F.hitstop === 0; }); if (q) break; await step(1); }
   await step(1, { b: 1 }); await step(30); await shot('trials');
   r = await p.evaluate(() => { const T = window.__dbg.F.trial; return { i: T.i, clear: T.clear, step: T.step }; });
@@ -68,13 +68,13 @@ const path = require('path'), fs = require('fs');
   T('TRIALS', r.clear > 0 && after === 1, `trial 1 cleared: ${r.clear > 0}, now on trial ${after + 1}`);
 
   // 7. RECORDS + UNLOCK: clearing arcade unlocks the alt color and a badge
-  r = await p.evaluate(() => { const d = window.__dbg; d.RUN = { mode: 'arcade', p1: 'ivan', ladder: [], idx: 0, cont: 0 }; d.go(d.Ending); return { clear: d.rec.ch.ivan.clear, badge: !!d.rec.badges.clear, stored: !!localStorage.getItem('worlddojo_rec') }; });
+  r = await p.evaluate(() => { const d = window.__dbg; d.RUN = { mode: 'arcade', p1: 'padre', ladder: [], idx: 0, cont: 0 }; d.go(d.Ending); return { clear: d.rec.ch.padre.clear, badge: !!d.rec.badges.clear, stored: !!localStorage.getItem('worlddojo_rec') }; });
   T('RECORDS + UNLOCK', r.clear === 1 && r.badge && r.stored, JSON.stringify(r));
   await p.waitForTimeout(300); await shot('badge-toast');
   await p.evaluate(() => { const d = window.__dbg; d.go(d.Records); }); await p.waitForTimeout(300); await shot('records');
   await p.evaluate(() => { const d = window.__dbg; d.go(d.Select, 'arcade'); d.Select.cur = 2; }); await p.waitForTimeout(300); await shot('select-unlocked');
   await p.evaluate(() => { const d = window.__dbg; d.go(d.Title); d.Title.ph = 'menu'; }); await p.waitForTimeout(400); await shot('title');
-  await p.evaluate(() => { const d = window.__dbg; d.RUN = { mode: '2p', p1: 'karl', ladder: ['ivan'], idx: 0, cont: 0, score: [1, 0] }; d.go(d.Result, 1, { p1: 'karl', p2: 'ivan', stage: 'ivan' }); }); await p.waitForTimeout(1200); await shot('rematch');
+  await p.evaluate(() => { const d = window.__dbg; d.RUN = { mode: '2p', p1: 'karl', ladder: ['padre'], idx: 0, cont: 0, score: [1, 0] }; d.go(d.Result, 1, { p1: 'karl', p2: 'padre', stage: 'padre' }); }); await p.waitForTimeout(1200); await shot('rematch');
   await p.evaluate(() => { localStorage.removeItem('worlddojo_rec'); });
   console.log(out.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();
   process.exit(out.some(l => l.startsWith('FAIL')) || errs.length ? 1 : 0);

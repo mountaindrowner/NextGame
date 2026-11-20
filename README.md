@@ -1,6 +1,6 @@
 # Bonfire Bash
 
-A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with ten fighters — Papa-Léguas, Ivan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie, Marcus, Devanté and Keksan — playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with nine fighters — Papa-Léguas, Keksan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie, Marcus and Devanté — playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
@@ -15,10 +15,10 @@ Controls: four face buttons, the same in every mode — **A** punch (`X`/`K`), *
 - **Special cancel** — any connected normal except the sweep cancels into the special (A+B). A+B pressed together cancels the first button's normal straight into the special.
 - **Dash** — double-tap forward or back; the back-dash has brief invincibility.
 - **Super meter** — fills when you hit (+7, heavy +10), get hit (+5) or block; forward + A+B with a full bar fires your fighter's unique super (see Supers). The meter carries between rounds.
-- **Throws** — forward/back + B right next to a grounded opponent; press A or B during the grab to break it. Back throws switch sides. Ivan's Bear Slam is an unbreakable command grab.
+- **Throws** — forward/back + B right next to a grounded opponent; press A or B during the grab to break it. Back throws switch sides. Keksan's Thai Clinch is an unblockable command grab.
 - **Counter hits** — hitting a move in its start-up does +20% damage and extra hit-stun.
 - **Juggles & scaling** — at most 2 extra hits on a falling opponent; damage scales down from the 3rd hit (85%, 75%, … 50%).
-- Ivan's Bear Slam is a command grab: it can't grab an opponent in hit-stun, but it can grab out of a blocked string.
+- Keksan's Thai Clinch is a command grab: it can't grab an opponent in hit-stun, but it can grab out of a blocked string.
 
 ## Powers
 
@@ -27,7 +27,6 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Fighter | Special 1 | Special 2 |
 |---|---|---|
 | Papa-Léguas | **Légua Rush** — dashing 3-hit punch flurry | **Légua Step** — invincible blur that goes through the opponent to their back |
-| Ivan | **Bear Slam** — command grab | **Iron Charge** — shoulder charge with armor that absorbs one hit |
 | Vizor | **Shutter Flash** — reticle lock-on at range, then a flash (reactable) | **Instant Replay** — rewinds his position and up to 15 recent damage |
 | Samson | **Holy Tome** — overhead book smash (must be blocked standing) | **Benediction** — kneels and heals; any hit interrupts it |
 | Zeke | **Strike Ball** — bowling ball rolled along the floor (low, knocks down) | **Split Shot** — lobbed ball that drops from above (overhead) |
@@ -44,7 +43,6 @@ Forward + A+B with a full meter. Each fighter's super is unique (`SUPERS` in `sr
 | Fighter | Super | What it does |
 |---|---|---|
 | Papa-Léguas | Mil Léguas | dash in, then afterimage blinks through the opponent from both sides (6 hits) |
-| Ivan | Siberian Storm | unblockable short-range grab into three slams |
 | Vizor | Full Exposure | full-screen lock-on, five camera-flash shots |
 | Samson | Final Sermon | four pillars of light walk toward the opponent (overhead), then he heals |
 | Zeke | Perfect Game | giant bowling ball, four low hits |
@@ -61,7 +59,6 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Fighter | Type | Health | Trait |
 |---|---|---|---|
 | Papa-Léguas | Rushdown | 92 | fastest dash, 4-hit chains |
-| Ivan | Grappler | 118 (10% damage reduction) | the start of his kick absorbs a hit |
 | Vizor | Zoner | 98 | long reach |
 | Samson | Powerhouse | 106 | counter-hit kicks knock down |
 | Zeke | High/low zoner | 100 | Spare: a blocked Strike Ball recharges his special to nearly ready |
@@ -80,7 +77,7 @@ Bread-and-butter combos (checked frame by frame by `tools/combos.js`):
 | Fighter | Combo | Hits |
 |---|---|---|
 | Papa-Léguas | jab, jab, kick > Légua Rush | 6 |
-| Ivan | jump kick, jab, kick | 3 |
+| Keksan | jab, kick > Tiger Knee | 3 |
 | Vizor | jab, kick > Shutter Flash | 3 |
 | Samson | jab, kick > Holy Tome | 3 |
 
@@ -96,7 +93,7 @@ Every stage and the title screen have a recorded song, played looped.
 |---|---|
 | Title | heroic guitar and brass rock theme |
 | Crossroads Dojo (Papa-Léguas) | samba-rock fighting theme |
-| Iron Gym (Ivan) | heavy drums, distorted bass riff, choir synths |
+| Tiger Gym (Keksan) | Thai fight music (oboe-like lead, ching cymbals) over hard rock |
 | Control Room (Vizor) | synthwave arpeggios and pulsing bass |
 | Old Chapel (Samson) | church organ over hard rock |
 
@@ -154,6 +151,10 @@ python3 ../build.py
 ```
 
 Strike timing (which frame lands the hit) and special-move frame maps live in the `AK` table in `src/game.js`; per-fighter overrides go in `CH[id].ak`. If a fighter has no animation for a state, the game falls back to the original single-sprite rendering.
+
+## Retired fighters
+
+Ivan "The Bear" (Sambo grappler) left the roster in v1.24.0 to make room for Keksan. His sprites, portraits, stage, song and voice lines are kept in `assets_retired/ivan/` (not bundled), and his kit code (Bear Slam, Iron Charge, the armored kick, Siberian Storm) is still in `src/game.js`, so he can come back. See `assets_retired/README.md`.
 
 ## Online
 
