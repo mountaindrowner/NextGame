@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.16.0
+
+- **The whole game runs 10% slower** (54 ticks a second instead of 60): every move, walk and jump is a touch heavier and easier to read. The round timer ticks a little slower too. Music and voices are unchanged.
+- **Normals are less spammable:**
+  - Jab and low jab recover in 10 frames instead of 8, and kick in 16 instead of 14.
+  - **A normal that whiffs** (touches nothing, not even a block) recovers 3 frames slower, so mashing at nothing can be punished.
+  - Combos still work, because chains and cancels happen on hit.
+- **New character select screen:**
+  - The full-size portrait, crisp at 1:1, in a spotlight of the fighter's colour (it was the small one, with empty space around it).
+  - Fighter icons in one big row at 30 px each (they were 16 px).
+  - The name logo at its native size, and an info box that fits its content.
+  - Specials are labelled with the SP button: SP / DN+SP / BK+SP.
+- **UI pass on every screen:**
+  - The pause move list is roomier and hides the round timer behind it.
+  - Long move names no longer run into their inputs.
+  - Records has bigger icons and taller rows.
+  - The story-card box fits its text.
+  - The online help text sits inside its box.
+  - Combo and trial hints use SP notation.
+- `tools/text_audit.js` now also fails when two pieces of text overlap (224 screens checked).
+
 ## 1.15.1
 
 - The handheld is now the **Dojo Boy Advanced**, on its printed logo and on the boot screen.

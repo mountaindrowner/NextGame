@@ -17,6 +17,8 @@ const path = require('path');
         else if (t.y < -1 || t.y + t.h > H + 1) why = `off screen y ${t.y}..${t.y + t.h}`;
         else { const inb = A.b.slice(0, t.nb).filter(b => t.x + 1 >= b.x && t.x + 1 <= b.x + b.w && t.y + 1 >= b.y && t.y + 1 <= b.y + b.h).sort((a, b) => a.w * a.h - b.w * b.h)[0];
           if (inb && (t.x + t.w > inb.x + inb.w + 0.5 || t.y + t.h > inb.y + inb.h + 0.5)) why = `out of its box (${inb.x},${inb.y} ${inb.w}x${inb.h}) by ${Math.max(t.x + t.w - inb.x - inb.w, t.y + t.h - inb.y - inb.h) | 0}px`; }
+        if (!why) { const o = A.t.find(u => u !== t && u.s !== t.s && u.x < t.x + t.w - 1 && t.x < u.x + u.w - 1 && u.y < t.y + t.h - 1 && t.y < u.y + u.h - 1 && u.s.trim() && t.s.trim());
+          if (o) why = `overlaps "${o.s}"`; }
         if (why) { const k = name.split(' ')[0] + t.s + why.split(' ')[0]; if (!seen.has(k)) { seen.add(k); bad.push(`${tag} ${why}`); } } } };
     const at = (scene, t, fn) => { d.go(scene, ...(fn ? [] : [])); };
     const O = d.ORDER;
