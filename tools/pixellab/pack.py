@@ -42,9 +42,11 @@ def find_offset(base, frame0):
 
 # raw animation dir -> game animation name (None = not shipped)
 RENAME = {"fall2": "fall", "fall": None, "sweep": None, "falling-back-death": None, "throw": None}
-PER_CHAR = {"diego": {"spin2": "special", "special": None, "fall4": "fall", "fall2": None}}
+PER_CHAR = {"diego": {"spin2": "special", "special": None, "fall4": "fall", "fall2": None},
+            # story characters made after the fall-animation fix: their first fall take is the good one
+            "chain": {"fall": "fall"}, "kicker": {"fall": "fall"}, "vex": {"fall": "fall"}}
 # per-fighter size: sprites are shrunk at pack time (attack reach is set in the game, so it is unchanged)
-SCALE = {"lawslie": 0.80, "goon": 0.92, "slinger": 0.90}
+SCALE = {"lawslie": 0.80, "goon": 0.92, "slinger": 0.90, "chain": 0.86, "kicker": 0.82, "vex": 0.98}
 
 
 def shrink(im, w, h):

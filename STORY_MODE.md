@@ -5,31 +5,31 @@ henchmen, fight a boss at the end of each level.
 
 ## Story
 
-A gritty Christian story about temptation, the fight against your own sin, and mercy. Bonfire City is rotting under
-**Vex**, who owns the streets, the fights and the people. On the eve of the finals he steals the Bonfire Bash trophy
-and names his price: *"Every man has a price."* Your fighter isn't for sale.
+A gritty Christian story about saving a city. Bonfire City is held hostage by fear: families lock their doors at
+sundown, shops pay **Vex** to stay open, and nobody calls the police any more. On the eve of the finals Vex steals
+the Bonfire Bash trophy and names his price: *"Every man has a price."* Your fighter isn't for sale, and neither are
+the people. Samson sends you out with one rule: *go for the people, not for revenge.* Each chapter shows the city
+taking a little more of its hope back, and the fight is won in the end by mercy, not fists.
 
-Each chapter is a dialogue scene (portraits, name tags, typed text) that closes on a King James verse. START skips it.
-
-- **Prologue, Bonfire City:** Vex takes the trophy and tempts you. *"The light shineth in darkness." (John 1:5)*
+- **Prologue, Bonfire City:** Vex shows off the trophy in the rain and tempts you. At the Old Chapel, Samson: "Hate can't drive out hate. Even Vex was somebody's son." *(John 1:5)*
 - **Stage 1, the mercy moment (played, not told):** the last man standing drops to his knees. Walk up and press **A: HELP HIM UP**.
-- **Chapter 2, The Docks:** the man you spared (by his own name) tells you where the trophy went and asks about the Old Chapel. *(Luke 19:10)*
-- **Chapter 3, Vex Tower:** Vex radios to offer the easy elevator. You take the stairs. *(Matthew 7:14)*
-- **Final Chapter, the Penthouse:** "All you have to do is kneel." "No." After his last men fall, your shadow steps out: every grudge and lie you've carried. *(Ephesians 6:12)*
+- **Chapter 2, The Docks:** the man you spared, with his own name and look, finds you: "You're not my enemy. You're one of the people I came to fight for." *(Luke 19:10)*
+- **Chapter 3, Vex Tower:** the dock workers walk off the job, and word spreads that somebody is standing up to Vex. Vex offers the easy elevator; you take the stairs. *(Matthew 7:14)*
+- **Final Chapter, the Penthouse:** "All you have to do is kneel." "Those lights are people's homes. No." Vex fights you himself. Beaten, he shows you your shadow: every grudge and lie you've carried. *(Ephesians 6:12)*
 - **Epilogue:**
   1. Vex kneels and waits for the last blow. You press **A: OFFER YOUR HAND**.
-  2. Sunday at the Old Chapel: the trophy is back on the altar, Samson is at the door, the man you spared sits in the front row, and Vex, now Victor, says: "All my life I said every man has a price. I was right. Mine was paid for me." *(Luke 15:24)*
-  3. Credits roll, then THE END.
+  2. Sunday at the Old Chapel: the trophy is back on the altar. Vex gave back the money, the debts and the deeds, and now goes by Victor: "Mine was paid for me." *(Luke 15:24)*
+  3. One month later, the shops stay open after dark and kids play ball in the streets.
+  4. Credits, then THE END.
 
-Vex has no art of his own: he's the bruiser sprite as a silhouette with red eyes, lit in gold once he turns back.
-His portraits, and the spared man's, are cut from the in-game sprites.
+**Cutscenes are acted out on the stage:** the real characters walk in, taunt and kneel on the level's backdrop (rain in the prologue, dawn at the end). The dialogue box shows the speaker's face and name. Each scene opens on a title card and closes on its verse; START skips.
 
 | Level | Where | Waves | Boss |
 |---|---|---|---|
 | 1 | **Bonfire Streets**: neon downtown at night | 3 | a rival fighter |
 | 2 | **The Docks**: shipping containers, cranes | 3 | a rival fighter |
 | 3 | **Vex Tower**: the security floor | 3 | a rival fighter |
-| Final | **Vex's Penthouse** | 1 | **Shadow**: Vex's fighter trained on your every move, a dark copy of you |
+| Final | **Vex's Penthouse** | 2 | **Vex** himself (in the brawl), then **your Shadow**: a dark copy of you |
 
 Dialogue scenes between levels; the ending returns the trophy and rolls the credits.
 Bosses are picked at random from the roster (never your own fighter), so every run is different.
@@ -55,6 +55,26 @@ Bosses are picked at random from the roster (never your own fighter), so every r
 | **Bruiser** | heavy | 70 | slow, shrugs off one hit, charges with a shoulder tackle |
 
 **Variants (v1.15):** Blade (fast goon, lunges in), Molotov (bottles leave fire on the floor) and Enforcer (white-suited bruiser, quicker charge), recoloured from the three PixelLab henchmen.
+
+**New in v1.22 (PixelLab):**
+
+| Enemy | HP | Behaviour |
+|---|---|---|
+| **Chain** | 34 | green-mohawk punk; a slow wind-up, then a bike-chain lash with the longest reach of any henchman |
+| **Kicker** | 30 | quick street kickboxer; kicks up close and leaps in with a flying side kick from range |
+| **Vex** (boss) | 240 | cane strikes, armour against every other hit, and a cane slam that sends a shockwave along the floor (jump it). Beaten, he kneels and his men run. |
+
+**No two henchmen look alike (v1.22).** Every spawn rolls its own look:
+- **Size:** 0.9× to 1.18×. Bigger means more health, harder hits, slower feet, and a BIG name.
+- **Colours:** shirt and trousers are recoloured separately; skin stays as it is.
+- **Headgear:** cap, beanie or bandana, sometimes shades.
+- **A weapon:** some carry a pipe, bat or knife, with longer reach and harder hits.
+
+The extras are drawn onto each animation frame at runtime: the head and fist are found from the frame's own pixels.
+
+**Weapons:** a henchman drops his weapon when knocked down. Walk over it to pick it up; A swings it (+reach, +damage). It breaks after 8 hits (a knife after 12), and you drop it if you're knocked down.
+
+**The spared man keeps his look.** The one you help up in Stage 1 comes back in the cutscenes with the same size, colours and hat.
 
 **Crowd rule (the classic trick):** only two enemies may attack at once. The others circle and wait their turn.
 That keeps fights fair and readable.

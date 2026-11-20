@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.22.0
+
+- **Vex is real now.** He has his own PixelLab character: silver hair, a purple pinstripe suit and a gold-handled cane, with walk, cane strike, cane slam, hurt, fall, kneel and taunt animations.
+  - **He's the boss of the penthouse.** After his last wave of men, he steps in himself. He has a boss bar, cane strikes, armour, and a slam that sends a shockwave along the floor (jump it). Beaten, he kneels and his men run.
+- **Two new henchmen (PixelLab):**
+  - **Chain:** a green-mohawk punk with a bike chain and the longest reach of any henchman.
+  - **Kicker:** a street kickboxer with a flying side kick.
+  - Both appear from Stage 1 on.
+- **No two henchmen look alike.** Every spawn gets its own size (up to "BIG"), separate shirt and trouser colours, a cap, beanie or bandana, sometimes shades, and sometimes a pipe, bat or knife.
+- **Weapons you can use:** a henchman drops his weapon when knocked down. Walk over it to pick it up, swing it with A for more reach and damage, and it breaks after 8 hits (12 for a knife).
+- **Cinematic cutscenes:** scenes are now acted out on the stage. The real characters walk in, Vex taunts with the trophy in the rain, your shadow fades in beside you, and Vex kneels. The dialogue box shows the speaker's face. New scenes:
+  - Samson at the chapel in the prologue.
+  - The penthouse confrontation.
+  - "One month later": the city at dawn.
+- **The story is about saving the city.**
+  - The prologue shows a city living in fear.
+  - Samson's charge: "Go for the people, not for revenge. Hate can't drive out hate."
+  - Each chapter shows the city taking hope back: the dock workers walk off the job, and word spreads.
+  - The end: Vex gives everything back and becomes Victor, and the city wakes up.
+- **The spared man keeps his look:** the one you help up comes back in the cutscenes with the same size, colours and hat.
+- **PixelLab:** 91 generations, out of the 160 budgeted. 9,829 left; the $0.07 credit wasn't touched.
+- **Tests:**
+  - `story.js` plays all 4 levels (including the Vex fight), every scene, the ending and the credits. It also checks henchman variety and the weapon drop, pickup and break.
+  - The text check covers every scene beat (788 screens).
+
 ## 1.21.0
 
 - **Online lobby.** ONLINE > LOBBY lists everyone who's online right now, marked READY or BUSY.

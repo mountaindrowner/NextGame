@@ -321,6 +321,39 @@ function hueOf(img,deg,sat=1,whiten=false){const m=fxCache(img),k='h'+deg+'s'+sa
     d[i]=f(H2/360+1/3)*255;d[i+1]=f(H2/360)*255;d[i+2]=f(H2/360-1/3)*255}
   x.putImageData(D,0,0);return m[k]=c}
 function altOf(img){const m=fxCache(img);return m.alt||(m.alt=altVersion(img))}
+// ---- henchman variety: every spawn gets its own size, shirt and trouser colours, headgear and maybe a weapon.
+// The extras are drawn onto each animation frame once (cached), found from the frame's own pixels: the head is the
+// top rows of the figure, the fist the front-most pixel in the arm band. Frames face east; the game mirrors them.
+function frameInfo(fr){const m=fxCache(fr);if(m.info)return m.info;const w=fr.width,h=fr.height,c=mk(w,h),x=c.getContext('2d');x.drawImage(fr,0,0);
+  const d=x.getImageData(0,0,w,h).data,A=(i,j)=>d[(j*w+i)*4+3]>60;let y0=-1,y1=-1;for(let j=0;j<h;j++)for(let i=0;i<w;i++)if(A(i,j)){if(y0<0)y0=j;y1=j;break}
+  const bh=Math.max(1,y1-y0+1),hh=Math.max(5,Math.round(bh*.12));let hx0=w,hx1=0,sx=0,n=0;for(let j=y0;j<y0+hh&&j<h;j++)for(let i=0;i<w;i++)if(A(i,j)){hx0=Math.min(hx0,i);hx1=Math.max(hx1,i);sx+=i;n++}
+  let fx=0,fy=0;const b0=Math.round(y0+bh*.24),b1=Math.round(y0+bh*.56);for(let j=b0;j<=b1&&j<h;j++)for(let i=w-1;i>fx;i--)if(A(i,j)){fx=i;fy=j;break}
+  return m.info={y0,y1,bh,hh,hx0,hx1,hc:n?sx/n:w/2,hw:hx1-hx0+1,fx,fy}}
+const PADX=22,PADY=8;
+function hslShift(d,i,deg){const r=d[i]/255,g=d[i+1]/255,b=d[i+2]/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,dl=mx-mn;if(dl<=0||l<.07)return;
+  const s2=dl/(1-Math.abs(2*l-1)||1);let h=mx===r?((g-b)/dl+6)%6:mx===g?(b-r)/dl+2:(r-g)/dl+4;h*=60;if(h<=52&&s2>.12&&l>.1&&l<.93)return;// keep skin
+  h=(h+deg)%360/360;const q=l<.5?l*(1+s2):l+s2-l*s2,p=2*l-q,f=t=>{t=(t+1)%1;return t<1/6?p+(q-p)*6*t:t<.5?q:t<2/3?p+(q-p)*(2/3-t)*6:p};
+  d[i]=f(h+1/3)*255;d[i+1]=f(h)*255;d[i+2]=f(h-1/3)*255}
+function dressed(src,fr,V,k,i,pk,H){const m=fxCache(src),key='v'+V.key+k+i;if(m[key])return m[key];const I=frameInfo(fr),w=src.width,h=src.height;
+  const c=mk(w+PADX*2,h+PADY),x=c.getContext('2d');c.padX=PADX;c.padY=PADY;
+  if(V.top!=null||V.bot!=null){const t=mk(w,h),tx=t.getContext('2d');tx.drawImage(src,0,0);const D=tx.getImageData(0,0,w,h),d=D.data,stand=I.bh>H*.6,waist=I.y0+I.bh*.47;
+    for(let j=0;j<h;j++){const deg=stand&&j>waist?V.bot:V.top;if(deg==null||!deg)continue;for(let q=0;q<w;q++){const o=(j*w+q)*4;if(d[o+3])hslShift(d,o,deg)}}tx.putImageData(D,0,0);x.drawImage(t,PADX,PADY)}
+  else x.drawImage(src,PADX,PADY);
+  const OL='#120e1e',X=PADX,Y=PADY,R=(a,b,ww,hh2,col)=>{x.fillStyle=col;x.fillRect(X+a,Y+b,ww,hh2)};
+  if(V.hat!=='none'&&I.hw<=22&&I.bh>H*.6){const y0=I.y0,l=I.hx0,r=I.hx1,hd=V.hc;
+    if(V.hat==='cap'){R(l-1,y0-2,r-l+3,5,OL);R(r,y0+1,5,3,OL);R(l,y0-1,r-l+1,3,hd);R(r,y0+2,4,1,hd);R(l+1,y0-1,r-l-1,1,'rgba(255,255,255,.35)')}
+    else if(V.hat==='beanie'){R(l,y0-4,r-l+1,7,OL);R(l-1,y0-2,r-l+3,5,OL);R(l+1,y0-3,r-l-1,5,hd);R(l,y0-1,r-l+1,3,hd);R(l,y0+1,r-l+1,1,'rgba(255,255,255,.4)');R(Math.round((l+r)/2)-1,y0-6,3,3,OL);R(Math.round((l+r)/2),y0-5,1,1,'#fff')}
+    else if(V.hat==='bandana'){const by=y0+Math.round(I.hh*.35);R(l-1,by-1,r-l+3,4,OL);R(l,by,r-l+1,2,hd);R(l-4,by+1,4,4,OL);R(l-3,by+2,2,2,hd)}
+    if(V.shades){const ey=y0+Math.round(I.hh*.62);R(Math.round(I.hc),ey,r-Math.round(I.hc)+1,3,OL);R(r-1,ey,1,1,'#9ad8ff')}}
+  if(V.w&&k!=='fall'){const{fx,fy}=I;let ang=k==='punch'?(i<pk?125:i<=pk+1?4:40):k==='hurt'?100:72;if(V.w==='knife')ang=k==='punch'&&i>=pk&&i<=pk+1?0:20;
+    const W2={pipe:{L:19,c:'#9aa2b2',hi:'#e0e6f0',t:2},bat:{L:21,c:'#b07a3a',hi:'#e0b070',t:2},knife:{L:7,c:'#d8dce8',hi:'#fff',t:1}}[V.w],ca=Math.cos(ang*Math.PI/180),sa=-Math.sin(ang*Math.PI/180);
+    for(const pass of[0,1])for(let t=-2;t<=W2.L;t+=.5){const px=X+fx+ca*t,py=Y+fy+sa*t,th=W2.t+(V.w==='bat'&&t>W2.L*.6?1:0)+(pass?0:2);x.fillStyle=pass?(t<1?'#5a3a2a':t>W2.L-2?W2.hi:W2.c):OL;x.fillRect(Math.round(px-th/2),Math.round(py-th/2),th,th)}}
+  return m[key]=c}
+const pickOf=a=>a[(Math.random()*a.length)|0];
+function rollVariant(C){const VR=C.vary;if(!VR)return null;const v={sc:pickOf(VR.sc||[1]),top:null,bot:null,hat:VR.hats?pickOf(VR.hats):'none',shades:!!VR.hats&&Math.random()<.3,
+    hc:pickOf(['#d02a2a','#2a5ad0','#e0c020','#26262e','#2aa04a','#e07a1a','#8a3ad0']),w:VR.weapon||(VR.weapons&&Math.random()<(VR.wchance||.35)?pickOf(VR.weapons):null)};
+  if(VR.outfit){const H=[0,0,45,100,150,200,250,300];if(Math.random()<.75)v.top=pickOf(H);if(Math.random()<.65)v.bot=pickOf(H)}
+  v.key=[v.top,v.bot,v.hat,v.shades?1:0,v.hc,v.w].join('');return v}
 
 function drawFlag(code,x,y){x|=0;y|=0;ctx.fillStyle='#000';ctx.fillRect(x-1,y-1,16,12);
   if(code==='br'){ctx.fillStyle='#1f9a3a';ctx.fillRect(x,y,14,10);ctx.fillStyle='#ffd72a';for(let r=0;r<5;r++){const w=2+r*2;ctx.fillRect(x+7-w/2-1,y+r,w+2,1);ctx.fillRect(x+7-w/2-1,y+9-r,w+2,1)}ctx.fillStyle='#2a3a9a';ctx.fillRect(x+5,y+3,4,4);ctx.fillRect(x+6,y+2,2,6);ctx.fillRect(x+4,y+4,6,2)}
@@ -1219,7 +1252,10 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
     case'attack':{const a=f.atk;const k={jab:'punch',kick:'kick',sweep:A.lowkick?'lowkick':'sweep',cjab:A.cpunch?'cpunch':null}[a.name];
       if(k&&A[k])return strike(k,a,t);if(a.crouch&&A.crouch)return{...P('crouch',last('crouch')),limbs:true};return null}
     case'hurt':if(f.hurtK==='crouch'&&A.crouch)return P('crouch',last('crouch'));return A.hurt?P('hurt',Math.min(t/3,last('hurt'))):null;
-    case'grabbed':case'yield':return A.hurt?P('hurt',last('hurt')):null;
+    case'yield':if(A.kneel)return P('kneel',Math.min(t/4,last('kneel')));return A.hurt?P('hurt',last('hurt')):null;
+    case'kneel':return A.kneel?P('kneel',Math.min(t/4,last('kneel'))):A.hurt?P('hurt',last('hurt')):null;
+    case'taunt':return A.taunt?P('taunt',(t/6)%n('taunt')):P('idle',(frameNo/7)%n('idle'));
+    case'grabbed':return A.hurt?P('hurt',last('hurt')):null;
     case'leave':return f.st<60||!A.walk?P('idle',0):P('walk',Math.floor(frameNo/6)%n('walk'));
     case'throwing':{if(!A.punch)return null;const pk=akOf(f.c,'punch').pk;return P('punch',f.thr?pk:Math.min(t/1.4,last('punch')))}
     case'block':return A.block?P('block',Math.min(t,last('block'))):null;
@@ -1251,15 +1287,17 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
     case'slamming':if(f.slam&&f.slam.kind==='throw')return A.punch?P('punch',kf(t,[[0,akOf(f.c,'punch').pk],[22,last('punch')]])):null;
       return A.throw?P('throw',kf(t,[[0,0],[30,last('throw')]])):A.win?P('win',kf(t,[[0,0],[30,last('win')]])):null;}
   return null}
-function blitA(img,x,y,fc,ax,ay,rot,pivotC,ox,oy,ph){ctx.save();ctx.translate(Math.round(x+ox),Math.round(GY-y+oy));
+function blitA(img,x,y,fc,ax,ay,rot,pivotC,ox,oy,ph,sc=1){ctx.save();ctx.translate(Math.round(x+ox),Math.round(GY-y+oy));
   if(rot){if(pivotC){ctx.translate(0,-ph/2);ctx.rotate(rot);ctx.translate(0,ph/2)}else ctx.rotate(rot)}
-  ctx.scale(fc,1);ctx.drawImage(img,-Math.round(ax),-ay);ctx.restore()}
+  ctx.scale(fc*sc,sc);ctx.drawImage(img,-Math.round(ax),-ay);ctx.restore()}
+const A0=(f,k)=>!!(f.c.anim&&f.c.anim[k]);
 function drawFighter(f){const P=pose(f);if(!P)return drawFighterLegacy(f);
   const c=f.c,a=c.anim[P.k],fr=a.fr[P.i],fc=f.face,t=f.st;let img=f.shadow?sil(fr,'#1a1030'):f.hue!=null?hueOf(fr,f.hue,f.sat,f.whiten):f.alt?altOf(fr):fr;if(f.flash>0&&(f.flash&1)&&!F.cinema)img=sil(fr,'#ffffff');
-  let rot=0,pivotC=false,ox=0,oy=0;if(f.state==='grabbed'){rot=f.rot||0;pivotC=true}if(f.state==='hurt'&&t<6)ox=-fc*2+(t&1?1:-1);if(f.state==='yield')oy=3;
+  let rot=0,pivotC=false,ox=0,oy=0;if(f.state==='grabbed'){rot=f.rot||0;pivotC=true}if(f.state==='hurt'&&t<6)ox=-fc*2+(t&1?1:-1);if(f.state==='yield'&&!A0(f,'kneel'))oy=3;
   // hurt reactions by where the hit landed: high = head snaps back, mid = doubles over, low = legs buckle, crouch = jolted down
   if(f.state==='hurt'){const k=Math.max(0,1-t/16),K=f.hurtK;if(K==='high')rot=-fc*.16*k;else if(K==='mid')rot=fc*.1*k;else if(K==='low'){rot=-fc*.05*k;oy=Math.round(3*k)}else if(K==='crouch'){oy=Math.round(2*k);ox=-fc*3*k+(t&1?1:-1)}}
-  const B=(im,x,y)=>blitA(im,x,y,fc,a.ax,a.ay,rot,pivotC,ox,oy,f.H);
+  if(f.vari&&!f.shadow&&!(f.flash>0&&(f.flash&1)&&!F.cinema))img=dressed(img,fr,f.vari,P.k,P.i,P.k==='punch'&&A0(f,'punch')?akOf(f.c,'punch').pk:-1,f.c.H);
+  const sc=f.vari?f.vari.sc:1,B=(im,x,y)=>blitA(im,x,y,fc,a.ax+(im.padX||0),a.ay+(im.padY||0),rot,pivotC,ox,oy,f.H,sc);
   for(const g of f.ghosts){ctx.globalAlpha=g.l/20;B(sil(fr,c.col.aura),g.x,g.y);ctx.globalAlpha=1}
   if(f.state==='special'&&t<10||F.superFlash>0&&F.superBy===f){const p=(frameNo&2)?2:1;ctx.globalAlpha=.6;for(const[dx,dy]of[[-p,0],[p,0],[0,-p]])B(sil(fr,c.col.aura),f.x+dx,f.y-dy);ctx.globalAlpha=1}
   if(f.inv>0&&f.state!=='down'&&!(f.sp&&f.sp.kind==='super')&&(frameNo&2))ctx.globalAlpha=.55;
@@ -1620,79 +1658,111 @@ let ASSETS_READY=false;
 const FY=148,FZ=36;// floor band: feet at screen y FY..FY+FZ (z = depth, 0 = far)
 const FOES={
   goon:{id:'goon',name:'GOON',hp:30,speed:.95,power:1,def:1,jump:1,dmg:5,reach:40,score:100,col:{aura:'#ff5a3a',skin:'#c98a5e',glove:'#222',leg:'#3d5a96',foot:'#222'},sh:.72,hip:.5,
-    names:['SID','KNOX','BUZZ','DUKE','ROCCO','JAKE','MOE','VIC']},
+    names:['SID','KNOX','BUZZ','DUKE','ROCCO','JAKE','MOE','NICKY'],vary:{sc:[.9,1,1,1.08,1.18],hats:['cap','beanie','bandana','none','none'],outfit:true,weapons:['pipe','bat','knife']}},
   slinger:{id:'slinger',name:'SLINGER',hp:24,speed:1.05,power:1,def:1,jump:1,dmg:6,reach:36,score:150,ranged:true,col:{aura:'#5ad86a',skin:'#e0a070',glove:'#222',leg:'#222',foot:'#222'},sh:.72,hip:.5,
-    names:['SPIKE','VINNY','ZIP','RAT','SKIDS','FLICK']},
+    names:['SPIKE','VINNY','ZIP','RAT','SKIDS','FLICK'],vary:{sc:[.94,1,1.06],hats:['cap','beanie','none'],outfit:true}},
   bruiser:{id:'bruiser',name:'BRUISER',hp:72,speed:.62,power:1.4,def:1,jump:1,dmg:9,reach:44,score:400,heavy:true,col:{aura:'#ffd23a',skin:'#8a5a3a',glove:'#111',leg:'#111',foot:'#111'},sh:.72,hip:.5,
-    names:['TANK','MOOSE','BRICK','OX','BULL']}};
+    names:['TANK','MOOSE','BRICK','OX','BULL'],vary:{sc:[1,1.08,1.15],hats:['beanie','none','none'],outfit:true,weapons:['pipe','bat'],wchance:.3}}};
 Object.assign(FOES,{
-  blade:{id:'blade',base:'goon',hue:250,name:'BLADE',hp:26,speed:1.35,power:1,def:1,jump:1,dmg:6,reach:46,lunge:3.2,score:180,col:{aura:'#b04aff'},names:['SLICK','RAZOR','JINX','SNAKE','DASH']},
-  molotov:{id:'molotov',base:'slinger',hue:150,name:'MOLOTOV',hp:28,speed:1,power:1,def:1,jump:1,dmg:5,reach:36,score:250,ranged:true,fire:true,col:{aura:'#ff7a2a'},names:['TORCH','SPARKY','BLAZE','ASH']},
-  enforcer:{id:'enforcer',base:'bruiser',hue:0,sat:1,whiten:true,name:'ENFORCER',hp:96,speed:.7,power:1.5,def:1,jump:1,dmg:11,reach:46,score:700,heavy:true,windup:15,col:{aura:'#7ad8ff'},names:['TITAN','HAMMER','ATLAS','BOULDER']}});
-const FALLBACK_FOE={goon:'karl',slinger:'vizor',bruiser:'ivan'};// used until a foe's own sprites exist
+  blade:{id:'blade',base:'goon',hue:250,name:'BLADE',hp:26,speed:1.35,power:1,def:1,jump:1,dmg:6,reach:46,lunge:3.2,score:180,col:{aura:'#b04aff'},names:['SLICK','RAZOR','JINX','SNAKE','DASH'],vary:{sc:[.92,1,1.05],hats:['bandana','cap','none'],weapon:'knife'}},
+  molotov:{id:'molotov',base:'slinger',hue:150,name:'MOLOTOV',hp:28,speed:1,power:1,def:1,jump:1,dmg:5,reach:36,score:250,ranged:true,fire:true,col:{aura:'#ff7a2a'},names:['TORCH','SPARKY','BLAZE','ASH'],vary:{sc:[.95,1,1.05],hats:['beanie','none']}},
+  enforcer:{id:'enforcer',base:'bruiser',hue:0,sat:1,whiten:true,name:'ENFORCER',hp:96,speed:.7,power:1.5,def:1,jump:1,dmg:11,reach:46,score:700,heavy:true,windup:15,col:{aura:'#7ad8ff'},names:['TITAN','HAMMER','ATLAS','BOULDER'],vary:{sc:[1,1.1],hats:['none'],weapons:['pipe'],wchance:.25}}});
+Object.assign(FOES,{
+  chain:{id:'chain',name:'CHAIN',hp:34,speed:.9,power:1,def:1,jump:1,dmg:8,reach:60,windupA:7,score:250,col:{aura:'#7aff3a',skin:'#d09a6a',glove:'#222',leg:'#4a5a2a',foot:'#c02020'},sh:.72,hip:.5,
+    names:['LINK','RUST','SCRAP','DIESEL','BOLT','GRIT'],vary:{sc:[.95,1,1.06],hats:['none'],outfit:true}},
+  kicker:{id:'kicker',name:'KICKER',hp:30,speed:1.25,power:1,def:1,jump:1,dmg:7,reach:46,atkName:'kick',flyer:true,score:300,col:{aura:'#c04aff',skin:'#d8a070',glove:'#fff',leg:'#222',foot:'#fff'},sh:.72,hip:.5,
+    names:['JADE','ROXY','NIKKI','KAT','VIOLET','REN'],vary:{sc:[.95,1,1.04],outfit:true}},
+  // the boss of Bonfire City: cane strikes and a ground shockwave; beaten, he kneels instead of falling
+  vex:{id:'vex',name:'VEX',hp:240,speed:.75,power:1.6,def:1,jump:1,dmg:12,reach:58,windupA:4,heavy:true,boss:true,score:5000,col:{aura:'#b04aff',skin:'#d8a070',glove:'#222',leg:'#3a1a4a',foot:'#111'},sh:.72,hip:.5,names:['VEX']}});
+const FALLBACK_FOE={goon:'karl',slinger:'vizor',bruiser:'ivan',chain:'zeke',kicker:'lawslie',vex:'hecky'};// used until a foe's own sprites exist
 const LEVELS=[
   {name:'BONFIRE STREETS',bg:'story_lvl1',bgY:-38,floor:{kind:'slabs',c1:'#3c3650',c2:'#1c1828',line:'#2a2438',edge:'#8a82a0'},alt:'vizor',song:'vizor',len:768,crates:[[236,8],[476,28]],
-    waves:[{at:70,foes:['goon','goon']},{at:300,foes:['goon','slinger','goon']},{at:512,foes:['goon','bruiser','slinger','goon']}]},
+    waves:[{at:70,foes:['goon','goon']},{at:300,foes:['goon','slinger','goon']},{at:512,foes:['goon','bruiser','chain','goon']}]},
   {name:'THE DOCKS',bg:'story_lvl2',bgY:-38,floor:{kind:'boards',c1:'#6a5034',c2:'#2e2216',line:'#3a2a18',edge:'#a07a4a'},alt:'zeke',song:'ivan',len:768,crates:[[200,22],[430,6],[650,28]],
-    waves:[{at:50,foes:['goon','slinger','blade']},{at:290,foes:['bruiser','goon','blade','slinger']},{at:512,foes:['molotov','bruiser','goon','blade','goon']}]},
+    waves:[{at:50,foes:['goon','slinger','blade']},{at:290,foes:['bruiser','chain','blade','slinger']},{at:512,foes:['molotov','bruiser','kicker','blade','goon']}]},
   {name:'VEX TOWER',bg:'story_lvl3',alt:'vizor',song:'hecky',len:768,crates:[[180,14],[420,26],[620,10]],
-    waves:[{at:60,foes:['blade','goon','molotov','goon']},{at:290,foes:['enforcer','slinger','molotov','blade']},{at:512,foes:['bruiser','blade','enforcer','molotov','goon','blade']}]},
+    waves:[{at:60,foes:['blade','kicker','molotov','goon']},{at:290,foes:['enforcer','chain','molotov','blade']},{at:512,foes:['bruiser','kicker','enforcer','molotov','chain','blade']}]},
   {name:"VEX'S PENTHOUSE",bg:'hecky_stage',alt:'hecky',song:'rex',len:256,crates:[],
-    waves:[{at:0,foes:['enforcer','blade','molotov','goon']}]}];
-// a gritty Christian story: temptation, the fight against your own sin, mercy instead of revenge (KJV verses).
-// Each scene is a list of beats: [speaker, text] (P = your fighter, VEX, FOE = the man you spared, SAM = Samson,
-// VIC = Vex after he turns back, N = narration), {verse}, {choice} (waits for A), {bg,title,sub} (a new place).
-// {N} = your fighter's name, {F} = the name of the man you spared.
+    waves:[{at:0,foes:['enforcer','blade','molotov','goon']},{at:0,foes:['vex','chain','kicker']}]}];
+// The story: a city held hostage by fear, one fighter who stands up for its people (not for revenge), and mercy
+// that wins where fists can't. KJV verses close each chapter.
+// A scene is a list of beats:
+//   {shot:{bg,cx,rain,dawn,trophy,actors:[[id,who,x,face,{state,hidden}]]}}  sets the stage: characters acted out on the backdrop
+//   {s:SPEAKER,t:TEXT,do:[[id,'walk',x]|[id,'anim',state]|[id,'fade']|[id,'in',x]|[id,'face',dir]],skipIf:p1,onlyIf:p1}
+//   {verse,ref}   {choice}  (waits for A)   {bg,title,sub}  (a new place: title card)
+// Speakers: P = your fighter, VEX, VIC = Vex once he's turned back (Victor), FOE = the man you spared, SAM = Samson,
+// N = narration. Actors (who): 'P', 'SHD' (your shadow), 'FOE', 'padre', or any henchman kind ('goon', 'chain', 'vex'...).
+// {N} = your fighter's name, {F} = the spared man's name.
 const SCENES={
-  intro:{bg:'story_lvl1',title:'PROLOGUE',sub:'BONFIRE CITY',with:'VEX',beats:[
-    ['N',"BONFIRE CITY. THE RAIN NEVER WASHES ANYTHING CLEAN. ONE MAN OWNS THE STREETS, THE FIGHTS AND THE PEOPLE IN THEM."],
-    ['VEX',"THE BONFIRE BASH TROPHY. SOLID GOLD. TOMORROW IT WAS GOING TO BE YOURS, CHAMP. TONIGHT IT'S MINE."],
-    ['VEX',"EVERY MAN HAS A PRICE. NAME YOURS. MONEY? A TITLE? I CAN MAKE ALL YOUR PAIN GO AWAY."],
-    ['P',"I'M NOT FOR SALE."],
-    ['VEX',"EVERYBODY SAYS THAT ONCE. COME UP TO MY PENTHOUSE AND SAY IT AGAIN... IF YOU MAKE IT."],
-    ['N',"BETWEEN HERE AND VEX TOWER, THE STREETS ARE FULL OF HIS MEN. {N} WALKS INTO THE DARK."],
+  intro:{title:'PROLOGUE',sub:'BONFIRE CITY',beats:[
+    {shot:{bg:'story_lvl1',cx:60,rain:1,actors:[['g1','goon',150,-1],['g2','chain',186,-1],['vex','vex',290,-1,{prop:'trophy'}],['P','P',-40,1]]}},
+    {s:'N',t:"BONFIRE CITY. FAMILIES LOCK THEIR DOORS AT SUNDOWN. SHOPS PAY VEX TO STAY OPEN. NOBODY CALLS THE POLICE ANY MORE.",do:[['vex','walk',222]]},
+    {s:'N',t:"ON THE EVE OF THE BONFIRE BASH FINALS, VEX TAKES THE ONE THING THIS CITY STILL CHEERED FOR.",do:[['P','walk',62]]},
+    {s:'VEX',t:"THE BONFIRE BASH TROPHY. SOLID GOLD. TOMORROW IT WAS GOING TO BE YOURS, CHAMP. TONIGHT IT'S MINE.",do:[['vex','anim','taunt']]},
+    {s:'VEX',t:"EVERY MAN HAS A PRICE. NAME YOURS. MONEY? A TITLE? A CUT OF THE WHOLE CITY?",do:[['vex','anim','idle']]},
+    {s:'P',t:"I'M NOT FOR SALE. AND NEITHER ARE THE PEOPLE OF THIS CITY."},
+    {s:'VEX',t:"EVERYBODY SAYS THAT ONCE. COME UP TO MY PENTHOUSE AND SAY IT AGAIN... IF YOU MAKE IT.",do:[['vex','walk',330],['g1','walk',330],['g2','walk',330]]},
+    {bg:'padre_stage',title:'THAT NIGHT',sub:'THE OLD CHAPEL'},
+    {shot:{bg:'padre_stage',actors:[['sam','padre',176,-1],['P','P',84,1]]},skipIf:'padre'},
+    {shot:{bg:'padre_stage',actors:[['P','P',128,1]]},onlyIf:'padre'},
+    {s:'SAM',t:"THEY TOOK MORE THAN A TROPHY. THEY TOOK THIS CITY'S HOPE. PEOPLE ARE AFRAID TO WALK THEIR OWN STREETS.",skipIf:'padre'},
+    {s:'P',t:"THEN I'LL GIVE THE STREETS BACK TO THEM. ONE BLOCK AT A TIME.",skipIf:'padre'},
+    {s:'SAM',t:"GO FOR THE PEOPLE, NOT FOR REVENGE. HATE CAN'T DRIVE OUT HATE. AND REMEMBER: EVEN VEX WAS SOMEBODY'S SON.",skipIf:'padre'},
+    {s:'N',t:"SAMSON KNEELS AND PRAYS FOR THE CITY: FOR THE AFRAID, FOR THE LOST, EVEN FOR VEX. THEN HE WALKS OUT INTO THE RAIN.",onlyIf:'padre',do:[['P','walk',300]]},
     {verse:"THE LIGHT SHINETH IN DARKNESS, AND THE DARKNESS COMPREHENDED IT NOT.",ref:'JOHN 1:5'}]},
-  ch2:{bg:'story_lvl2',title:'CHAPTER 2',sub:'THE DOCKS',with:'FOE',beats:[
-    ['FOE',"HEY... YOU. YOU COULD HAVE FINISHED ME BACK THERE. WHY DIDN'T YOU?"],
-    ['P',"SOMEBODY ONCE GAVE ME A SECOND CHANCE. I'M JUST PASSING IT ON."],
-    ['FOE',"NOBODY EVER GAVE ME NOTHING. VEX PAYS MY RENT. HE PAYS EVERYBODY'S RENT. THAT'S HOW HE OWNS YOU."],
-    ['FOE',"HE MOVES HIS STOLEN CARGO THROUGH THE DOCKS. YOUR TROPHY WENT DOWN THERE LAST NIGHT."],
-    ['P',"THEN THAT'S WHERE I'M GOING. AND YOU DON'T HAVE TO GO BACK TO HIM."],
-    ['FOE',"...THE OLD CHAPEL ON 5TH STREET STILL LEAVES ITS DOORS OPEN, RIGHT? MAYBE I'LL GO AND SEE."],
+  ch2:{title:'CHAPTER 2',sub:'THE DOCKS',beats:[
+    {shot:{bg:'story_lvl2',cx:40,actors:[['P','P',70,1],['foe','FOE',300,-1]]}},
+    {s:'N',t:"THE DOCKS. MEN WHO OWE VEX MONEY UNLOAD HIS STOLEN CARGO ALL NIGHT, PAYING OFF DEBTS THEY CAN NEVER CLEAR.",do:[['foe','walk',168]]},
+    {s:'FOE',t:"HEY... YOU. YOU COULD HAVE FINISHED ME BACK THERE. WHY DIDN'T YOU?"},
+    {s:'P',t:"BECAUSE YOU'RE NOT MY ENEMY. YOU'RE ONE OF THE PEOPLE I CAME TO FIGHT FOR."},
+    {s:'FOE',t:"VEX PAYS MY RENT. HE PAYS EVERYBODY'S RENT. THAT'S HOW HE OWNS YOU."},
+    {s:'FOE',t:"HE MOVES HIS STOLEN CARGO THROUGH HERE. YOUR TROPHY CAME DOWN TO THE DOCKS LAST NIGHT."},
+    {s:'P',t:"THEN THAT'S WHERE I'M GOING. AND YOU DON'T HAVE TO GO BACK TO HIM."},
+    {s:'FOE',t:"...THE OLD CHAPEL ON 5TH STREET STILL LEAVES ITS DOORS OPEN, RIGHT? MAYBE I'LL GO AND SEE.",do:[['foe','walk',330]]},
     {verse:"FOR THE SON OF MAN IS COME TO SEEK AND TO SAVE THAT WHICH WAS LOST.",ref:'LUKE 19:10'}]},
-  ch3:{bg:'story_lvl3',title:'CHAPTER 3',sub:'VEX TOWER',with:'VEX',beats:[
-    ['N',"IN A CONTAINER AT THE DOCKS: STOLEN GOLD, AND A KEY CARD. VEX TOWER, TOP FLOOR."],
-    ['VEX',"(ON THE RADIO) YOU'RE TOUGHER THAN YOU LOOK. I RESPECT THAT. SO I SENT THE ELEVATOR DOWN FOR YOU."],
-    ['VEX',"NO MORE FIGHTING. RIDE UP, SHAKE MY HAND, TAKE A SEAT AT MY TABLE. IT'S THE EASY WAY."],
-    ['P',"THE EASY WAY IS HOW YOU GOT EVERYBODY IN THIS CITY."],
-    ['P',"I'LL TAKE THE STAIRS."],
-    ['VEX',"THEN CLIMB, CHAMP. FORTY FLOORS, AND MY BEST MEN ARE WAITING ON EVERY ONE."],
+  ch3:{title:'CHAPTER 3',sub:'VEX TOWER',beats:[
+    {shot:{bg:'story_lvl3',actors:[['P','P',-40,1]]}},
+    {s:'N',t:"THE DOCK WORKERS WALK OFF THE JOB. WORD SPREADS ACROSS THE CITY: SOMEBODY IS FINALLY STANDING UP TO VEX.",do:[['P','walk',100]]},
+    {s:'N',t:"IN A CONTAINER AT THE DOCKS: STOLEN GOLD, AND A KEY CARD. VEX TOWER, TOP FLOOR."},
+    {s:'VEX',t:"(ON THE RADIO) YOU'RE TOUGHER THAN YOU LOOK. I RESPECT THAT. SO I SENT THE ELEVATOR DOWN FOR YOU."},
+    {s:'VEX',t:"RIDE UP, SHAKE MY HAND, TAKE A SEAT AT MY TABLE. NO MORE FIGHTING. IT'S THE EASY WAY."},
+    {s:'P',t:"THE EASY WAY IS HOW YOU GOT EVERYBODY IN THIS CITY. I'LL TAKE THE STAIRS.",do:[['P','walk',300]]},
+    {s:'VEX',t:"THEN CLIMB, CHAMP. FORTY FLOORS, AND MY BEST MEN ARE WAITING ON EVERY ONE."},
     {verse:"STRAIT IS THE GATE, AND NARROW IS THE WAY, WHICH LEADETH UNTO LIFE.",ref:'MATTHEW 7:14'}]},
-  final:{bg:'hecky_stage',title:'FINAL CHAPTER',sub:"VEX'S PENTHOUSE",with:'VEX',beats:[
-    ['N',"THE TOP FLOOR. THE WHOLE CITY GLITTERS BELOW. THE TROPHY SITS ON A GLASS TABLE."],
-    ['VEX',"LOOK AT IT. EVERY LIGHT DOWN THERE ANSWERS TO ME. ALL OF THIS CAN BE YOURS."],
-    ['VEX',"ALL YOU HAVE TO DO IS KNEEL."],
-    ['P',"NO."],
-    ['VEX',"THEN MY MEN WILL CHANGE YOUR MIND."]]},
-  shadow:{bg:'hecky_stage',with:'VEX',beats:[
-    ['VEX',"STILL STANDING? THEN MEET THE ONE FIGHTER YOU HAVE NEVER BEATEN."],
-    ['N',"A SHADOW STEPS OUT OF THE DARK. EVERY GRUDGE. EVERY LIE. IT MOVES LIKE {N}. IT FIGHTS LIKE {N}. IT IS {N}.",'SHD'],
+  final:{title:'FINAL CHAPTER',sub:"VEX'S PENTHOUSE",beats:[
+    {shot:{bg:'hecky_stage',trophy:132,actors:[['vex','vex',196,-1],['P','P',-40,1]]}},
+    {s:'N',t:"THE TOP FLOOR. THE WHOLE CITY GLITTERS BELOW. THE TROPHY SITS ON A GLASS TABLE.",do:[['P','walk',64]]},
+    {s:'VEX',t:"LOOK AT IT. EVERY LIGHT DOWN THERE ANSWERS TO ME. ALL OF THIS CAN BE YOURS.",do:[['vex','anim','taunt']]},
+    {s:'VEX',t:"ALL YOU HAVE TO DO IS KNEEL.",do:[['vex','anim','idle']]},
+    {s:'P',t:"THOSE LIGHTS ARE PEOPLE'S HOMES. THEY WERE NEVER YOURS TO GIVE. NO."},
+    {s:'VEX',t:"THEN I'LL BREAK YOU MYSELF. MEN!"}]},
+  shadow:{beats:[
+    {shot:{bg:'hecky_stage',actors:[['P','P',72,1],['shd','SHD',140,-1,{hidden:1}],['vex','vex',204,-1,{state:'kneel'}]]}},
+    {s:'VEX',t:"YOU THINK YOU'RE BETTER THAN ME? EVERYBODY HAS A DARK SIDE, CHAMP. LET'S SEE YOURS."},
+    {s:'N',t:"A SHADOW STEPS OUT OF THE DARK. EVERY GRUDGE. EVERY LIE. IT MOVES LIKE {N}. IT FIGHTS LIKE {N}.",do:[['shd','fade']]},
+    {s:'N',t:"TO SAVE THIS CITY, {N} HAS TO BEAT THE ONE ENEMY NO FIST CAN REACH."},
     {verse:"FOR WE WRESTLE NOT AGAINST FLESH AND BLOOD, BUT AGAINST THE RULERS OF THE DARKNESS OF THIS WORLD.",ref:'EPHESIANS 6:12'}]},
-  ending:{bg:'hecky_stage',title:'EPILOGUE',sub:'THE LAST BLOW',with:'VEX',beats:[
-    ['N',"THE SHADOW BREAKS APART LIKE SMOKE. VEX'S MEN ARE GONE. IT'S JUST THE TWO OF YOU NOW."],
-    ['VEX',"GO ON. FINISH IT. THAT'S HOW THIS CITY WORKS. THAT'S WHAT I WOULD DO."],
-    {choice:'OFFER YOUR HAND'},
-    ['VEX',"...WHY?"],
-    ['P',"BECAUSE NOBODY IS TOO FAR GONE. NOT THAT GOON ON THE STREET. NOT ME. NOT EVEN YOU."],
-    ['VEX',"I'VE DONE TERRIBLE THINGS. I DON'T KNOW HOW TO BE ANYTHING ELSE."],
-    ['P',"THEN COME ON SUNDAY. THE CHAPEL DOORS ARE OPEN. THAT'S WHERE YOU START."],
-    {bg:'padre_stage',title:'SUNDAY MORNING',sub:'THE OLD CHAPEL',with:'SAM',trophy:true},
-    ['N',"BELLS RING OVER BONFIRE CITY. THE TROPHY IS BACK ON THE ALTAR, WHERE THE TOURNAMENT BEGAN."],
-    ['SAM',"FIFTY YEARS THESE DOORS HAVE STAYED OPEN. I'VE NEVER SEEN THEM DO SO MUCH GOOD IN ONE WEEK."],
-    ['FOE',"I TOLD YOU I'D COME AND SEE. FRONT ROW, TOO."],
-    ['N',"IN THE FRONT PEW, A BIG MAN IN A CHEAP SUIT SITS WITH HIS HEAD BOWED. NOBODY CALLS HIM VEX ANY MORE."],
-    ['VIC',"MY NAME IS VICTOR. ALL MY LIFE I SAID EVERY MAN HAS A PRICE. I WAS RIGHT. MINE WAS PAID FOR ME."],
-    ['N',"NEXT WEEK, THE FINALS. TONIGHT, FOR THE FIRST TIME IN YEARS, BONFIRE CITY SLEEPS IN PEACE."],
+  ending:{title:'EPILOGUE',sub:'THE LAST BLOW',beats:[
+    {shot:{bg:'hecky_stage',trophy:40,actors:[['P','P',92,1],['vex','vex',176,-1,{state:'kneel'}]]}},
+    {s:'N',t:"THE SHADOW BREAKS APART LIKE SMOKE. VEX'S MEN ARE GONE. IT'S JUST THE TWO OF YOU NOW."},
+    {s:'VEX',t:"GO ON. FINISH IT. THAT'S HOW THIS CITY WORKS. THAT'S WHAT I WOULD DO."},
+    {choice:'OFFER YOUR HAND',do:[['P','walk',124]]},
+    {s:'VEX',t:"...WHY?",do:[['vex','anim','idle']]},
+    {s:'P',t:"BECAUSE NOBODY IS TOO FAR GONE. NOT THAT GOON ON THE STREET. NOT ME. NOT EVEN YOU."},
+    {s:'VEX',t:"I'VE HURT A LOT OF PEOPLE. I DON'T KNOW HOW TO BE ANYTHING ELSE."},
+    {s:'P',t:"THEN START BY GIVING BACK WHAT YOU TOOK. ALL OF IT. AND COME ON SUNDAY. THE CHAPEL DOORS ARE OPEN."},
+    {bg:'padre_stage',title:'SUNDAY MORNING',sub:'THE OLD CHAPEL'},
+    {shot:{bg:'padre_stage',trophy:172,actors:[['P','P',24,1],['foe','FOE',78,1],['vex','vex',128,1,{state:'kneel'}],['sam','padre',220,-1]]},skipIf:'padre'},
+    {shot:{bg:'padre_stage',trophy:172,actors:[['foe','FOE',40,1],['vex','vex',110,1,{state:'kneel'}],['P','P',220,-1]]},onlyIf:'padre'},
+    {s:'N',t:"BELLS RING OVER BONFIRE CITY. THE TROPHY IS BACK ON THE ALTAR, WHERE THE TOURNAMENT BEGAN."},
+    {s:'SAM',t:"FIFTY YEARS THESE DOORS HAVE STAYED OPEN. I'VE NEVER SEEN THEM DO SO MUCH GOOD IN ONE WEEK."},
+    {s:'FOE',t:"I TOLD YOU I'D COME AND SEE. FRONT ROW, TOO."},
+    {s:'N',t:"VEX GAVE IT ALL BACK: THE MONEY, THE DEBTS, THE DEEDS TO HALF THE STREET. NOBODY CALLS HIM VEX ANY MORE."},
+    {s:'VIC',t:"MY NAME IS VICTOR. ALL MY LIFE I SAID EVERY MAN HAS A PRICE. I WAS RIGHT. MINE WAS PAID FOR ME.",do:[['vex','anim','idle']]},
+    {bg:'story_lvl1',title:'ONE MONTH LATER',sub:'BONFIRE CITY'},
+    {shot:{bg:'story_lvl1',cx:60,dawn:1,actors:[['foe','FOE',-30,1],['P','P',124,1],['vex','vex',300,-1]]}},
+    {s:'N',t:"THE SHOPS ON 5TH STREET STAY OPEN AFTER DARK NOW. KIDS PLAY BALL IN THE STREETS AGAIN. THE CITY IS WAKING UP.",do:[['foe','walk',80],['vex','walk',178]]},
+    {s:'N',t:"NEXT WEEK, THE FINALS. TONIGHT, FOR THE FIRST TIME IN YEARS, BONFIRE CITY SLEEPS IN PEACE."},
     {verse:"FOR THIS MY SON WAS DEAD, AND IS ALIVE AGAIN. HE WAS LOST, AND IS FOUND.",ref:'LUKE 15:24'}]}};
 const SCENE_AT=['intro','ch2','ch3','final','ending'];// the scene before each level (and the ending after the shadow)
 function foeData(id){const c=FOES[id];if(c.base){const b=foeData(c.base);return{...b,...c,anim:b.anim,H:b.H,spr:b.spr,alt:b.alt,white:b.white,sh:.72,hip:.5,col:{...b.col,...c.col}}}if(c.anim)return c;const b=CH[FALLBACK_FOE[id]];return{...b,...c,anim:b.anim,H:b.H,spr:b.spr,alt:b.alt,white:b.white,fake:true}}
@@ -1709,10 +1779,13 @@ function bust(fr,key,eyes,rim){const m=fxCache(fr);if(m['bust'+key])return m['bu
   // fade the cut-off bottom edge into the dialogue box
   const g=x.createLinearGradient(0,86,0,112);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(6,4,18,.9)');x.globalCompositeOperation='source-atop';x.fillStyle=g;x.fillRect(0,86,93,26);
   return m['bust'+key]=c}
-function vexPor(lit){const fr=foeData('bruiser').anim.idle.fr[0];return lit?bust(hueOf(fr,130,1.2),'lit',null,'#ffd23a'):bust(sil(fr,'#0b0714'),'dark','#ff3a3a','#8a3aff')}
+// Vex: his own PixelLab sprite (a silhouette fallback if it's missing); a gold edge once he's turned back
+function vexPor(lit){const C=foeData('vex');if(!C.fake){const fr=C.anim.idle.fr[0];return lit?bust(fr,'lit',null,'#ffd23a'):bust(fr,'dark')}
+  const fr=foeData('bruiser').anim.idle.fr[0];return lit?bust(hueOf(fr,130,1.2),'lit',null,'#ffd23a'):bust(sil(fr,'#0b0714'),'dark','#ff3a3a','#8a3aff')}
 function foePor(){const M=RUN.mercy||{kind:'goon'},C=foeData(M.kind),fr=C.anim.idle.fr[0];
-  return bust(M.hue!=null?hueOf(fr,M.hue,M.sat,M.whiten):M.alt?altOf(fr):fr,'f'+(M.hue!=null?M.hue+''+M.whiten:M.alt?'a':''))}
-// your shadow: your own portrait, black with a violet edge and burning eyes
+  let src=M.hue!=null?hueOf(fr,M.hue,M.sat,M.whiten):M.alt?altOf(fr):fr,k='f'+(M.hue!=null?M.hue+''+M.whiten:M.alt?'a':'');
+  if(M.vari){const V={...M.vari,w:null,key:M.vari.key+'nw'};src=dressed(src,fr,V,'idle',0,-1,C.H);k+=V.key}return bust(src,k)}
+// your shadow: your own portrait, black with a violet edge
 function shadowPor(im){const m=fxCache(im);if(m.shd)return m.shd;const c=mk(im.width,im.height),x=c.getContext('2d'),r=sil(im,'#b04aff');
   for(const[dx,dy]of[[-2,0],[2,0],[0,-2]])x.drawImage(r,dx,dy);x.drawImage(sil(im,'#100818'),0,0);return m.shd=c}
 function bgImg(k){return IMG[k]||(CH[k.replace(/_stage$/,'')]||{}).stage||(LEVELS.find(L=>L.bg===k)?CH[LEVELS.find(L=>L.bg===k).alt].stage:CH.karl.stage)}
@@ -1720,48 +1793,76 @@ function drawTrophy(x,y){const g=(frameNo>>3)%12;ctx.fillStyle='#120e1e';ctx.fil
   ctx.fillStyle='#6a4a1a';ctx.fillRect(x-7,y-4,14,4);ctx.fillStyle='#c8902a';ctx.fillRect(x-2,y-10,4,6);ctx.fillRect(x-5,y-11,10,2);
   ctx.fillStyle='#ffd23a';ctx.fillRect(x-7,y-24,14,12);ctx.fillRect(x-9,y-22,2,6);ctx.fillRect(x+7,y-22,2,6);ctx.fillStyle='#fff3a0';ctx.fillRect(x-5,y-23,2,8);
   if(g<3){ctx.fillStyle='#fff';ctx.fillRect(x+3,y-27+g,1,5-g*2>0?5-g*2:1);ctx.fillRect(x+1,y-25,5,1)}}
+// a cutscene actor: a real game character (your fighter, Samson, any henchman, Vex) walking and acting on the backdrop
+function mkActor(id,who,x,face,o={}){let a;
+  if(who==='P'||who==='SHD'){const k=skinned(RUN.p1,0);a=new Fighter(k.skinKey||RUN.p1,0,false,RUN.alt&&RUN.alt[0]);if(who==='SHD')a.shadow=true}
+  else if(CH[who])a=new Fighter(who,1,false,false);
+  else{const M=who==='FOE'?(RUN.mercy||{kind:'goon'}):{kind:who},C=foeData(M.kind);a=new Fighter('karl',1,true,false);a.c=C;a.img=C.spr;a.H=C.H;a.kind=M.kind;
+    if(who==='FOE'){if(M.hue!=null){a.hue=M.hue;a.sat=M.sat;a.whiten=M.whiten}else a.alt=!!M.alt;if(M.vari)a.vari={...M.vari,w:null,key:M.vari.key+'nw'}}
+    else if(C.hue!=null&&!C.fake){a.hue=C.hue;a.sat=C.sat||1;a.whiten=!!C.whiten}}
+  Object.assign(a,{id,x,y:0,z:0,face,state:o.state||'idle',st:0,vx:0,vy:0,flash:0,inv:0,ghosts:[],atk:null,sp:null,alpha:o.hidden?0:1,to:null,prop:o.prop});return a}
 const Cutscene={
-  enter(k){this.k=k;const S=this.S=SCENES[k];this.i=0;this.bg=S.bg;this.title=S.title;this.sub=S.sub;this.right=S.with;this.trophy=false;this.flash=0;
-    this.card=S.title?110:0;this.n=0;this.prep();if(k==='ending'||k==='shadow')playMusic(k==='ending'?'ending':'select');else playMusic('select')},
-  // speaker info: name, portrait, side
+  enter(k){this.k=k;const S=this.S=SCENES[k];this.i=0;this.title=S.title;this.sub=S.sub;this.flash=0;this.shot=null;this.actors=[];this.rain=[];
+    if(!F)F={superFlash:0,cinema:false,superBy:null};this.card=S.title?110:0;this.n=0;this.prep();playMusic(k==='ending'?'ending':'select')},
+  // speaker info: name, face, colour
   who(s){if(s==='SAM'&&RUN.p1==='padre')s='P';const c=CH[RUN.p1];
-    return{P:{n:c.name,im:c.porm,L:1,c:c.col.aura},VEX:{n:'VEX',im:vexPor(RUN.vexLit),c:RUN.vexLit?'#ffd23a':'#ff4a4a'},VIC:{n:'VICTOR',im:vexPor(true),c:'#ffd23a'},
-      FOE:{n:(RUN.mercy&&RUN.mercy.name)||'SID',im:foePor(),c:'#ff9a6a'},SHD:{n:'SHADOW',im:shadowPor(c.porm),c:'#b04aff',full:1},SAM:{n:'SAMSON',im:CH.padre.porm,c:'#7ad8ff'},N:{}}[s]||{}},
+    return{P:{n:c.name,im:c.porm,c:c.col.aura},VEX:{n:'VEX',im:vexPor(RUN.vexLit),c:RUN.vexLit?'#ffd23a':'#e0a0ff'},VIC:{n:'VICTOR',im:vexPor(true),c:'#ffd23a'},
+      FOE:{n:(RUN.mercy&&RUN.mercy.name)||'SID',im:foePor(),c:'#ff9a6a'},SAM:{n:'SAMSON',im:CH.padre.porm,c:'#7ad8ff'},N:{}}[s]||{}},
   fill(s){const c=CH[RUN.p1];return s.replace(/\{N\}/g,c.name).replace(/\{F\}/g,(RUN.mercy&&RUN.mercy.name)||'SID')},
-  prep(){const b=this.S.beats[this.i];if(!b)return;this.n=0;
-    if(b.bg){this.bg=b.bg;this.title=b.title;this.sub=b.sub;this.right=b.with||this.right;if(b.trophy)this.trophy=true;this.card=110;if(b.bg==='padre_stage')try{SFX.bell()}catch(e){}this.i++;return this.prep()}
-    if(Array.isArray(b)){const sp=b[0]==='SAM'&&RUN.p1==='padre'?'P':b[0];if(sp!=='P'&&sp!=='N')this.right=sp;if(b[2])this.right=b[2];this.lines=wrap(this.fill(b[1]),38)}
-    else if(b.verse)this.lines=[...wrap(b.verse,38),'- '+b.ref];else this.lines=[]},
+  skip(b){return!!b&&((b.skipIf&&b.skipIf===RUN.p1)||(b.onlyIf&&b.onlyIf!==RUN.p1))},
+  shows(b){return!!b&&!b.bg&&!b.shot&&!this.skip(b)},// beats the player reads (the test counts these)
+  sp(b){const s=Array.isArray(b)?b[0]:b.s;return s==='SAM'&&RUN.p1==='padre'?'P':s},
+  setShot(sh){this.shot=sh;this.actors=sh.actors.map(([id,who,x,face,o])=>mkActor(id,who,x,face,o));this.rain=sh.rain?Array.from({length:70},()=>({x:Math.random()*W,y:Math.random()*H,v:5+Math.random()*3})):[]},
+  act(cmds){for(const[id,c,v]of cmds||[]){const a=this.actors.find(x=>x.id===id);if(!a)continue;
+    if(c==='walk')a.to=v;else if(c==='anim'){a.state=v;a.st=0}else if(c==='fade')a.fadeIn=1;else if(c==='in'){a.alpha=1;a.x=v}else if(c==='face')a.face=v}},
+  prep(){let b=this.S.beats[this.i];while(b&&(this.skip(b)||b.bg||b.shot)){
+      if(!this.skip(b)){if(b.bg){this.title=b.title;this.sub=b.sub;this.card=110;this.shot=null;this.actors=[];if(b.bg==='padre_stage')try{SFX.bell()}catch(e){}}if(b.shot)this.setShot(b.shot)}
+      b=this.S.beats[++this.i]}
+    if(!b)return;this.n=0;const t=Array.isArray(b)?b[1]:b.t;
+    this.lines=t?wrap(this.fill(t),this.sp(b)==='N'?38:31):b.verse?[...wrap(b.verse,38),'- '+b.ref]:[];if(!b.choice)this.act(b.do)},
   beat(){return this.S.beats[this.i]},
   len(){return this.lines.join(' ').length},
   done(){const k=this.k;if(k==='ending')goFade(()=>go(StoryEnd));else if(k==='shadow')goFade(()=>go(VS));else goFade(()=>go(Brawl))},
-  next(){this.i++;if(this.i>=this.S.beats.length){this.done();return}this.prep()},
-  update(){if(this.flash>0)this.flash--;if(this.card>0){this.card--;if(this.t>15&&(pressed.a||pressed.start))this.card=0;return}
+  next(){this.i++;if(this.i>=this.S.beats.length){this.done();return}this.prep();if(this.i>=this.S.beats.length)this.done()},
+  update(){if(this.flash>0)this.flash--;
+    for(const a of this.actors){a.st++;if(a.fadeIn)a.alpha=Math.min(1,a.alpha+.02);
+      if(a.to!=null){const d=a.to-a.x;if(Math.abs(d)<1.4){a.x=a.to;a.to=null;a.vx=0;a.state='idle';a.st=0}else{a.vx=Math.sign(d)*1.3;a.x+=a.vx;a.face=Math.sign(d);a.state='walk'}}}
+    for(const r of this.rain){r.y+=r.v;r.x-=1.4;if(r.y>H){r.y=-6;r.x=Math.random()*(W+40)}}
+    if(this.card>0){this.card--;if(this.t>15&&(pressed.a||pressed.start))this.card=0;return}
     const b=this.beat();if(!b)return;
-    if(pressed.start&&this.t>20){for(const x of this.S.beats)if(x.choice)RUN.vexLit=true;for(const x of this.S.beats)if(x.trophy)this.trophy=true;SFX.back();this.i=this.S.beats.length;this.done();return}
-    if(b.choice){if(pressed.a){RUN.vexLit=true;this.flash=24;try{SFX.bless()}catch(e){SFX.ok()}this.next()}return}
+    if(pressed.start&&this.t>20){if(this.S.beats.some(x=>x.choice))RUN.vexLit=true;SFX.back();this.i=this.S.beats.length;this.done();return}
+    if(b.choice){if(pressed.a){RUN.vexLit=true;this.flash=24;try{SFX.bless()}catch(e){SFX.ok()}this.act(b.do);this.next()}return}
     this.n+=1.3;if(pressed.a||pressed.b){if(this.n<this.len()){this.n=999;return}SFX.move();this.next()}},
-  draw(){const t=this.t,bg=bgImg(this.bg),bw=bg.width*H/bg.height,px=-Math.min(Math.max(0,bw-W),t*.08);ctx.drawImage(bg,Math.round(px),0,bw,H);
-    ctx.fillStyle=this.k==='ending'&&this.bg==='padre_stage'?'rgba(30,18,6,.45)':'rgba(6,4,18,.6)';ctx.fillRect(0,0,W,H);
-    if(this.trophy){const g=ctx.createRadialGradient(128,108,4,128,108,46);g.addColorStop(0,'rgba(255,220,120,.45)');g.addColorStop(1,'rgba(255,220,120,0)');ctx.fillStyle=g;ctx.fillRect(80,60,96,96);drawTrophy(128,128)}
+  // the stage: backdrop, floor, characters, rain; ground line at GL
+  drawShot(){const sh=this.shot,t=this.t,L=LEVELS.find(l=>l.bg===sh.bg),bg=bgImg(sh.bg);let GL;
+    if(L&&L.floor&&IMG[sh.bg]){const cx=(sh.cx||0)+Math.min(40,t*.05);ctx.fillStyle=L.floor.c2;ctx.fillRect(0,0,W,H);ctx.save();ctx.translate(0,-30);ctx.drawImage(bg,-Math.round(cx),L.bgY||0,bg.width,H);drawFloor(L.floor,cx);ctx.restore();GL=FY+12-30}
+    else{ctx.fillStyle='#0a0814';ctx.fillRect(0,0,W,H);ctx.drawImage(bg,0,-40,W,H);GL=GY-40}
+    ctx.fillStyle=sh.dawn?'rgba(255,160,80,.16)':this.rain.length?'rgba(10,14,40,.3)':'rgba(6,4,18,.15)';ctx.fillRect(0,0,W,H);
+    if(sh.trophy){const x=sh.trophy,g=ctx.createRadialGradient(x,GL-34,3,x,GL-34,34);g.addColorStop(0,'rgba(255,220,120,.5)');g.addColorStop(1,'rgba(255,220,120,0)');ctx.fillStyle=g;ctx.fillRect(x-36,GL-70,72,72);
+      ctx.fillStyle='#120e1e';ctx.fillRect(x-11,GL-14,22,14);ctx.fillStyle=sh.bg==='padre_stage'?'#e8e0d0':'#9ad8ff';ctx.fillRect(x-10,GL-13,20,3);ctx.fillStyle=sh.bg==='padre_stage'?'#8a5a3a':'rgba(154,216,255,.35)';ctx.fillRect(x-8,GL-10,16,10);drawTrophy(x,GL-14)}
+    for(const a of this.actors){if(a.alpha<=0)continue;ctx.globalAlpha=a.alpha*.4;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(Math.round(a.x),GL+1,16,3,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1}
+    for(const a of this.actors){if(a.alpha<=0)continue;ctx.save();ctx.globalAlpha=a.alpha;
+      if(a.id==='vex'&&RUN.vexLit){const g=ctx.createRadialGradient(a.x,GL-40,4,a.x,GL-40,44);g.addColorStop(0,'rgba(255,210,90,.35)');g.addColorStop(1,'rgba(255,210,90,0)');ctx.fillStyle=g;ctx.fillRect(a.x-46,GL-90,92,92)}
+      ctx.translate(0,GL-GY);drawFighter(a);ctx.restore();if(a.prop==='trophy'&&a.alpha>0)drawTrophy(Math.round(a.x+a.face*16),Math.round(GL-a.H*.42))}
+    ctx.fillStyle='rgba(170,190,255,.45)';for(const r of this.rain)ctx.fillRect(Math.round(r.x),Math.round(r.y),1,5);
+    ctx.fillStyle='#000';ctx.fillRect(0,0,W,14)},
+  draw(){const t=this.t;
+    if(this.shot)this.drawShot();else{ctx.fillStyle='#05040c';ctx.fillRect(0,0,W,H)}
     if(this.card>0||!this.beat()){this.drawCard();return}
-    const b=this.beat(),sp=Array.isArray(b)?(b[0]==='SAM'&&RUN.p1==='padre'?'P':b[0]):null,BY=140;
-    // portraits: you on the left, whoever you're talking to on the right; the one not speaking is dimmed
-    const me=this.who('P'),R=this.right&&this.who(this.right);
-    ctx.globalAlpha=sp==='P'?1:.4;ctx.drawImage(me.im,-4,BY-me.im.height);ctx.globalAlpha=1;
-    if(R&&R.im){ctx.globalAlpha=(sp&&sp!=='P'&&sp!=='N')||R.full||b.choice?1:.4;drawMirror(R.im,W-R.im.width+4,BY-R.im.height);ctx.globalAlpha=1}
-    if(this.title)drawText(this.title+(this.sub?' - '+this.sub:''),128,4,'#ffe66a',1,{align:'center',outline:'#000'});
-    const verse=!!b.verse,choice=!!b.choice;box(8,BY,240,44,verse?'rgba(30,20,4,.92)':'rgba(10,8,30,.92)',verse?'#ffd23a':choice?'#ffffff':'#d04aff');
-    if(sp&&sp!=='N'){const w=this.who(sp),nw=textW(w.n)+8,nx=w.L?8:248-nw;box(nx,BY-11,nw,9,'rgba(10,8,30,.95)',w.c);drawText(w.n,nx+4,BY-10,w.c,1,{shadow:false})}
-    if(choice){drawText('A: '+b.choice,128,BY+12,(t>>3)&1?'#ffe66a':'#ffffff',2,{align:'center',outline:'#000'});
-      drawText('HE WAITS FOR THE LAST BLOW.',128,BY+33,'#99a',1,{align:'center',shadow:false})}
-    else{let left=Math.floor(this.n);const col=verse?'#ffd96a':sp==='N'?'#c8c4e0':'#ffffff',y0=BY+4+Math.round((4-this.lines.length)*4.5);
-      this.lines.forEach((l,i)=>{const s=l.slice(0,Math.max(0,left));left-=l.length+1;drawText(s,verse?128:12,y0+i*9,i===this.lines.length-1&&verse?'#ffb43a':col,1,{shadow:false,align:verse?'center':'left'})});
+    const b=this.beat(),sp=this.sp(b),BY=140,verse=!!b.verse,choice=!!b.choice;
+    if(this.title)drawText(this.title+(this.sub?' - '+this.sub:''),128,3,'#ffe66a',1,{align:'center',shadow:false});
+    box(8,BY,240,44,verse?'rgba(30,20,4,.93)':'rgba(10,8,30,.9)',verse?'#ffd23a':choice?'#ffffff':'#d04aff');
+    const face=sp&&sp!=='N'&&this.who(sp);
+    if(face){const im=face.im;ctx.save();ctx.beginPath();ctx.rect(12,BY+4,34,36);ctx.clip();ctx.fillStyle='#000';ctx.fillRect(12,BY+4,34,36);ctx.drawImage(im,Math.round((im.width-64)/2),0,64,68,12,BY+4,34,36);ctx.restore();
+      ctx.strokeStyle=face.c;ctx.lineWidth=1;ctx.strokeRect(11.5,BY+3.5,35,37);const nw=textW(face.n)+8;box(8,BY-11,nw,9,'rgba(10,8,30,.95)',face.c);drawText(face.n,12,BY-10,face.c,1,{shadow:false})}
+    if(choice){drawText('A: '+b.choice,128,BY+12,(t>>3)&1?'#ffe66a':'#ffffff',2,{align:'center',outline:'#000'});drawText('HE WAITS FOR THE LAST BLOW.',128,BY+33,'#99a',1,{align:'center',shadow:false})}
+    else{let left=Math.floor(this.n);const col=verse?'#ffd96a':sp==='N'?'#c8c4e0':'#ffffff',y0=BY+4+Math.round((4-this.lines.length)*4.5),tx=face?52:12;
+      this.lines.forEach((l,i)=>{const s=l.slice(0,Math.max(0,left));left-=l.length+1;drawText(s,verse?128:tx,y0+i*9,i===this.lines.length-1&&verse?'#ffb43a':col,1,{shadow:false,align:verse?'center':'left'})});
       if(verse){ctx.fillStyle='#ffd23a';ctx.fillRect(126,BY-22,3,14);ctx.fillRect(122,BY-18,11,3)}
       if(this.n>=this.len()&&(t>>4)&1){ctx.fillStyle='#ffe66a';ctx.beginPath();ctx.moveTo(240,BY+38);ctx.lineTo(246,BY+38);ctx.lineTo(243,BY+41);ctx.fill()}}
     drawText('START: SKIP',252,H-6,'#667',1,{align:'right',shadow:false});
     if(this.flash>0){ctx.fillStyle=`rgba(255,240,200,${this.flash/24})`;ctx.fillRect(0,0,W,H)}},
-  drawCard(){const k=Math.min(1,(110-this.card)/20);ctx.globalAlpha=k;ctx.fillStyle='rgba(0,0,0,.45)';ctx.fillRect(0,62,W,52);
+  drawCard(){const k=Math.min(1,(110-this.card)/20);ctx.globalAlpha=k;ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(0,62,W,52);
     drawText(this.title||'',128,70,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});if(this.sub)drawText(this.sub,128,94,'#ffe66a',1,{align:'center',outline:'#000'});ctx.globalAlpha=1}};
 // the credits after the story: the cast, Vex's men, your score, THE END
 const StoryEnd={
@@ -1783,7 +1884,7 @@ const StoryEnd={
 
 const Brawl={
   enter(){const L=this.L=LEVELS[RUN.level];F=this;Object.assign(this,{cinema:false,superFlash:0,superBy:null,parts:[],texts:[],hitFx:[],proj:[],items:[],foes:[],cx:0,wi:0,wave:null,q:[],qT:0,goT:0,
-      ph:'intro',pt:0,mercyOn:false,camFlash:0,paused:false,psel:0,hitstop:0,shake:0,target:null,targetT:0,doneT:0,contN:9,supT:0});
+      ph:'intro',pt:0,mercyOn:false,bossDown:null,camFlash:0,paused:false,psel:0,hitstop:0,shake:0,target:null,targetT:0,doneT:0,contN:9,supT:0});
     const k=skinned(RUN.p1,0),P=this.P=new Fighter(k.skinKey||RUN.p1,0,!!RUN.bot,RUN.alt&&RUN.alt[0]);P.x=40;P.z=22;P.vz=0;P.meter=RUN.meter||0;P.inv=60;
     for(const[x,z]of L.crates)this.items.push({kind:'crate',x,z,y:0});
     if(!playTrack(L.song))stageMusic(L.song);SFX.start()},
@@ -1796,7 +1897,7 @@ const Brawl={
   input(){const P=this.P;if(P.cpu)return this.bot();
     return{l:held.left,r:held.right,u:held.up,d:held.down,a:pressed.a,b:pressed.b,j:pressed.jump}},
   // a simple autoplayer for tests and the attract demo: line up with the nearest enemy and punch
-  bot(){const P=this.P,o={l:0,r:0,u:0,d:0,a:0,b:0},alive=this.foes.filter(e=>!e.dead&&!e.ko&&e.state!=='down'&&e.state!=='leave');
+  bot(){const P=this.P,o={l:0,r:0,u:0,d:0,a:0,b:0},alive=this.foes.filter(e=>!e.dead&&!e.ko&&e.state!=='down'&&e.state!=='leave'&&!(e.state==='yield'&&FOES[e.kind].boss));
     const t=alive.sort((a,b)=>Math.hypot(a.x-P.x,(a.z-P.z)*2)-Math.hypot(b.x-P.x,(b.z-P.z)*2))[0];
     const crate=this.items.find(i=>i.kind!=='crate'&&Math.abs(i.x-P.x)<160);
     if(!t){if(crate){o[crate.x>P.x?'r':'l']=1;if(Math.abs(crate.z-P.z)>3)o[crate.z>P.z?'d':'u']=1}else o.r=1;return o}
@@ -1823,33 +1924,40 @@ const Brawl={
     if(!['idle','walk'].includes(P.state))return;
     if(i.j){P.state='prejump';P.st=0;P.jdir=i.r?1:i.l?-1:0;P.vx=0;return}
     if(i.b&&!i.a){P.chainN=0;this.atk(P,'kick',false);return}
-    if(i.a){const y=this.foes.find(e=>e.state==='yield'&&Math.abs(e.x-P.x)<50&&Math.abs(e.z-P.z)<14);if(y){this.helpUp(y);return}
+    if(i.a){const y=this.foes.find(e=>e.state==='yield'&&!FOES[e.kind].boss&&Math.abs(e.x-P.x)<50&&Math.abs(e.z-P.z)<14);if(y){this.helpUp(y);return}
       // grab a reeling enemy you're standing on, else start the combo
       const g=this.foes.find(e=>!e.dead&&e.state==='hurt'&&Math.abs(e.x-P.x)<30&&this.near(P,e,6)&&Math.sign(e.x-P.x)===P.face&&!FOES[e.kind].heavy);
       if(g){P.state='throwing';P.st=0;P.thr=g;P.knees=0;g.state='grabbed';g.st=0;g.vx=0;SFX.grab();return}
       P.chainN=0;this.atk(P,'jab');return}
     P.vx=(i.r-i.l)*1.45*P.c.speed;P.vz=(i.d-i.u)*0.95;if(P.vx)P.face=Math.sign(P.vx);P.state=P.vx||P.vz?'walk':'idle'},
-  atk(f,n,fin){startAtk(f,n);f.hitIds={};if(f===this.P&&n==='kick')f.atk={...f.atk,dmg:fin?8:7,fin:!!fin}},
+  atk(f,n,fin){startAtk(f,n);f.hitIds={};if(f===this.P&&n==='kick')f.atk={...f.atk,dmg:fin?8:7,fin:!!fin};
+    if(f===this.P&&f.wpn&&n==='jab'){const kn=f.wpn.kind==='knife';f.atk={...f.atk,reach:f.atk.reach+(kn?6:16),dmg:f.atk.dmg+(kn?3:5),wpn:true};SFX.whooshH&&SFX.whooshH()}},
   superMove(){const P=this.P;P.meter=0;P.state='special';P.st=0;P.vx=P.vz=0;P.atk=null;P.sp={kind:'desp',hits:0,id:++atkId,sup:true};P.inv=90;this.supT=50;
     SFX.superS();fighterVoice(P,'super')},
   toss(e,dir){const P=this.P;P.thr=null;P.state='idle';P.st=0;e.state='knock';e.st=0;e.vy=4.2;e.vx=dir*5;e.y=1;e.thrown=true;e.hp-=8;e.flash=4;SFX.slam();this.shake=6;
     if(e.hp<=0){if(this.mercyOK(e)){e.hp=1;e.yieldNext=true;this.mercyOn=true}else e.ko=true}this.score(80)},
   // Stage 1's last man standing begs for mercy; walk up and press A to help him up (he's the one who points you to the docks)
   mercyOK(e){return RUN.level===0&&!RUN.mercy&&!this.mercyOn&&this.wave&&this.wi===this.L.waves.length-1&&!this.q.length&&!this.foes.some(f=>f!==e&&!f.dead&&!f.ko)},
-  helpUp(e){const P=this.P;e.state='leave';e.st=0;e.face=P.x>e.x?1:-1;RUN.mercy={kind:e.kind,name:e.name,hue:e.hue,sat:e.sat,whiten:e.whiten,alt:e.alt};
+  helpUp(e){const P=this.P;e.state='leave';e.st=0;e.face=P.x>e.x?1:-1;RUN.mercy={kind:e.kind,name:e.name,hue:e.hue,sat:e.sat,whiten:e.whiten,alt:e.alt,vari:e.vari};
     P.state='idle';P.st=0;P.vx=P.vz=0;this.score(2000);this.addT('MERCY +2000',e.x,e.z,'#ffd23a');try{SFX.bless()}catch(x){SFX.ok()}},
   score(n){RUN.score=(RUN.score||0)+n},
+  // weapons: a henchman drops his when knocked down; walk over one to pick it up (A swings it, it breaks after a few hits)
+  dropWeapon(e){const v=e.vari;if(!v||!v.w||(e.c.vary&&e.c.vary.weapon))return;this.items.push({kind:'w_'+v.w,x:e.x,z:e.z,y:0,l:900});e.vari={...v,w:null,key:v.key+'x'};e.reachB=Math.round((v.sc-1)*30);e.dmgM=v.sc},
+  wpnBreak(P,drop){const k=P.wpn.kind;if(drop)this.items.push({kind:'w_'+k,x:P.x,z:P.z,y:0,l:600});else{this.addT(k.toUpperCase()+' BROKE!',P.x,P.z,'#ff9a6a');this.spark(P.x+P.face*20,P.z,40,'#c8c8d0',10);SFX.block()}P.wpn=null;P.vari=null},
   // ---- damage ----
   hitFoe(e,dmg,knock,dir,snd){const P=this.P;if(e.dead||e.ko||e.inv>0||e.state==='down'||e.state==='yield'||e.state==='leave'||e.yieldNext||(e.state==='knock'&&(e.jug||0)>=1))return false;const C=FOES[e.kind];if(e.state==='knock')e.jug=(e.jug||0)+1;
     e.hp-=dmg*P.c.power*(P.buff>0?1.25:1);e.flash=4;this.target=e;this.targetT=120;P.meter=Math.min(100,P.meter+2.5);this.score(dmg*10);
     const armored=C.heavy&&!knock&&e.hp>0&&(e.state==='special'||((e.armorN=(e.armorN||0)+1)%2));
-    if(e.hp<=0){if(this.mercyOK(e)){e.hp=1;e.yieldNext=true;this.mercyOn=true}else e.ko=true;knock=true}
-    if(knock){e.state='knock';e.st=0;e.vy=3.6;e.vx=dir*2.6;e.y=Math.max(e.y,1);e.atk=null;e.sp=null}
+    if(e.hp<=0&&C.boss){e.hp=1;e.yieldNext=true;this.bossDown=e;this.q=[];this.addT('VEX IS DOWN! HIS MEN RUN!',e.x,e.z,'#ffd23a');SFX.cheer();
+      for(const o of this.foes)if(o!==e&&!o.dead&&!o.ko){o.state='leave';o.st=60;o.atk=null;o.sp=null}knock=true}
+    else if(e.hp<=0){if(this.mercyOK(e)){e.hp=1;e.yieldNext=true;this.mercyOn=true}else e.ko=true;knock=true}
+    if(knock){e.state='knock';e.st=0;e.vy=3.6;e.vx=dir*2.6;e.y=Math.max(e.y,1);e.atk=null;e.sp=null;this.dropWeapon(e)}
     else if(!armored){e.state='hurt';e.st=0;e.stun=22;e.vx=dir*1.2;e.atk=null;e.sp=null}
     this.hitstop=knock?9:5;this.shake=knock?4:2;this.spark(e.x,e.z,e.y+e.H*.6,'#ffe66a',knock?12:7);(SFX[snd]||(knock?SFX.heavy:SFX.hit))();return true},
   hurtP(dmg,knock,dir){const P=this.P;if(P.inv>0||['knock','down','rise'].includes(P.state)||this.ph!=='play'&&this.ph!=='intro')return false;
     if(P.thr){if(!P.thr.ko){P.thr.state='hurt';P.thr.stun=8}P.thr=null}
     dmg*=[0.7,1,1.25][SET.diff];P.hp=Math.max(0,P.hp-dmg);P.flash=4;P.atk=null;P.sp=null;this.hitstop=6;this.shake=3;this.spark(P.x,P.z,P.y+P.H*.6,'#ff6a5a',8);SFX.hit();
+    if((P.hp<=0||knock)&&P.wpn)this.wpnBreak(P,true);
     if(P.hp<=0||knock){P.state='knock';P.st=0;P.vy=3.8;P.vx=dir*2.4;P.y=Math.max(P.y,1);if(P.hp<=0){P.ko=true;SFX.ko()}}else{P.state='hurt';P.st=0;P.stun=16;P.vx=dir*1.4;P.hurtK='mid'}return true},
   // the player's active hitbox against every enemy and crate (each enemy once per attack)
   playerHits(){const P=this.P;let reach,dmg,knock=false,air=false,id;
@@ -1860,6 +1968,7 @@ const Brawl={
       const inX=reach<0?Math.abs(dx)<-reach:(P.face>0?dx>-6&&dx<reach+12:dx<6&&dx>-reach-12);
       if(inX&&this.near(P,e,reach<0?18:air?14:10)&&(air||e.y<40)){P.hitIds[e.uid+':'+id]=1;if(this.hitFoe(e,dmg,knock,Math.sign(dx)||P.face))any=true;if(P.atk)P.hitDone=true}}
     if(any&&reach<0&&P.hp>5){P.hp-=4;P.trail=P.hp}
+    if(any&&P.atk&&P.atk.wpn&&P.wpn&&--P.wpn.uses<=0)this.wpnBreak(P,false);
     for(const it of this.items)if(it.kind==='crate'&&!it.broken){const dx=it.x-P.x;const inX=reach<0?Math.abs(dx)<-reach:(P.face>0?dx>-6&&dx<reach+14:dx<6&&dx>-reach-14);
       if(inX&&Math.abs(it.z-P.z)<12){it.broken=true;this.spark(it.x,it.z,8,'#c08040',12);SFX.block();this.score(50);const r=Math.random();
         this.items.push({kind:r<.45?'pizza':r<.7?'chicken':'cash',x:it.x,z:it.z,y:0,l:600})}}},
@@ -1874,21 +1983,28 @@ const Brawl={
     const pOK=!['down','rise','knock'].includes(P.state)&&this.ph==='play';
     if(e.wait>0)e.wait--;if(e.cool>0)e.cool--;
     if(!e.tok&&e.wait<=0&&this.foes.filter(f=>f.tok&&!f.dead).length<2)e.tok=true;
-    const go=(tx,tz,sp)=>{tx=clamp(tx,this.cx+14,this.cx+W-14);const ax=tx-e.x,az=tz-e.z;e.vx=Math.abs(ax)>3?Math.sign(ax)*C.speed*sp:0;e.vz=Math.abs(az)>2?Math.sign(az)*.7*C.speed*sp:0;e.state=e.vx||e.vz?'walk':'idle'};
+    const go=(tx,tz,sp)=>{sp*=e.spd||1;tx=clamp(tx,this.cx+14,this.cx+W-14);const ax=tx-e.x,az=tz-e.z;e.vx=Math.abs(ax)>3?Math.sign(ax)*C.speed*sp:0;e.vz=Math.abs(az)>2?Math.sign(az)*.7*C.speed*sp:0;e.state=e.vx||e.vz?'walk':'idle'};
     if(C.ranged){const side=e.x<P.x?-1:1,tx=clamp(P.x+side*118,this.cx+16,this.cx+W-16);go(tx,P.z,1);
       if(pOK&&Math.abs(dz)<5&&adx>60&&e.cool<=0&&!this.proj.some(p=>p.owner===e)){e.state='special';e.st=0;e.vx=e.vz=0;e.sp={kind:'throwB',id:++atkId};e.cool=[150,115,85][D]}return}
     if(!e.tok||!pOK){const side=e.x<P.x?-1:1;go(P.x+side*(86+e.uid%3*12),clamp(P.z+(e.uid%2?14:-14),0,FZ),.55);return}
-    if(C.heavy&&e.cool<=0&&Math.abs(dz)<6&&adx>56&&adx<150){e.state='special';e.st=0;e.vx=e.vz=0;e.sp={kind:'charge',id:++atkId,hit:false};e.cool=170;return}
+    if(C.boss&&e.cool<=0&&Math.abs(dz)<14&&adx>46&&adx<170){e.state='special';e.st=0;e.vx=e.vz=0;e.sp={kind:'slam',id:++atkId};e.cool=[200,160,120][D];return}
+    if(C.flyer&&e.cool<=0&&Math.abs(dz)<5&&adx>56&&adx<120){e.state='special';e.st=0;e.vx=e.vz=0;e.sp={kind:'fly',id:++atkId,hit:false};e.cool=[170,140,110][D];return}
+    if(C.heavy&&!C.boss&&e.cool<=0&&Math.abs(dz)<6&&adx>56&&adx<150){e.state='special';e.st=0;e.vx=e.vz=0;e.sp={kind:'charge',id:++atkId,hit:false};e.cool=170;return}
     const side=e.x<P.x?-1:1;go(P.x+side*30,P.z,1);
-    if(adx<C.reach+4&&Math.abs(dz)<6&&e.cool<=0){e.state='attack';e.st=0;e.vx=e.vz=0;e.atk={...ATK.jab,name:'jab',s:[18,13,9][D]+(C.heavy?4:0),a:4,r:14,id:++atkId};e.hitDone=false}},
+    if(adx<C.reach+(e.reachB||0)+4&&Math.abs(dz)<6&&e.cool<=0){e.state='attack';e.st=0;e.vx=e.vz=0;e.atk={...ATK.jab,name:C.atkName||'jab',s:[18,13,9][D]+(C.heavy?4:0)+(C.windupA||0),a:4,r:14,id:++atkId};e.hitDone=false}},
   foeUpdate(e){const P=this.P,C=FOES[e.kind];e.st++;if(e.ko&&!['knock','down'].includes(e.state)){e.state='knock';e.st=0;e.vy=Math.max(e.vy||0,2);e.y=Math.max(e.y,1);e.atk=null;e.sp=null}/* a KO'd enemy only ever falls */if(e.flash>0)e.flash--;if(e.inv>0)e.inv--;
     switch(e.state){
       case'idle':case'walk':this.foeAI(e);break;
       case'attack':{const a=e.atk;if(C.lunge&&e.st<a.s&&e.st>a.s-8)e.vx=e.face*C.lunge;if(e.st===a.s){SFX.whoosh()}if(e.st>=a.s&&e.st<a.s+a.a&&!e.hitDone){const dx=P.x-e.x;
-          if(Math.sign(dx)===e.face&&Math.abs(dx)<C.reach+10&&this.near(P,e,9)&&P.y<30)e.hitDone=this.hurtP(C.dmg,C.heavy,e.face)||true}
+          if(Math.sign(dx)===e.face&&Math.abs(dx)<C.reach+(e.reachB||0)+10&&this.near(P,e,9)&&P.y<30)e.hitDone=this.hurtP(C.dmg*(e.dmgM||1),C.heavy,e.face)||true}
         if(e.st>=a.s+a.a+a.r){e.state='idle';e.st=0;e.atk=null;e.tok=false;e.wait=[90,60,35][SET.diff]+rnd(0,40);e.cool=20}break}
       case'special':{const s=e.sp;
         if(s.kind==='throwB'){if(e.st===12){const tx=Math.abs(P.x-e.x);this.proj.push(C.fire?{kind:'molotov',x:e.x+e.face*16,z:e.z,y:52,vx:e.face*Math.max(1.4,tx/52),vy:2.2,owner:e,rot:0,life:200}:{kind:'bottle',x:e.x+e.face*16,z:e.z,y:52,vx:e.face*3.1,owner:e,rot:0,life:110});SFX.whoosh()}if(e.st>=26){e.state='idle';e.st=0;e.sp=null}}
+        else if(s.kind==='slam'){if(e.st<22){if(e.st%6<3)e.flash=2}else if(e.st===22){SFX.slam();this.shake=8;this.dust(e.x+e.face*20,e.z,8);
+            this.proj.push({kind:'wave',x:e.x+e.face*22,z:e.z,y:0,vx:e.face*3.2,owner:e,rot:0,life:80});if(Math.abs(P.x-e.x)<34&&this.near(P,e,10)&&P.y<20)this.hurtP(14,true,e.face)}
+          else if(e.st>=50){e.state='idle';e.st=0;e.sp=null;e.tok=false;e.wait=50}}
+        else if(s.kind==='fly'){if(e.st===9){e.vy=3.9;e.y=1;SFX.whoosh()}if(e.st>=9&&e.y>0){e.vx=e.face*3.4;if(!s.hit&&Math.abs(P.x-e.x)<26&&this.near(P,e,9)&&P.y<34){s.hit=true;this.hurtP(9,true,e.face)}}
+          if(e.st>12&&e.y<=0){e.vx*=.6;if(e.st>44){e.state='idle';e.st=0;e.sp=null;e.tok=false;e.wait=[80,55,35][SET.diff]}}}
         else if(s.kind==='charge'){const wu=C.windup||24;if(e.st<wu){e.vx=0;if(e.st%6<3)e.flash=2}else if(e.st<wu+36){e.vx=e.face*4.2;if(e.st%3===0)this.dust(e.x,e.z,1);
             if(!s.hit&&Math.abs(P.x-e.x)<30&&this.near(P,e,10)&&P.y<30){s.hit=true;this.hurtP(12,true,e.face);SFX.slam()}
             if(e.x<this.cx+6||e.x>this.cx+W-6)e.st=wu+36}else{e.vx*=.8;if(e.st>=wu+54){e.state='idle';e.st=0;e.sp=null;e.tok=false;e.wait=60}}}
@@ -1898,7 +2014,7 @@ const Brawl={
       case'down':if(e.ko){if(e.st>50){e.dead=true;this.score(C.score);if(Math.random()<(C.heavy?.6:.12))this.items.push({kind:Math.random()<.5?'pizza':'cash',x:e.x,z:e.z,y:0,l:600})}}
         else if(e.st>=40&&!e.yieldNext){e.state='rise';e.st=0;e.inv=16}break;
       case'rise':if(e.st>=12){e.state='idle';e.st=0}break;
-      case'yield':e.vx=e.vz=0;e.face=P.x>e.x?1:-1;if(e.st===2)this.addT('PLEASE... I GIVE UP!',e.x,e.z,'#fff');break;
+      case'yield':e.vx=e.vz=0;e.face=P.x>e.x?1:-1;if(e.st===2)this.addT(C.boss?'...ENOUGH.':'PLEASE... I GIVE UP!',e.x,e.z,'#fff');break;
       case'leave':if(e.st===36)this.addT('THANK YOU...',e.x,e.z,'#fff');if(e.st<60)e.vx=0;else{e.face=e.x<this.cx+W/2?-1:1;e.vx=e.face*1.3;if(e.x<this.cx-30||e.x>this.cx+W+30)e.dead=true}break}
     if(e.yieldNext&&e.state==='down'&&e.st>=34){e.yieldNext=false;e.state='yield';e.st=0;e.inv=0;e.x=clamp(e.x,this.cx+40,this.cx+W-40)}
     // a thrown enemy bowls over the others
@@ -1907,7 +2023,11 @@ const Brawl={
     const inside=e.x>this.cx+8&&e.x<this.cx+W-8;if(inside)e.inside=true;if(e.inside&&e.state!=='leave')e.x=clamp(e.x,this.cx+8,this.cx+W-8)},
   spawn(kind){const C=foeData(kind),right=this.q.length%2===0||this.cx<20,f=new Fighter('karl',1,true,false);
     f.c=C;f.img=C.spr;f.H=C.H;f.kind=kind;f.hp=f.mhp=C.hp*[0.8,1,1.2][SET.diff];f.x=right?this.cx+W+24:this.cx-24;f.z=rnd(4,FZ-4);f.vz=0;f.uid=++atkId;
-    f.name=C.names[(Math.random()*C.names.length)|0];f.alt=!!C.fake||(kind==='goon'&&Math.random()<.4);if(C.hue!=null&&!C.fake){f.hue=C.hue;f.sat=C.sat||1;f.whiten=!!C.whiten;f.alt=false}f.wait=30+rnd(0,40);f.cool=0;this.foes.push(f)},
+    f.name=C.names[(Math.random()*C.names.length)|0];f.alt=!!C.fake||(kind==='goon'&&Math.random()<.4);if(C.hue!=null&&!C.fake){f.hue=C.hue;f.sat=C.sat||1;f.whiten=!!C.whiten;f.alt=false}f.wait=30+rnd(0,40);f.cool=0;
+    const v=C.fake?null:rollVariant(C);if(v){f.vari=v;if(v.top!=null||v.bot!=null)f.alt=false;f.hp=f.mhp=Math.round(f.hp*Math.pow(v.sc,1.6));f.spd=1/Math.sqrt(v.sc);f.dmgM=v.sc*(v.w?1.25:1);
+      f.reachB=Math.round((v.sc-1)*30)+(v.w==='pipe'||v.w==='bat'?14:v.w==='knife'?4:0);f.H=C.H*v.sc;if(v.sc>=1.15)f.name='BIG '+f.name}
+    if(C.boss){f.x=this.cx+W-40;f.wait=90;this.addT('ENOUGH. I\'LL DO THIS MYSELF.',f.x,f.z,'#e0a0ff');f.name='VEX'}
+    this.foes.push(f)},
   // ---- the level: camera, waves, items ----
   update(){if(this.paused){this.updatePause();return}
     if(pressed.start&&!this.P.cpu&&this.ph!=='continue'){this.paused=true;this.psel=0;SFX.ok();return}
@@ -1940,18 +2060,21 @@ const Brawl={
     if(this.wave){if(this.q.length&&--this.qT<=0&&this.foes.filter(e=>!e.dead).length<4){this.spawn(this.q.shift());this.qT=45}
       if(!this.q.length&&!this.foes.some(e=>!e.dead)){this.wave=null;this.wi++;this.goT=150;SFX.ok();if(this.wi>=L.waves.length)this.goT=400}}
     if(this.goT>0)this.goT--;
+    if(this.bossDown&&this.bossDown.state==='yield'&&this.bossDown.st>80&&this.ph==='play'){this.wave=null;this.wi=L.waves.length;this.ph='clear';this.doneT=0;P.state='win';P.st=0;P.vx=P.vz=0;this.score(5000)}
     if(!this.wave&&this.wi>=L.waves.length&&P.x>=Math.min(L.len,this.cx+W)-40&&this.ph==='play'){this.ph='clear';this.doneT=0;P.state='win';P.st=0;P.vx=P.vz=0;SFX.cheer();this.score(1000)}
     for(const e of this.foes)this.foeUpdate(e);this.foes=this.foes.filter(e=>!e.dead||e.st<0);
     // projectiles (bottles)
-    for(const p of this.proj){if(p.kind==='fire'){p.life--;if(p.life%20===0&&Math.abs(p.x-P.x)<16&&Math.abs(p.z-P.z)<8&&P.y<=0)this.hurtP(4,false,1);continue}
+    for(const p of this.proj){if(p.kind==='wave'){p.x+=p.vx;p.life--;if(p.life%3===0)this.dust(p.x,p.z,1);if(Math.abs(p.x-P.x)<12&&Math.abs(p.z-P.z)<10&&P.y<8&&this.hurtP(10,true,Math.sign(p.vx)))p.life=0;continue}
+      if(p.kind==='fire'){p.life--;if(p.life%20===0&&Math.abs(p.x-P.x)<16&&Math.abs(p.z-P.z)<8&&P.y<=0)this.hurtP(4,false,1);continue}
       if(p.kind==='molotov'){p.x+=p.vx;p.y+=p.vy;p.vy-=.12;p.rot+=.3;if(p.y<=4){p.life=0;this.proj.push({kind:'fire',x:p.x,z:p.z,y:0,life:110,vx:0,rot:0});SFX.block();this.spark(p.x,p.z,4,'#ff9a3a',10)}
         else if(Math.abs(p.x-P.x)<10&&Math.abs(p.z-P.z)<8&&P.y<24&&p.y<60&&!['down','knock'].includes(P.state)&&this.hurtP(5,false,Math.sign(p.vx)))p.life=0;continue}
       p.x+=p.vx;p.rot+=.3;p.life--;if(Math.abs(p.x-P.x)<12&&Math.abs(p.z-P.z)<9&&P.y<24&&!['down','knock'].includes(P.state)){if(this.hurtP(6,false,Math.sign(p.vx)))p.life=0;
         for(let i=0;i<6;i++)this.parts.push({x:p.x,y:FY+p.z-p.y,vx:rnd(-2,2),vy:rnd(-2,0),l:14,c:'#7aff8a',g:.15})}}
     this.proj=this.proj.filter(p=>p.life>0&&p.x>this.cx-30&&p.x<this.cx+W+30);
     // pickups
-    for(const it of this.items){if(it.kind==='crate'||it.taken)continue;it.l--;if(Math.abs(it.x-P.x)<14&&Math.abs(it.z-P.z)<9&&P.y<=0&&P.state!=='knock'){it.taken=true;SFX.coin();
-      if(it.kind==='cash'){this.score(1000);this.addT('+1000',it.x,it.z,'#ffd23a')}else{const g=it.kind==='chicken'?60:30;P.hp=Math.min(P.mhp,P.hp+g);this.addT('+'+g+' HP',it.x,it.z,'#7aff8a')}}}
+    for(const it of this.items){if(it.kind==='crate'||it.taken)continue;it.l--;if(!(it.kind[0]==='w'&&P.wpn)&&Math.abs(it.x-P.x)<14&&Math.abs(it.z-P.z)<9&&P.y<=0&&P.state!=='knock'){it.taken=true;SFX.coin();
+      if(it.kind[0]==='w'){const k=it.kind.slice(2);P.wpn={kind:k,uses:k==='knife'?12:8};P.vari={sc:1,top:null,bot:null,hat:'none',shades:false,w:k,key:'P'+k};this.addT(k.toUpperCase()+'!',it.x,it.z,'#fff')}
+      else if(it.kind==='cash'){this.score(1000);this.addT('+1000',it.x,it.z,'#ffd23a')}else{const g=it.kind==='chicken'?60:30;P.hp=Math.min(P.mhp,P.hp+g);this.addT('+'+g+' HP',it.x,it.z,'#7aff8a')}}}
     this.items=this.items.filter(it=>!(it.taken||it.l<=0||(it.kind==='crate'&&it.broken)));
     for(const p of this.parts){p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.l--}this.parts=this.parts.filter(p=>p.l>0);
     for(const t of this.texts){t.y-=.4;t.l--}this.texts=this.texts.filter(t=>t.l>0);for(const h of this.hitFx)h.l--;this.hitFx=this.hitFx.filter(h=>h.l>0);
@@ -1973,7 +2096,8 @@ const Brawl={
       if(e.dead||(e.ko&&e.state==='down'&&e.st>20&&(frameNo&2)))continue;if(e===P&&P.inv>0&&this.ph==='play'&&(frameNo&4)&&P.state!=='special')continue;
       ctx.save();ctx.translate(-cx,FY+e.z-GY);drawFighter(e);ctx.restore();
       if(e.state==='special'&&e.sp&&e.sp.kind==='charge'&&e.st<24&&(frameNo&2)){ctx.fillStyle='#ffd23a';ctx.fillRect(e.x-cx-1,FY+e.z-e.H-12,2,6)}}
-    for(const p of this.proj){if(p.kind==='fire'){const x=Math.round(p.x-cx),y=FY+p.z,a=Math.min(1,p.life/20);ctx.globalAlpha=a;for(let i=0;i<7;i++){const fx=x-12+i*4,h=4+((frameNo+i*3)%6)+(i%2)*3;
+    for(const p of this.proj){if(p.kind==='wave'){const x=Math.round(p.x-cx),y=FY+p.z;ctx.globalAlpha=Math.min(1,p.life/20);for(let i=0;i<4;i++){const h=10-i*2+((frameNo+i)&3);ctx.fillStyle=i%2?'#b04aff':'#e0a0ff';ctx.fillRect(x-i*5*Math.sign(p.vx)-2,y-h,3,h)}ctx.globalAlpha=1;continue}
+      if(p.kind==='fire'){const x=Math.round(p.x-cx),y=FY+p.z,a=Math.min(1,p.life/20);ctx.globalAlpha=a;for(let i=0;i<7;i++){const fx=x-12+i*4,h=4+((frameNo+i*3)%6)+(i%2)*3;
         ctx.fillStyle='#120e1e';ctx.fillRect(fx-1,y-h-1,4,h+1);ctx.fillStyle=i%2?'#ff7a2a':'#ffd23a';ctx.fillRect(fx,y-h,2,h);ctx.fillStyle='#fff3a0';ctx.fillRect(fx,y-2,2,2)}ctx.globalAlpha=1;continue}
       const x=Math.round(p.x-cx),y=Math.round(FY+p.z-p.y);ctx.save();ctx.translate(x,y);ctx.rotate(p.rot);ctx.fillStyle='#120e1e';ctx.fillRect(-5,-3,10,6);ctx.fillStyle=p.kind==='molotov'?'#a04a1a':'#3aa04a';ctx.fillRect(-4,-2,6,4);ctx.fillStyle=p.kind==='molotov'?'#ffd23a':'#7aff8a';ctx.fillRect(2,-1,3,2);ctx.restore();
       ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(x-3,FY+p.z,6,1)}
@@ -1982,7 +2106,7 @@ const Brawl={
     ctx.save();ctx.translate(-cx,0);for(const h of this.hitFx)drawHitFx(h);
     for(const p of this.parts){ctx.fillStyle=p.c;ctx.globalAlpha=p.dust?Math.min(1,p.l/12)*.7:1;const s=p.dust?3:2;ctx.fillRect(p.x|0,p.y|0,s,s)}ctx.globalAlpha=1;
     for(const t of this.texts){const hw=textW(t.s)/2+4;drawText(t.s,clamp(t.x,cx+hw,cx+W-hw),t.y,t.c,1,{align:'center',outline:'#000'})}
-    for(const e of this.foes)if(e.state==='yield'&&e.st>50){const near=Math.abs(e.x-P.x)<50&&Math.abs(e.z-P.z)<14;if(near||(frameNo>>4)&1)drawText('A: HELP HIM UP',clamp(e.x,cx+48,cx+W-48),FY+e.z-e.H-16,near?'#ffe66a':'#fff',1,{align:'center',outline:'#000'})}ctx.restore();
+    for(const e of this.foes)if(e.state==='yield'&&e.st>50&&!FOES[e.kind].boss){const near=Math.abs(e.x-P.x)<50&&Math.abs(e.z-P.z)<14;if(near||(frameNo>>4)&1)drawText('A: HELP HIM UP',clamp(e.x,cx+48,cx+W-48),FY+e.z-e.H-16,near?'#ffe66a':'#fff',1,{align:'center',outline:'#000'})}ctx.restore();
     ctx.restore();
     if(F.camFlash>0){ctx.fillStyle=`rgba(255,255,255,${F.camFlash/10})`;ctx.fillRect(0,0,W,H);F.camFlash--}
     if(this.supT>0)this.drawSuper();
@@ -2000,9 +2124,12 @@ const Brawl={
     ctx.fillStyle='#e02a2a';ctx.fillRect(29,13,tw,6);ctx.fillStyle=P.hp<P.mhp*.25&&(frameNo&8)?'#ff7a3a':'#ffd23a';ctx.fillRect(29,13,hw,6);
     const mw=Math.round(60*P.meter/100);ctx.fillStyle='#000';ctx.fillRect(28,22,62,4);ctx.fillStyle=P.meter>=100?((frameNo>>2)&1?'#fff':'#ff4ad8'):'#b03adf';ctx.fillRect(29,23,mw,2);
     if(P.meter>=100)drawText('SUPER!',94,20,'#ffe66a',1,{outline:'#000'});
+    if(P.wpn)drawText(P.wpn.kind.toUpperCase()+' '+P.wpn.uses,136,20,'#c8d0e0',1,{outline:'#000'});
     drawText('SCORE '+String(RUN.score||0).padStart(7,'0'),252,3,'#fff',1,{align:'right',outline:'#000'});
     const e=this.target;if(e&&this.targetT>0&&!e.dead){const w=60,ew=Math.max(0,Math.round(w*e.hp/e.mhp));drawText(e.name,252,13,FOES[e.kind].heavy?'#ffd23a':'#fff',1,{align:'right',outline:'#000'});
       ctx.fillStyle='#000';ctx.fillRect(252-w-2,22,w+2,6);ctx.fillStyle='#401018';ctx.fillRect(252-w-1,23,w,4);ctx.fillStyle='#ff5a3a';ctx.fillRect(252-w-1,23,ew,4)}
+    const bz=this.foes.find(e=>FOES[e.kind].boss&&!e.dead&&e.state!=='yield');if(bz){const w=170,bw=Math.max(0,Math.round(w*bz.hp/bz.mhp));drawText('VEX',43,176,'#e0a0ff',1,{outline:'#000'});
+      ctx.fillStyle='#000';ctx.fillRect(64,176,w+2,8);ctx.fillStyle='#301040';ctx.fillRect(65,177,w,6);ctx.fillStyle='#b04aff';ctx.fillRect(65,177,bw,6);ctx.fillStyle='#e0a0ff';ctx.fillRect(65,177,bw,1)}
     if(this.goT>0&&!this.wave&&this.ph==='play'&&(frameNo>>4)&1){const fin=this.wi>=this.L.waves.length;drawText(fin?'EXIT':'GO',222,72,'#fff',2,{align:'right',grad:FIRE,outline:'#300'});
       ctx.fillStyle='#ffd23a';ctx.beginPath();ctx.moveTo(228,72);ctx.lineTo(248,80);ctx.lineTo(228,88);ctx.fill()}
     if(this.ph==='intro'){box(48,70,160,40,'rgba(10,8,30,.9)','#d04aff');drawText(RUN.level===3?'FINAL STAGE':'STAGE '+(RUN.level+1),128,76,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});drawText(this.L.name,128,96,'#ffe66a',1,{align:'center'})}
@@ -2028,6 +2155,9 @@ const ITEMDRAW={
   pizza(x,y){ctx.fillStyle='#120e1e';ctx.beginPath();ctx.moveTo(x-8,y-2);ctx.lineTo(x+8,y-2);ctx.lineTo(x,y-14);ctx.fill();ctx.fillStyle='#ffd06a';ctx.beginPath();ctx.moveTo(x-6,y-3);ctx.lineTo(x+6,y-3);ctx.lineTo(x,y-12);ctx.fill();
     ctx.fillStyle='#c8701a';ctx.fillRect(x-7,y-4,14,2);ctx.fillStyle='#d02a2a';ctx.fillRect(x-2,y-7,2,2);ctx.fillRect(x+1,y-9,2,2);ctx.fillRect(x-1,y-5,2,1)},
   chicken(x,y){ctx.fillStyle='#120e1e';ctx.fillRect(x-8,y-9,16,8);ctx.fillStyle='#d08a3a';ctx.fillRect(x-7,y-8,11,6);ctx.fillStyle='#f0b060';ctx.fillRect(x-6,y-8,6,2);ctx.fillStyle='#fff';ctx.fillRect(x+4,y-6,4,2);ctx.fillRect(x+7,y-7,2,4)},
+  w_pipe(x,y){ctx.fillStyle='#120e1e';ctx.fillRect(x-11,y-5,22,4);ctx.fillStyle='#9aa2b2';ctx.fillRect(x-10,y-4,20,2);ctx.fillStyle='#e0e6f0';ctx.fillRect(x-10,y-4,20,1)},
+  w_bat(x,y){ctx.fillStyle='#120e1e';ctx.fillRect(x-11,y-6,23,5);ctx.fillStyle='#b07a3a';ctx.fillRect(x-10,y-4,8,2);ctx.fillRect(x-2,y-5,13,3);ctx.fillStyle='#e0b070';ctx.fillRect(x-2,y-5,13,1);ctx.fillStyle='#5a3a2a';ctx.fillRect(x-10,y-4,3,2)},
+  w_knife(x,y){ctx.fillStyle='#120e1e';ctx.fillRect(x-6,y-5,13,4);ctx.fillStyle='#5a3a2a';ctx.fillRect(x-5,y-4,4,2);ctx.fillStyle='#d8dce8';ctx.fillRect(x-1,y-4,7,2);ctx.fillStyle='#fff';ctx.fillRect(x-1,y-4,7,1)},
   cash(x,y){ctx.fillStyle='#120e1e';ctx.fillRect(x-8,y-8,16,8);ctx.fillStyle='#4ab05a';ctx.fillRect(x-7,y-7,14,6);ctx.fillStyle='#bff0b0';ctx.fillRect(x-2,y-6,4,4);ctx.fillStyle='#2a7a3a';ctx.fillRect(x-1,y-5,2,2)}};
 
 function step(){pollInput();if(NET.lock&&!netStep()){CEL.update();return}frameNo++;CEL.update();if(TOAST&&--TOAST.l<=0)TOAST=null;
