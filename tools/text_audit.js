@@ -20,7 +20,7 @@ const path = require('path');
         if (why) { const k = name.split(' ')[0] + t.s + why.split(' ')[0]; if (!seen.has(k)) { seen.add(k); bad.push(`${tag} ${why}`); } } } };
     const at = (scene, t, fn) => { d.go(scene, ...(fn ? [] : [])); };
     const O = d.ORDER;
-    d.go(d.Title); d.Title.t = 99; check('title'); d.Title.ph = 'menu'; check('title-menu');
+    d.go(d.Boot); d.Boot.t = 200; check('boot'); d.go(d.Title); d.Title.t = 99; check('title'); d.Title.ph = 'menu'; check('title-menu');
     d.go(d.Intro); for (const t of [40, 120, 200, 300, 400]) { d.Intro.t = t; check('intro@' + t); }
     d.go(d.Options); check('options'); d.go(d.Records); check('records');
     for (const mode of ['arcade', 'vs', 'story', 'training']) { d.go(d.Select, mode); d.Select.slide = 0; for (let i = 0; i < O.length; i++) { d.Select.cur = i; d.Select.t = 200; check(`select-${mode}-${O[i]}`); } }

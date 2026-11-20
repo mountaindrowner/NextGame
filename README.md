@@ -1,6 +1,6 @@
 # Bonfire Bash
 
-A handheld-styled pixel fighting game ("Dojo Boy") with eight fighters — Papa-Léguas, Ivan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie and Marcus — playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with eight fighters — Papa-Léguas, Ivan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie and Marcus — playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 

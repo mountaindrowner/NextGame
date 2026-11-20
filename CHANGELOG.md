@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.15.1
+
+- The handheld is now the **Dojo Boy Advanced**, on its printed logo and on the boot screen.
+
 ## 1.15.0
 
 - **Four face buttons, one layout for both modes:** the handheld now has a classic diamond, with **A** punch, **B** kick, **SP** (top, gold) special and **JUMP** (bottom, blue).

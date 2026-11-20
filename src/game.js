@@ -1,7 +1,7 @@
 'use strict';
 const VER=typeof GAME_VERSION!=='undefined'?GAME_VERSION:'DEV';
 try{document.getElementById('ver').textContent='v'+VER}catch(e){}
-// ============ BONFIRE BASH — a Dojo Boy fighting game ============
+// ============ BONFIRE BASH — a Dojo Boy Advanced fighting game ============
 const W=256,H=192,GY=176,XMIN=26,XMAX=230,GRAV=0.3;
 const $=id=>document.getElementById(id);
 const cv=$('screen'),ctx=cv.getContext('2d');ctx.imageSmoothingEnabled=false;
@@ -360,7 +360,8 @@ const Power={update(){if(ASSETS_READY&&(anyPress()||pressed.b||pressed.select)){
 const Boot={update(){if(this.t===74)SFX.ding();if(this.t>160||(this.t>20&&anyPress()))goFade(()=>go(Intro))},
   draw(){ctx.fillStyle='#ebe9e1';ctx.fillRect(0,0,W,H);const y=Math.min(74,-24+this.t*1.35);
     drawText('DOJO BOY',128,y,'#2a2a6a',3,{align:'center',shadow:false});
-    if(this.t>74){drawText('PIXEL FIGHT SYSTEM',128,y+30,'#8b2d6b',1,{align:'center',shadow:false});drawText('BONFIRE BASH V'+VER,128,y+50,'#2a2a6a',1,{align:'center',shadow:false});ctx.fillStyle='#8b2d6b';ctx.fillRect(70,y+26,116,1);ctx.fillStyle='#2d3a8b';ctx.fillRect(70,y+42,116,1)}}};
+    if(this.t>74){drawText('ADVANCED',128,y+25,'#8b2d6b',2,{align:'center',shadow:false});ctx.fillStyle='#8b2d6b';ctx.fillRect(70,y+43,116,1);
+      drawText('PIXEL FIGHT SYSTEM',128,y+47,'#2d3a8b',1,{align:'center',shadow:false});ctx.fillStyle='#2d3a8b';ctx.fillRect(70,y+57,116,1);drawText('BONFIRE BASH V'+VER,128,y+63,'#2a2a6a',1,{align:'center',shadow:false})}}};
 
 const Intro={enter(){this.slam=-1},
   update(){const t=this.t;if(t>10&&anyPress()){goFade(()=>go(Title));return}
@@ -1769,5 +1770,5 @@ let last=performance.now(),acc=0;
 function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=now;let n=0;while(acc>=1000/60&&n<4){step();acc-=1000/60;n++}if(n>=4)acc=0;render();musicTick()}
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
-window.__dbg={clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,StoryCard,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
+window.__dbg={Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,StoryCard,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
 
