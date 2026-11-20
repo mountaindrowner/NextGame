@@ -41,6 +41,14 @@ const path = require('path');
       B.spawn('goon'); const y = B.foes[B.foes.length - 1]; y.x = B.cx + 20; y.state = 'yield'; y.st = 80; check(`brawl-mercy-${a}`); B.foes = [];
       B.ph = 'continue'; check(`brawl-continue-${a}`); B.ph = 'clear'; check(`brawl-clear-${a}`); }
     d.RUN = { mode: 'arcade', p1: 'karl', ladder: ['ivan'], idx: 0, cont: 0 }; d.go(d.Continue); d.Continue.t = 10; check('continue'); d.go(d.GameOver); d.GameOver.t = 50; check('gameover');
+    { const L = d.LOB, names = ['MIGHTY DRAGON', 'GOLDEN FALCON', 'HUMBLE SHIELD', 'BRIGHT HAMMER', 'SILENT KNIGHT', 'STORM BISON', 'NOBLE RAVEN', 'QUICK SHARK', 'STONE EAGLE', 'ROYAL COMET'];
+      d.go(d.Online); d.Online.ph = 'lobby'; L.gen++; Object.assign(L, { id: null, err: '' }); check('lobby-joining'); L.err = "CAN'T REACH THE SERVER"; check('lobby-error');
+      Object.assign(L, { id: 'x', key: 'y', name: 'MIGHTY DRAGON', n: 1, players: [], err: '', note: '', noteT: 0, out: null, inc: null, vs: null }); check('lobby-empty');
+      L.players = names.slice(1).map((n, i) => ({ id: 'p' + i, name: n, busy: i % 3 === 2 })); L.n = 10; L.note = 'SILENT KNIGHT SAID NO THANKS'; L.noteT = 99;
+      for (const ls of [0, 3, 9]) { d.Online.ls = ls; check('lobby-list-' + ls); }
+      L.out = { id: 'p1', name: 'GOLDEN FALCON', t: performance.now() }; check('lobby-out'); L.out = null;
+      L.inc = { id: 'p1', name: 'GOLDEN FALCON', t: performance.now() }; check('lobby-in'); L.inc = null;
+      L.vs = { id: 'p1', name: 'GOLDEN FALCON', role: 'host', t: performance.now() }; check('lobby-vs'); Object.assign(L, { vs: null, id: null, players: [], noteT: 0 }); }
     for (const ph of ['menu', 'host', 'join', 'msg']) { d.go(d.Online); d.Online.ph = ph; d.Online.msg = 'COULD NOT REACH THE MATCHMAKING SERVER'; d.NET.code = 'ABCD'; d.NET.status = 'waiting'; check('online-' + ph); }
     d.go(d.Title); return { bad, screens };
   });

@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.21.0
+
+- **Online lobby.** ONLINE > LOBBY lists everyone who's online right now, marked READY or BUSY.
+  - Challenge anyone who's ready. They see a pop-up ("A CHALLENGER!") and have 20 seconds to accept.
+  - When they accept, the match connects by itself: no codes to read out.
+  - Names are two random words (IRON TIGER, HUMBLE FALCON...). They're unique in the lobby, and the top row gives you a new one. There's no typing, so there's nothing to moderate.
+  - Room codes are still there (HOST / JOIN WITH A CODE) for playing a specific friend.
+- **Phones can play online now.** Phones on mobile data often can't make the direct browser-to-browser link that matches used. Now, if the direct link isn't up within 7 seconds, the match runs through the server instead (a WebSocket relay). If a direct link drops mid-match, the relay takes over without a disconnect. The select screen shows DIRECT or VIA SERVER, and the ping.
+- **Fixed:** with a slow answer from the server, the host could flip back from "connected" to "connecting" and stall on the select screen.
+- **Fixed:** the select screen footer could run off the screen with the costume button and the ping both showing. The ping moved under the opponent's name.
+- **Server:**
+  - `bonfire-bash-net` now has a Lobby Durable Object (migration v2), kept in memory only, plus the relay inside each Room.
+  - **Deployed.**
+- **Tests:**
+  - New `tools/lobby.js`: two browsers meet in the lobby, rename, challenge, accept and play a full match. It passes on the live server over both the direct link and the forced relay (`RELAY=1`).
+  - The text check covers the lobby screens (736 screens).
+
 ## 1.20.0
 
 - **The story is told in real scenes now.** The text cards are gone. Each chapter opens with a title card, then a dialogue scene: your fighter's portrait on the left, whoever you're facing on the right, name tags, typed text, and a King James verse to close it. START skips a scene.

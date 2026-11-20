@@ -152,9 +152,31 @@ python3 ../build.py
 
 Strike timing (which frame lands the hit) and special-move frame maps live in the `AK` table in `src/game.js`; per-fighter overrides go in `CH[id].ak`. If a fighter has no animation for a state, the game falls back to the original single-sprite rendering.
 
+## Online
+
+**ONLINE > LOBBY** shows everyone who's in the lobby right now.
+- Pick a player marked READY and press A to challenge them. They get 20 seconds to accept.
+- Your lobby name is two random words, like IRON TIGER. The top row gives you a new one. Names come from fixed word lists, so nobody types anything and there's nothing to moderate.
+- **HOST / JOIN WITH A CODE** still works for playing a specific friend.
+
+**How a match connects.** The two browsers first try a direct link (WebRTC). If it isn't up within 7 seconds, which is common on phones on mobile data, the match runs through the server relay instead. The select screen shows DIRECT or VIA SERVER, plus the ping.
+
+**The server** is `server/worker.js`, a Cloudflare Worker named `bonfire-bash-net`. It has two Durable Objects:
+- **Lobby:** kept in memory only. A player who stops checking in, every 3 seconds, drops off after 20 seconds.
+- **Room:** swaps connection offers under a 4-letter code that expires after 10 minutes. It also runs the WebSocket relay.
+
+**Deploying.** Run `CONFIRM_DEPLOY=bonfire-bash-net sh server/deploy.sh`. It ships code only: migration v2, which added the Lobby, is already live.
+
+**Free-plan limits.** Lobby check-ins count against the account's Workers Free limits: 100,000 requests a day, with Durable Object requests counted separately. Relayed matches count too, since every frame's input is a message. On the free plan, going over makes requests fail until the next day; it doesn't bill anything.
+
 ## Build
 
 ```
 python3 tools/build.py
 node tools/smoke.js /tmp/shot
+node tools/story.js        # story mode: every level, cutscene, the mercy moment, the ending
+node tools/text_audit.js   # no text off-screen, out of its box or overlapping, on every screen
+node tools/online.js       # two browsers, a room code, a match (live server)
+node tools/lobby.js        # two browsers meet in the lobby and fight; RELAY=1 forces the server relay,
+                           # NET=http://127.0.0.1:8787 uses a local `wrangler dev` copy of server/worker.js
 ```
