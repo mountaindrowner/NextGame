@@ -21,6 +21,7 @@ ROSTER = [  # id, name, style, special 1, special 2
     ("vizor", "VIZOR", "TECH BRAWLER", "SHUTTER FLASH", "INSTANT REPLAY"),
     ("padre", "SAMSON", "SACRED BOXING", "HOLY TOME", "BENEDICTION"),
     ("zeke", "ZEKE", "BOWLING BRAWLER", "STRIKE BALL", "SPLIT SHOT"),
+    ("hecky", "HECKY XAVIER", "DAPPER BOXING", "HOSTILE TAKEOVER", "POWER SUIT"),
 ]
 
 

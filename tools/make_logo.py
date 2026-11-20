@@ -27,9 +27,9 @@ def word(s):
 
 
 mask = Image.new("L", ((W - 4) * S, txt_h * S), 0)
-if "-" in text:
-    top, main = text.split("-", 1)
-    tb, mb = word(top + "-"), word(main)
+if "-" in text or "|" in text:
+    top, main = text.split("|", 1) if "|" in text else text.split("-", 1)
+    tb, mb = word(top if "|" in text else top + "-"), word(main)
     th_top, th_main = int(txt_h * 0.36), int(txt_h * 0.66)
     mw = min((W - 6) * S, int(mb.width * th_main * S / mb.height * 1.05))
     tw_ = int(tb.width * th_top * S / tb.height * 1.1)

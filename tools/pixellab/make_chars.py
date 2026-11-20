@@ -15,6 +15,10 @@ DESC = {
     "padre": "Padre, a fighting priest: muscular man with short slicked-back black hair, a thin mustache and a stern face, black clerical shirt with a white roman collar, rolled short sleeves, a cream-white stole with gold crosses and gold fringe draped around his neck, black wristbands, black belt with silver buckle, baggy black trousers, black boots, holding a big dark-red holy book with a gold cross under one arm. 16-bit arcade fighting game character",
     # Zeke: concept tools/pixellab/concept/zeke.png on a dark background, style_character_id = karl's id
     "zeke": "Zeke, a bowling champion fighter: stocky muscular man with short black hair in a high fade, a full trimmed beard and a big confident grin, black bowling jersey shirt with a red and white vertical stripe and a bowling pins logo on the sleeve, a white towel with gold trim over one shoulder, black fingerless wrist-support gloves, black shorts, black socks, black white and red bowling shoes, holding a glossy purple bowling ball in one hand. 16-bit arcade fighting game character",
+    # Hecky: concept tools/pixellab/concept/hecky.png on a dark background, style_character_id = karl's id
+    "hecky": "Hecky Xavier, a smug suave fighter: slim young man with messy brown hair and thin silver rectangular glasses, confident smirk, an open white double-breasted suit jacket, black dress shirt and black tie, black belt with silver buckle, white suit trousers, polished black dress shoes, fists raised in a loose stylish boxing stance. 16-bit arcade fighting game character",
+    # Hecky's fox costume: create_with_style with style_character_id = hecky's id (no concept image)
+    "heckyfox": "an anthropomorphic red fox fighter standing upright like a man: orange-red fur, white muzzle and chest fur, pointed black-tipped ears, a big fluffy fox tail with a white tip, thin silver rectangular glasses, smug smirk, wearing an open white double-breasted suit jacket, black dress shirt and black tie, white suit trousers, black dress shoes, fists raised in a loose stylish boxing stance. 16-bit arcade fighting game character",
 }
 out = {}
 for k in sys.argv[1:]:

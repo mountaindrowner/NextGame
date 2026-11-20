@@ -1,6 +1,6 @@
 # World Dojo
 
-A handheld-styled pixel fighting game ("Dojo Boy") with seven fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor, Samson and Zeke — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game ("Dojo Boy") with eight fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor, Samson, Zeke and Hecky Xavier — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
@@ -33,6 +33,24 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Vizor | **Shutter Flash** — reticle lock-on at range, then a knockdown flash | **Instant Replay** — rewinds his position and up to 15 recent damage |
 | Samson | **Holy Tome** — overhead book smash (must be blocked standing) | **Benediction** — kneels and heals; any hit interrupts it |
 | Zeke | **Strike Ball** — bowling ball rolled along the floor (low, knocks down) | **Split Shot** — lobbed ball that drops from above (overhead) |
+| Hecky Xavier | **Hostile Takeover** — rising uppercut that launches for a juggle | **Power Suit** — 7-second power-up (+25% damage, faster) |
+
+## Fighting styles
+
+Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `node tools/traits.js`:
+
+| Fighter | Type | Health | Trait |
+|---|---|---|---|
+| Papa-Léguas | Rushdown | 92 | fastest dash, 4-hit chains |
+| Akira | Ninja | 94 | double jump |
+| Ivan | Grappler | 118 | the start of his kick absorbs a hit |
+| Diego | Mix-up | 96 | very low crouch: ducks under projectiles and high hits |
+| Vizor | Zoner | 98 | longest reach |
+| Samson | Powerhouse | 106 | counter-hit kicks knock down |
+| Zeke | High/low zoner | 104 | bowling balls smash through other projectiles |
+| Hecky Xavier | Technician | 98 | parry: tap forward just as a hit lands (no damage, +meter) |
+
+Hecky has a second costume — an anthropomorphic fox — chosen with SELECT on the character select screen (`skin2` in his roster entry; sprites in `assets/fighters/heckyfox/`).
 
 `tools/powers.js` checks each of these mechanics.
 

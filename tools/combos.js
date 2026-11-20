@@ -11,6 +11,7 @@ const COMBOS = {
   vizor: [['a'], ['b'], ['a', 'b']],
   padre: [['a'], ['b'], ['a', 'b']],
   zeke: [['a'], ['b'], ['a', 'b']],
+  hecky: [['a', { down: 1 }], ['a'], ['b'], ['a', 'b']],
 };
 (async () => {
   const br = await chromium.launch();

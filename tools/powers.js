@@ -12,7 +12,7 @@ const path = require('path');
     const setup = (a, b, x1 = 100, x2 = 140) => {
       d.RUN = { mode: 'training', p1: a, ladder: [b], idx: 0, cont: 0 }; d.go(d.Fight, { p1: a, p2: b, stage: b });
       const F = d.F, sc = d.scene, orig = d.Fight.__u || (d.Fight.__u = d.Fight.update), upd = orig.bind(sc); sc.update = () => {};
-      F.phase = 'play'; F.p1.x = x1; F.p2.x = x2; F.p1.face = 1; F.p2.face = -1;
+      F.phase = 'play'; F.p1.x = x1; F.p2.x = x2; F.p1.face = 1; F.p2.face = -1; for (const f of [F.p1, F.p2]) f.hp = f.mhp = f.trail = 100;
       const { held, pressed } = d.inp; const K = ['up', 'down', 'left', 'right', 'a', 'b', 'start', 'select', 'tap'];
       const step = (n = 1, o = {}) => { for (let i = 0; i < n; i++) { for (const k of K) { pressed[k] = i === 0 && !!o[k]; held[k] = !!(o.h && o.h[k]); } d.tick(); upd(); } };
       return { F, step };

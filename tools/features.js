@@ -15,7 +15,7 @@ const path = require('path'), fs = require('fs');
   const setup = (a, b, mode, x1 = 100, x2 = 140) => p.evaluate(([a, b, mode, x1, x2]) => {
     const d = window.__dbg; d.setTwo(mode === '2p'); d.RUN = { mode, p1: a, ladder: [b], idx: 0, cont: 0, score: [0, 0] };
     d.go(d.Fight, { p1: a, p2: b, stage: b }); const F = d.F, sc = d.scene, orig = d.Fight.__u || (d.Fight.__u = d.Fight.update);
-    window.__upd = orig.bind(sc); sc.update = () => {}; F.phase = 'play'; F.p1.x = x1; F.p2.x = x2; F.p1.face = 1; F.p2.face = -1;
+    window.__upd = orig.bind(sc); sc.update = () => {}; F.phase = 'play'; F.p1.x = x1; F.p2.x = x2; F.p1.face = 1; F.p2.face = -1; for (const f of [F.p1, F.p2]) f.hp = f.mhp = f.trail = 100;
   }, [a, b, mode, x1, x2]);
   const step = (n, o1 = {}, o2 = {}) => p.evaluate(([n, o1, o2]) => {
     const d = window.__dbg, { held, pressed } = d.inp, { held2, pressed2 } = d.inp2, K = ['up', 'down', 'left', 'right', 'a', 'b', 'start', 'select', 'tap'];

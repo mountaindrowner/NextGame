@@ -109,5 +109,47 @@
    "take": "airkick__e",
    "pk": 4
   }
+ },
+ "hecky": {
+  "special": {
+   "take": "special__c"
+  },
+  "cpunch": {
+   "take": "cpunch__a",
+   "pk": 4
+  },
+  "lowkick": {
+   "take": "lowkick__d",
+   "pk": 5
+  },
+  "airpunch": {
+   "take": "airpunch__a",
+   "pk": 4
+  },
+  "airkick": {
+   "take": "airkick__a",
+   "pk": 4
+  }
+ },
+ "heckyfox": {
+  "special": {
+   "take": "special__c"
+  },
+  "cpunch": {
+   "take": "cpunch__a",
+   "pk": 5
+  },
+  "lowkick": {
+   "take": "lowkick__d",
+   "pk": 5
+  },
+  "airpunch": {
+   "take": "airpunch__b",
+   "pk": 4
+  },
+  "airkick": {
+   "take": "airkick__b",
+   "pk": 4
+  }
  }
 }

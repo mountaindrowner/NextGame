@@ -18,6 +18,7 @@ PRESET = {
     "lowkick": (None, 0, "swoop kick"),
     "airkick": ("jump", 5, "high kick"),
     "airpunch": ("jump", 5, "punch"),
+    "special": (None, 0, "uppercut"),
 }
 # per-fighter wording (e.g. Samson holds a book under one arm), used as CHAR:ANIM:alt, takes e/f
 ALT = {

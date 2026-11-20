@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.0
+
+- **New fighter: Hecky Xavier "The Closer"** — a smug technician in a white suit from the Penthouse. **Hostile Takeover** is a rising uppercut that launches the opponent for a juggle; **Power Suit** powers him up for 7 seconds (+25% damage, faster walk). Super: **Golden Parachute**. Stage, song, voice, trials and ending.
+- **Costume 2: a fox.** On the select screen, press SELECT on Hecky to play him as an anthropomorphic fox in the same white suit (full animation set and portraits).
+- **Every fighter has a fighting style now** — an archetype with its own health, movement and reach, plus a trait no one else has (shown on the select screen and pause menu):
+  Papa-Léguas RUSHDOWN (fast dash, 4-hit chains) · Akira NINJA (double jump) · Ivan GRAPPLER (armored kick, most health) · Diego MIX-UP (ducks under high hits) · Vizor ZONER (longest reach) · Samson POWERHOUSE (counter-hits knock down) · Zeke HIGH/LOW ZONER (balls beat other projectiles) · Hecky TECHNICIAN (parry: tap forward as a hit lands).
+
 ## 1.3.0
 
 - **New fighter: Zeke "The Strike"** — a bowling brawler from the Strike Lanes. **Strike Ball** rolls a bowling ball along the floor (low: block it crouching, and it knocks down); **Split Shot** lobs one in a high arc that drops on the opponent (overhead: block it standing). Super: **Perfect Game**. His own stage (a neon bowling alley), song, voice, trials and ending.
