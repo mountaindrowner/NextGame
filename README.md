@@ -73,9 +73,7 @@ Every stage and the title screen have a recorded song, played looped.
 |---|---|
 | Title | heroic guitar and brass rock theme |
 | Crossroads Dojo (Papa-Léguas) | samba-rock fighting theme |
-| Moonlit Temple (Akira) | taiko, flute and koto over rock drums |
 | Iron Gym (Ivan) | heavy drums, distorted bass riff, choir synths |
-| Rio Plaza (Diego) | berimbau, pandeiro and funky bass |
 | Control Room (Vizor) | synthwave arpeggios and pulsing bass |
 | Old Chapel (Samson) | church organ over hard rock |
 
