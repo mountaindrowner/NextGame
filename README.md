@@ -1,6 +1,6 @@
 # World Dojo
 
-A handheld-styled pixel fighting game ("Dojo Boy") with six fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor and Samson — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game ("Dojo Boy") with seven fighters — Papa-Léguas, Akira, Ivan, Diego, Vizor, Samson and Zeke — playable in a browser on phone or desktop. Modes: Arcade, Versus CPU, 2 Players, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
@@ -32,6 +32,7 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Diego | **Meia-Lua** — advancing 3-hit spin kick | **Martelo** — invincible rising kick, the anti-air |
 | Vizor | **Shutter Flash** — reticle lock-on at range, then a knockdown flash | **Instant Replay** — rewinds his position and up to 15 recent damage |
 | Samson | **Holy Tome** — overhead book smash (must be blocked standing) | **Benediction** — kneels and heals; any hit interrupts it |
+| Zeke | **Strike Ball** — bowling ball rolled along the floor (low, knocks down) | **Split Shot** — lobbed ball that drops from above (overhead) |
 
 `tools/powers.js` checks each of these mechanics.
 

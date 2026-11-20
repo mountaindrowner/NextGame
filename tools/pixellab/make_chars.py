@@ -13,6 +13,8 @@ DESC = {
     "vizor": "Vizor, a tech brawler: stocky young man with short dark curly hair and a thin mustache, a high-tech cybernetic camera monocle over his right eye glowing cyan, black t-shirt with a white camera-shutter logo, dark diagonal harness strap with a small camera, chrome forearm gauntlet with cyan lights, black fingerless gloves, belt with a camera on the hip, baggy blue cargo jeans with gray tech knee pads, white and teal sneakers. 16-bit arcade fighting game character",
     # Padre: concept image tools/pixellab/concept/padre.png on a dark background, style_character_id = karl's id
     "padre": "Padre, a fighting priest: muscular man with short slicked-back black hair, a thin mustache and a stern face, black clerical shirt with a white roman collar, rolled short sleeves, a cream-white stole with gold crosses and gold fringe draped around his neck, black wristbands, black belt with silver buckle, baggy black trousers, black boots, holding a big dark-red holy book with a gold cross under one arm. 16-bit arcade fighting game character",
+    # Zeke: concept tools/pixellab/concept/zeke.png on a dark background, style_character_id = karl's id
+    "zeke": "Zeke, a bowling champion fighter: stocky muscular man with short black hair in a high fade, a full trimmed beard and a big confident grin, black bowling jersey shirt with a red and white vertical stripe and a bowling pins logo on the sleeve, a white towel with gold trim over one shoulder, black fingerless wrist-support gloves, black shorts, black socks, black white and red bowling shoes, holding a glossy purple bowling ball in one hand. 16-bit arcade fighting game character",
 }
 out = {}
 for k in sys.argv[1:]:

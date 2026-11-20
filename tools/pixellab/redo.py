@@ -21,6 +21,7 @@ PRESET = {
 }
 # per-fighter wording (e.g. Samson holds a book under one arm), used as CHAR:ANIM:alt, takes e/f
 ALT = {
+    ("zeke", "airkick"): ("jump", 5, 4, "in mid-air he straightens his front leg completely and thrusts it forward horizontally in a flying side kick, the leg fully extended and straight at chest height with the shoe sole leading, body leaning back, other knee tucked"),
     ("padre", "airkick"): ("jump", 5, 4, "in mid-air, holding the book tight under his left arm, he snaps his front leg out perfectly straight forward in a flying side kick, the sole of the boot leading at chest height, the other knee tucked up"),
     ("padre", "airpunch"): ("jump", 5, 4, "in mid-air, holding the book tight under his left arm, he throws a hard punch with his free right fist, the right arm fully extended forward and angled down, legs tucked"),
 }

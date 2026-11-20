@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.0
+
+- **New fighter: Zeke "The Strike"** — a bowling brawler from the Strike Lanes. **Strike Ball** rolls a bowling ball along the floor (low: block it crouching, and it knocks down); **Split Shot** lobs one in a high arc that drops on the opponent (overhead: block it standing). Super: **Perfect Game**. His own stage (a neon bowling alley), song, voice, trials and ending.
+- Seven-fighter select screen, intro, title and records.
+
 ## 1.2.0
 
 - **Real voices** — a recorded arcade announcer (rounds, "Fight!", "K.O.", "Perfect!", fighter names, "versus", results) and a voice for every fighter: they shout their specials and super, say a line when they win, and another when they lose. Made with Kokoro, an open-source voice model (`tools/voices.py`); the browser's robot voice is only a fallback now.

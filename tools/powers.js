@@ -45,6 +45,13 @@ const path = require('path');
       r = setup('padre', 'ivan', 100, 140); F = r.F; F.dummy = 'BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2); r.step(34);
       const standBlocked = F.p2.hp > 95;
       check('SAMSON       Holy Tome (overhead)', crouchHit && standBlocked, `hits crouch-block: ${crouchHit}, blocked standing: ${standBlocked}`); }
+    for (const [kind, which, lowOk, label] of [['strike', 1, true, 'ZEKE         Strike Ball (low)'], ['split', 2, false, 'ZEKE         Split Shot (overhead)']]) {
+      // low: hits a standing block, blocked crouching. overhead: hits a crouching block, blocked standing.
+      let r = setup('zeke', 'ivan', 70, 170), F = r.F; F.dummy = 'BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2, which); r.step(90); const vsStand = F.p2.hp;
+      r = setup('zeke', 'ivan', 70, 170); F = r.F; F.dummy = 'LOW BLOCK'; r.step(3); d.startSpecial(F.p1, F.p2, which); r.step(90); const vsLow = F.p2.hp;
+      const ok = lowOk ? (vsStand < 95 && vsLow > 95) : (vsLow < 95 && vsStand > 95);
+      check(label, ok, `vs standing block: ivan hp ${vsStand | 0}, vs crouching block: ${vsLow | 0}`);
+    }
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none');

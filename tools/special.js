@@ -14,7 +14,7 @@ const path = require('path');
   const shots = await p.evaluate(async (W) => {
     const d = window.__dbg, F = d.F; F.phase = 'play'; F.p1.x = 110; F.p2.x = 150; F.p2.cpu = true;
     const sc = d.scene, upd = sc.update.bind(sc); sc.update = () => {};
-    d.startSpecial(F.p1, F.p2, W); const out = [];
+    F.p2.x = W === 2 ? 190 : F.p2.x; d.startSpecial(F.p1, F.p2, W); const out = [];
     for (let i = 0; i < 64; i++) { upd(); if (i % 3 === 0) { await new Promise(r => requestAnimationFrame(r)); out.push(document.getElementById('screen').toDataURL()); } }
     sc.update = upd; return out;
   }, +which);

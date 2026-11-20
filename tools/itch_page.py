@@ -20,6 +20,7 @@ ROSTER = [  # id, name, style, special 1, special 2
     ("diego", "DIEGO", "CAPOEIRA", "MEIA-LUA", "MARTELO"),
     ("vizor", "VIZOR", "TECH BRAWLER", "SHUTTER FLASH", "INSTANT REPLAY"),
     ("padre", "SAMSON", "SACRED BOXING", "HOLY TOME", "BENEDICTION"),
+    ("zeke", "ZEKE", "BOWLING BRAWLER", "STRIKE BALL", "SPLIT SHOT"),
 ]
 
 
@@ -55,9 +56,9 @@ def header():  # 960x320 (480x160 x2)
     im = stage("akira", W, H, 0.45)
     draw_text(im, "WORLD DOJO", W // 2, 12, 5, grad=FIRE, outline="#3a0808", center=True)
     bar(im, 51, 260, RED)
-    draw_text(im, "6 FIGHTERS - 12 POWERS - 1 CHAMPION", W // 2, 57, 1, col=GOLD, center=True)
+    draw_text(im, f"{len(ROSTER)} FIGHTERS - {len(ROSTER) * 2} POWERS - 1 CHAMPION", W // 2, 57, 1, col=GOLD, center=True)
     for i, (id_, *_rest) in enumerate(ROSTER):
-        place(im, id_, 44 + i * 78, H - 6 - (i % 2) * 4, anim="idle", flip=i >= 3)
+        place(im, id_, round(W / len(ROSTER) * (i + .5)), H - 6 - (i % 2) * 4, anim="idle", flip=i >= len(ROSTER) // 2)
     save(im, "header-960x320.png", 2)
 
 
@@ -73,9 +74,10 @@ def background():  # 1920x1080 (480x270 x4): stripes, darker in the middle where
     im.alpha_composite(shade)
     # faint fighters standing along the bottom edges
     for i, (id_, *_rest) in enumerate(ROSTER):
-        f, ax, ay = fighter(id_, "idle", 0, flip=i >= 3)
+        f, ax, ay = fighter(id_, "idle", 0, flip=i >= len(ROSTER) // 2)
         f = f.copy(); f.putalpha(f.getchannel("A").point(lambda v: v * 45 // 255))
-        x = 26 + i * 50 if i < 3 else W - 26 - (5 - i) * 50
+        h = len(ROSTER) // 2
+        x = 26 + i * 44 if i < h else W - 26 - (len(ROSTER) - 1 - i) * 44
         im.alpha_composite(f, (int(x - ax), H - 6 - ay))
     save(im, "background-1920x1080.png", 4)
 
@@ -90,10 +92,12 @@ def title(text, name):  # 960x72 section titles (480x36 x2)
 
 def roster():  # 960x? roster card, 3 x 2 fighter cards (drawn at 1x, scaled x2)
     CW, CH, G = 152, 150, 6
-    W, H = CW * 3 + G * 4, CH * 2 + G * 3
+    rows = -(-len(ROSTER) // 3)
+    W, H = CW * 3 + G * 4, CH * rows + G * (rows + 1)
     im = Image.new("RGBA", (W, H), (14, 11, 34, 255))
     for i, (id_, name, style, s1, s2) in enumerate(ROSTER):
-        x0, y0 = G + (i % 3) * (CW + G), G + (i // 3) * (CH + G)
+        last = len(ROSTER) - (rows - 1) * 3 if i >= (rows - 1) * 3 else 3
+        x0, y0 = G + (i % 3) * (CW + G) + (3 - last) * (CW + G) // 2, G + (i // 3) * (CH + G)
         card = panel(CW, CH)
         art = stage(id_, CW, 88, 0.55)
         por = Image.open(A / f"{id_}_porm.png").convert("RGBA")
@@ -162,8 +166,8 @@ def lineup_gif():  # animated idle line-up, 960x320
     for t in range(16):
         im = bg.copy()
         for i, (id_, name, *_r) in enumerate(ROSTER):
-            x = 44 + i * 78
-            place(im, id_, x, H - 18, anim="idle", frame=(t // 2 + i) % metas[id_], flip=i >= 3)
+            x = round(W / len(ROSTER) * (i + .5))
+            place(im, id_, x, H - 18, anim="idle", frame=(t // 2 + i) % metas[id_], flip=i >= len(ROSTER) // 2)
             draw_text(im, name, x, H - 12, 1, col=GOLD, center=True)
         frames.append(im.resize((W * 2, H * 2), Image.NEAREST).convert("RGB"))
     frames = gif_frames(frames)

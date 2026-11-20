@@ -53,7 +53,7 @@ def logo(im, cx, y, k, two_lines=False, sub=True):
     w = text_w("WORLD DOJO" if not two_lines else "WORLD", k) + 4 * k
     ImageDraw.Draw(im).rectangle((cx - w // 2, y2 + k // 2, cx + w // 2, y2 + k // 2 + max(2, k // 3)), fill=RED)
     if sub:
-        s = "6 FIGHTERS - 12 POWERS - 1 CHAMPION"
+        s = "7 FIGHTERS - 14 POWERS - 1 CHAMPION"
         sk = max(1, k // 3)
         while sk > 1 and text_w(s, sk) > im.width - 24:
             sk -= 1
@@ -62,7 +62,7 @@ def logo(im, cx, y, k, two_lines=False, sub=True):
 
 
 # poses that show each fighter's style; left side faces right, right side faces left
-POSE = {"karl": ("punch", 4), "akira": ("special", 6), "vizor": ("special", 4),
+POSE = {"zeke": ("special", 7), "karl": ("punch", 4), "akira": ("special", 6), "vizor": ("special", 4),
         "padre": ("special", 6), "ivan": ("kick", 4), "diego": ("special", 5)}
 
 
@@ -71,9 +71,10 @@ def keyart():  # 1376x768
     vignette(im, 170)
     logo(im, im.width // 2, 28, 11)
     g = im.height - 34
-    for id_, x in (("karl", 170), ("akira", 380), ("vizor", 585)):
+    for id_, x in (("karl", 140), ("akira", 320), ("vizor", 500)):
         put(im, id_, x, g, *POSE[id_], flip=False)
-    for id_, x in (("padre", 800), ("ivan", 1010), ("diego", 1215)):
+    put(im, "zeke", 688, g - 18, "win", 8, flip=False)
+    for id_, x in (("padre", 870), ("ivan", 1055), ("diego", 1240)):
         put(im, id_, x, g, *POSE[id_], flip=True)
     draw_text(im, f"PLAY IN YOUR BROWSER  -  V{VER}", im.width // 2, im.height - 22, 2, col="#ffffff", outline="#000", center=True)
     im.convert("RGB").save(OUT / "keyart-1376x768.png")
@@ -84,7 +85,7 @@ def poster():  # 768x1024
     vignette(im, 150)
     logo(im, im.width // 2, 36, 12, two_lines=True)
     back, front = im.height - 190, im.height - 26
-    for id_, x, anim, fr, fl in (("karl", 150, "win", 8, False), ("ivan", 384, "win", 8, False), ("vizor", 618, "idle", 0, True)):
+    for id_, x, anim, fr, fl in (("karl", 110, "win", 8, False), ("ivan", 290, "win", 8, False), ("zeke", 478, "win", 8, False), ("vizor", 660, "idle", 0, True)):
         put(im, id_, x, back, anim, fr, fl, k=3)
     for id_, x in (("akira", 130), ("padre", 384), ("diego", 636)):
         an, fr = POSE[id_]
@@ -100,8 +101,8 @@ def cover():  # 630x500, new cover on the arena backdrop
     draw_text(im, "DOJO", 157, 52, 6, grad=FIRE, outline="#3a0808", center=True)
     ImageDraw.Draw(im).rectangle((93, 99, 221, 100), fill=RED)
     draw_text(im, "PIXEL FIGHTERS", 157, 105, 1, col=GOLD, center=True)
-    for i, (id_, flip) in enumerate([("karl", False), ("akira", False), ("vizor", False), ("padre", True), ("ivan", True), ("diego", True)]):
-        put(im, id_, 30 + i * 51, 238 - (i % 2) * 7, "idle", 0, flip, k=1)
+    for i, (id_, flip) in enumerate([("karl", False), ("akira", False), ("vizor", False), ("zeke", False), ("padre", True), ("ivan", True), ("diego", True)]):
+        put(im, id_, 26 + i * 44, 238 - (i % 2) * 7, "idle", 0, flip, k=1)
     im.resize((630, 500), Image.NEAREST).convert("RGB").save(OUT / "cover-arena-630x500.png")
 
 
