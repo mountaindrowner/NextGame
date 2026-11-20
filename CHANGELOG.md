@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.13.2
+
+Playtesters found Zeke the hardest fighter to face, so this targets what makes him hard for a person: the high/low guessing game from range.
+- **Split Shot is readable:** a pink landing marker with an arrow shows where the ball will drop from the moment it's thrown. It also comes out 4 frames slower, and its cooldown is 120 frames instead of 90.
+- **No instant high/low switch:** throwing one bowling ball puts his other ball special on at least a 40-frame cooldown, so a low Strike Ball can't be followed straight away by an overhead Split Shot.
+- **CPU Zeke throws a little less often**, but now actually alternates low and high the way a player would.
+- **The balance test is more human:** CPU defenders now have to *read* high vs low in time. They guess more often when a move comes fast or they're under pressure, instead of always knowing which way to block.
+
 ## 1.13.1
 
 - **Zeke nerfed a little:**
