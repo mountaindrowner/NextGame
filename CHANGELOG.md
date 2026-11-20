@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.26.0
+
+- **New attract intro.** It no longer squeezes every fighter into thin slices:
+  1. "Nine fighters. Nine styles. One champion."
+  2. A **spotlight for each fighter** in turn: their own stage behind them, a band in their colour with speed lines, the big portrait sliding in, their logo, nickname and style, and their in-game sprite in its victory pose. The announcer calls each name.
+  3. A **group shot**: all nine in-game fighters on stage in two rows, with the BONFIRE BASH logo slamming in.
+- **New title screen.** The crowded row of nine portraits is gone. **Two fighters at a time** face each other on the left one's stage, celebrating and then standing ready, and the pair changes every few seconds. When the menu opens, they frame it. The version tag sits at the bottom centre.
+- The text check covers the whole intro and every title pairing (939 screens).
+
 ## 1.25.0
 
 - **Ivan is back, as a story boss.** He's Vex's enforcer and the boss of the Docks, every run. You fight him one-on-one with his full kit: Bear Slam, Iron Charge, the armored kick and Siberian Storm. He has 15% more health than normal and his Iron Gym theme. He still isn't on the roster.

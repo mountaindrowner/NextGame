@@ -412,41 +412,69 @@ const Boot={update(){if(this.t===74)SFX.ding();if(this.t>160||(this.t>20&&anyPre
     if(this.t>74){drawText('ADVANCED',128,y+25,'#8b2d6b',2,{align:'center',shadow:false});ctx.fillStyle='#8b2d6b';ctx.fillRect(70,y+43,116,1);
       drawText('PIXEL FIGHT SYSTEM',128,y+47,'#2d3a8b',1,{align:'center',shadow:false});ctx.fillStyle='#2d3a8b';ctx.fillRect(70,y+57,116,1);drawText('BONFIRE BASH V'+VER,128,y+63,'#2a2a6a',1,{align:'center',shadow:false})}}};
 
-const Intro={enter(){this.slam=-1},
-  update(){const t=this.t;if(t>10&&anyPress()){goFade(()=>go(Title));return}
+// The attract intro: three title beats, then a spotlight for each fighter (stage, portrait, logo, nickname, style and
+// their in-game sprite in its victory pose, the announcer calling the name), then everyone together and the logo.
+const CARD=46,SPOT0=190;
+const Intro={enter(){this.slam=-1;if(!F)F={superFlash:0,cinema:false,superBy:null};this.act={};this.crowd=null},
+  actor(id,state){const a=this.act[id]||(this.act[id]=mkActor(id,id,0,-1));if(state&&a.state!==state){a.state=state;a.st=0}return a},
+  update(){const t=this.t,N=ORDER.length,FIN=SPOT0+N*CARD;if(t>10&&anyPress()){goFade(()=>go(Title));return}
     if(t===20||t===70||t===120)SFX.thud();
-    if(t>=190&&t<410){const k=Math.floor((t-190)/22);if(k!==this.slam&&k<ORDER.length){this.slam=k;SFX.heavy();SFX.whooshH()}}
-    if(t===400)say('Bonfire Bash!',1,0.5);
-    if(t===430)goFade(()=>go(Title),0.06)},
-  draw(){const t=this.t;ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
-    if(t<185){const NW=['','ONE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN'][ORDER.length]||ORDER.length,lines=[[NW+' FIGHTERS.',20],[NW+' STYLES.',70],['ONE CHAMPION.',120]];
+    if(t>=SPOT0&&t<FIN){const k=Math.floor((t-SPOT0)/CARD);if(k!==this.slam){this.slam=k;SFX.heavy();SFX.whooshH();sayName(ORDER[k]);this.actor(ORDER[k],'win')}}
+    for(const id in this.act)this.act[id].st++;
+    if(t===FIN){SFX.heavy();this.crowd=ORDER.map((id,i)=>{const a=this.actor(id,'idle');return a})}
+    if(t===FIN+22){SFX.slam();say('Bonfire Bash!',1,0.5)}
+    if(t===FIN+140)goFade(()=>go(Title),0.06)},
+  draw(){const t=this.t,N=ORDER.length,FIN=SPOT0+N*CARD;ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+    if(t<SPOT0-5){const NW=['','ONE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN'][N]||N,lines=[[NW+' FIGHTERS.',20],[NW+' STYLES.',70],['ONE CHAMPION.',120]];
       lines.forEach(([s,st],i)=>{if(t>=st){const a=Math.min(1,(t-st)/8);ctx.globalAlpha=a;drawText(s,128,62+i*24,i===2?'#fff':'#bbb',i===2?2:1,i===2?{align:'center',grad:FIRE,outline:'#400'}:{align:'center'});ctx.globalAlpha=1}});return}
-    const cols=['#7a1a1a','#2a1a5a','#1a2a6a','#1a5a2a','#14324a'],N=ORDER.length,PW=W/N;
-    for(let i=0;i<N;i++){const st=190+i*22;if(t<st)continue;const p=Math.min(1,(t-st)/8),c=CH[ORDER[i]],x0=Math.round(i*PW),pw=Math.round((i+1)*PW)-x0;
-      ctx.save();ctx.beginPath();ctx.rect(x0,0,pw,H);ctx.clip();ctx.fillStyle=cols[i%cols.length];ctx.fillRect(x0,0,pw,H);
-      ctx.fillStyle='rgba(255,255,255,.07)';for(let y=(t*2)%12;y<H;y+=12)ctx.fillRect(x0,y,pw,4);
-      const dir=i%2?1:-1,ox=(1-p)*80*dir,img=c.porm;ctx.drawImage(img,Math.round(x0+pw/2-img.width/2+ox),H-img.height-18);
-      if(t-st<4){ctx.fillStyle='rgba(255,255,255,.8)';ctx.fillRect(x0,0,pw,H)}ctx.restore();
-      if(p>=1){const lg=c.logo,lw=pw-4;ctx.drawImage(lg,0,0,lg.width,lg.height,x0+2,H-28,lw,Math.round(lg.height*lw/lg.width))}}
-    ctx.fillStyle='#000';for(let i=1;i<N;i++)ctx.fillRect(Math.round(i*PW)-1,0,2,H);
-    if(t>395){ctx.fillStyle=`rgba(255,255,255,${Math.min(1,(t-395)/12)})`;ctx.fillRect(0,0,W,H)}}};
+    if(t<FIN){if(t<SPOT0)return;const k=Math.floor((t-SPOT0)/CARD),u=(t-SPOT0)%CARD,c=CH[ORDER[k]],ease=x=>1-Math.pow(1-Math.min(1,Math.max(0,x)),3);
+      // backdrop: their stage, darkened, with a band of their colour and speed lines
+      ctx.drawImage(c.stage,Math.round(-u*.4),0);ctx.fillStyle='rgba(6,4,16,.55)';ctx.fillRect(0,0,W,H);
+      ctx.save();ctx.beginPath();ctx.moveTo(118,0);ctx.lineTo(W,0);ctx.lineTo(W,H);ctx.lineTo(78,H);ctx.closePath();ctx.clip();
+      ctx.globalAlpha=.28;ctx.fillStyle=c.col.aura;ctx.fillRect(0,0,W,H);ctx.globalAlpha=.12;ctx.fillStyle='#fff';
+      for(let i=-4;i<14;i++){const x=((i*28-u*6)%(W+60)+W+60)%(W+60)-30;ctx.fillRect(x,0,10,H)}ctx.restore();ctx.globalAlpha=1;
+      ctx.fillStyle=c.col.aura;ctx.beginPath();ctx.moveTo(116,0);ctx.lineTo(119,0);ctx.lineTo(79,H);ctx.lineTo(76,H);ctx.fill();
+      // the in-game fighter, celebrating
+      const a=this.actor(ORDER[k]);a.x=200;ctx.save();ctx.translate(0,186-GY);drawFighter(a);ctx.restore();
+      // portrait slides in from the left
+      const im=c.por,px=Math.round(-im.width+(im.width+2)*ease(u/9));ctx.drawImage(im,px,H-im.height);
+      // logo, nickname, style
+      const lw=144,lx=Math.round(W+10-(W+10-104)*ease((u-3)/9)),lh=Math.round(c.logo.height*lw/c.logo.width);ctx.drawImage(c.logo,0,0,c.logo.width,c.logo.height,lx,18,lw,lh);
+      if(u>9){const al=Math.min(1,(u-9)/6);ctx.globalAlpha=al;if(c.nick)drawText('"'+c.nick+'"',176,22+lh+2,'#ffe66a',1,{align:'center',outline:'#000'});
+        drawText(c.style,176,32+lh+2,'#ffffff',1,{align:'center',outline:'#000'});ctx.globalAlpha=1}
+      drawText((k+1)+'/'+N,250,182,'#ffffffaa',1,{align:'right',shadow:false});
+      if(u<3){ctx.fillStyle=`rgba(255,255,255,${.85-u*.28})`;ctx.fillRect(0,0,W,H)}return}
+    // everyone together, then the logo slams in
+    const u=t-FIN;ctx.drawImage(CH.karl.stage,0,0);ctx.fillStyle='rgba(6,4,16,.6)';ctx.fillRect(0,0,W,H);
+    const g=ctx.createRadialGradient(128,150,10,128,150,150);g.addColorStop(0,'rgba(255,140,40,.35)');g.addColorStop(1,'rgba(255,140,40,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    const back=ORDER.slice(0,5),front=ORDER.slice(5);
+    const row=(ids,y,x0,dx,d)=>ids.forEach((id,i)=>{const a=this.actor(id),dl=Math.max(0,1-(u-d-i*3)/10);if(u<d+i*3)return;a.x=x0+i*dx;a.face=a.x<128?1:-1;
+      ctx.globalAlpha=.4;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(a.x,y+1,16,3,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;ctx.save();ctx.translate(0,y-GY-Math.round(dl*30));drawFighter(a);ctx.restore()});
+    row(back,156,30,49,0);ctx.fillStyle='rgba(6,4,16,.35)';ctx.fillRect(0,0,W,H);row(front,190,54,49,8);
+    if(u>=22){const k=Math.min(1,(u-22)/6),sc=1+(1-k)*1.5;ctx.save();ctx.translate(128,34);ctx.scale(sc,sc);ctx.globalAlpha=k;
+      drawText('BONFIRE',0,-28,'#fff',3,{align:'center',grad:FIRE,outline:'#3a0808',ow:1});drawText('BASH',0,-4,'#fff',4,{align:'center',grad:FIRE,outline:'#3a0808',ow:1});ctx.restore();ctx.globalAlpha=1;
+      if(u<28){ctx.fillStyle=`rgba(255,255,255,${(28-u)/8})`;ctx.fillRect(0,0,W,H)}}
+    if(u<4){ctx.fillStyle=`rgba(255,255,255,${.9-u*.22})`;ctx.fillRect(0,0,W,H)}
+    if(u>125){ctx.fillStyle=`rgba(0,0,0,${Math.min(1,(u-125)/15)})`;ctx.fillRect(0,0,W,H)}}};
 
-const Title={enter(){setTwo(false);this.ph='press';this.sel=0;this.petals=Array.from({length:18},()=>({x:rnd(0,W),y:rnd(0,H),v:rnd(.3,.8),s:rnd(0,6)}));playMusic('title')},
+const Title={enter(){setTwo(false);this.ph='press';this.sel=0;if(!F)F={superFlash:0,cinema:false,superBy:null};this.duo(0);this.petals=Array.from({length:18},()=>({x:rnd(0,W),y:rnd(0,H),v:rnd(.3,.8),s:rnd(0,6)}));playMusic('title')},
   items:['STORY','ARCADE','VERSUS CPU','ONLINE','TRAINING','TRIALS','RECORDS','OPTIONS'],
-  update(){if(this.ph==='press'){if(anyPress()){SFX.start();this.ph='menu';say('Bonfire Bash',1,0.5)}return}
+  // two fighters at a time face each other on the left one's stage; the pair changes every few seconds
+  duo(i){const N=ORDER.length;this.pi=i%N;this.pt=0;const a=ORDER[this.pi],b=ORDER[(this.pi+1)%N];this.pair=[mkActor('a',a,42,1,{state:'win'}),mkActor('b',b,214,-1,{state:'win'})]},
+  update(){this.pt=(this.pt||0)+1;for(const a of this.pair||[]){a.st++;if(a.state==='win'&&a.st>90){a.state='idle';a.st=0}}if(this.pt>=260)this.duo(this.pi+2);if(this.ph==='press'){if(anyPress()){SFX.start();this.ph='menu';say('Bonfire Bash',1,0.5)}return}
     const n=this.items.length;if(pressed.up){this.sel=(this.sel+n-1)%n;SFX.move()}if(pressed.down){this.sel=(this.sel+1)%n;SFX.move()}
     if(pressed.b){this.ph='press';SFX.back()}
     if(pressed.a||pressed.start){SFX.ok();const s=this.sel;const it=this.items[s];if(it==='OPTIONS')go(Options);else if(it==='RECORDS')go(Records);else if(it==='ONLINE'){Online.ph='menu';goFade(()=>go(Online))}else goFade(()=>go(Select,{STORY:'story',ARCADE:'arcade','VERSUS CPU':'vs',TRAINING:'training',TRIALS:'trials'}[it]))}},
-  draw(){const t=this.t;ctx.drawImage(CH.karl.stage,0,0);ctx.fillStyle='rgba(8,6,24,.55)';ctx.fillRect(0,0,W,H);
+  draw(){const t=this.t,st=CH[ORDER[this.pi||0]].stage;ctx.drawImage(st,0,0);ctx.fillStyle='rgba(8,6,24,.55)';ctx.fillRect(0,0,W,H);
     ctx.fillStyle='#ffc0d8';for(const p of this.petals){p.y+=p.v;p.x+=Math.sin((t+p.s*30)/30)*0.4-0.2;if(p.y>H){p.y=-4;p.x=rnd(0,W)}ctx.fillRect(p.x|0,p.y|0,2,2)}
-    ORDER.forEach((id,i)=>{const im=CH[id].pors;ctx.drawImage(im,Math.round(-8+i*W/ORDER.length),H-im.height)});
-    ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,H-6,W,6);
+    for(const a of this.pair||[]){ctx.globalAlpha=.45;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(a.x,185,18,3,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;ctx.save();ctx.translate(0,184-GY);drawFighter(a);ctx.restore()}
+    if(this.pt<6){ctx.fillStyle=`rgba(255,255,255,${(6-this.pt)/10})`;ctx.fillRect(0,0,W,H)}
     const bob=Math.round(Math.sin(t/20)*1.5);
     drawText('BONFIRE',128,10+bob,'#fff',4,{align:'center',grad:FIRE,outline:'#3a0808',ow:1});
     drawText('BASH',128,42+bob,'#fff',5,{align:'center',grad:FIRE,outline:'#3a0808',ow:1});
     ctx.fillStyle='#d0301a';ctx.fillRect(64,80+bob,128,2);
     drawText('PIXEL FIGHTERS',128,86,'#ffe66a',1,{align:'center'});
-    {const v='VERSION '+VER,w=textW(v)+8;ctx.fillStyle='rgba(0,0,0,.65)';ctx.fillRect(W-w-2,H-12,w,11);drawText(v,W-6,H-10,'#ffe66a',1,{align:'right',shadow:false})}
+    if(this.ph==='press'){const v='VERSION '+VER,w=textW(v)+8;ctx.fillStyle='rgba(0,0,0,.65)';ctx.fillRect(128-w/2,H-12,w,11);drawText(v,128,H-10,'#ffe66a',1,{align:'center',shadow:false})}
     if(this.ph==='press'){if((t>>4)&1)drawText('PRESS START',128,100,'#fff',1,{align:'center',outline:'#000'})}
     else{box(80,95,96,this.items.length*10+5);this.items.forEach((s,i)=>{const on=i===this.sel;drawText((on?'> ':'  ')+s,86,99+i*10,on?'#ffe66a':'#aab',1)})}}};
 
