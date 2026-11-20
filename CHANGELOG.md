@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.25.0
+
+- **Ivan is back, as a story boss.** He's Vex's enforcer and the boss of the Docks, every run. You fight him one-on-one with his full kit: Bear Slam, Iron Charge, the armored kick and Siberian Storm. He has 15% more health than normal and his Iron Gym theme. He still isn't on the roster.
+  - **New face-off scene** at the end of the pier: "Back home I fought for medals. Here I fight for rent. It is nothing personal, little one."
+  - **Chapter 3 opens with his turn.** "You had me down. Why did you stop?" "I came here to free people. That includes you." Vex holds his passport, so Ivan sends the dock workers home himself.
+  - **One month later:** Ivan got his passport back and stayed. He teaches wrestling to dock kids for free.
+  - **Credits:** he gets his own line, "THE BEAR, WHO SENT THEM HOME".
+- The other two story duels are still random rivals. The Docks level plays the Iron Gym song again.
+- **Under the hood:**
+  - The game now loads fighters who aren't on the roster but appear in the story (`STORY_FIGHTERS`).
+  - Ivan's assets are back in `assets/`.
+  - His move tests are restored.
+  - The story test checks the Docks hand-off: the scene, then the duel, with a boosted Ivan who isn't on the roster.
+
 ## 1.24.0
 
 - **Keksan replaces Ivan.** Ivan "The Bear" has left the roster, and Keksan takes his slot, second on the select grid. The roster is back to nine and the grid back to 3×3.

@@ -215,6 +215,11 @@ const CH={
     speed:1.25,power:1.0,def:1.0,jump:1.0,stats:[5,3,3],special:'rush',spName:'LÉGUA RUSH',special2:'step',sp2Name:'LÉGUA STEP',tr:0,
     col:{skin:'#e0965c',glove:'#2c2a44',leg:'#e9e7f3',foot:'#f6f6f6',aura:'#ffd23a'},sh:.72,hip:.5,
     quote:"TOO SLOW! THEY DON'T CALL ME PAPA-LÉGUAS FOR NOTHING!",lose:'I RAN OUT OF ROAD...',stageName:'CROSSROADS DOJO'},
+  // Ivan isn't on the roster (not in ORDER): he's Vex's enforcer, the boss of the Docks in story mode
+  ivan:{id:'ivan',name:'IVAN',nick:'THE BEAR',style:'SAMBO',country:'RUSSIA',flag:'ru',ht:"6'2\" (188 CM)",wt:'215 LB (98 KG)',
+    speed:0.82,power:1.3,def:1.1,jump:0.88,stats:[2,5,4],special:'slam',spName:'BEAR SLAM',special2:'charge',sp2Name:'IRON CHARGE',tr:-5,
+    col:{skin:'#e3a272',glove:'#2e2f4a',leg:'#2b3168',foot:'#2c3a8a',aura:'#ff4a3a'},sh:.75,hip:.5,
+    quote:'IN MY GYM, THE FLOOR IS MY FRIEND. SAY HELLO TO IT.',lose:'NEXT TIME... I BRING BIGGER BEAR.',stageName:'IRON GYM'},
   vizor:{id:'vizor',name:'VIZOR',nick:'THE WATCHER',style:'TECH BRAWLER',country:'UNKNOWN',countryLabel:'ORIGIN',flag:'unk',ht:"5'11\" (180 CM)",wt:'190 LB (86 KG)',
     speed:1.04,power:1.06,def:1.0,jump:1.0,stats:[3,4,4],special:'flash',spName:'SHUTTER FLASH',special2:'replay',sp2Name:'INSTANT REPLAY',tr:1,
     col:{skin:'#c98a5e',glove:'#25232f',leg:'#3d5a96',foot:'#f0f0f0',aura:'#3ae8ff'},sh:.72,hip:.5,
@@ -248,10 +253,13 @@ const CH={
     col:{skin:'#c88a5a',glove:'#d02a2a',leg:'#1a1a22',foot:'#c88a5a',aura:'#ff3a3a'},sh:.72,hip:.5,
     quote:"RESPECT THE RING. THEN RESPECT THE TIGER.",lose:'MY GUARD... DROPPED...',stageName:'TIGER GYM'},
 };
+// fighters who aren't on the roster but fight in story mode (they load like everyone else)
+const STORY_FIGHTERS=['ivan'];
 const ORDER=['karl','keksan','vizor','padre','zeke','hecky','lawslie','rex','kai'];
 // ---- archetypes: every fighter plays differently (health, reach, movement, chains) and has one unique trait ----
 const ARCH={
   karl:{type:'RUSHDOWN',trait:'FAST DASH, 4-HIT CHAINS',hp:92,chain:4,dash:1.3,reach:1},
+  ivan:{type:'GRAPPLER',trait:'ARMORED KICK, MOST HP',hp:118,dash:.8,armor:true,reach:1},
   vizor:{type:'ZONER',trait:'LONG REACH',hp:98,reach:1.25},
   padre:{type:'POWERHOUSE',trait:'COUNTERS KNOCK DOWN',hp:106,heavy:true,reach:1.05},
   zeke:{type:'HIGH/LOW ZONER',trait:'BLOCKED BALL: RELOAD',hp:100,spare:true,reach:1},
@@ -263,7 +271,7 @@ const ARCH={
 const arch=c=>ARCH[c.id]||{};
 // RHYTHM trait: a steady 128-ish bpm beat on the shared frame counter (same on both sides online)
 const BEAT=28,onBeat=()=>{const m=frameNo%BEAT;return m<4||m>BEAT-4};
-const SUPER_NAME={"karl": "MIL LÉGUAS", "vizor": "FULL EXPOSURE", "padre": "FINAL SERMON", "zeke": "PERFECT GAME", "hecky": "GOLDEN PARACHUTE", "lawslie": "FULL ARREST", "rex": "STAGE DIVE", "kai": "FAST BREAK", "keksan": "EIGHT LIMBS"};
+const SUPER_NAME={"karl": "MIL LÉGUAS", "ivan": "SIBERIAN STORM", "vizor": "FULL EXPOSURE", "padre": "FINAL SERMON", "zeke": "PERFECT GAME", "hecky": "GOLDEN PARACHUTE", "lawslie": "FULL ARREST", "rex": "STAGE DIVE", "kai": "FAST BREAK", "keksan": "EIGHT LIMBS"};
 const ENDING={"keksan": "KEKSAN HUNG THE BONFIRE BASH TROPHY OVER THE TIGER GYM DOOR AND OPENED IT TO EVERY KID IN THE CITY. FREE CLASSES EVERY NIGHT. RESPECT FIRST, THEN FISTS.", "kai": "DEVANTE TOOK THE BONFIRE BASH TROPHY TO THE STREET COURT AND RAN A MIDNIGHT TOURNAMENT. NOBODY COULD GUARD HIM. NOBODY EVER WILL.", "rex": "MARCUS PLAYED THE BONFIRE BASH VICTORY SHOW TO A SOLD-OUT CROWD. THE CROWN STAYED ON FOR THE ENCORE, AND THE ENCORE, AND THE ENCORE.", "lawslie": "OFFICER LAWSLIE CLOSED THE BONFIRE BASH CASE FILE: EVERY FIGHTER BOOKED, EVERY TROPHY ACCOUNTED FOR. THE CHIEF MADE HER DETECTIVE BY MORNING.", "hecky": "HECKY XAVIER BOUGHT THE BONFIRE BASH TOURNAMENT THE NEXT MORNING. NEXT YEAR'S TROPHY IS GOLD-PLATED, AND SO IS THE PENTHOUSE.", "zeke": "ZEKE BOWLED A PERFECT 300 AT THE CHAMPIONS PARTY, THEN BOUGHT EVERYONE NACHOS. THE STRIKE LANES ARE NOW THE MOST FAMOUS ALLEY ON EARTH.", "karl": "PAPA-LEGUAS RAN STRAIGHT FROM THE FINAL FIGHT TO HIS DOJO AND HUNG UP A SIGN: EVERYONE WELCOME. JUST KEEP UP.", "vizor": "VIZOR REPLAYED EVERY FIGHT FRAME BY FRAME. THE FOOTAGE BECAME THE MOST WATCHED VIDEO ON EARTH.", "padre": "SAMSON RANG THE OLD CHAPEL BELL FOR THE FIRST TIME IN YEARS. EVEN HIS RIVALS CAME TO LISTEN."};
 // combo trials: each step is the move that must hit, in order, inside one combo
 const TRIALS={karl:[['jab','kick'],['jab','jab','kick','sp1'],['jab','kick','super']],
@@ -290,7 +298,7 @@ function altVersion(img){const c=mk(img.width,img.height),x=c.getContext('2d');x
     if(skin)continue;if(s>0.18)h=(h+0.42)%1;else if(l>0.5){h=0.0;s=0.55;l*=0.72}else{h=0.6;s=0.35}
     const[r,g,b]=hsl2rgb(h,s,l);p[i]=r;p[i+1]=g;p[i+2]=b}x.putImageData(d,0,0);return c}
 function loadAssets(){return Promise.all(Object.entries(ASSETS).map(([k,src])=>new Promise(res=>{const i=new Image();i.onload=()=>{IMG[k]=i;res()};i.onerror=res;i.src=src}))).then(()=>{
-  for(const id of ORDER){const c=CH[id],s=IMG[id+'_spr'];c.spr=s;c.white=silhouette(s,'#ffffff');c.blue=silhouette(s,'#5aa8ff');c.auraS=silhouette(s,c.col.aura);
+  for(const id of [...ORDER,...STORY_FIGHTERS]){const c=CH[id],s=IMG[id+'_spr'];c.spr=s;c.white=silhouette(s,'#ffffff');c.blue=silhouette(s,'#5aa8ff');c.auraS=silhouette(s,c.col.aura);
     c.alt=altVersion(s);c.H=s.height;c.por=IMG[id+'_por'];c.porm=IMG[id+'_porm'];c.pors=IMG[id+'_pors'];c.head=IMG[id+'_head'];c.logo=IMG[id+'_logo'];c.stage=IMG[id+'_stage'];
     c.porDark=silhouette(c.porm,'#0a0a18');
     const an=sliceAnims(id);if(an){c.anim=an.A;c.H=an.H}}
@@ -988,7 +996,7 @@ function addCombo(att){F.comboShow={side:att.side,n:att.combo,l:70}}
 //    then draws one card from that deck by weight; difficulty shifts the weights.
 // 3. Execution ability: tricky cards (specials, combos, anti-airs) are rolled; a fumbled special comes out as a jab.
 // 4. Pressure: getting hit and falling behind raises an internal meter that makes its execution sloppier.
-const SUP_RANGE={keksan:100,kai:120,lawslie:110,vizor:230,zeke:220,padre:230,karl:130,rex:190};
+const SUP_RANGE={keksan:100,kai:120,ivan:50,lawslie:110,vizor:230,zeke:220,padre:230,karl:130,rex:190};
 function aiSnap(o){return{x:o.x,y:o.y,vy:o.vy,state:o.state,st:o.st,atk:o.atk,ph:phaseOf(o),sp:o.sp,crouch:o.crouch}}
 function drawCard(cards){let t=0;for(const c of cards)if(c[0]>0)t+=c[0];let r=Math.random()*t;for(const c of cards){if(c[0]<=0)continue;if((r-=c[0])<=0){c[1]();return c[2]}}return null}
 function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:0},ai=f.ai;
@@ -1107,7 +1115,8 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     const a1=!!(RUN&&RUN.alt&&RUN.alt[0]),a2=c.p1===c.p2?!a1:!!(RUN&&RUN.alt&&RUN.alt[1]);
     const k1=skinned(c.p1,0),k2=skinned(c.p2,1);this.p1=new Fighter(k1.skinKey||c.p1,0,false,a1);this.p2=new Fighter(k2.skinKey||c.p2,1,!this.two,c.p1===c.p2&&k1!==k2?false:a2);if(this.meters){this.p1.meter=this.meters[0];this.p2.meter=this.meters[1]}
     // story mode: carry the super meter into the boss duel; the final boss is your own SHADOW (tougher, hits harder)
-    if(RUN&&RUN.mode==='story'){if(RUN.meter)this.p1.meter=RUN.meter;if(RUN.shadow){this.p2.shadow=true;this.p2.alt=false;this.p2.hp=this.p2.mhp=this.p2.trail=Math.round(this.p2.mhp*1.25)}}
+    if(RUN&&RUN.mode==='story'){if(RUN.meter)this.p1.meter=RUN.meter;if(this.p2.c.id==='ivan'&&!ORDER.includes('ivan')){this.p2.hp=this.p2.mhp=this.p2.trail=Math.round(this.p2.mhp*1.15);this.p2.boss=true}
+      if(RUN.shadow){this.p2.shadow=true;this.p2.alt=false;this.p2.hp=this.p2.mhp=this.p2.trail=Math.round(this.p2.mhp*1.25)}}
     this.cine=null;this.proj=[];this.parts=[];this.texts=[];this.hitFx=[];
     this.time=60;this.tf=0;this.phase='intro';this.pt=0;this.hitstop=0;this.shake=0;this.slow=0;this.superFlash=0;this.camFlash=0;this.comboShow=null;this.paused=false;this.winner=-1;this.banner=null;
     const final=this.wins[0]===1&&this.wins[1]===1;setTimeout(()=>say(final?'Final round':`Round ${['one','two','three','four','five'][this.round-1]||this.round}`),200);SFX.bell()},
@@ -1709,7 +1718,7 @@ const FALLBACK_FOE={goon:'karl',slinger:'vizor',bruiser:'padre',chain:'zeke',kic
 const LEVELS=[
   {name:'BONFIRE STREETS',bg:'story_lvl1',bgY:-38,floor:{kind:'slabs',c1:'#3c3650',c2:'#1c1828',line:'#2a2438',edge:'#8a82a0'},alt:'vizor',song:'vizor',len:768,crates:[[236,8],[476,28]],
     waves:[{at:70,foes:['goon','goon']},{at:300,foes:['goon','slinger','goon']},{at:512,foes:['goon','bruiser','chain','goon']}]},
-  {name:'THE DOCKS',bg:'story_lvl2',bgY:-38,floor:{kind:'boards',c1:'#6a5034',c2:'#2e2216',line:'#3a2a18',edge:'#a07a4a'},alt:'zeke',song:'zeke',len:768,crates:[[200,22],[430,6],[650,28]],
+  {name:'THE DOCKS',bg:'story_lvl2',bgY:-38,floor:{kind:'boards',c1:'#6a5034',c2:'#2e2216',line:'#3a2a18',edge:'#a07a4a'},alt:'zeke',song:'ivan',len:768,crates:[[200,22],[430,6],[650,28]],
     waves:[{at:50,foes:['goon','slinger','blade']},{at:290,foes:['bruiser','chain','blade','slinger']},{at:512,foes:['molotov','bruiser','kicker','blade','goon']}]},
   {name:'VEX TOWER',bg:'story_lvl3',alt:'vizor',song:'hecky',len:768,crates:[[180,14],[420,26],[620,10]],
     waves:[{at:60,foes:['blade','kicker','molotov','goon']},{at:290,foes:['enforcer','chain','molotov','blade']},{at:512,foes:['bruiser','kicker','enforcer','molotov','chain','blade']}]},
@@ -1751,9 +1760,22 @@ const SCENES={
     {s:'P',t:"THEN THAT'S WHERE I'M GOING. AND YOU DON'T HAVE TO GO BACK TO HIM."},
     {s:'FOE',t:"...THE OLD CHAPEL ON 5TH STREET STILL LEAVES ITS DOORS OPEN, RIGHT? MAYBE I'LL GO AND SEE.",do:[['foe','walk',330]]},
     {verse:"FOR THE SON OF MAN IS COME TO SEEK AND TO SAVE THAT WHICH WAS LOST.",ref:'LUKE 19:10'}]},
-  ch3:{title:'CHAPTER 3',sub:'VEX TOWER',beats:[
+  ivan:{title:'THE END OF THE PIER',sub:'VEX\'S ENFORCER',beats:[
+    {shot:{bg:'story_lvl2',cx:380,actors:[['P','P',60,1],['ivan','ivan',330,-1]]}},
+    {s:'N',t:"AT THE END OF THE PIER, A GIANT CRACKS HIS KNUCKLES. THE DOCK WORKERS STOP AND STARE.",do:[['ivan','walk',190]]},
+    {s:'IVAN',t:"SO YOU ARE THE ONE MAKING NOISE ON MY DOCKS. VEX SAID YOU WOULD COME."},
+    {s:'P',t:"THESE MEN WORK ALL NIGHT TO PAY DEBTS THAT NEVER END. LET THEM GO HOME."},
+    {s:'IVAN',t:"BACK HOME I FOUGHT FOR MEDALS. HERE I FIGHT FOR RENT. IT IS NOTHING PERSONAL, LITTLE ONE."},
+    {s:'P',t:"THEN LET'S SEE WHO'S FIGHTING FOR SOMETHING REAL."}]},
+  ch3:{title:'THE DOCKS',sub:'AFTER THE FIGHT',beats:[
+    {shot:{bg:'story_lvl2',cx:380,actors:[['P','P',96,1],['ivan','ivan',176,-1,{state:'down'}]]}},
+    {s:'IVAN',t:"...YOU HAD ME DOWN. YOU COULD HAVE KEPT HITTING. WHY DID YOU STOP?"},
+    {s:'P',t:"BECAUSE I CAME HERE TO FREE PEOPLE. THAT INCLUDES YOU."},
+    {s:'IVAN',t:"VEX HOLDS MY PASSPORT. HE SAID I WOULD WORK HERE UNTIL I DIED. MAYBE I AM DONE WORKING FOR HIM.",do:[['ivan','anim','idle']]},
+    {s:'IVAN',t:"GO. CLIMB HIS TOWER. I WILL SEND THESE MEN HOME TONIGHT. NOBODY WILL STOP THEM. NOT WHILE I AM HERE."},
+    {bg:'story_lvl3',title:'CHAPTER 3',sub:'VEX TOWER'},
     {shot:{bg:'story_lvl3',actors:[['P','P',-40,1]]}},
-    {s:'N',t:"THE DOCK WORKERS WALK OFF THE JOB. WORD SPREADS ACROSS THE CITY: SOMEBODY IS FINALLY STANDING UP TO VEX.",do:[['P','walk',100]]},
+    {s:'N',t:"THE DOCK WORKERS WALK HOME UNDER IVAN'S WATCH. WORD SPREADS ACROSS THE CITY: SOMEBODY IS FINALLY STANDING UP TO VEX.",do:[['P','walk',100]]},
     {s:'N',t:"IN A CONTAINER AT THE DOCKS: STOLEN GOLD, AND A KEY CARD. VEX TOWER, TOP FLOOR."},
     {s:'VEX',t:"(ON THE RADIO) YOU'RE TOUGHER THAN YOU LOOK. I RESPECT THAT. SO I SENT THE ELEVATOR DOWN FOR YOU."},
     {s:'VEX',t:"RIDE UP, SHAKE MY HAND, TAKE A SEAT AT MY TABLE. NO MORE FIGHTING. IT'S THE EASY WAY."},
@@ -1791,14 +1813,15 @@ const SCENES={
     {s:'N',t:"VEX GAVE IT ALL BACK: THE MONEY, THE DEBTS, THE DEEDS TO HALF THE STREET. NOBODY CALLS HIM VEX ANY MORE."},
     {s:'VIC',t:"MY NAME IS VICTOR. ALL MY LIFE I SAID EVERY MAN HAS A PRICE. I WAS RIGHT. MINE WAS PAID FOR ME.",do:[['vex','anim','idle']]},
     {bg:'story_lvl1',title:'ONE MONTH LATER',sub:'BONFIRE CITY'},
-    {shot:{bg:'story_lvl1',cx:60,dawn:1,actors:[['foe','FOE',-30,1],['P','P',124,1],['vex','vex',300,-1]]}},
+    {shot:{bg:'story_lvl1',cx:60,dawn:1,actors:[['foe','FOE',-30,1],['P','P',124,1],['vex','vex',300,-1],['ivan','ivan',330,-1]]}},
     {s:'N',t:"THE SHOPS ON 5TH STREET STAY OPEN AFTER DARK NOW. KIDS PLAY BALL IN THE STREETS AGAIN. THE CITY IS WAKING UP.",do:[['foe','walk',80],['vex','walk',178]]},
+    {s:'N',t:"IVAN GOT HIS PASSPORT BACK, AND STAYED. HE TEACHES WRESTLING TO DOCK KIDS FOR FREE. NOBODY CALLS HIM AN ENFORCER NOW.",do:[['ivan','walk',224]]},
     {s:'N',t:"NEXT WEEK, THE FINALS. TONIGHT, FOR THE FIRST TIME IN YEARS, BONFIRE CITY SLEEPS IN PEACE."},
     {verse:"FOR THIS MY SON WAS DEAD, AND IS ALIVE AGAIN. HE WAS LOST, AND IS FOUND.",ref:'LUKE 15:24'}]}};
 const SCENE_AT=['intro','ch2','ch3','final','ending'];// the scene before each level (and the ending after the shadow)
 function foeData(id){const c=FOES[id];if(c.base){const b=foeData(c.base);return{...b,...c,anim:b.anim,H:b.H,spr:b.spr,alt:b.alt,white:b.white,sh:.72,hip:.5,col:{...b.col,...c.col}}}if(c.anim)return c;const b=CH[FALLBACK_FOE[id]];return{...b,...c,anim:b.anim,H:b.H,spr:b.spr,alt:b.alt,white:b.white,fake:true}}
 function startStory(p1,alt,skin){const pool=ORDER.filter(i=>i!==p1).sort(()=>Math.random()-.5);
-  RUN={mode:'story',p1,ladder:[],idx:0,cont:0,alt,skin,level:0,lives:3,score:0,bosses:pool.slice(0,3),mercy:null,vexLit:false};go(Cutscene,'intro')}
+  RUN={mode:'story',p1,ladder:[],idx:0,cont:0,alt,skin,level:0,lives:3,score:0,bosses:[pool[0],'ivan',pool[1]],mercy:null,vexLit:false};go(Cutscene,'intro')}
 // a bust portrait (93x112) cut from an in-game sprite frame, for characters with no portrait art: the upper body, scaled up
 function bust(fr,key,eyes,rim){const m=fxCache(fr);if(m['bust'+key])return m['bust'+key];
   const w=fr.width,h=fr.height,t=mk(w,h),tx=t.getContext('2d');tx.drawImage(fr,0,0);const d=tx.getImageData(0,0,w,h).data,A=(x,y)=>d[(y*w+x)*4+3]>40;
@@ -1838,7 +1861,7 @@ const Cutscene={
   // speaker info: name, face, colour
   who(s){if(s==='SAM'&&RUN.p1==='padre')s='P';const c=CH[RUN.p1];
     return{P:{n:c.name,im:c.porm,c:c.col.aura},VEX:{n:'VEX',im:vexPor(RUN.vexLit),c:RUN.vexLit?'#ffd23a':'#e0a0ff'},VIC:{n:'VICTOR',im:vexPor(true),c:'#ffd23a'},
-      FOE:{n:(RUN.mercy&&RUN.mercy.name)||'SID',im:foePor(),c:'#ff9a6a'},SAM:{n:'SAMSON',im:CH.padre.porm,c:'#7ad8ff'},N:{}}[s]||{}},
+      FOE:{n:(RUN.mercy&&RUN.mercy.name)||'SID',im:foePor(),c:'#ff9a6a'},SAM:{n:'SAMSON',im:CH.padre.porm,c:'#7ad8ff'},IVAN:{n:'IVAN',im:CH.ivan.porm,c:'#ff5a3a'},N:{}}[s]||{}},
   fill(s){const c=CH[RUN.p1];return s.replace(/\{N\}/g,c.name).replace(/\{F\}/g,(RUN.mercy&&RUN.mercy.name)||'SID')},
   skip(b){return!!b&&((b.skipIf&&b.skipIf===RUN.p1)||(b.onlyIf&&b.onlyIf!==RUN.p1))},
   shows(b){return!!b&&!b.bg&&!b.shot&&!this.skip(b)},// beats the player reads (the test counts these)
@@ -1853,7 +1876,7 @@ const Cutscene={
     this.lines=t?wrap(this.fill(t),this.sp(b)==='N'?38:31):b.verse?[...wrap(b.verse,38),'- '+b.ref]:[];if(!b.choice)this.act(b.do)},
   beat(){return this.S.beats[this.i]},
   len(){return this.lines.join(' ').length},
-  done(){const k=this.k;if(k==='ending')goFade(()=>go(StoryEnd));else if(k==='shadow')goFade(()=>go(VS));else goFade(()=>go(Brawl))},
+  done(){const k=this.k;if(k==='ending')goFade(()=>go(StoryEnd));else if(k==='shadow'||k==='ivan')goFade(()=>go(VS));else goFade(()=>go(Brawl))},
   next(){this.i++;if(this.i>=this.S.beats.length){this.done();return}this.prep();if(this.i>=this.S.beats.length)this.done()},
   update(){if(this.flash>0)this.flash--;
     for(const a of this.actors){a.st++;if(a.fadeIn)a.alpha=Math.min(1,a.alpha+.02);
@@ -1900,7 +1923,7 @@ const StoryEnd={
   enter(){playMusic('ending');const c=CH[RUN.p1],r=rc(RUN.p1);r.clear++;r.story=(r.story||0)+1;saveRec();badge('story');if(ORDER.every(id=>rc(id).clear>0))badge('allclear');
     const M=(RUN.mercy&&RUN.mercy.name)||'SID',L=[['BONFIRE BASH',1],['STORY MODE',2],[''],['STARRING',3],[c.name,1],...(c.nick?[['"'+c.nick+'"',2]]:[]),[''],
       ['AND',3],['VICTOR',1],['WHO USED TO BE VEX',2],[''],['WITH',3],...(RUN.p1!=='padre'?[['SAMSON',1],['THE SHEPHERD',2]]:[]),[M,1],['WHO GOT BACK UP',2],
-      ...RUN.bosses.map(b=>[CH[b].name,1]),['THE RIVALS',2],['THE SHADOW',1],['EVERY GRUDGE YOU EVER CARRIED',2],[''],['VEX\'S MEN',3],
+      ['IVAN',1],['THE BEAR, WHO SENT THEM HOME',2],...RUN.bosses.filter(b=>b!=='ivan').map(b=>[CH[b].name,1]),['THE RIVALS',2],['THE SHADOW',1],['EVERY GRUDGE YOU EVER CARRIED',2],[''],['VEX\'S MEN',3],
       ['GOONS  SLINGERS  BRUISERS',1],['BLADES  MOLOTOVS  ENFORCERS',1],[''],['FINAL SCORE',3],[String(RUN.score||0).padStart(7,'0'),1],[''],
       ['A GAME BY MARK',1],['BUILT WITH CLAUDE',2],['ART MADE WITH PIXELLAB',2],[''],['HE WAS LOST, AND IS FOUND.',3],[''],['THANK YOU FOR PLAYING',1]];
     this.L=L;this.stop=Math.ceil((H+10-(52-(L.length-1)*11))/.45)},
@@ -2068,7 +2091,7 @@ const Brawl={
     if(this.ph==='intro'&&this.pt>80)this.ph='play';
     if(this.ph==='continue'){if(this.pt%60===0){this.contN--;SFX.tick();if(this.contN<0){goFade(()=>go(GameOver));this.ph='over'}}
       if(pressed.a||pressed.start){RUN.lives=3;RUN.cont++;RUN.score=0;this.respawn();SFX.start()}return}
-    if(this.ph==='clear'){if(++this.doneT===70){RUN.meter=P.meter;const boss=RUN.level===3?RUN.p1:RUN.bosses[RUN.level];RUN.shadow=RUN.level===3;RUN.ladder=[boss];RUN.idx=0;goFade(()=>RUN.shadow?go(Cutscene,'shadow'):go(VS))}return}
+    if(this.ph==='clear'){if(++this.doneT===70){RUN.meter=P.meter;const boss=RUN.level===3?RUN.p1:RUN.bosses[RUN.level];RUN.shadow=RUN.level===3;RUN.ladder=[boss];RUN.idx=0;goFade(()=>RUN.shadow?go(Cutscene,'shadow'):boss==='ivan'?go(Cutscene,'ivan'):go(VS))}return}
     // player
     if(P.qA&&frameNo-P.qA<6){pressed.a=true;P.qA=0}
     P.st++;if(P.inv>0)P.inv--;if(P.flash>0)P.flash--;if(P.buff>0)P.buff--;P.trail=P.trail>P.hp?Math.max(P.hp,P.trail-0.4):P.hp;

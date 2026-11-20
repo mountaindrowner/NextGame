@@ -152,9 +152,9 @@ python3 ../build.py
 
 Strike timing (which frame lands the hit) and special-move frame maps live in the `AK` table in `src/game.js`; per-fighter overrides go in `CH[id].ak`. If a fighter has no animation for a state, the game falls back to the original single-sprite rendering.
 
-## Retired fighters
+## Ivan, the story boss
 
-Ivan "The Bear" (Sambo grappler) left the roster in v1.24.0 to make room for Keksan. His sprites, portraits, stage, song and voice lines are kept in `assets_retired/ivan/` (not bundled), and his kit code (Bear Slam, Iron Charge, the armored kick, Siberian Storm) is still in `src/game.js`, so he can come back. See `assets_retired/README.md`.
+Ivan "The Bear" (Sambo grappler) left the roster in v1.24.0 to make room for Keksan. Since v1.25.0 he's **the boss of the Docks** in story mode: Vex's enforcer, fought one-on-one with his full kit (Bear Slam, Iron Charge, the armored kick, Siberian Storm) and 15% more health. He isn't selectable (`STORY_FIGHTERS` in `src/game.js` loads fighters who aren't in `ORDER`).
 
 ## Online
 

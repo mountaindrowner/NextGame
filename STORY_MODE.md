@@ -14,7 +14,8 @@ taking a little more of its hope back, and the fight is won in the end by mercy,
 - **Prologue, Bonfire City:** Vex shows off the trophy in the rain and tempts you. At the Old Chapel, Samson: "Hate can't drive out hate. Even Vex was somebody's son." *(John 1:5)*
 - **Stage 1, the mercy moment (played, not told):** the last man standing drops to his knees. Walk up and press **A: HELP HIM UP**.
 - **Chapter 2, The Docks:** the man you spared, with his own name and look, finds you: "You're not my enemy. You're one of the people I came to fight for." *(Luke 19:10)*
-- **Chapter 3, Vex Tower:** the dock workers walk off the job, and word spreads that somebody is standing up to Vex. Vex offers the easy elevator; you take the stairs. *(Matthew 7:14)*
+- **The Docks boss, Ivan:** at the end of the pier, Vex's enforcer: "Back home I fought for medals. Here I fight for rent." You beat him and stop; he asks why. "I came here to free people. That includes you." He sends the dock workers home himself.
+- **Chapter 3, Vex Tower:** the dock workers walk home under Ivan's watch, and word spreads that somebody is standing up to Vex. Vex offers the easy elevator; you take the stairs. *(Matthew 7:14)*
 - **Final Chapter, the Penthouse:** "All you have to do is kneel." "Those lights are people's homes. No." Vex fights you himself. Beaten, he shows you your shadow: every grudge and lie you've carried. *(Ephesians 6:12)*
 - **Epilogue:**
   1. Vex kneels and waits for the last blow. You press **A: OFFER YOUR HAND**.
@@ -27,7 +28,7 @@ taking a little more of its hope back, and the fight is won in the end by mercy,
 | Level | Where | Waves | Boss |
 |---|---|---|---|
 | 1 | **Bonfire Streets**: neon downtown at night | 3 | a rival fighter |
-| 2 | **The Docks**: shipping containers, cranes | 3 | a rival fighter |
+| 2 | **The Docks**: shipping containers, cranes | 3 | **Ivan**, Vex's enforcer (always; 15% more health) |
 | 3 | **Vex Tower**: the security floor | 3 | a rival fighter |
 | Final | **Vex's Penthouse** | 2 | **Vex** himself (in the brawl), then **your Shadow**: a dark copy of you |
 

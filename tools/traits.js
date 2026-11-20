@@ -23,6 +23,9 @@ const path = require('path');
       const { F, step } = setup('karl', 'padre', 100, 140); let n = 0;
       for (const b of ['a', 'a', 'a', 'b']) { step(1, { [b]: 1 }); for (let w = 0; w < 30 && !(F.p1.hitDone && F.hitstop === 0); w++) step(1); }
       step(40); check('RUSHDOWN  4-hit chain', F.tBest >= 4, `best ${F.tBest}`); }
+    { // GRAPPLER: kick start-up absorbs a jab
+      const { F, step } = setup('ivan', 'karl', 100, 136); d.startAtk(F.p1, 'kick'); F.p1.state = 'attack'; F.p1.st = 1; d.startAtk(F.p2, 'jab'); F.p2.st = 3; step(30);
+      check('GRAPPLER  armored kick', F.p1.armorId != null && F.p1.hitDone, `armor used ${F.p1.armorId != null}, kick still landed ${F.p1.hitDone}`); }
     { // ZONER: longest punch reach
       const r = {}; for (const id of ['vizor', 'karl']) { const { F } = setup(id, 'padre'); d.startAtk(F.p1, 'jab'); r[id] = F.p1.atk.reach; }
       check('ZONER     reach', r.vizor > r.karl, `vizor jab reach ${r.vizor}, karl ${r.karl}`); }

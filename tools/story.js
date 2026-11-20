@@ -35,6 +35,14 @@ const OUT = process.argv[2];
       info.frames = nf; info.ph = B.ph; info.waves = B.wi; info.of = B.L.waves.length; info.lives = R.lives; info.score = R.score; return info;
     }, lv);
     await shot('story-l' + (lv + 1));
+    if (lv === 1) { // the Docks boss: Ivan, after a face-off scene
+      await p.evaluate(() => { const d = window.__dbg, B = d.scene; for (let i = 0; i < 80; i++) { d.tick(); B.update(); } }); await p.waitForTimeout(600);
+      const s1 = await sceneName(); const tk = await talk(); await p.waitForTimeout(600); const s2 = await sceneName();
+      const iv = await p.evaluate(() => { const d = window.__dbg; return { boss: d.RUN.ladder[0], roster: d.ORDER.includes('ivan') }; });
+      const fb = await p.evaluate(() => { const d = window.__dbg; d.go(d.Fight, { p1: 'karl', p2: 'ivan', stage: 'ivan' }); const F = d.F; return { hp: F.p2.mhp, boss: !!F.p2.boss, cpu: F.p2.cpu, spr: !!d.CH.ivan.spr }; });
+      C('Docks boss: Ivan', s1 === 'Cutscene:ivan' && tk.n === tk.of && s2 === 'VS' && iv.boss === 'ivan' && !iv.roster && fb.boss && fb.hp > 118 && fb.cpu && fb.spr,
+        `${s1}, ${tk.n}/${tk.of} beats, then ${s2}; boss ${iv.boss} (on roster: ${iv.roster}), hp ${fb.hp}, sprites ${fb.spr}`);
+      await p.evaluate(() => { const d = window.__dbg; d.go(d.Brawl); }); }
     if (lv === 0) { const m = await p.evaluate(() => window.__dbg.RUN.mercy); C('mercy: helped the last man up', !!m && !!m.name, m ? `${m.name} the ${m.kind}` : 'nobody spared'); }
     C(`level ${lv + 1} cleared by autoplayer`, r.ph === 'clear' && r.waves === r.of, `${r.waves}/${r.of} waves, ${r.spawned} enemies (${Object.entries(r.kinds).map(([k, v]) => k + ' ' + v).join(', ')}), took ${r.pHit} hits, ${(r.frames / 60) | 0}s, score ${r.score}`);
   }
