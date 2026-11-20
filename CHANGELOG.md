@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.16.1
+
+- **Hitboxes match the sprites.** Every fighter's punches and kicks are measured from their own animation frames (`tools/hitboxes.py` → `assets/hitboxes.json`):
+  - **Reach:** each hit reaches to the actual fist or foot, plus 4 px.
+  - **Height:** each hit covers the height band the limb really travels through.
+  - **Strike frame:** the frame shown while a move is active is the fully extended one, so what you see is what can hit.
+- **Hurtboxes match the bodies.** Every fighter used to be hittable only within ±15 px of their centre, while their visible bodies are ±18–28 px. A foot overlapping the visible body by up to 13 px whiffed; now it connects. Marcus keeps his extra-long reach (the sound blast at the tip of his attacks).
+- **Fixed in Story mode:**
+  - Kneeing a grabbed enemy until he dropped could leave him standing back up, unhittable, after the grab ended. A knocked-out enemy now always falls.
+  - The test autoplayer turns to face enemies behind it.
+- Balance re-checked: no fighter moved more than a few points.
+
 ## 1.16.0
 
 - **The whole game runs 10% slower** (54 ticks a second instead of 60): every move, walk and jump is a touch heavier and easier to read. The round timer ticks a little slower too. Music and voices are unchanged.

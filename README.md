@@ -116,6 +116,7 @@ The announcer and the fighters' lines are recorded clips in `assets/voice/` made
 - `tools/itch_art.py`, `tools/shots.js` — itch.io cover, banner and screenshots (written to `release/itch/`)
 - `tools/itch_keyart.py`, `tools/stills.js`, `tools/super_gif.js` — key art, poster, cover, badges, feature card and the supers GIF (arena backdrops in `tools/pixellab/concept/` from PixelLab)
 - `tools/combos.js` — frame-exact combo checks; `tools/powers.js` — every special power; `tools/features.js` — super, throws, 2 players, trials, records; `tools/celebrate.js` — film the victory celebration
+- `tools/hitboxes.py` — measures every fighter's attack reach / height band and body width from the sprites into `assets/hitboxes.json` (rerun after changing any fighter's animations)
 - `tools/text_audit.js` — draws 223 screens (every fighter) and fails if any text leaves the screen or its box, or uses a letter the pixel font lacks
 - `tools/story.js` — Story mode: an autoplayer clears all four stages, then the boss hand-off and the shadow duel are checked
 - `tools/balance.js` — full balance test: CPU-vs-CPU round robin, win rates and matchup table (`node tools/balance.js 10 2`; add a fighter id to test only their matchups, and a JS snippet to try a change)

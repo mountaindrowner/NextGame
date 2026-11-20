@@ -488,7 +488,9 @@ class Fighter{constructor(id,side,cpu,alt){const c=CH[id];this.c=c;this.side=sid
   this.x=side?180:76;this.y=0;this.vx=0;this.vy=0;this.face=side?-1:1;this.hp=this.mhp=(ARCH[c.id]&&ARCH[c.id].hp)||100;this.trail=this.mhp;this.state='idle';this.st=0;this.atk=null;this.ast=0;
   this.stun=0;this.crouch=false;this.inv=0;this.combo=0;this.comboT=0;this.spCD=0;this.spCD2=0;this.spCD3=0;this.meter=0;this.flash=0;this.hist=[];this.ghosts=[];this.lastA=-99;this.lastB=-99;this.ai={t:0,dur:0,plan:null};this.sp=null;this.hitDone=false}
   get h(){return this.crouch?this.H*(arch(this.c).crouchH||.7):this.H}
-  hurt(){return{x1:this.x-15,x2:this.x+15,y1:this.y,y2:this.y+this.h}}}
+  hurt(){const hw=(HBX[this.c.id]&&HBX[this.c.id].hw)||15;return{x1:this.x-hw,x2:this.x+hw,y1:this.y,y2:this.y+this.h}}}
+// hitboxes measured from each fighter's own sprites (tools/hitboxes.py): reach to the fist/foot + 4 px, and the height band the limb covers
+const HBX=(typeof ASSET_DATA!=='undefined'&&ASSET_DATA.hitboxes)||{};
 const ground=f=>f.y<=0&&f.state!=='jump'&&f.state!=='knock';
 const canAct=f=>['idle','walk','crouch'].includes(f.state)||(f.state==='land'&&f.st>2);
 const overlap=(a,b)=>a.x1<b.x2&&a.x2>b.x1&&a.y1<b.y2&&a.y2>b.y1;
@@ -553,7 +555,8 @@ function control(f,o,inp){
   if(inp.d){f.crouch=true;setS(f,'crouch');f.vx=0;return}
   f.crouch=false;
   if(fwd){setS(f,'walk');f.vx=f.face*1.35*f.c.speed*(f.buff>0?1.2:1)}else if(back){setS(f,'walk');f.vx=-f.face*1.05*f.c.speed}else{setS(f,'idle');f.vx=0}}
-function startAtk(f,n){f.atk={...ATK[n],name:n,id:++atkId};f.atk.reach*=arch(f.c).reach||1;f.atk.hh*=arch(f.c).hh||1;if(arch(f.c).slow){f.atk.s+=arch(f.c).slow;f.atk.r+=2}f.hitDone=false;if(f.atk.air)f.ast=0;else{f.state='attack';f.st=0;f.vx=0;f.crouch=!!f.atk.crouch}
+function startAtk(f,n){f.atk={...ATK[n],name:n,id:++atkId};f.atk.reach*=arch(f.c).reach||1;f.atk.hh*=arch(f.c).hh||1;
+  {const m=HBX[f.c.id]&&HBX[f.c.id].moves[n];if(m){f.atk.reach=arch(f.c).amp?Math.max(m.reach,f.atk.reach):m.reach;f.atk.y1=m.y1;f.atk.y2=m.y2}}if(arch(f.c).slow){f.atk.s+=arch(f.c).slow;f.atk.r+=2}f.hitDone=false;if(f.atk.air)f.ast=0;else{f.state='attack';f.st=0;f.vx=0;f.crouch=!!f.atk.crouch}
   (n==='kick'||n==='sweep'||n==='jkick'?SFX.whooshH:SFX.whoosh)()}
 const canThrow=(f,o)=>Math.abs(o.x-f.x)<48&&o.y<=0&&f.y<=0&&o.inv<=0&&!(o.throwInv>0)&&['idle','walk','crouch','attack','land','dash','prejump'].includes(o.state)&&!(o.state==='attack'&&phaseOf(o)==='active');
 function startThrow(f,o,back){f.state='throwing';f.st=0;f.vx=0;f.atk=null;f.crouch=false;f.thBack=back;f.thr=null;f.thrId=++atkId;SFX.whoosh()}
@@ -814,11 +817,11 @@ function updateF(f,o){f.st++;if(f.buff>0){f.buff--;if(frameNo%4===0)F.parts.push
   f.trail=f.trail>f.hp?Math.max(f.hp,f.trail-0.4):f.hp;f.ghosts.forEach(g=>g.l--);f.ghosts=f.ghosts.filter(g=>g.l>0);
   switch(f.state){
     case'prejump':if(f.st>=3){f.state='jump';f.st=0;f.vy=5.4*f.c.jump;f.vx=f.jdir*f.face*1.8*f.c.speed;SFX.jump()}break;
-    case'jump':if(f.atk){f.ast++;if(phaseOf(f)==='active'&&!f.hitDone){const a=f.atk,cy=f.y+f.H*a.hy;if(tryHit(f,o,{x1:f.face>0?f.x:f.x-a.reach,x2:f.face>0?f.x+a.reach:f.x,y1:cy-a.hh/2,y2:cy+a.hh/2},{...a,heavy:false}))f.hitDone=true}}break;
+    case'jump':if(f.atk){f.ast++;if(phaseOf(f)==='active'&&!f.hitDone){const a=f.atk,cy=f.y+f.H*a.hy;if(tryHit(f,o,{x1:f.face>0?f.x:f.x-a.reach,x2:f.face>0?f.x+a.reach:f.x,y1:a.y1!=null?f.y+a.y1:cy-a.hh/2,y2:a.y1!=null?f.y+a.y2:cy+a.hh/2},{...a,heavy:false}))f.hitDone=true}}break;
     case'land':f.vx=0;if(f.st>=5)setS(f,'idle');break;
     case'dash':f.vx*=0.88;if(f.st>=(f.dashDir>0?13:15)){f.vx=0;setS(f,'idle')}break;
     case'attack':{const a=f.atk,ph=phaseOf(f);if(ph==='active'&&!f.hitDone){const h=f.H*(a.crouch?.7:1),cy=f.y+h*a.hy;
-        if(tryHit(f,o,{x1:f.face>0?f.x:f.x-a.reach,x2:f.face>0?f.x+a.reach:f.x,y1:cy-a.hh/2,y2:cy+a.hh/2},a))f.hitDone=true}
+        if(tryHit(f,o,{x1:f.face>0?f.x:f.x-a.reach,x2:f.face>0?f.x+a.reach:f.x,y1:a.y1!=null?f.y+a.y1:cy-a.hh/2,y2:a.y1!=null?f.y+a.y2:cy+a.hh/2},a))f.hitDone=true}
       f.vx*=.75;if(f.st>=a.s+a.a+a.r+(f.hitDone?0:WHIFF)){f.atk=null;f.state=a.crouch&&f.holdDown?'crouch':'idle';f.st=0;if(f.state==='idle')f.crouch=false}}break;
     case'hurt':f.vx*=.86;if(--f.stun<=0){f.state='idle';f.st=0}break;
     case'block':f.vx*=.84;if(--f.stun<=0){f.state=f.crouch?'crouch':'idle';f.st=0}break;
@@ -1081,8 +1084,8 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
       x=Math.round(f.x+f.face*(a.reach-6)),y=Math.round(GY-f.y-h*a.hy),r=4+((frameNo>>1)&1)*2;ctx.lineWidth=2;
       for(let i=0;i<2;i++){ctx.strokeStyle=i?'#ff4a6a':'#ffffff';ctx.beginPath();ctx.arc(x-f.face*i*4,y,r+i*3,f.face>0?-1:Math.PI-1,f.face>0?1:Math.PI+1);ctx.stroke()}}
     if(SHOWBOX){ctx.lineWidth=1;for(const f of[this.p1,this.p2]){const h=f.hurt();ctx.strokeStyle='#3a8aff';ctx.strokeRect(Math.round(h.x1)+.5,Math.round(GY-h.y2)+.5,Math.round(h.x2-h.x1),Math.round(h.y2-h.y1))}
-      ctx.strokeStyle='#ff3a3a';for(const f of[this.p1,this.p2])if(f.atk&&(f.state==='attack'||f.state==='jump')&&phaseOf(f)==='active'){const A=f.atk,h=f.H*(A.crouch?.7:1),cy=f.y+h*A.hy,x1=f.face>0?f.x:f.x-A.reach;
-        ctx.strokeRect(Math.round(x1)+.5,Math.round(GY-cy-A.hh/2)+.5,Math.round(A.reach),Math.round(A.hh))}
+      ctx.strokeStyle='#ff3a3a';for(const f of[this.p1,this.p2])if(f.atk&&(f.state==='attack'||f.state==='jump')&&phaseOf(f)==='active'){const A=f.atk,h=f.H*(A.crouch?.7:1),cy=f.y+h*A.hy,x1=f.face>0?f.x:f.x-A.reach,y2=A.y1!=null?f.y+A.y2:cy+A.hh/2,y1=A.y1!=null?f.y+A.y1:cy-A.hh/2;
+        ctx.strokeRect(Math.round(x1)+.5,Math.round(GY-y2)+.5,Math.round(A.reach),Math.round(y2-y1))}
       ctx.strokeStyle='#ff3a3a';for(const b of this.dbg||[])if(frameNo-b.f<=2)ctx.strokeRect(Math.round(b.x1)+.5,Math.round(GY-b.y2)+.5,Math.round(b.x2-b.x1),Math.round(b.y2-b.y1));
       if(this.dbg&&this.dbg.length>40)this.dbg=this.dbg.filter(b=>frameNo-b.f<=2);drawText('HITBOXES',4,40,'#ff3a3a',1,{outline:'#000'})}
     for(const h of this.hitFx)drawHitFx(h);
@@ -1148,7 +1151,10 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
 // special = [[tick,frame],...] piecewise map over the move's own timeline. Per-fighter overrides in CH[id].ak.
 const AK={punch:{pk:4},kick:{pk:4},sweep:{pk:4},lowkick:{pk:3},cpunch:{pk:2},airkick:{pk:2},airpunch:{pk:2},jump:{prep:2,rise:3,apex:5,fall:6,land:7},fall:{air:4},
   special:{rush:[[0,0],[7,3]],shuriken:[[0,0],[9,6],[18,8]],slam:[[0,0],[10,8]],spin:[[0,0],[40,99]],flash:[[0,0],[17,3],[18,4],[26,7],[36,8]],tome:[[0,0],[13,6],[14,7],[22,7],[34,8]],taser:[[0,0],[7,5],[8,6],[14,7],[30,8]],strike:[[0,0],[10,7],[28,8]],takeover:[[0,0],[5,2],[7,3],[11,4],[30,7]],bassdrop:[[0,0],[9,4],[10,5],[13,6],[22,7],[34,8]],throwB:[[0,0],[10,5],[12,7],[26,8]],charge:[[0,0],[24,5],[27,6],[30,7],[60,7],[78,8]]}};
-function akOf(c,k){const o=(c.ak&&c.ak[k])||AK[k],m=c.anim&&c.anim[k];return m&&m.pk!=null?{...o,pk:m.pk}:o}
+// the strike frame shown while a move is active = the frame its hitbox was measured on (fully extended)
+const HB_ANIM={punch:'jab',kick:'kick',cpunch:'cjab',lowkick:'sweep',airpunch:'jpunch',airkick:'jkick'};
+function akOf(c,k){const o=(c.ak&&c.ak[k])||AK[k],m=c.anim&&c.anim[k],h=HB_ANIM[k]&&HBX[c.id]&&HBX[c.id].moves[HB_ANIM[k]];
+  if(h&&m&&!c.skinKey)return{...o,pk:Math.min(h.frame,m.n-1)};return m&&m.pk!=null?{...o,pk:m.pk}:o}
 function kf(t,pts){if(t<=pts[0][0])return pts[0][1];for(let i=1;i<pts.length;i++){const[a,fa]=pts[i-1],[b,fb]=pts[i];if(t<=b)return Math.round(fa+(fb-fa)*(t-a)/(b-a))}return pts[pts.length-1][1]}
 function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>A[k].n,last=k=>A[k].n-1,P=(k,i)=>A[k]?{k,i:clamp(Math.floor(i),0,last(k))}:null;
   const strike=(k,a,tt)=>{const pk=akOf(f.c,k).pk,N=n(k);if(tt<a.s)return P(k,pk*tt/a.s);if(tt<a.s+a.a||!a.r)return P(k,pk);return P(k,pk+1+(N-pk-1)*(tt-a.s-a.a)/a.r)};
@@ -1549,14 +1555,14 @@ const Brawl={
     if(Math.abs(dx)>4)o[dx>0?'r':'l']=1;if(Math.abs(dz)>3)o[dz>0?'d':'u']=1;
     const crowd=alive.filter(e=>Math.abs(e.x-P.x)<50&&Math.abs(e.z-P.z)<16).length;
     if(crowd>=2&&P.hp>20&&frameNo%40===0){o.a=o.b=1;return o}
-    if(Math.abs(t.x-P.x)<44&&Math.abs(dz)<6&&frameNo%7===0){o.l=o.r=0;o[t.x>P.x?'r':'l']=frameNo%14===0;o.a=1}
+    if(Math.abs(t.x-P.x)<44&&Math.abs(dz)<6&&frameNo%7===0){o.l=o.r=0;if(Math.sign(t.x-P.x)!==P.face&&t.x!==P.x&&['idle','walk'].includes(P.state)){o[t.x>P.x?'r':'l']=1;return o}o.a=1}
     return o},
   // ---- the player ----
   control(){const P=this.P,i=this.input();if(i.a)P.lastA=frameNo;if(i.b)P.lastB=frameNo;
     const fwd=P.face>0?i.r:i.l,back=P.face>0?i.l:i.r,spNow=(i.a&&frameNo-P.lastB<=4)||(i.b&&frameNo-P.lastA<=4);
     if(P.state==='throwing'&&P.thr){const e=P.thr;P.vx=0;e.x=P.x+P.face*26;e.z=P.z;e.y=0;
-      if(i.a){if(back||(P.knees||0)>=2){this.toss(e,back?-P.face:P.face);return}P.knees=(P.knees||0)+1;this.hitFoe(e,3,false,P.face,'hitL');P.st=2}
-      if(P.st>70){e.state='hurt';e.stun=10;P.thr=null;P.state='idle'}return}
+      if(i.a){if(back||(P.knees||0)>=2){this.toss(e,back?-P.face:P.face);return}P.knees=(P.knees||0)+1;this.hitFoe(e,3,false,P.face,'hitL');P.st=2;if(e.ko){P.thr=null;P.state='idle';P.st=0;return}}
+      if(P.st>70){if(!e.ko){e.state='hurt';e.stun=10}P.thr=null;P.state='idle'}return}
     if(spNow&&['idle','walk','attack','prejump','jump'].includes(P.state)&&!(P.state==='attack'&&P.st>5)&&!(P.state==='jump'&&P.st>6)){
       if(P.meter>=100&&fwd)return this.superMove();P.state='special';P.st=0;P.vx=P.vz=0;P.y=0;P.atk=null;P.sp={kind:'desp',hits:0,id:++atkId,two:false};P.inv=14;
       SFX.special();fighterVoice(P,'sp1');this.addT(P.c.spName+'!',P.x,P.z,P.c.col.aura);return}
@@ -1586,7 +1592,7 @@ const Brawl={
     else if(!armored){e.state='hurt';e.st=0;e.stun=22;e.vx=dir*1.2;e.atk=null;e.sp=null}
     this.hitstop=knock?9:5;this.shake=knock?4:2;this.spark(e.x,e.z,e.y+e.H*.6,'#ffe66a',knock?12:7);(SFX[snd]||(knock?SFX.heavy:SFX.hit))();return true},
   hurtP(dmg,knock,dir){const P=this.P;if(P.inv>0||['knock','down','rise'].includes(P.state)||this.ph!=='play'&&this.ph!=='intro')return false;
-    if(P.thr){P.thr.state='hurt';P.thr.stun=8;P.thr=null}
+    if(P.thr){if(!P.thr.ko){P.thr.state='hurt';P.thr.stun=8}P.thr=null}
     dmg*=[0.7,1,1.25][SET.diff];P.hp=Math.max(0,P.hp-dmg);P.flash=4;P.atk=null;P.sp=null;this.hitstop=6;this.shake=3;this.spark(P.x,P.z,P.y+P.H*.6,'#ff6a5a',8);SFX.hit();
     if(P.hp<=0||knock){P.state='knock';P.st=0;P.vy=3.8;P.vx=dir*2.4;P.y=Math.max(P.y,1);if(P.hp<=0){P.ko=true;SFX.ko()}}else{P.state='hurt';P.st=0;P.stun=16;P.vx=dir*1.4;P.hurtK='mid'}return true},
   // the player's active hitbox against every enemy and crate (each enemy once per attack)
@@ -1619,7 +1625,7 @@ const Brawl={
     if(C.heavy&&e.cool<=0&&Math.abs(dz)<6&&adx>56&&adx<150){e.state='special';e.st=0;e.vx=e.vz=0;e.sp={kind:'charge',id:++atkId,hit:false};e.cool=170;return}
     const side=e.x<P.x?-1:1;go(P.x+side*30,P.z,1);
     if(adx<C.reach+4&&Math.abs(dz)<6&&e.cool<=0){e.state='attack';e.st=0;e.vx=e.vz=0;e.atk={...ATK.jab,name:'jab',s:[18,13,9][D]+(C.heavy?4:0),a:4,r:14,id:++atkId};e.hitDone=false}},
-  foeUpdate(e){const P=this.P,C=FOES[e.kind];e.st++;if(e.flash>0)e.flash--;if(e.inv>0)e.inv--;
+  foeUpdate(e){const P=this.P,C=FOES[e.kind];e.st++;if(e.ko&&!['knock','down'].includes(e.state)){e.state='knock';e.st=0;e.vy=Math.max(e.vy||0,2);e.y=Math.max(e.y,1);e.atk=null;e.sp=null}/* a KO'd enemy only ever falls */if(e.flash>0)e.flash--;if(e.inv>0)e.inv--;
     switch(e.state){
       case'idle':case'walk':this.foeAI(e);break;
       case'attack':{const a=e.atk;if(C.lunge&&e.st<a.s&&e.st>a.s-8)e.vx=e.face*C.lunge;if(e.st===a.s){SFX.whoosh()}if(e.st>=a.s&&e.st<a.s+a.a&&!e.hitDone){const dx=P.x-e.x;
