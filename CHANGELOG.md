@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.20.0
+
+- **The story is told in real scenes now.** The text cards are gone. Each chapter opens with a title card, then a dialogue scene: your fighter's portrait on the left, whoever you're facing on the right, name tags, typed text, and a King James verse to close it. START skips a scene.
+  - **Vex** is a black silhouette with burning red eyes until the very end.
+  - **Your shadow** shows up as a dark copy of your own portrait before the final duel.
+- **New scenes:**
+  - **Prologue:** Vex takes the trophy and names his price. Your answer: "I'm not for sale."
+  - **Chapter 2:** the man you spared finds you. He tells you where the trophy went, then asks about the Old Chapel.
+  - **Chapter 3:** Vex radios to offer the easy elevator. You take the stairs.
+  - **Final chapter:** "All you have to do is kneel." "No."
+  - **The shadow reveal** now plays after Vex's last men fall, right before the duel.
+- **A mercy moment you play:** at the end of Stage 1, the last man standing doesn't get knocked out. He drops to his knees and begs. Walk up and press **A: HELP HIM UP** (+2000). He's the one who finds you in chapter 2, under his own name.
+- **A proper ending:**
+  1. After the shadow falls, Vex kneels and waits for the last blow. You press **A: OFFER YOUR HAND**.
+  2. Sunday morning at the Old Chapel: the trophy back on the altar, Samson, the man you spared in the front row, and Vex, who now goes by his real name, Victor. "All my life I said every man has a price. I was right. Mine was paid for me."
+  3. Luke 15:24, then a **credits roll**: the cast, the rivals you beat, Vex's men, your final score, and THE END.
+- **New badge: REDEEMED** (clear story mode). A story clear still unlocks your fighter's new color.
+- Tests:
+  - The story test now plays through every cutscene, the mercy moment, the ending choice and the credits.
+  - The text check covers every scene beat and the credits for all 9 fighters (727 screens).
+
 ## 1.19.0
 
 - **New character select screen in two steps:**

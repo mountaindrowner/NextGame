@@ -19,7 +19,7 @@ function saveRec(){try{localStorage.setItem('worlddojo_rec',JSON.stringify(REC))
 function rc(id){return REC.ch[id]||(REC.ch[id]={w:0,l:0,clear:0,combo:0})}
 const BADGES=[['first','FIRST VICTORY','WIN A MATCH'],['perfect','FLAWLESS','WIN A ROUND UNTOUCHED'],['combo5','COMBO ARTIST','LAND A 5-HIT COMBO'],
   ['super','SUPER FINISH','KO WITH A SUPER'],['throw','HANDS ON','LAND A THROW'],['tech','SLIPPERY','BREAK A THROW'],['clear','CHAMPION','CLEAR ARCADE'],
-  ['hard','IRON WILL','CLEAR ARCADE ON HARD'],['trials','STUDENT','CLEAR A FIGHTER\'S TRIALS'],['allclear','WORLD CHAMPION','CLEAR ARCADE WITH EVERYONE']];
+  ['hard','IRON WILL','CLEAR ARCADE ON HARD'],['trials','STUDENT','CLEAR A FIGHTER\'S TRIALS'],['allclear','WORLD CHAMPION','CLEAR ARCADE WITH EVERYONE'],['story','REDEEMED','CLEAR STORY MODE']];
 let TOAST=null;
 function badge(k){if(REC.badges[k])return;REC.badges[k]=1;saveRec();const b=BADGES.find(x=>x[0]===k);if(b)TOAST={s:b[1],l:170};try{SFX.ok()}catch(e){}}
 
@@ -1219,7 +1219,8 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
     case'attack':{const a=f.atk;const k={jab:'punch',kick:'kick',sweep:A.lowkick?'lowkick':'sweep',cjab:A.cpunch?'cpunch':null}[a.name];
       if(k&&A[k])return strike(k,a,t);if(a.crouch&&A.crouch)return{...P('crouch',last('crouch')),limbs:true};return null}
     case'hurt':if(f.hurtK==='crouch'&&A.crouch)return P('crouch',last('crouch'));return A.hurt?P('hurt',Math.min(t/3,last('hurt'))):null;
-    case'grabbed':return A.hurt?P('hurt',last('hurt')):null;
+    case'grabbed':case'yield':return A.hurt?P('hurt',last('hurt')):null;
+    case'leave':return f.st<60||!A.walk?P('idle',0):P('walk',Math.floor(frameNo/6)%n('walk'));
     case'throwing':{if(!A.punch)return null;const pk=akOf(f.c,'punch').pk;return P('punch',f.thr?pk:Math.min(t/1.4,last('punch')))}
     case'block':return A.block?P('block',Math.min(t,last('block'))):null;
     case'knock':{const fa=akOf(f.c,'fall');if(fa.hurtAir&&A.hurt)return P('hurt',last('hurt'));return A.fall?P('fall',Math.min(t/4,fa.air)):null}
@@ -1255,7 +1256,7 @@ function blitA(img,x,y,fc,ax,ay,rot,pivotC,ox,oy,ph){ctx.save();ctx.translate(Ma
   ctx.scale(fc,1);ctx.drawImage(img,-Math.round(ax),-ay);ctx.restore()}
 function drawFighter(f){const P=pose(f);if(!P)return drawFighterLegacy(f);
   const c=f.c,a=c.anim[P.k],fr=a.fr[P.i],fc=f.face,t=f.st;let img=f.shadow?sil(fr,'#1a1030'):f.hue!=null?hueOf(fr,f.hue,f.sat,f.whiten):f.alt?altOf(fr):fr;if(f.flash>0&&(f.flash&1)&&!F.cinema)img=sil(fr,'#ffffff');
-  let rot=0,pivotC=false,ox=0,oy=0;if(f.state==='grabbed'){rot=f.rot||0;pivotC=true}if(f.state==='hurt'&&t<6)ox=-fc*2+(t&1?1:-1);
+  let rot=0,pivotC=false,ox=0,oy=0;if(f.state==='grabbed'){rot=f.rot||0;pivotC=true}if(f.state==='hurt'&&t<6)ox=-fc*2+(t&1?1:-1);if(f.state==='yield')oy=3;
   // hurt reactions by where the hit landed: high = head snaps back, mid = doubles over, low = legs buckle, crouch = jolted down
   if(f.state==='hurt'){const k=Math.max(0,1-t/16),K=f.hurtK;if(K==='high')rot=-fc*.16*k;else if(K==='mid')rot=fc*.1*k;else if(K==='low'){rot=-fc*.05*k;oy=Math.round(3*k)}else if(K==='crouch'){oy=Math.round(2*k);ox=-fc*3*k+(t&1?1:-1)}}
   const B=(im,x,y)=>blitA(im,x,y,fc,a.ax,a.ay,rot,pivotC,ox,oy,f.H);
@@ -1377,7 +1378,7 @@ const Result={enter(w,cfg){this.w=w;this.cfg=cfg;this.two=RUN.mode==='2p'||RUN.m
         goFade(()=>{if(k==='REMATCH')startFight();else if(this.online&&k==='CHARACTER SELECT'){NET.lock=false;go(OnlineSelect)}else if(this.online){netQuit();go(Title);Title.ph='menu'}
           else if(k==='CHARACTER SELECT')go(Select,RUN.mode);else{go(Title);Title.ph='menu'}})}return}
     if(pressed.a||pressed.start){SFX.ok();goFade(()=>this.next())}},
-  next(){if(RUN.mode==='story'){if(this.win){RUN.level++;go(StoryCard)}else go(Continue);return}
+  next(){if(RUN.mode==='story'){if(this.win){RUN.level++;go(Cutscene,SCENE_AT[Math.min(RUN.level,4)])}else go(Continue);return}
     if(RUN.mode!=='arcade'){go(Select,RUN.mode);return}if(this.win){RUN.idx++;if(RUN.idx>=RUN.ladder.length)go(Ending);else go(VS)}else go(Continue)},
   draw(){const t=this.t,c=this.wc;ctx.drawImage(CH[this.cfg.stage].stage,0,0);ctx.fillStyle='rgba(6,4,20,.7)';ctx.fillRect(0,0,W,H);
     if(this.win){ctx.fillStyle='rgba(255,210,58,.07)';for(let i=0;i<12;i++){const a=t*0.006+i*Math.PI/6;ctx.beginPath();ctx.moveTo(56,120);ctx.lineTo(56+Math.cos(a)*300,120+Math.sin(a)*300);ctx.lineTo(56+Math.cos(a+0.14)*300,120+Math.sin(a+0.14)*300);ctx.fill()}}
@@ -1512,7 +1513,7 @@ const OnlineSelect={enter(){this.cur=this.cur||0;this.done=false;this.skin=false
 const Records={enter(){playMusic('select')},
   update(){if(pressed.b||pressed.a||pressed.start){SFX.back();go(Title);Title.ph='menu';Title.sel=Title.items.indexOf('RECORDS')}},
   draw(){stripes(this.t,'#120f30','#191540');drawText('RECORDS',128,6,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});
-    const RH=Math.min(11,Math.floor(96/ORDER.length));box(8,24,240,ORDER.length*RH+12);['FIGHTER','W-L','BEST','TRIALS'].forEach((h,i)=>drawText(h,[30,128,170,214][i],27,'#99a',1,{align:i?'center':'left',shadow:false}));
+    const RH=Math.min(11,Math.floor(84/ORDER.length));box(8,24,240,ORDER.length*RH+12);['FIGHTER','W-L','BEST','TRIALS'].forEach((h,i)=>drawText(h,[30,128,170,214][i],27,'#99a',1,{align:i?'center':'left',shadow:false}));
     ORDER.forEach((id,i)=>{const r=rc(id),y=36+i*RH,c=CH[id];ctx.imageSmoothingEnabled=true;ctx.drawImage(c.head,12,y-1,10,10);ctx.imageSmoothingEnabled=false;
       drawText(c.name,27,y+1,'#fff',1,{shadow:false});if(r.clear)drawText('*',100,y+1,'#ffd23a',1,{shadow:false});
       drawText(`${r.w}-${r.l}`,128,y+1,'#fff',1,{align:'center',shadow:false});drawText(r.combo?r.combo+(r.combo>1?' HITS':' HIT'):'-',170,y+1,'#fff',1,{align:'center',shadow:false});
@@ -1566,33 +1567,151 @@ const LEVELS=[
     waves:[{at:60,foes:['blade','goon','molotov','goon']},{at:290,foes:['enforcer','slinger','molotov','blade']},{at:512,foes:['bruiser','blade','enforcer','molotov','goon','blade']}]},
   {name:"VEX'S PENTHOUSE",bg:'hecky_stage',alt:'hecky',song:'rex',len:256,crates:[],
     waves:[{at:0,foes:['enforcer','blade','molotov','goon']}]}];
-// a gritty Christian story: temptation, the fight against your own sin, mercy instead of revenge (KJV verses)
-const STORY=[
-  "BONFIRE CITY IS ROTTING. VEX OWNS THE STREETS, THE FIGHTS AND THE PEOPLE. ON FINALS EVE HE STEALS THE TROPHY AND LEAVES A CARD: 'EVERY MAN HAS A PRICE.' {N} DOESN'T.",
-  "A BEATEN GOON BEGS FOR MERCY. {N} HELPS HIM UP INSTEAD. 'VEX OWNS THE DOCKS,' HE WHISPERS. 'HE OWNS ME TOO.' NOBODY IS TOO FAR GONE TO BE FOUND.",
-  "AT THE DOCKS: STOLEN CARGO AND BROKEN MEN. A KEY CARD READS VEX TOWER, TOP FLOOR. THE ELEVATOR IS EASY. THE STAIRS ARE NARROW. {N} TAKES THE STAIRS.",
-  "VEX LOOKS DOWN ON THE CITY. 'ALL OF THIS IS YOURS IF YOU KNEEL.' {N} WON'T. THEN A SHADOW STEPS OUT: EVERY GRUDGE, EVERY SIN {N} EVER CARRIED. IT'S YOU.",
-  "THE SHADOW FALLS. VEX KNEELS, WAITING FOR THE LAST BLOW. IT NEVER COMES. {N} OFFERS A HAND. BY SUNDAY THE TROPHY IS BACK AND VEX SITS IN THE FRONT PEW."];
-const VERSES=["THE LIGHT SHINETH IN DARKNESS. - JOHN 1:5","THE SON OF MAN IS COME TO SAVE THAT WHICH WAS LOST. - LUKE 19:10",
-  "NARROW IS THE WAY, WHICH LEADETH UNTO LIFE. - MATT. 7:14","WE WRESTLE NOT AGAINST FLESH AND BLOOD. - EPH. 6:12","HE WAS LOST, AND IS FOUND. - LUKE 15:24"];
+// a gritty Christian story: temptation, the fight against your own sin, mercy instead of revenge (KJV verses).
+// Each scene is a list of beats: [speaker, text] (P = your fighter, VEX, FOE = the man you spared, SAM = Samson,
+// VIC = Vex after he turns back, N = narration), {verse}, {choice} (waits for A), {bg,title,sub} (a new place).
+// {N} = your fighter's name, {F} = the name of the man you spared.
+const SCENES={
+  intro:{bg:'story_lvl1',title:'PROLOGUE',sub:'BONFIRE CITY',with:'VEX',beats:[
+    ['N',"BONFIRE CITY. THE RAIN NEVER WASHES ANYTHING CLEAN. ONE MAN OWNS THE STREETS, THE FIGHTS AND THE PEOPLE IN THEM."],
+    ['VEX',"THE BONFIRE BASH TROPHY. SOLID GOLD. TOMORROW IT WAS GOING TO BE YOURS, CHAMP. TONIGHT IT'S MINE."],
+    ['VEX',"EVERY MAN HAS A PRICE. NAME YOURS. MONEY? A TITLE? I CAN MAKE ALL YOUR PAIN GO AWAY."],
+    ['P',"I'M NOT FOR SALE."],
+    ['VEX',"EVERYBODY SAYS THAT ONCE. COME UP TO MY PENTHOUSE AND SAY IT AGAIN... IF YOU MAKE IT."],
+    ['N',"BETWEEN HERE AND VEX TOWER, THE STREETS ARE FULL OF HIS MEN. {N} WALKS INTO THE DARK."],
+    {verse:"THE LIGHT SHINETH IN DARKNESS, AND THE DARKNESS COMPREHENDED IT NOT.",ref:'JOHN 1:5'}]},
+  ch2:{bg:'story_lvl2',title:'CHAPTER 2',sub:'THE DOCKS',with:'FOE',beats:[
+    ['FOE',"HEY... YOU. YOU COULD HAVE FINISHED ME BACK THERE. WHY DIDN'T YOU?"],
+    ['P',"SOMEBODY ONCE GAVE ME A SECOND CHANCE. I'M JUST PASSING IT ON."],
+    ['FOE',"NOBODY EVER GAVE ME NOTHING. VEX PAYS MY RENT. HE PAYS EVERYBODY'S RENT. THAT'S HOW HE OWNS YOU."],
+    ['FOE',"HE MOVES HIS STOLEN CARGO THROUGH THE DOCKS. YOUR TROPHY WENT DOWN THERE LAST NIGHT."],
+    ['P',"THEN THAT'S WHERE I'M GOING. AND YOU DON'T HAVE TO GO BACK TO HIM."],
+    ['FOE',"...THE OLD CHAPEL ON 5TH STREET STILL LEAVES ITS DOORS OPEN, RIGHT? MAYBE I'LL GO AND SEE."],
+    {verse:"FOR THE SON OF MAN IS COME TO SEEK AND TO SAVE THAT WHICH WAS LOST.",ref:'LUKE 19:10'}]},
+  ch3:{bg:'story_lvl3',title:'CHAPTER 3',sub:'VEX TOWER',with:'VEX',beats:[
+    ['N',"IN A CONTAINER AT THE DOCKS: STOLEN GOLD, AND A KEY CARD. VEX TOWER, TOP FLOOR."],
+    ['VEX',"(ON THE RADIO) YOU'RE TOUGHER THAN YOU LOOK. I RESPECT THAT. SO I SENT THE ELEVATOR DOWN FOR YOU."],
+    ['VEX',"NO MORE FIGHTING. RIDE UP, SHAKE MY HAND, TAKE A SEAT AT MY TABLE. IT'S THE EASY WAY."],
+    ['P',"THE EASY WAY IS HOW YOU GOT EVERYBODY IN THIS CITY."],
+    ['P',"I'LL TAKE THE STAIRS."],
+    ['VEX',"THEN CLIMB, CHAMP. FORTY FLOORS, AND MY BEST MEN ARE WAITING ON EVERY ONE."],
+    {verse:"STRAIT IS THE GATE, AND NARROW IS THE WAY, WHICH LEADETH UNTO LIFE.",ref:'MATTHEW 7:14'}]},
+  final:{bg:'hecky_stage',title:'FINAL CHAPTER',sub:"VEX'S PENTHOUSE",with:'VEX',beats:[
+    ['N',"THE TOP FLOOR. THE WHOLE CITY GLITTERS BELOW. THE TROPHY SITS ON A GLASS TABLE."],
+    ['VEX',"LOOK AT IT. EVERY LIGHT DOWN THERE ANSWERS TO ME. ALL OF THIS CAN BE YOURS."],
+    ['VEX',"ALL YOU HAVE TO DO IS KNEEL."],
+    ['P',"NO."],
+    ['VEX',"THEN MY MEN WILL CHANGE YOUR MIND."]]},
+  shadow:{bg:'hecky_stage',with:'VEX',beats:[
+    ['VEX',"STILL STANDING? THEN MEET THE ONE FIGHTER YOU HAVE NEVER BEATEN."],
+    ['N',"A SHADOW STEPS OUT OF THE DARK. EVERY GRUDGE. EVERY LIE. IT MOVES LIKE {N}. IT FIGHTS LIKE {N}. IT IS {N}.",'SHD'],
+    {verse:"FOR WE WRESTLE NOT AGAINST FLESH AND BLOOD, BUT AGAINST THE RULERS OF THE DARKNESS OF THIS WORLD.",ref:'EPHESIANS 6:12'}]},
+  ending:{bg:'hecky_stage',title:'EPILOGUE',sub:'THE LAST BLOW',with:'VEX',beats:[
+    ['N',"THE SHADOW BREAKS APART LIKE SMOKE. VEX'S MEN ARE GONE. IT'S JUST THE TWO OF YOU NOW."],
+    ['VEX',"GO ON. FINISH IT. THAT'S HOW THIS CITY WORKS. THAT'S WHAT I WOULD DO."],
+    {choice:'OFFER YOUR HAND'},
+    ['VEX',"...WHY?"],
+    ['P',"BECAUSE NOBODY IS TOO FAR GONE. NOT THAT GOON ON THE STREET. NOT ME. NOT EVEN YOU."],
+    ['VEX',"I'VE DONE TERRIBLE THINGS. I DON'T KNOW HOW TO BE ANYTHING ELSE."],
+    ['P',"THEN COME ON SUNDAY. THE CHAPEL DOORS ARE OPEN. THAT'S WHERE YOU START."],
+    {bg:'padre_stage',title:'SUNDAY MORNING',sub:'THE OLD CHAPEL',with:'SAM',trophy:true},
+    ['N',"BELLS RING OVER BONFIRE CITY. THE TROPHY IS BACK ON THE ALTAR, WHERE THE TOURNAMENT BEGAN."],
+    ['SAM',"FIFTY YEARS THESE DOORS HAVE STAYED OPEN. I'VE NEVER SEEN THEM DO SO MUCH GOOD IN ONE WEEK."],
+    ['FOE',"I TOLD YOU I'D COME AND SEE. FRONT ROW, TOO."],
+    ['N',"IN THE FRONT PEW, A BIG MAN IN A CHEAP SUIT SITS WITH HIS HEAD BOWED. NOBODY CALLS HIM VEX ANY MORE."],
+    ['VIC',"MY NAME IS VICTOR. ALL MY LIFE I SAID EVERY MAN HAS A PRICE. I WAS RIGHT. MINE WAS PAID FOR ME."],
+    ['N',"NEXT WEEK, THE FINALS. TONIGHT, FOR THE FIRST TIME IN YEARS, BONFIRE CITY SLEEPS IN PEACE."],
+    {verse:"FOR THIS MY SON WAS DEAD, AND IS ALIVE AGAIN. HE WAS LOST, AND IS FOUND.",ref:'LUKE 15:24'}]}};
+const SCENE_AT=['intro','ch2','ch3','final','ending'];// the scene before each level (and the ending after the shadow)
 function foeData(id){const c=FOES[id];if(c.base){const b=foeData(c.base);return{...b,...c,anim:b.anim,H:b.H,spr:b.spr,alt:b.alt,white:b.white,sh:.72,hip:.5,col:{...b.col,...c.col}}}if(c.anim)return c;const b=CH[FALLBACK_FOE[id]];return{...b,...c,anim:b.anim,H:b.H,spr:b.spr,alt:b.alt,white:b.white,fake:true}}
 function startStory(p1,alt,skin){const pool=ORDER.filter(i=>i!==p1).sort(()=>Math.random()-.5);
-  RUN={mode:'story',p1,ladder:[],idx:0,cont:0,alt,skin,level:0,lives:3,score:0,bosses:pool.slice(0,3)};go(StoryCard)}
-const StoryCard={enter(){this.i=Math.min(RUN.level,STORY.length-1);this.txt=wrap(STORY[this.i].replace(/\{N\}/g,CH[RUN.p1].name),25);this.verse=wrap(VERSES[this.i]||'',25);this.n=0;playMusic('select')},
-  update(){this.n+=0.7;if(this.t>20&&(pressed.a||pressed.start)){if(this.n<this.txt.join(' ').length){this.n=999;return}SFX.ok();
-      goFade(()=>{if(RUN.level>=LEVELS.length)go(Ending);else go(Brawl)})}},
-  draw(){const L=LEVELS[Math.min(RUN.level,LEVELS.length-1)],bg=IMG[L.bg]||CH[L.alt].stage;ctx.drawImage(bg,0,0,bg.width*H/bg.height,H);ctx.fillStyle='rgba(6,4,18,.78)';ctx.fillRect(0,0,W,H);
-    const c=CH[RUN.p1];ctx.drawImage(c.porm,-6,H-c.porm.height);
-    drawText(RUN.level>=LEVELS.length?'EPILOGUE':RUN.level===3?'FINAL CHAPTER':'CHAPTER '+(RUN.level+1),170,14,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});
-    if(RUN.level<LEVELS.length)drawText(L.name,170,34,'#ffe66a',1,{align:'center'});
-    const vh=this.verse.length?this.verse.length*9+6:0,bh=this.txt.length*9+10+vh,by=Math.max(44,Math.round(48+(124-bh)/3));box(84,by,166,bh,'rgba(10,8,30,.9)','#d04aff');let left=Math.floor(this.n);
-    this.txt.forEach((l,i)=>{const s=l.slice(0,Math.max(0,left));left-=l.length+1;drawText(s,90,by+6+i*9,'#e8e6f0',1,{shadow:false})});
-    if(this.n>=this.txt.join(' ').length){const vy=by+8+this.txt.length*9;ctx.fillStyle='#5a3a7a';ctx.fillRect(90,vy-2,154,1);this.verse.forEach((l,i)=>drawText(l,90,vy+2+i*9,'#ffd96a',1,{shadow:false}))}
-    if(this.n>=this.txt.join(' ').length&&(this.t>>4)&1)drawText('PRESS A',248,182,'#ffe66a',1,{align:'right',outline:'#000'})}};
+  RUN={mode:'story',p1,ladder:[],idx:0,cont:0,alt,skin,level:0,lives:3,score:0,bosses:pool.slice(0,3),mercy:null,vexLit:false};go(Cutscene,'intro')}
+// a bust portrait (93x112) cut from an in-game sprite frame, for characters with no portrait art: the upper body, scaled up
+function bust(fr,key,eyes,rim){const m=fxCache(fr);if(m['bust'+key])return m['bust'+key];
+  const w=fr.width,h=fr.height,t=mk(w,h),tx=t.getContext('2d');tx.drawImage(fr,0,0);const d=tx.getImageData(0,0,w,h).data,A=(x,y)=>d[(y*w+x)*4+3]>40;
+  let y0=h,y1=0;for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(A(x,y)){y0=Math.min(y0,y);y1=y;break}
+  const bh=Math.max(8,y1-y0+1),hh=Math.max(4,Math.round(bh*.16));let sx=0,n=0,hx1=0;for(let y=y0;y<y0+hh;y++)for(let x=0;x<w;x++)if(A(x,y)){sx+=x;n++;hx1=Math.max(hx1,x)}
+  const hc=n?sx/n:w/2,s=clamp(Math.floor(112/(bh*.62)),2,4),c=mk(93,112),x=c.getContext('2d');x.imageSmoothingEnabled=false;
+  const ox=Math.round(46-hc*s),oy=Math.round(12-y0*s);if(rim){const r=sil(fr,rim);for(const[dx,dy]of[[-1,0],[1,0],[0,-1]])x.drawImage(r,ox+dx*s,oy+dy*s,w*s,h*s)}x.drawImage(fr,ox,oy,w*s,h*s);
+  if(eyes){x.fillStyle=eyes;const ey=oy+Math.round((y0+hh*.5)*s),ex=ox+Math.round((hx1-2.5)*s);x.fillRect(ex,ey,s*2,s);x.globalAlpha=.35;x.fillRect(ex-s,ey-s,s*4,s*3);x.globalAlpha=1}
+  // fade the cut-off bottom edge into the dialogue box
+  const g=x.createLinearGradient(0,86,0,112);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(6,4,18,.9)');x.globalCompositeOperation='source-atop';x.fillStyle=g;x.fillRect(0,86,93,26);
+  return m['bust'+key]=c}
+function vexPor(lit){const fr=foeData('bruiser').anim.idle.fr[0];return lit?bust(hueOf(fr,130,1.2),'lit',null,'#ffd23a'):bust(sil(fr,'#0b0714'),'dark','#ff3a3a','#8a3aff')}
+function foePor(){const M=RUN.mercy||{kind:'goon'},C=foeData(M.kind),fr=C.anim.idle.fr[0];
+  return bust(M.hue!=null?hueOf(fr,M.hue,M.sat,M.whiten):M.alt?altOf(fr):fr,'f'+(M.hue!=null?M.hue+''+M.whiten:M.alt?'a':''))}
+// your shadow: your own portrait, black with a violet edge and burning eyes
+function shadowPor(im){const m=fxCache(im);if(m.shd)return m.shd;const c=mk(im.width,im.height),x=c.getContext('2d'),r=sil(im,'#b04aff');
+  for(const[dx,dy]of[[-2,0],[2,0],[0,-2]])x.drawImage(r,dx,dy);x.drawImage(sil(im,'#100818'),0,0);return m.shd=c}
+function bgImg(k){return IMG[k]||(CH[k.replace(/_stage$/,'')]||{}).stage||(LEVELS.find(L=>L.bg===k)?CH[LEVELS.find(L=>L.bg===k).alt].stage:CH.karl.stage)}
+function drawTrophy(x,y){const g=(frameNo>>3)%12;ctx.fillStyle='#120e1e';ctx.fillRect(x-9,y-26,18,27);
+  ctx.fillStyle='#6a4a1a';ctx.fillRect(x-7,y-4,14,4);ctx.fillStyle='#c8902a';ctx.fillRect(x-2,y-10,4,6);ctx.fillRect(x-5,y-11,10,2);
+  ctx.fillStyle='#ffd23a';ctx.fillRect(x-7,y-24,14,12);ctx.fillRect(x-9,y-22,2,6);ctx.fillRect(x+7,y-22,2,6);ctx.fillStyle='#fff3a0';ctx.fillRect(x-5,y-23,2,8);
+  if(g<3){ctx.fillStyle='#fff';ctx.fillRect(x+3,y-27+g,1,5-g*2>0?5-g*2:1);ctx.fillRect(x+1,y-25,5,1)}}
+const Cutscene={
+  enter(k){this.k=k;const S=this.S=SCENES[k];this.i=0;this.bg=S.bg;this.title=S.title;this.sub=S.sub;this.right=S.with;this.trophy=false;this.flash=0;
+    this.card=S.title?110:0;this.n=0;this.prep();if(k==='ending'||k==='shadow')playMusic(k==='ending'?'ending':'select');else playMusic('select')},
+  // speaker info: name, portrait, side
+  who(s){if(s==='SAM'&&RUN.p1==='padre')s='P';const c=CH[RUN.p1];
+    return{P:{n:c.name,im:c.porm,L:1,c:c.col.aura},VEX:{n:'VEX',im:vexPor(RUN.vexLit),c:RUN.vexLit?'#ffd23a':'#ff4a4a'},VIC:{n:'VICTOR',im:vexPor(true),c:'#ffd23a'},
+      FOE:{n:(RUN.mercy&&RUN.mercy.name)||'SID',im:foePor(),c:'#ff9a6a'},SHD:{n:'SHADOW',im:shadowPor(c.porm),c:'#b04aff',full:1},SAM:{n:'SAMSON',im:CH.padre.porm,c:'#7ad8ff'},N:{}}[s]||{}},
+  fill(s){const c=CH[RUN.p1];return s.replace(/\{N\}/g,c.name).replace(/\{F\}/g,(RUN.mercy&&RUN.mercy.name)||'SID')},
+  prep(){const b=this.S.beats[this.i];if(!b)return;this.n=0;
+    if(b.bg){this.bg=b.bg;this.title=b.title;this.sub=b.sub;this.right=b.with||this.right;if(b.trophy)this.trophy=true;this.card=110;if(b.bg==='padre_stage')try{SFX.bell()}catch(e){}this.i++;return this.prep()}
+    if(Array.isArray(b)){const sp=b[0]==='SAM'&&RUN.p1==='padre'?'P':b[0];if(sp!=='P'&&sp!=='N')this.right=sp;if(b[2])this.right=b[2];this.lines=wrap(this.fill(b[1]),38)}
+    else if(b.verse)this.lines=[...wrap(b.verse,38),'- '+b.ref];else this.lines=[]},
+  beat(){return this.S.beats[this.i]},
+  len(){return this.lines.join(' ').length},
+  done(){const k=this.k;if(k==='ending')goFade(()=>go(StoryEnd));else if(k==='shadow')goFade(()=>go(VS));else goFade(()=>go(Brawl))},
+  next(){this.i++;if(this.i>=this.S.beats.length){this.done();return}this.prep()},
+  update(){if(this.flash>0)this.flash--;if(this.card>0){this.card--;if(this.t>15&&(pressed.a||pressed.start))this.card=0;return}
+    const b=this.beat();if(!b)return;
+    if(pressed.start&&this.t>20){for(const x of this.S.beats)if(x.choice)RUN.vexLit=true;for(const x of this.S.beats)if(x.trophy)this.trophy=true;SFX.back();this.i=this.S.beats.length;this.done();return}
+    if(b.choice){if(pressed.a){RUN.vexLit=true;this.flash=24;try{SFX.bless()}catch(e){SFX.ok()}this.next()}return}
+    this.n+=1.3;if(pressed.a||pressed.b){if(this.n<this.len()){this.n=999;return}SFX.move();this.next()}},
+  draw(){const t=this.t,bg=bgImg(this.bg),bw=bg.width*H/bg.height,px=-Math.min(Math.max(0,bw-W),t*.08);ctx.drawImage(bg,Math.round(px),0,bw,H);
+    ctx.fillStyle=this.k==='ending'&&this.bg==='padre_stage'?'rgba(30,18,6,.45)':'rgba(6,4,18,.6)';ctx.fillRect(0,0,W,H);
+    if(this.trophy){const g=ctx.createRadialGradient(128,108,4,128,108,46);g.addColorStop(0,'rgba(255,220,120,.45)');g.addColorStop(1,'rgba(255,220,120,0)');ctx.fillStyle=g;ctx.fillRect(80,60,96,96);drawTrophy(128,128)}
+    if(this.card>0||!this.beat()){this.drawCard();return}
+    const b=this.beat(),sp=Array.isArray(b)?(b[0]==='SAM'&&RUN.p1==='padre'?'P':b[0]):null,BY=140;
+    // portraits: you on the left, whoever you're talking to on the right; the one not speaking is dimmed
+    const me=this.who('P'),R=this.right&&this.who(this.right);
+    ctx.globalAlpha=sp==='P'?1:.4;ctx.drawImage(me.im,-4,BY-me.im.height);ctx.globalAlpha=1;
+    if(R&&R.im){ctx.globalAlpha=(sp&&sp!=='P'&&sp!=='N')||R.full||b.choice?1:.4;drawMirror(R.im,W-R.im.width+4,BY-R.im.height);ctx.globalAlpha=1}
+    if(this.title)drawText(this.title+(this.sub?' - '+this.sub:''),128,4,'#ffe66a',1,{align:'center',outline:'#000'});
+    const verse=!!b.verse,choice=!!b.choice;box(8,BY,240,44,verse?'rgba(30,20,4,.92)':'rgba(10,8,30,.92)',verse?'#ffd23a':choice?'#ffffff':'#d04aff');
+    if(sp&&sp!=='N'){const w=this.who(sp),nw=textW(w.n)+8,nx=w.L?8:248-nw;box(nx,BY-11,nw,9,'rgba(10,8,30,.95)',w.c);drawText(w.n,nx+4,BY-10,w.c,1,{shadow:false})}
+    if(choice){drawText('A: '+b.choice,128,BY+12,(t>>3)&1?'#ffe66a':'#ffffff',2,{align:'center',outline:'#000'});
+      drawText('HE WAITS FOR THE LAST BLOW.',128,BY+33,'#99a',1,{align:'center',shadow:false})}
+    else{let left=Math.floor(this.n);const col=verse?'#ffd96a':sp==='N'?'#c8c4e0':'#ffffff',y0=BY+4+Math.round((4-this.lines.length)*4.5);
+      this.lines.forEach((l,i)=>{const s=l.slice(0,Math.max(0,left));left-=l.length+1;drawText(s,verse?128:12,y0+i*9,i===this.lines.length-1&&verse?'#ffb43a':col,1,{shadow:false,align:verse?'center':'left'})});
+      if(verse){ctx.fillStyle='#ffd23a';ctx.fillRect(126,BY-22,3,14);ctx.fillRect(122,BY-18,11,3)}
+      if(this.n>=this.len()&&(t>>4)&1){ctx.fillStyle='#ffe66a';ctx.beginPath();ctx.moveTo(240,BY+38);ctx.lineTo(246,BY+38);ctx.lineTo(243,BY+41);ctx.fill()}}
+    drawText('START: SKIP',252,H-6,'#667',1,{align:'right',shadow:false});
+    if(this.flash>0){ctx.fillStyle=`rgba(255,240,200,${this.flash/24})`;ctx.fillRect(0,0,W,H)}},
+  drawCard(){const k=Math.min(1,(110-this.card)/20);ctx.globalAlpha=k;ctx.fillStyle='rgba(0,0,0,.45)';ctx.fillRect(0,62,W,52);
+    drawText(this.title||'',128,70,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});if(this.sub)drawText(this.sub,128,94,'#ffe66a',1,{align:'center',outline:'#000'});ctx.globalAlpha=1}};
+// the credits after the story: the cast, Vex's men, your score, THE END
+const StoryEnd={
+  enter(){playMusic('ending');const c=CH[RUN.p1],r=rc(RUN.p1);r.clear++;r.story=(r.story||0)+1;saveRec();badge('story');if(ORDER.every(id=>rc(id).clear>0))badge('allclear');
+    const M=(RUN.mercy&&RUN.mercy.name)||'SID',L=[['BONFIRE BASH',1],['STORY MODE',2],[''],['STARRING',3],[c.name,1],...(c.nick?[['"'+c.nick+'"',2]]:[]),[''],
+      ['AND',3],['VICTOR',1],['WHO USED TO BE VEX',2],[''],['WITH',3],...(RUN.p1!=='padre'?[['SAMSON',1],['THE SHEPHERD',2]]:[]),[M,1],['WHO GOT BACK UP',2],
+      ...RUN.bosses.map(b=>[CH[b].name,1]),['THE RIVALS',2],['THE SHADOW',1],['EVERY GRUDGE YOU EVER CARRIED',2],[''],['VEX\'S MEN',3],
+      ['GOONS  SLINGERS  BRUISERS',1],['BLADES  MOLOTOVS  ENFORCERS',1],[''],['FINAL SCORE',3],[String(RUN.score||0).padStart(7,'0'),1],[''],
+      ['A GAME BY MARK',1],['BUILT WITH CLAUDE',2],['ART MADE WITH PIXELLAB',2],[''],['HE WAS LOST, AND IS FOUND.',3],[''],['THANK YOU FOR PLAYING',1]];
+    this.L=L;this.stop=Math.ceil((H+10-(52-(L.length-1)*11))/.45)},
+  update(){if(this.t>60&&(pressed.start||pressed.a)){if(this.t<this.stop){this.t=this.stop;return}goFade(()=>go(Title),.05)}},
+  draw(){const t=this.t;ctx.drawImage(bgImg('padre_stage'),0,0,W,H);ctx.fillStyle='rgba(8,4,14,.78)';ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(255,210,58,.06)';for(let i=0;i<10;i++){const a=t*.003+i*Math.PI/5;ctx.beginPath();ctx.moveTo(128,-20);ctx.lineTo(128+Math.cos(a)*300,-20+Math.abs(Math.sin(a))*300);ctx.lineTo(128+Math.cos(a+.12)*300,-20+Math.abs(Math.sin(a+.12))*300);ctx.fill()}
+    const y0=Math.max(52-(this.L.length-1)*11,H+10-Math.min(t,this.stop)*.45);
+    this.L.forEach(([s,k],i)=>{const y=Math.round(y0+i*11);if(!s||y<0||y>H-14)return;ctx.globalAlpha=clamp(y/24,0,1);
+      drawText(s,128,y,k===1?'#ffffff':k===2?'#99a0c0':'#ffd23a',1,{align:'center',outline:'#000'});ctx.globalAlpha=1});
+    if(t>=this.stop){const k=Math.min(1,(t-this.stop)/40);ctx.globalAlpha=k;drawText('THE END',128,82,'#fff',3,{align:'center',grad:FIRE,outline:'#300'});ctx.globalAlpha=1;
+      if((t>>4)&1&&t>this.stop+40)drawText('PRESS START',128,170,'#ffe66a',1,{align:'center',outline:'#000'})}}};
 
 const Brawl={
   enter(){const L=this.L=LEVELS[RUN.level];F=this;Object.assign(this,{cinema:false,superFlash:0,superBy:null,parts:[],texts:[],hitFx:[],proj:[],items:[],foes:[],cx:0,wi:0,wave:null,q:[],qT:0,goT:0,
-      ph:'intro',pt:0,camFlash:0,paused:false,psel:0,hitstop:0,shake:0,target:null,targetT:0,doneT:0,contN:9,supT:0});
+      ph:'intro',pt:0,mercyOn:false,camFlash:0,paused:false,psel:0,hitstop:0,shake:0,target:null,targetT:0,doneT:0,contN:9,supT:0});
     const k=skinned(RUN.p1,0),P=this.P=new Fighter(k.skinKey||RUN.p1,0,!!RUN.bot,RUN.alt&&RUN.alt[0]);P.x=40;P.z=22;P.vz=0;P.meter=RUN.meter||0;P.inv=60;
     for(const[x,z]of L.crates)this.items.push({kind:'crate',x,z,y:0});
     if(!playTrack(L.song))stageMusic(L.song);SFX.start()},
@@ -1605,11 +1724,12 @@ const Brawl={
   input(){const P=this.P;if(P.cpu)return this.bot();
     return{l:held.left,r:held.right,u:held.up,d:held.down,a:pressed.a,b:pressed.b,j:pressed.jump}},
   // a simple autoplayer for tests and the attract demo: line up with the nearest enemy and punch
-  bot(){const P=this.P,o={l:0,r:0,u:0,d:0,a:0,b:0},alive=this.foes.filter(e=>!e.dead&&!e.ko&&e.state!=='down');
+  bot(){const P=this.P,o={l:0,r:0,u:0,d:0,a:0,b:0},alive=this.foes.filter(e=>!e.dead&&!e.ko&&e.state!=='down'&&e.state!=='leave');
     const t=alive.sort((a,b)=>Math.hypot(a.x-P.x,(a.z-P.z)*2)-Math.hypot(b.x-P.x,(b.z-P.z)*2))[0];
     const crate=this.items.find(i=>i.kind!=='crate'&&Math.abs(i.x-P.x)<160);
     if(!t){if(crate){o[crate.x>P.x?'r':'l']=1;if(Math.abs(crate.z-P.z)>3)o[crate.z>P.z?'d':'u']=1}else o.r=1;return o}
-    const side=P.x<t.x?-1:1,gx=t.x+side*30,dx=gx-P.x,dz=t.z-P.z;
+    const side=P.x<t.x?-1:1,gx=t.x+side*(t.state==='yield'?22:30),dx=gx-P.x,dz=t.z-P.z;
+    if(t.state==='yield'&&Math.abs(t.x-P.x)<46&&Math.abs(dz)<10){if(frameNo%9===0)o.a=1;return o}
     if(Math.abs(dx)>4)o[dx>0?'r':'l']=1;if(Math.abs(dz)>3)o[dz>0?'d':'u']=1;
     const crowd=alive.filter(e=>Math.abs(e.x-P.x)<50&&Math.abs(e.z-P.z)<16).length;
     if(crowd>=2&&P.hp>20&&frameNo%40===0){o.a=o.b=1;return o}
@@ -1631,7 +1751,8 @@ const Brawl={
     if(!['idle','walk'].includes(P.state))return;
     if(i.j){P.state='prejump';P.st=0;P.jdir=i.r?1:i.l?-1:0;P.vx=0;return}
     if(i.b&&!i.a){P.chainN=0;this.atk(P,'kick',false);return}
-    if(i.a){// grab a reeling enemy you're standing on, else start the combo
+    if(i.a){const y=this.foes.find(e=>e.state==='yield'&&Math.abs(e.x-P.x)<50&&Math.abs(e.z-P.z)<14);if(y){this.helpUp(y);return}
+      // grab a reeling enemy you're standing on, else start the combo
       const g=this.foes.find(e=>!e.dead&&e.state==='hurt'&&Math.abs(e.x-P.x)<30&&this.near(P,e,6)&&Math.sign(e.x-P.x)===P.face&&!FOES[e.kind].heavy);
       if(g){P.state='throwing';P.st=0;P.thr=g;P.knees=0;g.state='grabbed';g.st=0;g.vx=0;SFX.grab();return}
       P.chainN=0;this.atk(P,'jab');return}
@@ -1640,13 +1761,17 @@ const Brawl={
   superMove(){const P=this.P;P.meter=0;P.state='special';P.st=0;P.vx=P.vz=0;P.atk=null;P.sp={kind:'desp',hits:0,id:++atkId,sup:true};P.inv=90;this.supT=50;
     SFX.superS();fighterVoice(P,'super')},
   toss(e,dir){const P=this.P;P.thr=null;P.state='idle';P.st=0;e.state='knock';e.st=0;e.vy=4.2;e.vx=dir*5;e.y=1;e.thrown=true;e.hp-=8;e.flash=4;SFX.slam();this.shake=6;
-    if(e.hp<=0)e.ko=true;this.score(80)},
+    if(e.hp<=0){if(this.mercyOK(e)){e.hp=1;e.yieldNext=true;this.mercyOn=true}else e.ko=true}this.score(80)},
+  // Stage 1's last man standing begs for mercy; walk up and press A to help him up (he's the one who points you to the docks)
+  mercyOK(e){return RUN.level===0&&!RUN.mercy&&!this.mercyOn&&this.wave&&this.wi===this.L.waves.length-1&&!this.q.length&&!this.foes.some(f=>f!==e&&!f.dead&&!f.ko)},
+  helpUp(e){const P=this.P;e.state='leave';e.st=0;e.face=P.x>e.x?1:-1;RUN.mercy={kind:e.kind,name:e.name,hue:e.hue,sat:e.sat,whiten:e.whiten,alt:e.alt};
+    P.state='idle';P.st=0;P.vx=P.vz=0;this.score(2000);this.addT('MERCY +2000',e.x,e.z,'#ffd23a');try{SFX.bless()}catch(x){SFX.ok()}},
   score(n){RUN.score=(RUN.score||0)+n},
   // ---- damage ----
-  hitFoe(e,dmg,knock,dir,snd){const P=this.P;if(e.dead||e.ko||e.inv>0||e.state==='down'||(e.state==='knock'&&(e.jug||0)>=1))return false;const C=FOES[e.kind];if(e.state==='knock')e.jug=(e.jug||0)+1;
+  hitFoe(e,dmg,knock,dir,snd){const P=this.P;if(e.dead||e.ko||e.inv>0||e.state==='down'||e.state==='yield'||e.state==='leave'||e.yieldNext||(e.state==='knock'&&(e.jug||0)>=1))return false;const C=FOES[e.kind];if(e.state==='knock')e.jug=(e.jug||0)+1;
     e.hp-=dmg*P.c.power*(P.buff>0?1.25:1);e.flash=4;this.target=e;this.targetT=120;P.meter=Math.min(100,P.meter+2.5);this.score(dmg*10);
     const armored=C.heavy&&!knock&&e.hp>0&&(e.state==='special'||((e.armorN=(e.armorN||0)+1)%2));
-    if(e.hp<=0){e.ko=true;knock=true}
+    if(e.hp<=0){if(this.mercyOK(e)){e.hp=1;e.yieldNext=true;this.mercyOn=true}else e.ko=true;knock=true}
     if(knock){e.state='knock';e.st=0;e.vy=3.6;e.vx=dir*2.6;e.y=Math.max(e.y,1);e.atk=null;e.sp=null}
     else if(!armored){e.state='hurt';e.st=0;e.stun=22;e.vx=dir*1.2;e.atk=null;e.sp=null}
     this.hitstop=knock?9:5;this.shake=knock?4:2;this.spark(e.x,e.z,e.y+e.H*.6,'#ffe66a',knock?12:7);(SFX[snd]||(knock?SFX.heavy:SFX.hit))();return true},
@@ -1699,12 +1824,15 @@ const Brawl={
       case'hurt':if(--e.stun<=0){e.state='idle';e.st=0}break;
       case'grabbed':break;
       case'down':if(e.ko){if(e.st>50){e.dead=true;this.score(C.score);if(Math.random()<(C.heavy?.6:.12))this.items.push({kind:Math.random()<.5?'pizza':'cash',x:e.x,z:e.z,y:0,l:600})}}
-        else if(e.st>=40){e.state='rise';e.st=0;e.inv=16}break;
-      case'rise':if(e.st>=12){e.state='idle';e.st=0}break}
+        else if(e.st>=40&&!e.yieldNext){e.state='rise';e.st=0;e.inv=16}break;
+      case'rise':if(e.st>=12){e.state='idle';e.st=0}break;
+      case'yield':e.vx=e.vz=0;e.face=P.x>e.x?1:-1;if(e.st===2)this.addT('PLEASE... I GIVE UP!',e.x,e.z,'#fff');break;
+      case'leave':if(e.st===36)this.addT('THANK YOU...',e.x,e.z,'#fff');if(e.st<60)e.vx=0;else{e.face=e.x<this.cx+W/2?-1:1;e.vx=e.face*1.3;if(e.x<this.cx-30||e.x>this.cx+W+30)e.dead=true}break}
+    if(e.yieldNext&&e.state==='down'&&e.st>=34){e.yieldNext=false;e.state='yield';e.st=0;e.inv=0;e.x=clamp(e.x,this.cx+40,this.cx+W-40)}
     // a thrown enemy bowls over the others
     if(e.thrown&&e.state==='knock')for(const o of this.foes)if(o!==e&&!o.dead&&o.state!=='knock'&&Math.abs(o.x-e.x)<22&&this.near(o,e,12)){this.hitFoe(o,8,true,Math.sign(e.vx));}
     this.phys(e);
-    const inside=e.x>this.cx+8&&e.x<this.cx+W-8;if(inside)e.inside=true;if(e.inside)e.x=clamp(e.x,this.cx+8,this.cx+W-8)},
+    const inside=e.x>this.cx+8&&e.x<this.cx+W-8;if(inside)e.inside=true;if(e.inside&&e.state!=='leave')e.x=clamp(e.x,this.cx+8,this.cx+W-8)},
   spawn(kind){const C=foeData(kind),right=this.q.length%2===0||this.cx<20,f=new Fighter('karl',1,true,false);
     f.c=C;f.img=C.spr;f.H=C.H;f.kind=kind;f.hp=f.mhp=C.hp*[0.8,1,1.2][SET.diff];f.x=right?this.cx+W+24:this.cx-24;f.z=rnd(4,FZ-4);f.vz=0;f.uid=++atkId;
     f.name=C.names[(Math.random()*C.names.length)|0];f.alt=!!C.fake||(kind==='goon'&&Math.random()<.4);if(C.hue!=null&&!C.fake){f.hue=C.hue;f.sat=C.sat||1;f.whiten=!!C.whiten;f.alt=false}f.wait=30+rnd(0,40);f.cool=0;this.foes.push(f)},
@@ -1717,7 +1845,7 @@ const Brawl={
     if(this.ph==='intro'&&this.pt>80)this.ph='play';
     if(this.ph==='continue'){if(this.pt%60===0){this.contN--;SFX.tick();if(this.contN<0){goFade(()=>go(GameOver));this.ph='over'}}
       if(pressed.a||pressed.start){RUN.lives=3;RUN.cont++;RUN.score=0;this.respawn();SFX.start()}return}
-    if(this.ph==='clear'){if(++this.doneT===70){RUN.meter=P.meter;const boss=RUN.level===3?RUN.p1:RUN.bosses[RUN.level];RUN.shadow=RUN.level===3;RUN.ladder=[boss];RUN.idx=0;goFade(()=>go(VS))}return}
+    if(this.ph==='clear'){if(++this.doneT===70){RUN.meter=P.meter;const boss=RUN.level===3?RUN.p1:RUN.bosses[RUN.level];RUN.shadow=RUN.level===3;RUN.ladder=[boss];RUN.idx=0;goFade(()=>RUN.shadow?go(Cutscene,'shadow'):go(VS))}return}
     // player
     if(P.qA&&frameNo-P.qA<6){pressed.a=true;P.qA=0}
     P.st++;if(P.inv>0)P.inv--;if(P.flash>0)P.flash--;if(P.buff>0)P.buff--;P.trail=P.trail>P.hp?Math.max(P.hp,P.trail-0.4):P.hp;
@@ -1781,7 +1909,8 @@ const Brawl={
     if(P.state==='special'&&P.sp&&!P.sp.sup&&P.st>=8&&P.st<20){const k=P.st-8,R=14+k*4;ctx.globalAlpha=1-k/12;ctx.strokeStyle=P.c.col.aura;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(P.x-cx,FY+P.z-P.H*.4,R,R*.7,0,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}
     ctx.save();ctx.translate(-cx,0);for(const h of this.hitFx)drawHitFx(h);
     for(const p of this.parts){ctx.fillStyle=p.c;ctx.globalAlpha=p.dust?Math.min(1,p.l/12)*.7:1;const s=p.dust?3:2;ctx.fillRect(p.x|0,p.y|0,s,s)}ctx.globalAlpha=1;
-    for(const t of this.texts)drawText(t.s,clamp(t.x,cx+30,cx+W-30),t.y,t.c,1,{align:'center',outline:'#000'});ctx.restore();
+    for(const t of this.texts){const hw=textW(t.s)/2+4;drawText(t.s,clamp(t.x,cx+hw,cx+W-hw),t.y,t.c,1,{align:'center',outline:'#000'})}
+    for(const e of this.foes)if(e.state==='yield'&&e.st>50){const near=Math.abs(e.x-P.x)<50&&Math.abs(e.z-P.z)<14;if(near||(frameNo>>4)&1)drawText('A: HELP HIM UP',clamp(e.x,cx+48,cx+W-48),FY+e.z-e.H-16,near?'#ffe66a':'#fff',1,{align:'center',outline:'#000'})}ctx.restore();
     ctx.restore();
     if(F.camFlash>0){ctx.fillStyle=`rgba(255,255,255,${F.camFlash/10})`;ctx.fillRect(0,0,W,H);F.camFlash--}
     if(this.supT>0)this.drawSuper();
@@ -1843,5 +1972,5 @@ const TICK=1000/54;
 function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=now;let n=0;while(acc>=TICK&&n<4){step();acc-=TICK;n++}if(n>=4)acc=0;render();musicTick()}
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
-window.__dbg={Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,StoryCard,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
+window.__dbg={Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
 

@@ -7,15 +7,22 @@ henchmen, fight a boss at the end of each level.
 
 A gritty Christian story about temptation, the fight against your own sin, and mercy. Bonfire City is rotting under
 **Vex**, who owns the streets, the fights and the people. On the eve of the finals he steals the Bonfire Bash trophy
-and leaves a card: *"Every man has a price."* Your fighter doesn't.
+and names his price: *"Every man has a price."* Your fighter isn't for sale.
 
-- **Chapter 1, Bonfire Streets:** you walk into the dark. *"The light shineth in darkness." (John 1:5)*
-- **Chapter 2, The Docks:** you help up a beaten goon instead of finishing him, and he points the way. Nobody is too far gone. *(Luke 19:10)*
-- **Chapter 3, Vex Tower:** the elevator is easy, the stairs are narrow; you take the stairs. *(Matthew 7:14)*
-- **Final Chapter, the Penthouse:** Vex offers you the whole city if you'll kneel. You won't. Then your shadow steps out: every grudge and sin you've carried. *"We wrestle not against flesh and blood." (Ephesians 6:12)*
-- **Epilogue:** you spare Vex and offer him a hand. By Sunday the trophy is back and Vex sits in the front pew of the Old Chapel. *"He was lost, and is found." (Luke 15:24)*
+Each chapter is a dialogue scene (portraits, name tags, typed text) that closes on a King James verse. START skips it.
 
-Each story card shows its King James verse under the text.
+- **Prologue, Bonfire City:** Vex takes the trophy and tempts you. *"The light shineth in darkness." (John 1:5)*
+- **Stage 1, the mercy moment (played, not told):** the last man standing drops to his knees. Walk up and press **A: HELP HIM UP**.
+- **Chapter 2, The Docks:** the man you spared (by his own name) tells you where the trophy went and asks about the Old Chapel. *(Luke 19:10)*
+- **Chapter 3, Vex Tower:** Vex radios to offer the easy elevator. You take the stairs. *(Matthew 7:14)*
+- **Final Chapter, the Penthouse:** "All you have to do is kneel." "No." After his last men fall, your shadow steps out: every grudge and lie you've carried. *(Ephesians 6:12)*
+- **Epilogue:**
+  1. Vex kneels and waits for the last blow. You press **A: OFFER YOUR HAND**.
+  2. Sunday at the Old Chapel: the trophy is back on the altar, Samson is at the door, the man you spared sits in the front row, and Vex, now Victor, says: "All my life I said every man has a price. I was right. Mine was paid for me." *(Luke 15:24)*
+  3. Credits roll, then THE END.
+
+Vex has no art of his own: he's the bruiser sprite as a silhouette with red eyes, lit in gold once he turns back.
+His portraits, and the spared man's, are cut from the in-game sprites.
 
 | Level | Where | Waves | Boss |
 |---|---|---|---|
@@ -24,7 +31,7 @@ Each story card shows its King James verse under the text.
 | 3 | **Vex Tower**: the security floor | 3 | a rival fighter |
 | Final | **Vex's Penthouse** | 1 | **Shadow**: Vex's fighter trained on your every move, a dark copy of you |
 
-Short story cards between levels (portrait and text); the ending card gets the trophy back.
+Dialogue scenes between levels; the ending returns the trophy and rolls the credits.
 Bosses are picked at random from the roster (never your own fighter), so every run is different.
 
 ## How it plays

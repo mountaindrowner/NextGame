@@ -15,6 +15,14 @@ const OUT = process.argv[2];
   // menu: STORY is on the title screen and 2 PLAYERS is gone
   const items = await p.evaluate(() => window.__dbg.Title.items);
   C('title menu', items[0] === 'STORY' && !items.includes('2 PLAYERS'), items.join(', '));
+  // press A through the cutscene on screen; returns the beats seen
+  const talk = async () => p.evaluate(() => { const d = window.__dbg, Cs = d.Cutscene, seen = [];
+    for (let i = 0; i < 3000 && d.scene === Cs && Cs.i < Cs.S.beats.length; i++) { const b = Cs.beat(); if (b && !seen.includes(b)) seen.push(b);
+      d.inp.pressed.a = i % 3 === 0; Cs.update(); Cs.t++; d.inp.pressed.a = false; } return { k: Cs.k, n: seen.length, of: Cs.S.beats.filter(b => !b.bg).length }; });
+  const sceneName = () => p.evaluate(() => { const d = window.__dbg; return d.scene === d.Cutscene ? 'Cutscene:' + d.Cutscene.k : d.scene === d.Brawl ? 'Brawl' : d.scene === d.VS ? 'VS' : d.scene === d.StoryEnd ? 'StoryEnd' : d.scene === d.Title ? 'Title' : '?'; });
+  await p.evaluate(() => window.__dbg.startStory('karl', [false, false], [false, false]));
+  let sc0 = await sceneName(); const tk = await talk(); await p.waitForTimeout(500); await shot('story-intro');
+  C('prologue cutscene', sc0 === 'Cutscene:intro' && tk.n === tk.of && (await sceneName()) === 'Brawl', `${sc0}, ${tk.n}/${tk.of} beats, then ${await sceneName()}`);
   for (let lv = 0; lv < 4; lv++) {
     const r = await p.evaluate(async (lv) => {
       const d = window.__dbg; if (lv === 0) { d.startStory('karl', [false, false], [false, false]); }
@@ -27,13 +35,26 @@ const OUT = process.argv[2];
       info.frames = nf; info.ph = B.ph; info.waves = B.wi; info.of = B.L.waves.length; info.lives = R.lives; info.score = R.score; return info;
     }, lv);
     await shot('story-l' + (lv + 1));
+    if (lv === 0) { const m = await p.evaluate(() => window.__dbg.RUN.mercy); C('mercy: helped the last man up', !!m && !!m.name, m ? `${m.name} the ${m.kind}` : 'nobody spared'); }
     C(`level ${lv + 1} cleared by autoplayer`, r.ph === 'clear' && r.waves === r.of, `${r.waves}/${r.of} waves, ${r.spawned} enemies (${Object.entries(r.kinds).map(([k, v]) => k + ' ' + v).join(', ')}), took ${r.pHit} hits, ${(r.frames / 60) | 0}s, score ${r.score}`);
   }
   // boss hand-off and shadow
   const b = await p.evaluate(() => { const d = window.__dbg, B = d.scene; for (let i = 0; i < 80; i++) { d.tick(); B.update(); } return { boss: d.RUN.ladder[0], shadow: d.RUN.shadow, bosses: d.RUN.bosses }; });
   await p.waitForTimeout(600);
-  const sc = await p.evaluate(() => { const d = window.__dbg; return d.scene === d.VS ? 'VS' : '?'; });
-  C('final boss = your shadow', b.boss === 'karl' && b.shadow && sc === 'VS', `boss ${b.boss}, shadow ${b.shadow}, scene ${sc}, earlier bosses ${b.bosses.join(', ')}`);
+  const sc1 = await sceneName(); const tk2 = await talk(); await p.waitForTimeout(600); const sc = await sceneName();
+  C('final boss = your shadow', b.boss === 'karl' && b.shadow && sc1 === 'Cutscene:shadow' && tk2.n === tk2.of && sc === 'VS', `boss ${b.boss}, shadow ${b.shadow}, ${sc1} then ${sc}, earlier bosses ${b.bosses.join(', ')}`);
+  // every chapter cutscene plays between levels (Result -> next chapter)
+  for (const lv of [1, 2, 3]) { await p.evaluate(lv => { const d = window.__dbg; d.RUN.level = lv - 1; d.go(d.Result, 0, { p1: 'karl', p2: 'ivan', stage: 'karl' }); d.Result.next(); }, lv);
+    const s1 = await sceneName(); const t3 = await talk(); await p.waitForTimeout(500);
+    C(`chapter ${lv + 1} cutscene`, s1 === 'Cutscene:' + ['', 'ch2', 'ch3', 'final'][lv] && t3.n === t3.of && (await sceneName()) === 'Brawl', `${s1}, ${t3.n}/${t3.of} beats, then ${await sceneName()}`); }
+  // the ending: beat the shadow, offer your hand, the chapel, the credits
+  await p.evaluate(() => { const d = window.__dbg; d.RUN.level = 3; d.RUN.vexLit = false; d.go(d.Result, 0, { p1: 'karl', p2: 'karl', stage: 'karl' }); d.Result.next(); });
+  const s2 = await sceneName(); const t4 = await talk(); await p.waitForTimeout(600);
+  const end = await p.evaluate(() => { const d = window.__dbg; return { lit: d.RUN.vexLit, badge: !!d.rec.badges.story, story: d.rec.ch.karl.story || 0 }; });
+  C('ending: offer your hand', s2 === 'Cutscene:ending' && t4.n === t4.of && end.lit, `${s2}, ${t4.n}/${t4.of} beats, Vex redeemed ${end.lit}`);
+  const s3 = await sceneName(); await p.evaluate(() => { const d = window.__dbg, E = d.StoryEnd; E.t = E.stop + 60; }); await p.waitForTimeout(200); await shot('story-credits');
+  await p.evaluate(() => { const d = window.__dbg; d.inp.pressed.start = true; d.StoryEnd.update(); d.inp.pressed.start = false; }); await p.waitForTimeout(900);
+  C('credits, THE END, back to title', s3 === 'StoryEnd' && end.badge && end.story > 0 && (await sceneName()) === 'Title', `${s3}, badge REDEEMED ${end.badge}, story clears ${end.story}, then ${await sceneName()}`);
   const f = await p.evaluate(() => { const d = window.__dbg; d.go(d.Fight, { p1: 'karl', p2: 'karl', stage: 'karl' }); const F = d.F; return { shadow: F.p2.shadow, hp: F.p2.mhp, cpu: F.p2.cpu }; });
   await p.waitForTimeout(300); await shot('story-shadow');
   C('shadow duel', f.shadow && f.hp > 92 && f.cpu, `shadow ${f.shadow}, hp ${f.hp}`);

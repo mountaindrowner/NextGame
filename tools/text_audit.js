@@ -33,8 +33,12 @@ const path = require('path');
       d.RUN = { mode: 'arcade', p1: a, ladder: [b], idx: 0, cont: 0 }; d.go(d.Result, 0, { p1: a, p2: b, stage: a }); d.Result.t = 400; check(`result-win-${a}`);
       d.go(d.Result, 1, { p1: a, p2: b, stage: b }); d.Result.t = 400; check(`result-lose-${a}`);
       d.go(d.Ending); for (const t of [100, 400, 900, 1600]) { d.Ending.t = t; check(`ending@${t}-${a}`); }
-      d.startStory(a, [0, 0], [0, 0]); for (let lv = 0; lv <= 4; lv++) { d.RUN.level = lv; d.go(d.StoryCard); d.StoryCard.t = 400; d.StoryCard.n = 9999; check(`story-card${lv}-${a}`); }
+      d.startStory(a, [0, 0], [0, 0]); d.RUN.mercy = { kind: 'enforcer', name: 'BOULDER', hue: 0, sat: 1, whiten: true };
+      for (const k of Object.keys(d.SCENES)) { d.go(d.Cutscene, k); const C = d.Cutscene; if (C.card) { C.card = 60; check(`scene-${k}-card-${a}`); }
+        for (let j = 0; C.i < C.S.beats.length && j < 40; j++) { C.card = 0; C.n = 9999; C.t = 400; check(`scene-${k}-${C.i}-${a}`); if (C.beat().choice) d.RUN.vexLit = true; C.i++; if (C.i < C.S.beats.length) C.prep(); } }
+      d.go(d.StoryEnd); for (const t of [100, 500, 900, 1300]) { d.StoryEnd.t = t; check(`credits@${t}-${a}`); } d.StoryEnd.t = d.StoryEnd.stop + 90; check(`credits-end-${a}`); d.clearToast();
       d.RUN.level = 0; d.go(d.Brawl); const B = d.scene; check(`brawl-intro-${a}`); B.ph = 'play'; B.goT = 100; check(`brawl-${a}`); B.paused = true; check(`brawl-pause-${a}`); B.paused = false;
+      B.spawn('goon'); const y = B.foes[B.foes.length - 1]; y.x = B.cx + 20; y.state = 'yield'; y.st = 80; check(`brawl-mercy-${a}`); B.foes = [];
       B.ph = 'continue'; check(`brawl-continue-${a}`); B.ph = 'clear'; check(`brawl-clear-${a}`); }
     d.RUN = { mode: 'arcade', p1: 'karl', ladder: ['ivan'], idx: 0, cont: 0 }; d.go(d.Continue); d.Continue.t = 10; check('continue'); d.go(d.GameOver); d.GameOver.t = 50; check('gameover');
     for (const ph of ['menu', 'host', 'join', 'msg']) { d.go(d.Online); d.Online.ph = ph; d.Online.msg = 'COULD NOT REACH THE MATCHMAKING SERVER'; d.NET.code = 'ABCD'; d.NET.status = 'waiting'; check('online-' + ph); }
