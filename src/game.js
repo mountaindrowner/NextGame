@@ -10,6 +10,7 @@ let frameNo=0;
 
 // ---------------- SETTINGS ----------------
 const SET={diff:1,music:true,sound:true,voice:true};
+let SHOWBOX=false;// pause menu: draw hurtboxes (blue) and every hit check (red)
 try{Object.assign(SET,JSON.parse(localStorage.getItem('worlddojo')||'{}'))}catch(e){}
 function saveSet(){try{localStorage.setItem('worlddojo',JSON.stringify(SET))}catch(e){}}
 // records & badges (kept in this browser)
@@ -52,19 +53,21 @@ const held2={},prev2={},pressed2={},latch2={},keyHeld2={};KEYS.forEach(k=>{held2
 let TWO=false;// true while a 2-player match is being set up or played: keyboard splits into two sides
 function setTwo(v){if(TWO===v)return;TWO=v;for(const k of KEYS){keyHeld[k]=keyHeld2[k]=false}}
 function padState(g){const o={};if(!g)return o;const b=i=>!!(g.buttons[i]&&g.buttons[i].pressed),ax=g.axes||[];
-  o.left=b(14)||ax[0]<-.5;o.right=b(15)||ax[0]>.5;o.up=b(12)||ax[1]<-.5;o.down=b(13)||ax[1]>.5;o.a=b(0)||b(2);o.b=b(1)||b(3);o.start=b(9);o.select=b(8);return o}
+  o.left=b(14)||ax[0]<-.5;o.right=b(15)||ax[0]>.5;o.up=b(12)||ax[1]<-.5;o.down=b(13)||ax[1]>.5;o.a=b(0)||b(2)||b(3)||b(5)||b(7);o.b=b(1)||b(3)||b(5)||b(7);o.start=b(9);o.select=b(8);return o}
 function pollInput(){const gp=navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean):[];
   // one pad in a 2-player match goes to player 2 (player 1 has the keyboard); two pads: one each
   const g1=TWO&&gp.length===1?{}:padState(gp[0]),g2=TWO?padState(gp.length===1?gp[0]:gp[1]):{};
   for(const k of KEYS){const h=!!(touchHeld[k]||keyHeld[k]||mouseHeld[k]||g1[k]);pressed[k]=(h&&!prev[k])||latch[k];latch[k]=false;held[k]=h;prev[k]=h;
     const h2=!!(keyHeld2[k]||g2[k]);pressed2[k]=(h2&&!prev2[k])||latch2[k];latch2[k]=false;held2[k]=h2;prev2[k]=h2}}
 const anyPress=()=>pressed.start||pressed.a||pressed.tap;
-const els={dpad:$('dpad'),A:$('bA'),B:$('bB'),sel:$('bSel'),sta:$('bSta')};
+const els={dpad:$('dpad'),A:$('bA'),B:$('bB'),SP:$('bSp'),sel:$('bSel'),sta:$('bSta')};
+let TOUCHY=false;// last input came from a touch screen: buttons get a longer buffer and A+B window
 function hitTest(x,y,out){
   const q=cv.getBoundingClientRect();if(x>q.left&&x<q.right&&y>q.top&&y<q.bottom){out.tap=true;return}
   const r=els.dpad.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=x-cx,dy=y-cy,R=r.width/2,d=Math.hypot(dx,dy);
   if(d<R*1.4){if(d>R*0.15){const sec=Math.round(Math.atan2(dy,dx)/(Math.PI/4));
     ({0:['right'],1:['right','down'],2:['down'],3:['down','left'],4:['left'],'-4':['left'],'-3':['up','left'],'-2':['up'],'-1':['up','right']})[sec].forEach(k=>out[k]=true)}return}
+  if(els.SP){const p=els.SP.getBoundingClientRect(),R=p.width/2;if(Math.hypot(x-p.left-R,y-p.top-R)<R*1.3){out.a=out.b=true;out.sp=true;return}}
   const ra=els.A.getBoundingClientRect(),rb=els.B.getBoundingClientRect(),rr=ra.width/2;
   const ca=[ra.left+ra.width/2,ra.top+ra.height/2],cb=[rb.left+rb.width/2,rb.top+rb.height/2];
   const da=Math.hypot(x-ca[0],y-ca[1]),db=Math.hypot(x-cb[0],y-cb[1]);
@@ -72,25 +75,26 @@ function hitTest(x,y,out){
   if(da<rr*1.45&&da<=db){out.a=true;return}if(db<rr*1.45){out.b=true;return}
   for(const[el,k]of[[els.sel,'select'],[els.sta,'start']]){const p=el.getBoundingClientRect();if(x>p.left-14&&x<p.right+14&&y>p.top-16&&y<p.bottom+16){out[k]=true;return}}
 }
-function applyPointer(store,out){for(const k of KEYS){if(out[k]&&!store[k]){latch[k]=true;if(k!=='tap'&&navigator.vibrate)try{navigator.vibrate(6)}catch(e){}}store[k]=!!out[k]}updateVis()}
-function onTouch(e){e.preventDefault();unlockAudio();const out={};for(const t of e.touches)hitTest(t.clientX,t.clientY,out);applyPointer(touchHeld,out)}
+function applyPointer(store,out){store.sp=!!out.sp;for(const k of KEYS){if(out[k]&&!store[k]){latch[k]=true;if(k!=='tap'&&navigator.vibrate)try{navigator.vibrate(6)}catch(e){}}store[k]=!!out[k]}updateVis()}
+function onTouch(e){e.preventDefault();unlockAudio();TOUCHY=true;const out={};for(const t of e.touches)hitTest(t.clientX,t.clientY,out);applyPointer(touchHeld,out)}
 ['touchstart','touchmove','touchend','touchcancel'].forEach(ev=>document.addEventListener(ev,onTouch,{passive:false}));
 let mDown=false;
 document.addEventListener('mousedown',e=>{mDown=true;unlockAudio();const o={};hitTest(e.clientX,e.clientY,o);applyPointer(mouseHeld,o)});
 document.addEventListener('mousemove',e=>{if(!mDown)return;const o={};hitTest(e.clientX,e.clientY,o);applyPointer(mouseHeld,o)});
 document.addEventListener('mouseup',()=>{mDown=false;applyPointer(mouseHeld,{})});
-const KM={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',KeyW:'up',KeyS:'down',KeyA:'left',KeyD:'right',KeyJ:'b',KeyK:'a',KeyZ:'b',KeyX:'a',Enter:'start',Space:'start',ShiftRight:'select',Backspace:'select'};
+const KM={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',KeyW:'up',KeyS:'down',KeyA:'left',KeyD:'right',KeyJ:'b',KeyK:'a',KeyZ:'b',KeyX:'a',KeyC:'sp',KeyL:'sp',Enter:'start',Space:'start',ShiftRight:'select',Backspace:'select'};
 // 2-player keyboard: P1 = WASD + F/G (or C/V), P2 = arrows + K/L (or numpad 1/2, comma/period)
-const KM_P1={KeyW:'up',KeyS:'down',KeyA:'left',KeyD:'right',KeyF:'a',KeyG:'b',KeyC:'a',KeyV:'b',Enter:'start',Space:'start',Tab:'select'};
-const KM_P2={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',KeyK:'a',KeyL:'b',Numpad1:'a',Numpad2:'b',Comma:'a',Period:'b',NumpadEnter:'start',ShiftRight:'select',Backspace:'select'};
+const KM_P1={KeyW:'up',KeyS:'down',KeyA:'left',KeyD:'right',KeyF:'a',KeyG:'b',KeyH:'sp',KeyC:'a',KeyV:'b',Enter:'start',Space:'start',Tab:'select'};
+const KM_P2={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',KeyK:'a',KeyL:'b',Semicolon:'sp',Numpad3:'sp',Numpad1:'a',Numpad2:'b',Comma:'a',Period:'b',NumpadEnter:'start',ShiftRight:'select',Backspace:'select'};
 function keyRoute(c){if(TWO)return KM_P1[c]?[1,KM_P1[c]]:KM_P2[c]?[2,KM_P2[c]]:null;return KM[c]?[1,KM[c]]:null}
-document.addEventListener('keydown',e=>{const r=keyRoute(e.code);if(!r)return;e.preventDefault();unlockAudio();const[pl,k]=r;
-  if(pl===1){if(!keyHeld[k])latch[k]=true;keyHeld[k]=true}else{if(!keyHeld2[k])latch2[k]=true;keyHeld2[k]=true}updateVis()});
-document.addEventListener('keyup',e=>{const r=keyRoute(e.code);if(!r)return;if(r[0]===1)keyHeld[r[1]]=false;else keyHeld2[r[1]]=false;updateVis()});
+// SP (special) key = A+B in one press
+document.addEventListener('keydown',e=>{const r=keyRoute(e.code);if(!r)return;e.preventDefault();unlockAudio();TOUCHY=false;const[pl,k0]=r;
+  for(const k of k0==='sp'?['a','b']:[k0]){if(pl===1){if(!keyHeld[k])latch[k]=true;keyHeld[k]=true}else{if(!keyHeld2[k])latch2[k]=true;keyHeld2[k]=true}}updateVis()});
+document.addEventListener('keyup',e=>{const r=keyRoute(e.code);if(!r)return;for(const k of r[1]==='sp'?['a','b']:[r[1]]){if(r[0]===1)keyHeld[k]=false;else keyHeld2[k]=false}updateVis()});
 document.addEventListener('contextmenu',e=>e.preventDefault());
 function updateVis(){const h=k=>touchHeld[k]||keyHeld[k]||mouseHeld[k];
   els.dpad.className='btn'+(h('up')?' u':'')+(h('down')?' d':'')+(h('left')?' l':'')+(h('right')?' r':'');
-  els.A.classList.toggle('on',!!h('a'));els.B.classList.toggle('on',!!h('b'));els.sel.classList.toggle('on',!!h('select'));els.sta.classList.toggle('on',!!h('start'))}
+  const sp=!!(touchHeld.sp||mouseHeld.sp);if(els.SP)els.SP.classList.toggle('on',sp);els.A.classList.toggle('on',!!h('a')&&!sp);els.B.classList.toggle('on',!!h('b')&&!sp);els.sel.classList.toggle('on',!!h('select'));els.sta.classList.toggle('on',!!h('start'))}
 
 // ---------------- AUDIO ----------------
 const AU={ctx:null};
@@ -118,8 +122,10 @@ const SFX={
   ding:()=>{T('sine',1046,.9,.35);T('sine',1568,1.2,.25,null,.11);T('triangle',2093,.5,.08,null,.11)},
   whoosh:()=>N(.09,.22,4000,900,'bandpass'),
   whooshH:()=>N(.16,.28,2600,300,'bandpass'),
-  hit:()=>{N(.12,.55,3000,200);T('square',220,.08,.22,70);T('sine',110,.14,.5,40)},
-  heavy:()=>{N(.22,.7,2500,120);T('square',160,.14,.28,45);T('sine',80,.25,.6,30)},
+  hitL:()=>{N(.03,.5,9000,3000,'highpass');N(.08,.45,3500,300);T('square',300,.05,.18,110);T('sine',140,.09,.38,60)},
+  hit:()=>{N(.025,.55,8000,2500,'highpass');N(.12,.55,3000,200);T('square',220,.08,.22,70);T('sine',110,.16,.5,40)},
+  heavy:()=>{N(.03,.6,7000,2000,'highpass');N(.22,.7,2500,120);T('square',160,.14,.28,45);T('sine',80,.28,.6,30);T('sine',52,.5,.5,28,.04)},
+  burst:()=>{T('sawtooth',180,.4,.2,900);N(.4,.5,400,6000,'bandpass');T('sine',60,.5,.6,30)},
   block:()=>{T('square',1500,.05,.14,900);N(.05,.2,7000,3000,'highpass')},
   jump:()=>T('square',260,.12,.07,620),
   land:()=>N(.06,.2,500,120),
@@ -482,12 +488,19 @@ function qcf(h){let st=0;for(let i=Math.max(0,h.length-16);i<h.length;i++){const
 // Any grounded normal except the sweep can also be cancelled into the special once it connects.
 const BUF=7,MAXCHAIN=3,CHAIN={jab:['jab','cjab','kick','sweep'],cjab:['cjab','jab','sweep','kick'],jpunch:['jkick']};
 function cancelOk(f){const a=f.atk;if(!a||!f.hitDone)return false;const t=a.air?f.ast:f.st;return t>=a.s&&t<a.s+a.a+Math.max(6,a.r)}
+function burst(f,o){f.burstOK=false;f.state=f.y>0?'jump':'idle';f.st=0;f.stun=0;f.vy=f.y>0?2:0;f.atk=null;f.inv=30;f.jug=0;f.vx=0;
+  const dir=o.x>=f.x?1:-1;o.combo=0;o.comboT=0;o.ips=false;o.atk=null;o.sp=null;o.state='hurt';o.st=0;o.stun=22;o.vx=dir*4.2;o.hurtK='mid';
+  F.hitstop=8;F.shake=7;SFX.burst();addText('BURST!',f.x,GY-f.y-f.H-12,'#3ae8ff');
+  for(let i=0;i<24;i++){const a=i/24*Math.PI*2;F.parts.push({x:f.x+Math.cos(a)*10,y:GY-f.y-f.H*.5+Math.sin(a)*10,vx:Math.cos(a)*3,vy:Math.sin(a)*3,l:18,c:i%2?'#3ae8ff':'#ffffff',g:0})}}
 function control(f,o,inp){
   const fwd=f.face>0?inp.r:inp.l,back=f.face>0?inp.l:inp.r,upE=inp.u&&!f.pu;f.pu=inp.u;
   f.hist.push(inp.d?(fwd?3:back?1:2):inp.u?(fwd?9:back?7:8):fwd?6:back?4:5);if(f.hist.length>24)f.hist.shift();
   if(inp.aP){f.lastA=frameNo;f.bufA=frameNo}if(inp.bP){f.lastB=frameNo;f.bufB=frameNo}
-  const bA=frameNo-(f.bufA??-99)<=BUF,bB=frameNo-(f.bufB??-99)<=BUF,btn=bA||bB,use=()=>{f.bufA=f.bufB=-99};
-  const both=Math.abs(f.lastA-f.lastB)<=4&&frameNo-Math.max(f.lastA,f.lastB)<=BUF;
+  const tch=TOUCHY&&!f.cpu&&!NET.lock&&f.side===0&&!TWO,BF=tch?BUF+4:BUF;// touch: 11-frame buffer, 6-frame A+B window
+  const bA=frameNo-(f.bufA??-99)<=BF,bB=frameNo-(f.bufB??-99)<=BF,btn=bA||bB,use=()=>{f.bufA=f.bufB=-99};
+  const both=Math.abs(f.lastA-f.lastB)<=(tch?6:4)&&frameNo-Math.max(f.lastA,f.lastB)<=BF;
+  // BURST: A or B (buffered, so a press during hit-stop counts) breaks out of a detected loop
+  if(f.burstOK){if(!['hurt','knock'].includes(f.state)||!o.ips||o.state==='slamming'||(o.sp&&o.sp.kind==='super'))f.burstOK=false;else if(btn){use();burst(f,o);return}}
   const wantSp2=!(f.cuffed>0)&&f.c.special2&&(inp.sp2||(btn&&both&&inp.d)||(inp.bP&&qcb(f.hist)));
   const wantSp3=!(f.cuffed>0)&&!wantSp2&&f.c.special3&&(inp.sp3||(btn&&both&&back&&!inp.d));
   const wantSp=!(f.cuffed>0)&&!wantSp2&&!wantSp3&&(inp.sp||(btn&&both)||((inp.aP||inp.bP)&&qcf(f.hist)));
@@ -729,7 +742,7 @@ function updateSlam(f,o){const S=f.slam||{T:30,dmg:17,back:true,h:64},t=f.st,T=S
     o.x=clamp(o.x,XMIN,XMAX);if(S.back)f.face=-f.face;f.combo=1;o.flash=6;if(o.hp<=0){o.state='ko';o.st=0;F.onKO(f,o)}else{o.state='down';o.st=0}}
   if(t>=T+18){f.state='idle';f.st=0;f.sp=null;f.grabbed=null;f.slam=null}}
 const JUGGLE=2,SCALE=[1,1,.85,.75,.65,.55,.5];
-function tryHit(att,def,hb,d){if(def.inv>0||['down','ko','rise','grabbed'].includes(def.state)||F.phase!=='play')return false;
+function tryHit(att,def,hb,d){if(SHOWBOX)(F.dbg||(F.dbg=[])).push({...hb,f:frameNo});if(def.inv>0||['down','ko','rise','grabbed'].includes(def.state)||F.phase!=='play')return false;
   if(def.state==='knock'&&(def.jug||0)>=JUGGLE)return false;if(!overlap(hb,def.hurt()))return false;
   const cx=(Math.max(hb.x1,def.x-15)+Math.min(hb.x2,def.x+15))/2,cy=GY-(Math.max(hb.y1,def.y)+Math.min(hb.y2,def.y+def.h))/2;return applyHit(att,def,d,cx,cy)}
 function applyHit(att,def,d,cx,cy){const push=def.x>=att.x?1:-1,A=arch(def.c);
@@ -755,7 +768,13 @@ function applyHit(att,def,d,cx,cy){const push=def.x>=att.x?1:-1,A=arch(def.c);
   let dmg=d.dmg*att.c.power/def.c.def*(att.buff>0?1.25:1)*dim;if(att.cpu)dmg*=[0.75,0.95,1.1][SET.diff];
   if(arch(att.c).rhythm&&onBeat()){dmg*=1.25;if(!F.texts.some(x=>x.s==='ON BEAT!'&&x.l>34))addText('ON BEAT!',def.x,GY-def.y-def.H-20,'#ff4a6a')}
   const inCombo=(def.state==='hurt'&&def.stun>0)||def.state==='knock';
-  if(inCombo)att.combo++;else att.combo=1;att.comboT=60;if(att.combo>=2)addCombo(att);
+  if(inCombo)att.combo++;else att.combo=1;
+  // INFINITE PROTECTION (Skullgirls-style): the same move landing for a 4th time in one combo is a loop;
+  // sparks turn blue and the defender can BURST out with A or B
+  if(!inCombo){att.cseq={};att.ips=false}
+  {const key=d.tag||(att.state==='special'&&att.sp?(att.sp.two?'sp2':'sp1'):att.atk?att.atk.name:'?'),iid=d.tid||(att.sp&&att.sp.id)||(att.atk&&att.atk.id);
+    if(key!=='super'){const m=att.cseq||(att.cseq={}),q=m[key]||(m[key]={n:0,id:null});if(q.id!==iid){q.n++;q.id=iid}
+      if(q.n>=4&&!att.ips){att.ips=true;def.burstOK=true;addText('LOOP! PRESS A/B: BURST',def.x,GY-def.H-24,'#3ae8ff')}}}att.comboT=60;if(att.combo>=2)addCombo(att);
   dmg*=d.minScale?Math.max(d.minScale,SCALE[Math.min(SCALE.length-1,att.combo-1)]):SCALE[Math.min(SCALE.length-1,att.combo-1)];
   if(!att.cpu&&F.p1){const r=rc(att.c.id);if(att.combo>r.combo){r.combo=att.combo;saveRec()}if(att.combo>=5)badge('combo5')}
   if(F.trial&&att===F.p1)trialHit(att,d.tag||(att.state==='special'&&att.sp?(att.sp.two?'sp2':'sp1'):att.atk?att.atk.name:'?'),d.tid||(att.sp&&att.sp.id)||(att.atk&&att.atk.id));
@@ -767,9 +786,12 @@ function applyHit(att,def,d,cx,cy){const push=def.x>=att.x?1:-1,A=arch(def.c);
   if(F.training){if(att===F.p1){if(att.combo===1)F.tDmg=0;F.tDmg+=dmg;F.tHits=att.combo;F.tBest=Math.max(F.tBest,att.combo)}def.hp=Math.max(1,def.hp)}
   if(def.hp<=0){def.state='knock';def.st=0;def.ko=true;def.vy=4.2;def.vx=push*2.6;def.y=Math.max(def.y,1);F.onKO(att,def)}
   else if(d.knock||def.y>0){def.state='knock';def.st=0;def.vy=d.launch?6.6:3.8;def.vx=push*(d.launch?0.9:2.4);def.y=Math.max(def.y,1);def.stun=1}
-  else{def.state='hurt';def.st=0;def.stun=d.stun;def.vx=push*d.kb}
+  else{def.state='hurt';def.st=0;def.stun=d.stun;def.vx=push*d.kb;
+    const rel=(GY-cy-def.y)/Math.max(1,def.h);def.hurtK=def.crouch?'crouch':d.lv==='low'||d.crouch||rel<.3?'low':rel>.62?'high':'mid'}
   if((def.x<=XMIN+1&&push<0)||(def.x>=XMAX-1&&push>0))att.vx=-push*d.kb*0.7;
-  F.hitstop=d.heavy?10:6;F.shake=d.heavy?5:2;sparks(cx,cy,'#ffe66a',d.heavy?14:8);F.hitFx.push({x:cx,y:cy,l:8,big:!!d.heavy});(d.heavy||d.dmg>=7?SFX.heavy:SFX.hit)();
+  // hit feel: the freeze scales with the damage that landed (heavier = longer), plus shake and a 3-tier sound
+  F.hitstop=clamp(Math.round(4+dmg*.7),5,12);if(d.heavy)F.hitstop=Math.max(F.hitstop,10);F.shake=d.heavy?5:dmg>=7?3:2;
+  sparks(cx,cy,att.ips?'#3ae8ff':'#ffe66a',d.heavy?14:8);F.hitFx.push({x:cx,y:cy,l:8,big:!!d.heavy,ips:!!att.ips});(d.heavy||dmg>=9?SFX.heavy:dmg>=5?SFX.hit:SFX.hitL)();
   if(!att.cpu&&navigator.vibrate)try{navigator.vibrate(d.heavy?40:18)}catch(e){}
   return'hit'}
 function updateF(f,o){f.st++;if(f.buff>0){f.buff--;if(frameNo%4===0)F.parts.push({x:f.x+rnd(-14,14),y:GY-f.y-rnd(4,f.H),vx:0,vy:-.6,l:16,c:Math.random()<.5?'#ffd23a':'#fff3a0',g:0})}if(f.spCD>0)f.spCD--;if(f.spCD2>0)f.spCD2--;if(f.spCD3>0)f.spCD3--;if(f.cuffed>0)f.cuffed--;if(f.zap>0){f.zap--;if(f.zap%3===0)F.parts.push({x:f.x+rnd(-12,12),y:GY-f.y-rnd(8,f.H),vx:rnd(-1,1),vy:rnd(-1,1),l:8,c:Math.random()<.5?'#fff':'#7ad8ff',g:0})}if(f.throwInv>0)f.throwInv--;
@@ -833,63 +855,114 @@ function dust(x,n){for(let i=0;i<n;i++)F.parts.push({x:x+rnd(-12,12),y:GY-1,vx:r
 function addText(s,x,y,c){F.texts.push({s,x:clamp(x,40,216),y,c,l:50})}
 function addCombo(att){F.comboShow={side:att.side,n:att.combo,l:70}}
 
-// AI
-function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:0},ai=f.ai,dist=Math.abs(o.x-f.x),tw=o.x>f.x?'r':'l',aw=tw==='r'?'l':'r';
+// ---- CPU: SF6-style decks of cards (after Capcom's CEDEC 2024 talk) ----
+// 1. Perception: the CPU reacts to what it SAW a few frames ago (reaction time ~270 ms easy, ~85 ms hard).
+// 2. It picks the deck for the situation (anti-air, defend, punish, wake-up, close / mid / far range),
+//    then draws one card from that deck by weight; difficulty shifts the weights.
+// 3. Execution ability: tricky cards (specials, combos, anti-airs) are rolled; a fumbled special comes out as a jab.
+// 4. Pressure: getting hit and falling behind raises an internal meter that makes its execution sloppier.
+const SUP_RANGE={ivan:50,lawslie:110,vizor:230,zeke:220,padre:230,karl:130,rex:190};
+function aiSnap(o){return{x:o.x,y:o.y,vy:o.vy,state:o.state,st:o.st,atk:o.atk,ph:phaseOf(o),sp:o.sp,crouch:o.crouch}}
+function drawCard(cards){let t=0;for(const c of cards)if(c[0]>0)t+=c[0];let r=Math.random()*t;for(const c of cards){if(c[0]<=0)continue;if((r-=c[0])<=0){c[1]();return c[2]}}return null}
+function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:0},ai=f.ai;
   const L=clamp([0.15,0.45,0.75][SET.diff]+(RUN&&RUN.mode==='arcade'?RUN.idx*0.1:0),0,1);
-  if(f.state==='grabbed'){if(o.state==='throwing'&&ai.tg!==o.thrId){ai.tg=o.thrId;ai.tech=Math.random()<lerp(.08,.6,L);ai.tdel=1+((Math.random()*7)|0)}
+  // perception (reaction delay)
+  const seen=ai.seen||(ai.seen=[]);seen.push(aiSnap(o));const RT=Math.round(lerp(16,5,L));while(seen.length>RT+1)seen.shift();const O=seen[0];
+  // pressure: rises when hit or behind on health; execution gets sloppier under pressure
+  if(ai.hp!=null&&f.hp<ai.hp)ai.pr=Math.min(1,(ai.pr||0)+.1);ai.hp=f.hp;
+  const behind=clamp((o.hp/o.mhp-f.hp/f.mhp)*1.6,0,1);ai.pr=clamp((ai.pr||0)+(behind-(ai.pr||0))*.01,0,1);
+  const EXEC=ai.ex=clamp(lerp(.72,.97,L)-.28*ai.pr,.35,1),exec=()=>{const ok=Math.random()<EXEC;ai.fumbles=(ai.fumbles||0)+(ok?0:1);return ok};
+  const card=(deck,cards)=>{ai.deck=deck;ai.card=drawCard(cards);(ai.log||(ai.log={}))[deck]=(ai.log[deck]||0)+1;return inp};
+  const SPC=k=>()=>{if(exec())inp[k]=1;else inp.aP=1};// a special card: fumbled = a stray jab
+  const dist=Math.abs(O.x-f.x),tw=O.x>f.x?'r':'l',aw=tw==='r'?'l':'r',sp=f.c.special,s2=f.c.special2,s3=f.c.special3;
+  const rdy=f.spCD<=0,rdy2=!!s2&&f.spCD2<=0,rdy3=!!s3&&f.spCD3<=0,wait=Math.round(lerp(26,6,L)),plan=(p,d)=>()=>{ai.plan=p;ai.dur=d};
+  const hold=k=>()=>{inp[k]=1},both=(x,y)=>()=>{inp[x]=1;inp[y]=1},rage=1+ai.pr;// under pressure it gets reckless
+  const supOK=f.meter>=100&&!(f.cuffed>0),incoming=F.proj.find(p=>p.owner===o&&Math.abs(p.x-f.x)<120&&Math.sign(p.vx)===Math.sign(f.x-p.x));
+  // burst out of a detected loop
+  if(f.burstOK&&Math.random()<lerp(.03,.2,L)){inp.aP=1;return inp}
+  // throw tech
+  if(f.state==='grabbed'){if(o.state==='throwing'&&ai.tg!==o.thrId){ai.tg=o.thrId;ai.tech=Math.random()<lerp(.08,.6,L)*EXEC/.9;ai.tdel=1+((Math.random()*7)|0)}
     if(ai.tech&&--ai.tdel===0)inp.aP=1;return inp}
-  if(f.meter>=100&&!['ivan','lawslie'].includes(f.c.id)&&f.state==='attack'&&f.hitDone&&cancelOk(f)&&o.state==='hurt'&&Math.random()<lerp(.2,.8,L)){inp.sup=1;return inp}
-  // hit-confirm into a combo: chain/cancel when the last normal connected
+  // CONFIRM: my normal connected -> chain, cancel into a special or super (one execution roll per combo)
   if(f.state==='attack'&&f.hitDone&&cancelOk(f)&&o.state==='hurt'){const n=f.atk.name;
-    if(ai.cid!==f.atk.id){ai.cid=f.atk.id;ai.go=Math.random()<lerp(0.15,0.9,L)}
+    if(ai.cid!==f.atk.id){ai.cid=f.atk.id;ai.go=Math.random()<lerp(0.15,0.9,L)&&exec();ai.sup=supOK&&!['ivan','lawslie'].includes(f.c.id)&&Math.random()<lerp(.2,.8,L)}
+    if(ai.sup){inp.sup=1;return inp}
     if(ai.go){if(n==='jab'){if((f.chain||0)<1&&Math.random()<.35)inp.aP=1;else inp.bP=1}else if(n==='cjab'){inp.d=1;if(Math.random()<.5)inp.aP=1;else inp.bP=1}
-      else if(n==='kick'&&f.spCD<=0&&f.c.special!=='slam')inp.sp=1}
+      else if(n==='kick'){if(f.c.id==='rex'&&rdy2)inp.sp2=1;else if(rdy&&sp!=='slam'&&sp!=='bassdrop')inp.sp=1}}
     return inp}
-  if(canAct(f)&&f.meter>=100&&Math.abs(o.x-f.x)<({ivan:50,lawslie:110,vizor:230,zeke:220,padre:230,karl:130,rex:190}[f.c.id]||90)&&o.state!=='jump'&&o.state!=='hurt'&&Math.random()<.004+.02*L){inp.sup=1;return inp}
-  if(canAct(f)&&canThrow(f,o)&&Math.random()<(o.state==='crouch'||o.state==='idle'?.05:.02)*(0.4+L)){inp.bP=1;inp[o.x>f.x?'r':'l']=1;return inp}
-  // second specials, each used for what it is good at
-  const s2=f.c.special2,r2=Math.random();
-  if(s2&&f.spCD2<=0&&canAct(f)){
-    if(s2==='rising'&&o.state==='jump'&&dist<85&&o.vy<1.5&&r2<lerp(.06,.55,L)){inp.sp2=1;return inp}
-    if(s2==='counter'&&o.state==='attack'&&phaseOf(o)==='start'&&dist<75&&r2<lerp(.03,.4,L)){inp.sp2=1;return inp}
-    if(s2==='charge'&&dist>60&&dist<140&&o.state!=='jump'&&r2<.01+.025*L){inp.sp2=1;return inp}
-    if(s2==='step'&&dist<70&&o.state!=='attack'&&r2<.006+.014*L){inp.sp2=1;return inp}
-    if(s2==='replay'&&f.rh&&f.rh.length>=90&&f.rh[f.rh.length-90].hp-f.hp>12&&r2<.1){inp.sp2=1;return inp}
-    if(f.c.special3==='laser'&&f.spCD3<=0&&dist>70&&o.state!=='crouch'&&o.state!=='jump'&&r2<.012+.02*L){inp.sp3=1;return inp}
-    if(s2==='cuff'&&dist<55&&!['hurt','jump'].includes(o.state)&&r2<.03+.05*L){inp.sp2=1;return inp}
-    if(s2==='powersuit'&&dist>100&&r2<.02){inp.sp2=1;return inp}
-    if(s2==='split'&&dist>70&&dist<150&&(o.state==='crouch'||r2<.5)&&r2<.02+.04*L){inp.sp2=1;return inp}
-    if(s2==='miccheck'&&(F.proj.some(p=>p.owner===o&&p.kind!=='giant'&&Math.abs(p.x-f.x)<120&&Math.sign(p.vx)===Math.sign(f.x-p.x))?r2<lerp(.1,.7,L):dist>90&&r2<.006+.012*L)){inp.sp2=1;return inp}
-    if(s2==='bless'&&dist>115&&f.hp<f.mhp*.8&&r2<.04){inp.sp2=1;return inp}}
-  const oa=o.atk&&o.state==='attack'&&phaseOf(o)!=='rec'&&dist<o.atk.reach+22;
-  const threat=oa||(o.state==='special'&&dist<(o.sp&&o.sp.kind==='flash'?135:90)&&o.sp&&!['shuriken','strike','split'].includes(o.sp.kind))||(o.state==='jump'&&dist<70&&o.vy<1)||F.proj.some(p=>p.owner===o&&Math.abs(p.x-f.x)<70&&Math.sign(p.vx)===Math.sign(f.x-p.x));
-  const tid=(o.atk&&o.atk.id)||(o.sp&&o.sp.id)||(F.proj[0]&&'p')||'j'+Math.floor(frameNo/40);
-  if(threat&&canAct(f)){if(ai.tid!==tid){ai.tid=tid;ai.block=Math.random()<lerp(0.15,0.82,L);ai.delay=Math.round(lerp(9,1,L))}
-    if(ai.block){if(ai.delay>0)ai.delay--;else{inp[aw]=1;if((o.atk&&o.atk.lv==='low')||(o.sp&&o.sp.kind==='bassdrop')||F.proj.some(p=>p.owner===o&&p.lv==='low'&&Math.abs(p.x-f.x)<90))inp.d=1;return inp}}}
-  if(f.state==='jump'&&arch(f.c).dj&&!f.dj&&f.vy<1&&f.st>6&&Math.random()<.05){inp.u=1;inp[tw]=1;return inp}
-  if(f.state==='jump'){if(!f.atk&&dist<60&&f.vy<1.5&&Math.random()<0.15+L*0.5)inp.bP=1;return inp}
-  // punish / combo follow-up
+  // AIR
+  if(f.state==='jump'){if(arch(f.c).dj&&!f.dj&&f.vy<1&&f.st>6&&Math.random()<.05){inp.u=1;inp[tw]=1;return inp}
+    if(!f.atk&&dist<60&&f.vy<1.5&&Math.random()<0.15+L*0.5)inp.bP=1;return inp}
+  // follow-up on a hit I can see
   if(canAct(f)&&o.state==='hurt'&&dist<48&&Math.random()<L*0.35){Math.random()<.5?inp.aP=1:inp.bP=1;return inp}
-  if(ai.dur>0){ai.dur--;const p=ai.plan;if(p==='walkF')inp[tw]=1;else if(p==='walkB')inp[aw]=1;else if(p==='guard'){inp[aw]=1}else if(p==='crouch')inp.d=1;return inp}
+  // ANTI-AIR deck: one decision per jump, fired when they come down in range
+  if(canAct(f)&&O.state==='jump'&&dist<100){const id=frameNo-O.st;
+    if(ai.aa!==id){ai.aa=id;ai.aaMove=null;const cards=[[lerp(.35,.1,L),()=>{},'let it land'],[lerp(.2,.4,L),plan('guard',22),'block'],[.12+.25*L,()=>{ai.aaMove='kick'},'standing kick'],[.08+.15*L,()=>{ai.aaMove='jump'},'air-to-air']];
+      if(s2==='rising'&&rdy2)cards.push([lerp(.1,.9,L),()=>{ai.aaMove='sp2'},'martelo']);
+      if(sp==='takeover'&&rdy)cards.push([lerp(.1,.8,L),()=>{ai.aaMove='sp'},'hostile takeover']);
+      if(s3==='laser'&&rdy3)cards.push([.1+.2*L,()=>{ai.aaMove='sp3'},'laser glare']);
+      card('antiair',cards)}
+    if(ai.aaMove&&O.vy<1.5&&dist<(ai.aaMove==='kick'?72:ai.aaMove==='jump'?90:85)){const m=ai.aaMove;ai.aaMove=null;
+      if(m==='jump'){inp.u=1;inp[tw]=1}else if(exec()){if(m==='kick')inp.bP=1;else inp[m]=1}return inp}
+    if(ai.aaMove)return inp}
+  // DEFEND deck: one decision per threat (an attack, a special, a projectile)
+  const oa=O.atk&&O.state==='attack'&&O.ph!=='rec'&&dist<O.atk.reach+22;
+  const threat=oa||(O.state==='special'&&dist<(O.sp&&O.sp.kind==='flash'?135:90)&&O.sp&&!['shuriken','strike','split','bassdrop'].includes(O.sp.kind))||(O.state==='jump'&&dist<70&&O.vy<1)||(incoming&&Math.abs(incoming.x-f.x)<75);
+  if(threat&&canAct(f)){const tid=(O.atk&&O.atk.id)||(O.sp&&O.sp.id)||(incoming&&(incoming.id||'p'))||'j'+Math.floor(frameNo/40);
+    if(ai.tid!==tid){ai.tid=tid;ai.react=null;const cards=[[lerp(.85,.18,L),()=>{ai.react='eat'},'eat it'],[lerp(.15,.82,L),()=>{ai.react='block'},'block']];
+      if(incoming&&s2==='miccheck'&&rdy2)cards.push([lerp(.1,.9,L),()=>{ai.react='sp2'},'reflect']);
+      if(incoming&&incoming.lv==='low')cards.push([.05+.3*L,()=>{ai.react='jump'},'jump it']);
+      if(oa&&dist<60)cards.push([.03+.08*L,()=>{ai.react='back'},'backdash']);
+      if(oa&&O.ph==='start'&&s2==='counter'&&rdy2)cards.push([lerp(.03,.5,L),()=>{ai.react='sp2'},'shadow counter']);
+      if(oa&&O.ph==='start'&&sp==='takeover'&&rdy&&dist<70)cards.push([.03+.2*L,()=>{ai.react='sp'},'reversal']);
+      card('defend',cards)}
+    const R=ai.react;
+    if(R==='block'){inp[aw]=1;if((O.atk&&O.atk.lv==='low')||(O.sp&&O.sp.kind==='bassdrop')||(incoming&&incoming.lv==='low'))inp.d=1;return inp}
+    if(R==='jump'){ai.react='done';inp.u=1;return inp}
+    if(R==='back'){ai.react='done';inp.dash=-1;return inp}
+    if(R==='sp'||R==='sp2'){ai.react='done';if(exec())inp[R]=1;return inp}}
+  // keep walking / guarding for the planned time
+  if(ai.dur>0){ai.dur--;const p=ai.plan;if(p==='walkF')inp[tw]=1;else if(p==='walkB'||p==='guard')inp[aw]=1;else if(p==='crouch')inp.d=1;return inp}
   if(!canAct(f))return inp;
-  const r=Math.random(),sp=f.c.special,ready=f.spCD<=0,wait=Math.round(lerp(26,6,L)),plan=(p,d)=>{ai.plan=p;ai.dur=d};
-  if(o.state==='down'||o.state==='rise'){if(dist>60)plan('walkF',10);else plan('guard',12);return inp}
-  if(sp==='flash'&&ready&&dist>60&&dist<125&&r<.3){inp.sp=1;return inp}
-  if(arch(f.c).amp){// long-range: poke at max reach, zone with Bass Drop, back off when they get in
-    if(sp==='bassdrop'&&ready&&dist>90&&r<.05+.08*L){inp.sp=1;return inp}
-    if(dist>64&&dist<88&&o.y<=0&&r<.12+.15*L){inp.bP=1;return inp}
-    if(dist<50&&r<.06+.06*L){inp.dash=-1;return inp}
-    if(dist>130&&r<.6){plan('guard',8+wait/2);return inp}}
-  if(dist>110&&r<.07*(0.5+L)){inp.dash=1;return inp}
-  if(dist<50&&o.state==='attack'&&r<.05*L){inp.dash=-1;return inp}
-  if(sp==='takeover'&&ready&&((dist>55&&dist<105&&o.state!=='attack'&&r<.03+.05*L)||(o.state==='jump'&&dist<80&&r<.1+.3*L))){inp.sp=1;return inp}
-  if(sp==='taser'&&ready&&dist>50&&dist<115&&r<.06+.08*L){inp.sp=1;return inp}
-  if(dist>100){if((sp==='shuriken'||sp==='strike')&&ready&&r<.4)inp.sp=1;else if(sp==='rush'&&ready&&dist<150&&r<.22)inp.sp=1;else if(r<.12){inp.u=1;inp[tw]=1}else plan('walkF',14+wait)}
-  else if(dist>58){if(r<.32)plan('walkF',10+wait/2);else if(r<.46&&dist<62)inp.bP=1;else if(r<.58){inp.u=1;inp[tw]=1}else if(r<.66)plan('walkB',10);
-    else if(ready&&r<.78&&sp!=='slam')inp.sp=1;else plan('guard',wait)}
-  else{if(sp==='slam'&&ready&&r<.32*(0.5+L))inp.sp=1;else if(r<.28)inp.aP=1;else if(r<.48)inp.bP=1;else if(r<.6){inp.d=1;inp.bP=1}else if(r<.67){inp.d=1;inp.aP=1}
-    else if(ready&&r<.74&&sp!=='shuriken')inp.sp=1;else if(r<.84)plan('walkB',12);else plan('guard',wait)}
-  return inp}
+  const C=[];// the deck being built
+  // PUNISH deck: they whiffed or are recovering close by
+  if(dist<75&&((O.state==='attack'&&O.ph==='rec')||(O.state==='special'&&O.sp&&O.sp.kind!=='super'&&O.st>22)||O.state==='land')){
+    const pid=(O.atk&&O.atk.id)||(O.sp&&O.sp.id)||'land'+(frameNo-O.st);if(ai.pid!==pid){ai.pid=pid;
+      C.push([lerp(.6,.1,L),()=>{},'too slow'],[dist<60?.4:.1,hold('bP'),'kick'],[.25,hold('aP'),'jab']);
+      if(rdy)C.push([.3,SPC('sp'),'special']);if(supOK)C.push([.25+.3*L,SPC('sup'),'super']);if(canThrow(f,o))C.push([.25,()=>{inp.bP=1;inp[tw]=1},'throw']);
+      return card('punish',C)}}
+  // WAKE-UP deck: they're down
+  if(O.state==='down'||O.state==='rise'){if(dist>60)return card('wakeup',[[1,plan('walkF',10),'approach']]);
+    return card('wakeup',[[.5,plan('guard',12),'guard'],[.15+.25*L,()=>{if(O.state==='rise'&&O.st>6){inp.d=1;inp.aP=1}else{ai.plan='crouch';ai.dur=4}},'meaty low jab'],[.1,plan('walkB',10),'back off']])}
+  // SUPER card in any range deck when it reaches
+  if(supOK&&dist<(SUP_RANGE[f.c.id]||90)&&O.state!=='jump'&&O.state!=='hurt')C.push([.03+.12*L,SPC('sup'),'super']);
+  // fighter cards that matter at every range
+  if(s2==='replay'&&rdy2&&f.rh&&f.rh.length>=90&&f.rh[f.rh.length-90].hp-f.hp>12)C.push([.5,SPC('sp2'),'instant replay']);
+  if(s2==='bless'&&rdy2&&dist>115&&f.hp<f.mhp*.8)C.push([.4,SPC('sp2'),'benediction']);
+  if(s2==='powersuit'&&rdy2&&dist>100)C.push([.2,SPC('sp2'),'power suit']);
+  if(arch(f.c).amp){// LONG-RANGE: poke at the tip, zone, back off
+    if(rdy&&dist>90)C.push([.2+.15*L,SPC('sp'),'bass drop']);if(dist>64&&dist<88&&O.y<=0)C.push([.3+.25*L,hold('bP'),'tip kick']);
+    if(dist<50)C.push([.2+.15*L,()=>{inp.dash=-1},'backdash']);if(dist>130)C.push([1,plan('guard',8+wait/2),'hold space']);
+    if(rdy2&&dist>90)C.push([.05,SPC('sp2'),'mic check'])}
+  if(dist>110){// FAR deck
+    C.push([1,plan('walkF',14+wait),'walk in'],[.12*rage,both('u',tw),'jump in'],[.07*(.5+L),()=>{inp.dash=1},'dash in']);
+    if(rdy&&(sp==='shuriken'||sp==='strike'))C.push([.8,SPC('sp'),'projectile']);if(rdy&&sp==='rush'&&dist<150)C.push([.4*rage,SPC('sp'),'rush']);
+    if(rdy3&&s3==='laser'&&O.state!=='crouch')C.push([.15+.15*L,SPC('sp3'),'laser glare']);if(rdy2&&s2==='split'&&dist<150)C.push([.15+.2*L,SPC('sp2'),'split shot']);
+    if(rdy2&&s2==='charge'&&dist<140)C.push([.1+.1*L,SPC('sp2'),'iron charge']);return card('far',C)}
+  if(dist>58){// MID deck (footsies)
+    C.push([.32,plan('walkF',10+wait/2),'walk in'],[.12*rage,both('u',tw),'jump in'],[.08,plan('walkB',10),'walk back'],[.22,plan('guard',wait),'guard']);
+    if(dist<64)C.push([.14,hold('bP'),'poke']);if(rdy&&!['slam','bassdrop','shuriken','strike'].includes(sp))C.push([.12*rage,SPC('sp'),'special']);
+    if(rdy&&sp==='flash'&&dist<125)C.push([.3,SPC('sp'),'shutter flash']);if(rdy&&sp==='taser'&&dist<115)C.push([.06+.08*L,SPC('sp'),'taser']);
+    if(rdy&&sp==='takeover'&&dist<105&&O.state!=='attack')C.push([.03+.05*L,SPC('sp'),'takeover rush']);
+    if(rdy2&&s2==='charge')C.push([.06+.1*L,SPC('sp2'),'iron charge']);if(rdy2&&s2==='split')C.push([.08+.1*L,SPC('sp2'),'split shot']);
+    if(rdy3&&s3==='laser'&&O.state!=='crouch')C.push([.06+.08*L,SPC('sp3'),'laser glare']);
+    return card('mid',C)}
+  // CLOSE deck (pressure)
+  C.push([.28,hold('aP'),'jab'],[.2,hold('bP'),'kick'],[.12,both('d','bP'),'sweep'],[.07,both('d','aP'),'low jab'],[.1,plan('walkB',12),'back off'],[.16,plan('guard',wait),'guard']);
+  if(rdy&&sp==='slam')C.push([.32*(0.5+L),SPC('sp'),'bear slam']);if(rdy&&!['shuriken','slam','bassdrop'].includes(sp))C.push([.07*rage,SPC('sp'),'special']);
+  if(canThrow(f,o))C.push([(O.state==='crouch'||O.state==='idle'?.5:.2)*(0.4+L),()=>{inp.bP=1;inp[tw]=1},'throw']);
+  if(rdy2&&s2==='cuff'&&!['hurt','jump'].includes(O.state))C.push([.2+.3*L,SPC('sp2'),"cuff 'em"]);if(rdy2&&s2==='step'&&O.state!=='attack')C.push([.05+.1*L,SPC('sp2'),'legua step']);
+  return card('close',C)}
 
 // ---- FIGHT SCENE ----
 function startFight(){const opp=RUN.ladder[RUN.idx];go(Fight,{p1:RUN.p1,p2:opp,stage:opp})}
@@ -916,7 +989,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     this.pt++;const p1=this.p1,p2=this.p2;
     if(this.phase==='intro'){if(this.pt===80){SFX.special();say('Fight!',1.1,0.6)}if(this.pt>=105)this.phase='play'}
     const none={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,dash:0};
-    const pin=this.phase==='play'?{l:held.left,r:held.right,u:held.up,d:held.down,aP:pressed.a,bP:pressed.b,sp:0}:none;
+    const pin=this.phase==='play'?p1.cpu?aiInput(p1,p2):{l:held.left,r:held.right,u:held.up,d:held.down,aP:pressed.a,bP:pressed.b,sp:0}:none;
     if(this.training&&!this.trial&&pressed.select){this.dummy=DUMMY[(DUMMY.indexOf(this.dummy||'STAND')+1)%DUMMY.length];SFX.move()}
     const away=p1.x>p2.x?'l':'r',dm=this.dummy||'STAND';
     const cin=this.phase!=='play'?none:this.two?{l:held2.left,r:held2.right,u:held2.up,d:held2.down,aP:pressed2.a,bP:pressed2.b,sp:0}
@@ -960,7 +1033,8 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     if(w>=0)this.wins[w]++;else if(++this.draws>=2){this.wins[1]=2;w=1}
     if(this.wins[0]>=2||this.wins[1]>=2){const pw=this.wins[0]>=2?0:1;goFade(()=>go(Result,pw,this.cfg));return}
     goFade(()=>{this.round++;this.startRound()})},
-  updatePause(){if(pressed.up||pressed.down){this.psel^=1;SFX.move()}if(pressed.start||(pressed.a&&this.psel===0)||pressed.b){this.paused=false;SFX.back();return}
+  updatePause(){if(pressed.up){this.psel=(this.psel+2)%3;SFX.move()}if(pressed.down){this.psel=(this.psel+1)%3;SFX.move()}if(pressed.start||(pressed.a&&this.psel===0)||pressed.b){this.paused=false;SFX.back();return}
+    if(pressed.a&&this.psel===2){SHOWBOX=!SHOWBOX;SFX.ok();return}
     if(pressed.a&&this.psel===1){this.paused=false;goFade(()=>{go(Title);Title.ph='menu'})}},
   draw(){const sh=this.shake,ox=sh?Math.round(rnd(-sh,sh)):0,oy=sh?Math.round(rnd(-sh,sh)):0;const c=CH[this.cfg.stage];
     ctx.save();ctx.translate(ox,oy);ctx.drawImage(c.stage,-4,-4,W+8,H+8);
@@ -981,6 +1055,11 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     for(const f of[this.p1,this.p2])if(arch(f.c).amp&&f.atk&&(f.state==='attack'||f.state==='jump')&&phaseOf(f)==='active'){const a=f.atk,h=f.H*(a.crouch?.7:1),
       x=Math.round(f.x+f.face*(a.reach-6)),y=Math.round(GY-f.y-h*a.hy),r=4+((frameNo>>1)&1)*2;ctx.lineWidth=2;
       for(let i=0;i<2;i++){ctx.strokeStyle=i?'#ff4a6a':'#ffffff';ctx.beginPath();ctx.arc(x-f.face*i*4,y,r+i*3,f.face>0?-1:Math.PI-1,f.face>0?1:Math.PI+1);ctx.stroke()}}
+    if(SHOWBOX){ctx.lineWidth=1;for(const f of[this.p1,this.p2]){const h=f.hurt();ctx.strokeStyle='#3a8aff';ctx.strokeRect(Math.round(h.x1)+.5,Math.round(GY-h.y2)+.5,Math.round(h.x2-h.x1),Math.round(h.y2-h.y1))}
+      ctx.strokeStyle='#ff3a3a';for(const f of[this.p1,this.p2])if(f.atk&&(f.state==='attack'||f.state==='jump')&&phaseOf(f)==='active'){const A=f.atk,h=f.H*(A.crouch?.7:1),cy=f.y+h*A.hy,x1=f.face>0?f.x:f.x-A.reach;
+        ctx.strokeRect(Math.round(x1)+.5,Math.round(GY-cy-A.hh/2)+.5,Math.round(A.reach),Math.round(A.hh))}
+      ctx.strokeStyle='#ff3a3a';for(const b of this.dbg||[])if(frameNo-b.f<=2)ctx.strokeRect(Math.round(b.x1)+.5,Math.round(GY-b.y2)+.5,Math.round(b.x2-b.x1),Math.round(b.y2-b.y1));
+      if(this.dbg&&this.dbg.length>40)this.dbg=this.dbg.filter(b=>frameNo-b.f<=2);drawText('HITBOXES',4,40,'#ff3a3a',1,{outline:'#000'})}
     for(const h of this.hitFx)drawHitFx(h);
     for(const p of this.parts){ctx.fillStyle=p.c;ctx.globalAlpha=p.dust?Math.min(1,p.l/12)*.7:1;const s=p.dust?3:2;ctx.fillRect(p.x|0,p.y|0,s,s)}ctx.globalAlpha=1;
     ctx.restore();
@@ -1034,9 +1113,9 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     const s2=Math.max(1,Math.round(sc*k));drawText(s,128,84-s2*3.5,'#fff',s2,{align:'center',grad,outline:'#200',ow:1})},
   drawPause(){ctx.fillStyle='rgba(0,0,10,.75)';ctx.fillRect(0,0,W,H);drawText('PAUSE',128,14,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});drawText('V'+VER,252,184,'#667',1,{align:'right',shadow:false});
     const c=this.p1.c;box(16,34,224,108);drawText('MOVES - '+c.name,128,38,'#ffe66a',1,{align:'center'});
-    const m=[['PUNCH / KICK','A / B'],['LOW PUNCH / SWEEP','DOWN + A / B'],['JUMP ATTACK','UP, THEN A OR B'],['BLOCK','HOLD BACK'],['DASH','TAP FWD OR BACK TWICE'],[c.spName,'A+B OR DOWN,FWD+A'],...(c.sp2Name?[[c.sp2Name,'DN+A+B / DN,BK+B']]:[]),...(c.sp3Name?[[c.sp3Name,'BACK+A+B']]:[]),[SUPER_NAME[c.id],'FWD+A+B (FULL BAR)'],['THROW','FWD/BACK+B CLOSE'],...(arch(c).type?[[arch(c).type,arch(c).trait]]:[]),['COMBO',BNB[c.id]||'']];
+    const m=[['PUNCH / KICK','A / B'],['LOW PUNCH / SWEEP','DOWN + A / B'],['JUMP ATTACK','UP, THEN A OR B'],['BLOCK','HOLD BACK'],['DASH','TAP FWD OR BACK TWICE'],[c.spName,'SP (=A+B) / DN,FWD+A'],...(c.sp2Name?[[c.sp2Name,'DOWN+SP / DN,BK+B']]:[]),...(c.sp3Name?[[c.sp3Name,'BACK+SP']]:[]),[SUPER_NAME[c.id],'FWD+SP (FULL BAR)'],['THROW','FWD/BACK+B CLOSE'],...(arch(c).type?[[arch(c).type,arch(c).trait]]:[]),['COMBO',BNB[c.id]||'']];
     m.forEach(([k,v],i)=>{const y=45+i*8,cm=k==='COMBO';drawText(k,22,y,cm?'#ffe66a':'#ff9a6a',1,{shadow:false});drawText(v,234,y,cm?'#ffe66a':'#fff',1,{align:'right',shadow:false})});
-    ['RESUME','QUIT TO TITLE'].forEach((s,i)=>drawText((this.psel===i?'> ':'  ')+s,128,148+i*12,this.psel===i?'#ffe66a':'#99a',1,{align:'center'}))}};
+    ['RESUME','QUIT TO TITLE','HITBOXES: '+(SHOWBOX?'ON':'OFF')].forEach((s,i)=>drawText((this.psel===i?'> ':'  ')+s,128,146+i*11,this.psel===i?'#ffe66a':'#99a',1,{align:'center'}))}};
 
 // ---- frame-animated fighters ----
 // Key frames per animation: pk = frame where the strike lands; jump = [prep, rise, apex, fall, land];
@@ -1058,7 +1137,7 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
       if(!A.jump)return null;const j=akOf(f.c,'jump');return P('jump',f.vy>2?j.rise:f.vy>-1.5?j.apex:j.fall)}
     case'attack':{const a=f.atk;const k={jab:'punch',kick:'kick',sweep:A.lowkick?'lowkick':'sweep',cjab:A.cpunch?'cpunch':null}[a.name];
       if(k&&A[k])return strike(k,a,t);if(a.crouch&&A.crouch)return{...P('crouch',last('crouch')),limbs:true};return null}
-    case'hurt':return A.hurt?P('hurt',Math.min(t/3,last('hurt'))):null;
+    case'hurt':if(f.hurtK==='crouch'&&A.crouch)return P('crouch',last('crouch'));return A.hurt?P('hurt',Math.min(t/3,last('hurt'))):null;
     case'grabbed':return A.hurt?P('hurt',last('hurt')):null;
     case'throwing':{if(!A.punch)return null;const pk=akOf(f.c,'punch').pk;return P('punch',f.thr?pk:Math.min(t/1.4,last('punch')))}
     case'block':return A.block?P('block',Math.min(t,last('block'))):null;
@@ -1094,8 +1173,10 @@ function blitA(img,x,y,fc,ax,ay,rot,pivotC,ox,oy,ph){ctx.save();ctx.translate(Ma
   ctx.scale(fc,1);ctx.drawImage(img,-Math.round(ax),-ay);ctx.restore()}
 function drawFighter(f){const P=pose(f);if(!P)return drawFighterLegacy(f);
   const c=f.c,a=c.anim[P.k],fr=a.fr[P.i],fc=f.face,t=f.st;let img=f.alt?altOf(fr):fr;if(f.flash>0&&(f.flash&1)&&!F.cinema)img=sil(fr,'#ffffff');
-  let rot=0,pivotC=false,ox=0;if(f.state==='grabbed'){rot=f.rot||0;pivotC=true}if(f.state==='hurt'&&t<6)ox=-fc*2+(t&1?1:-1);
-  const B=(im,x,y)=>blitA(im,x,y,fc,a.ax,a.ay,rot,pivotC,ox,0,f.H);
+  let rot=0,pivotC=false,ox=0,oy=0;if(f.state==='grabbed'){rot=f.rot||0;pivotC=true}if(f.state==='hurt'&&t<6)ox=-fc*2+(t&1?1:-1);
+  // hurt reactions by where the hit landed: high = head snaps back, mid = doubles over, low = legs buckle, crouch = jolted down
+  if(f.state==='hurt'){const k=Math.max(0,1-t/16),K=f.hurtK;if(K==='high')rot=-fc*.16*k;else if(K==='mid')rot=fc*.1*k;else if(K==='low'){rot=-fc*.05*k;oy=Math.round(3*k)}else if(K==='crouch'){oy=Math.round(2*k);ox=-fc*3*k+(t&1?1:-1)}}
+  const B=(im,x,y)=>blitA(im,x,y,fc,a.ax,a.ay,rot,pivotC,ox,oy,f.H);
   for(const g of f.ghosts){ctx.globalAlpha=g.l/20;B(sil(fr,c.col.aura),g.x,g.y);ctx.globalAlpha=1}
   if(f.state==='special'&&t<10||F.superFlash>0&&F.superBy===f){const p=(frameNo&2)?2:1;ctx.globalAlpha=.6;for(const[dx,dy]of[[-p,0],[p,0],[0,-p]])B(sil(fr,c.col.aura),f.x+dx,f.y-dy);ctx.globalAlpha=1}
   if(f.inv>0&&f.state!=='down'&&!(f.sp&&f.sp.kind==='super')&&(frameNo&2))ctx.globalAlpha=.55;
@@ -1192,7 +1273,7 @@ function drawReticle(f){const t=f.st,x=Math.round(f.sp.lx),y=Math.round(GY-f.H*.
   for(const[sx,sy]of[[-1,-1],[1,-1],[-1,1],[1,1]]){ctx.fillRect(x+sx*r-(sx>0?L:0)-1,y+sy*r-1,L+2,3);ctx.fillRect(x+sx*r-1,y+sy*r-(sy>0?L:0)-1,3,L+2)}
   ctx.fillStyle=c;for(const[sx,sy]of[[-1,-1],[1,-1],[-1,1],[1,1]]){ctx.fillRect(x+sx*r-(sx>0?L:0),y+sy*r,L,1);ctx.fillRect(x+sx*r,y+sy*r-(sy>0?L:0),1,L)}
   if((frameNo>>2)&1&&t<14){ctx.fillRect(x-1,y,3,1);ctx.fillRect(x,y-1,1,3)}ctx.globalAlpha=1}
-function drawHitFx(h){const r=(8-h.l)*(h.big?3:2)+3;ctx.strokeStyle=h.l>4?'#fff':'#ffd23a';ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+0.3;ctx.moveTo(h.x+Math.cos(a)*r*0.4,h.y+Math.sin(a)*r*0.4);ctx.lineTo(h.x+Math.cos(a)*r,h.y+Math.sin(a)*r)}ctx.stroke();
+function drawHitFx(h){const r=(8-h.l)*(h.big?3:2)+3;ctx.strokeStyle=h.l>4?'#fff':h.ips?'#3ae8ff':'#ffd23a';ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+0.3;ctx.moveTo(h.x+Math.cos(a)*r*0.4,h.y+Math.sin(a)*r*0.4);ctx.lineTo(h.x+Math.cos(a)*r,h.y+Math.sin(a)*r)}ctx.stroke();
   if(h.l>5){ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(h.x,h.y,r*0.35,0,Math.PI*2);ctx.fill()}}
 
 // ---------------- RESULT / CONTINUE / ENDING ----------------
@@ -1380,5 +1461,5 @@ let last=performance.now(),acc=0;
 function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=now;let n=0;while(acc>=1000/60&&n<4){step();acc-=1000/60;n++}if(n>=4)acc=0;render();musicTick()}
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
-window.__dbg={onBeat,NET,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
+window.__dbg={SET,onBeat,showBox:v=>{SHOWBOX=v},NET,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
 

@@ -118,12 +118,12 @@ def roster():  # 960x? roster card, 3 x 2 fighter cards (drawn at 1x, scaled x2)
 def controls():  # how to play card
     W, H = 480, 226
     im = panel(W, H)
-    rows_l = [("MOVE", "ARROWS / WASD"), ("PUNCH (A)", "X OR K"), ("KICK (B)", "Z OR J"), ("PAUSE / MOVES", "ENTER"),
+    rows_l = [("MOVE", "ARROWS / WASD"), ("PUNCH (A)", "X OR K"), ("KICK (B)", "Z OR J"), ("SP (= A+B)", "C OR L"), ("PAUSE / MOVES", "ENTER"),
               ("BLOCK", "HOLD BACK"), ("DASH", "TAP FWD/BACK TWICE"),
               ("2 PLAYERS P1", "WASD + F / G"), ("2 PLAYERS P2", "ARROWS + K / L")]
-    rows_r = [("SPECIAL 1", "A+B"), ("SPECIAL 2", "DOWN + A+B"), ("CHAIN", "A > B, LOW A > LOW B"), ("CANCEL", "HIT > A+B"),
+    rows_r = [("SPECIAL 1", "SP OR A+B"), ("SPECIAL 2", "DOWN + SP"), ("CHAIN", "A > B, LOW A > LOW B"), ("CANCEL", "HIT > A+B"),
               ("LOW / SWEEP", "DOWN + A / B"), ("JUMP ATTACK", "UP, THEN A OR B"),
-              ("SUPER (FULL BAR)", "FWD + A+B"), ("THROW (CLOSE)", "FWD/BACK + B")]
+              ("SUPER (FULL BAR)", "FWD + SP"), ("THROW (CLOSE)", "FWD/BACK + B")]
     draw_text(im, "KEYBOARD", 120, 8, 2, grad=FIRE, outline="#200", center=True)
     draw_text(im, "FIGHTING", 360, 8, 2, grad=FIRE, outline="#200", center=True)
     for col, rows in ((0, rows_l), (1, rows_r)):

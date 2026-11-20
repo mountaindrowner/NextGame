@@ -6,7 +6,7 @@ A handheld-styled pixel fighting game ("Dojo Boy") with eight fighters — Papa-
 
 Open `dist/index.html` in a browser. It is a single self-contained file (also ready to upload to itch.io as an HTML game).
 
-Controls: arrows/WASD move, `X`/`K` = A (punch), `Z`/`J` = B (kick), Enter = Start (pause shows each fighter's moves and combo). On touch screens use the on-screen pad. Gamepads work (A/X = punch, B/Y = kick). In 2 Players mode the keyboard splits: P1 = WASD + F/G, P2 = arrows + K/L; a single gamepad goes to P2. A+B together, or down→forward+A, fires the special move.
+Controls: arrows/WASD move, `X`/`K` = A (punch), `Z`/`J` = B (kick), Enter = Start (pause shows each fighter's moves and combo). On touch screens use the on-screen pad. Gamepads work (A/X = punch, B/Y = kick). In 2 Players mode the keyboard splits: P1 = WASD + F/G, P2 = arrows + K/L; a single gamepad goes to P2. A+B together, the **SP** button (on screen; `C`/`L` on a keyboard; Y/RB on a gamepad; `H` and `;` for P1/P2 in 2 Players), or down→forward+A, fires the special move. SP is just A+B in one press, so down+SP, back+SP and forward+SP work too.
 
 ## Fighting system
 
@@ -116,6 +116,7 @@ The announcer and the fighters' lines are recorded clips in `assets/voice/` made
 - `tools/itch_art.py`, `tools/shots.js` — itch.io cover, banner and screenshots (written to `release/itch/`)
 - `tools/itch_keyart.py`, `tools/stills.js`, `tools/super_gif.js` — key art, poster, cover, badges, feature card and the supers GIF (arena backdrops in `tools/pixellab/concept/` from PixelLab)
 - `tools/combos.js` — frame-exact combo checks; `tools/powers.js` — every special power; `tools/features.js` — super, throws, 2 players, trials, records; `tools/celebrate.js` — film the victory celebration
+- `tools/feel.js` — hit-stop by weight, hurt reactions, loop detection + burst, the SP key; `tools/ai.js` — CPU-vs-CPU matches: decks used, reaction time and execution by difficulty
 - `tools/make_logo.py` — draw a name logo in the game's style
 - `tools/anim_sheet.py` — labeled sheet of every animation a fighter uses (to check each move looks like what it does)
 - `tools/pixellab/redo.py` + `picks.json` — regenerate a mismatched move as two takes and choose one (with its strike frame)

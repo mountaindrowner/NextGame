@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.13.0
+
+Five fighting-game systems players and developers rate highest, filled in where the game was missing them:
+- **Hit feel**
+  - **Freeze scales with damage:** the hit-stop freeze is 6 frames for a jab, 8 for a kick, and up to 12 for big specials. Late hits in a long combo freeze for less.
+  - **Three hit-sound weights:** light, medium and heavy. Each has a sharp crack at the start and a tail that gets deeper on heavy hits.
+  - **Hurt reactions by where the hit lands:** high hits snap the head back, mid hits double the opponent over, low hits buckle the legs, and crouching opponents get jolted while staying crouched.
+- **Hitbox view:** pause, then **HITBOXES: ON** draws every fighter's hurtbox (blue) and every hit check, including specials and projectiles (red).
+- **Forgiving inputs**
+  - **New SP button:** a gold button on the handheld (`C`/`L` on a keyboard, Y/RB on a gamepad) is A+B in one press. SP fires special 1, down+SP special 2, back+SP special 3 and forward+SP the super.
+  - **Longer windows on touch screens:** an 11-frame button buffer (7 elsewhere) and a 6-frame A+B window. Online keeps the standard windows so both sides stay in sync.
+- **Infinite protection:** if the same move lands for a 4th time in one combo, the game calls it a loop. The sparks turn blue and the defender can press A or B to **BURST** out: they recover, get a moment of invincibility, and the attacker is knocked back.
+- **A CPU that plays like a person** (modelled on Capcom's Street Fighter 6 CPU design talk):
+  - **Decks of moves:** the CPU now draws moves from situational "decks": anti-air, defend, punish, wake-up and close / mid / far range. Every fighter's tricks are cards in those decks.
+  - **Reaction time:** it reacts to what it saw a moment ago, about 230 ms on Easy and about 130 ms on Hard.
+  - **Mistakes:** it can fumble a special into a stray jab, and it fumbles more often when it's losing.
+  - **New test:** `tools/ai.js` plays CPU-vs-CPU matches to check all of this.
+
 ## 1.12.0
 
 Playtest fixes:
