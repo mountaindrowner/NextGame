@@ -50,14 +50,19 @@ Winning a match sets off confetti, fireworks and a crowd cheer; the result and e
 
 ## Music
 
-Stages with a recorded song play it looped; the rest use the built-in chiptune theme.
+Every stage and the title screen have a recorded song, played looped.
 
-| Stage | Song |
+| Screen / stage | Song |
 |---|---|
+| Title | heroic guitar and brass rock theme |
 | Crossroads Dojo (Papa-Léguas) | samba-rock fighting theme |
 | Moonlit Temple (Akira) | taiko, flute and koto over rock drums |
 | Iron Gym (Ivan) | heavy drums, distorted bass riff, choir synths |
-| Rio Plaza, Control Room, Old Chapel | chiptune for now — prompts are ready in `tools/pixellab/music.py` |
+| Rio Plaza (Diego) | berimbau, pandeiro and funky bass |
+| Control Room (Vizor) | synthwave arpeggios and pulsing bass |
+| Old Chapel (Samson) | church organ over hard rock |
+
+Select, win/lose jingles and the ending keep the chiptune music.
 
 Songs are made with PixelLab's music generator (`python3 tools/pixellab/music.py <stage>`, two takes per request),
 then `tools/pixellab/takes.py` compares the takes, and `tools/pixellab/loopfind.py` measures the tempo, finds a
