@@ -48,6 +48,22 @@ Training mode: the dummy stands still (SELECT switches it to standing or low blo
 
 Winning a match sets off confetti, fireworks and a crowd cheer; the result and ending screens celebrate too.
 
+## Music
+
+Stages with a recorded song play it looped; the rest use the built-in chiptune theme.
+
+| Stage | Song |
+|---|---|
+| Crossroads Dojo (Papa-Léguas) | samba-rock fighting theme |
+| Moonlit Temple (Akira) | taiko, flute and koto over rock drums |
+| Iron Gym (Ivan) | heavy drums, distorted bass riff, choir synths |
+| Rio Plaza, Control Room, Old Chapel | chiptune for now — prompts are ready in `tools/pixellab/music.py` |
+
+Songs are made with PixelLab's music generator (`python3 tools/pixellab/music.py <stage>`, two takes per request),
+then `tools/pixellab/takes.py` compares the takes, and `tools/pixellab/loopfind.py` measures the tempo, finds a
+bar-aligned seamless loop and writes `assets/music/<stage>.mp3` (mono 64 kbps) + `<stage>.json` (loop points).
+`node tools/music_check.js` checks every stage's song decodes and loops in the game.
+
 ## Layout
 
 - `src/template.html` — page shell, handheld styling and on-screen controls
