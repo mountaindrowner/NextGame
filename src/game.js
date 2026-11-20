@@ -420,52 +420,70 @@ const Options={enter(){this.sel=0},
 
 // ---------------- SELECT ----------------
 let RUN=null;
-const Select={enter(mode){this.mode=mode;setTwo(mode==='2p');this.ph='p1';this.cur=this.cur||0;this.p1=null;this.done=0;this.slide=20;this.alt=[false,false];this.skin=[false,false];playMusic('select')},
+const Select={enter(mode){this.mode=mode;setTwo(mode==='2p');this.ph='p1';this.det=0;this.dt=0;this.cur=this.cur||0;this.p1=null;this.done=0;this.slide=20;this.alt=[false,false];this.skin=[false,false];playMusic('select')},
   solo(){return this.mode==='arcade'||this.mode==='trials'||this.mode==='story'},
+  // browse a big grid; A opens the fighter's full card (det); A again confirms, B goes back to the grid
   update(){if(this.done){if(++this.done>50){goFade(()=>this.finish())}return}
-    // in 2-player mode, player 2 picks with their own controls
-    const P=this.ph==='p2'&&this.mode==='2p'?pressed2:pressed,N=ORDER.length,pi=this.ph==='p1'?0:1;
-    if(P.left||P.up){this.cur=(this.cur+N-1)%N;this.slide=16;SFX.move()}if(P.right||P.down){this.cur=(this.cur+1)%N;this.slide=16;SFX.move()}
+    const P=pressed,N=ORDER.length,pi=this.ph==='p1'?0:1,C=3;
+    if(!this.det){
+      if(P.left){this.cur=(this.cur+N-1)%N;this.slide=16;SFX.move()}if(P.right){this.cur=(this.cur+1)%N;this.slide=16;SFX.move()}
+      if(P.up){this.cur=(this.cur-C+N*C)%N;this.slide=16;SFX.move()}if(P.down){this.cur=(this.cur+C)%N;this.slide=16;SFX.move()}}
     if(P.select&&CH[ORDER[this.cur]].skin2&&CH[CH[ORDER[this.cur]].skin2]){this.skin[pi]=!this.skin[pi];SFX.move()}
     else if(P.select&&rc(ORDER[this.cur]).clear>0){this.alt[pi]=!this.alt[pi];SFX.move()}// unlocked by clearing arcade
-    if(P.b){SFX.back();if(this.ph==='p2'){this.ph='p1';this.cur=ORDER.indexOf(this.p1)}else goFade(()=>{go(Title);Title.ph='menu'});return}
-    if(P.a||P.start){const id=ORDER[this.cur];SFX.ok();sayName(id);
-      if(this.ph==='p1'){this.p1=id;if(!this.solo()){this.ph='p2';this.cur=(this.cur+1)%ORDER.length}else this.done=1}else{this.p2=id;this.done=1}}
-    if(this.slide>0)this.slide-=2},
+    if(P.b){SFX.back();if(this.det){this.det=0;return}if(this.ph==='p2'){this.ph='p1';this.cur=ORDER.indexOf(this.p1)}else goFade(()=>{go(Title);Title.ph='menu'});return}
+    if(P.a||P.start){const id=ORDER[this.cur];
+      if(!this.det){this.det=1;this.dt=0;SFX.ok();sayName(id);return}
+      SFX.start();this.det=1;
+      if(this.ph==='p1'){this.p1=id;if(!this.solo()){this.ph='p2';this.det=0;this.cur=(this.cur+1)%ORDER.length}else this.done=1}else{this.p2=id;this.done=1}}
+    if(this.det)this.dt=Math.min(8,(this.dt||0)+1);if(this.slide>0)this.slide-=2},
   finish(){const alt=[this.alt[0]&&rc(this.p1).clear>0,!!(this.p2&&this.alt[1]&&rc(this.p2).clear>0)],skin=[this.skin[0]&&!!CH[this.p1].skin2,!!(this.p2&&this.skin[1]&&CH[this.p2].skin2)];
     if(this.mode==='story'){startStory(this.p1,alt,skin);return}
     if(this.mode==='arcade'){const opp=ORDER.filter(i=>i!==this.p1).sort(()=>Math.random()-.5);RUN={mode:'arcade',p1:this.p1,ladder:opp,idx:0,cont:0,alt,skin}}
     else if(this.mode==='trials')RUN={mode:'trials',p1:this.p1,ladder:[this.p1==='ivan'?'karl':'ivan'],idx:0,cont:0,alt,skin};
     else RUN={mode:this.mode,p1:this.p1,ladder:[this.p2],idx:0,cont:0,alt,skin,score:[0,0]};
     if(this.mode==='training'||this.mode==='trials')startFight();else go(VS)},
-  draw(){const t=this.t,id=ORDER[this.cur],c=CH[id],pi=this.ph==='p1'?0:1,sk=c.skin2&&this.skin[pi]&&CH[c.skin2]?CH[c.skin2]:c;stripes(t,'#120f30','#191540');
-    // portrait: the full-size art, 1:1, in a spotlight of the fighter's colour
-    ctx.save();ctx.beginPath();ctx.rect(0,0,120,156);ctx.clip();const sg=ctx.createRadialGradient(58,92,6,58,92,96);sg.addColorStop(0,c.col.aura+'55');sg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=sg;ctx.fillRect(0,0,120,156);
-    const pm=sk.por,px=Math.round(-4-this.slide*2),py=156-pm.height;if(this.ph==='p2')drawMirror(pm,px,py);else ctx.drawImage(pm,px,py);
-    if(this.done&&this.done<8){ctx.globalAlpha=.7;ctx.drawImage(silhouette(pm,'#fff'),px,py);ctx.globalAlpha=1}ctx.restore();
-    ctx.fillStyle='#d0301a';ctx.fillRect(0,156,W,1);
-    // panel
-    drawText(this.ph==='p1'?'SELECT YOUR FIGHTER':'CHOOSE OPPONENT',187,4,'#fff',1,{align:'center',grad:FIRE,outline:'#300'});ctx.fillStyle='#d0301a';ctx.fillRect(124,13,128,1);
-    ctx.drawImage(c.logo,122,17);drawFlag(c.flag,237,21);drawText(c.nick,124,55,'#ffe66a',1,{outline:'#000'});
-    const A=arch(c),rows=[];for(const[k,v]of[['STYLE',c.style],['FROM',c.country],['TYPE',A.type||'-']])rows.push({k,v});
-    if(A.trait)for(const l of wrap(A.trait,21))rows.push({s:l,c:'#7aff8a'});
-    rows.push({sk:'SP',s:c.spName,c:'#ff9a6a'});if(c.sp2Name)rows.push({sk:'DN+SP',s:c.sp2Name,c:'#7ad8ff'});if(c.sp3Name)rows.push({sk:'BK+SP',s:c.sp3Name,c:'#ff7a8a'});rows.push({stats:1});
-    const bh=rows.length*9+5;box(120,64,134,bh);
-    rows.forEach((r,i)=>{const y=67+i*9;if(r.k){drawText(r.k,124,y,'#99a',1,{shadow:false});drawText(':',155,y,'#99a',1,{shadow:false});drawText(r.v,161,y,'#fff',1,{shadow:false})}
-      else if(r.stats)['SPD','PWR','DEF'].forEach((k,j)=>{const x=124+j*43;drawText(k,x,y,'#99a',1,{shadow:false});for(let q=0;q<5;q++){ctx.fillStyle=q<c.stats[j]?'#ffd23a':'#333';ctx.fillRect(x+19+q*4,y+1,3,5)}});
-      else if(r.sk){drawText(r.sk,124,y,r.c,1,{shadow:false});drawText(r.s,157,y,r.c,1,{shadow:false})}else drawText(r.s,124,y,r.c,1,{shadow:false})});
-    // fighter icons: one big row
-    const N=ORDER.length,S=Math.min(30,Math.floor((W-8)/N)-1),x0=Math.round((W-(N*(S+1)-1))/2);
-    ORDER.forEach((oid,i)=>{const on=i===this.cur,x=x0+i*(S+1),y=160-(on?1:0);ctx.fillStyle=on?(this.ph==='p1'?'#ff3a3a':'#3aa0ff'):'#000';ctx.fillRect(x-1,y-1,S+2,S+2);
-      const hd=(CH[oid].skin2&&this.skin[pi]&&on&&CH[CH[oid].skin2]?CH[CH[oid].skin2]:CH[oid]).head;ctx.drawImage(hd,1,1,30,30,x,y,S,S);
-      if(!on){ctx.fillStyle='rgba(8,6,24,.35)';ctx.fillRect(x,y,S,S)}
-      if(this.ph==='p2'&&oid===this.p1){ctx.fillStyle='#e03030';ctx.fillRect(x,y+S-8,13,8);drawText('1P',x+1,y+S-8,'#fff',1,{shadow:false})}
-      if(rc(oid).clear>0)drawText('*',x+S-6,y+1,'#ffd23a',1,{outline:'#000'});
-      if(on&&((t>>3)&1||this.done)){ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(x-1.5,y-1.5,S+3,S+3)}});
-    drawText(this.ph==='p1'?'1P':({vs:'CPU',training:'DUMMY'}[this.mode]||'2P'),4,147,this.ph==='p1'?'#ff5a5a':'#5ab4ff',1,{outline:'#000'});
-    const unl=rc(id).clear>0;
-    const hint=c.skin2&&CH[c.skin2]?'SELECT: '+(this.skin[pi]?'FOX SKIN':'COSTUME 1'):unl?'SELECT: COLOR '+(this.alt[pi]?'2':'1'):'ARCADE: NEW COLOR';
-    drawText(hint,3,3,unl||c.skin2?'#ffe66a':'#9a96b8',1,{outline:'#000'})}};
+  draw(){const t=this.t,id=ORDER[this.cur],c=CH[id],pi=this.ph==='p1'?0:1,sk=c.skin2&&this.skin[pi]&&CH[c.skin2]?CH[c.skin2]:c,A=arch(c);stripes(t,'#120f30','#191540');
+    const title=this.ph==='p1'?'SELECT YOUR FIGHTER':'CHOOSE YOUR OPPONENT';drawText(title,128,4,'#fff',1,{align:'center',grad:FIRE,outline:'#300'});ctx.fillStyle='#d0301a';ctx.fillRect(40,13,176,1);
+    const unl=rc(id).clear>0,hint=c.skin2&&CH[c.skin2]?'SELECT: '+(this.skin[pi]?'FOX SKIN':'COSTUME 1'):unl?'SELECT: COLOR '+(this.alt[pi]?'2':'1'):'';
+    const stats=(x,y,gap)=>['SPD','PWR','DEF'].forEach((k,j)=>{const yy=y+j*gap;drawText(k,x,yy,'#99a',1,{shadow:false});for(let q=0;q<5;q++){ctx.fillStyle=q<c.stats[j]?'#ffd23a':'#333';ctx.fillRect(x+21+q*5,yy+1,4,5)}});
+    if(!this.det){
+      // left: the highlighted fighter, a medium portrait over the basics
+      ctx.save();ctx.beginPath();ctx.rect(2,17,100,108);ctx.clip();const sg=ctx.createRadialGradient(52,70,4,52,70,70);sg.addColorStop(0,c.col.aura+'55');sg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=sg;ctx.fillRect(2,17,100,108);
+      const pm=sk.porm,px=Math.round(52-pm.width/2-this.slide),py=125-pm.height;if(this.ph==='p2')drawMirror(pm,px,py);else ctx.drawImage(pm,px,py);ctx.restore();
+      ctx.fillStyle='#d0301a';ctx.fillRect(2,125,100,1);
+      drawText(c.name,52,129,'#fff',1,{align:'center',grad:FIRE,outline:'#300'});drawText(A.type||c.style,52,139,'#7aff8a',1,{align:'center',shadow:false});
+      stats(18,150,9);
+      drawText('A: DETAILS',52,181,'#ffe66a',1,{align:'center',outline:'#000'});
+      // right: the roster grid, as big as the space allows
+      const N=ORDER.length,C=3,R=Math.ceil(N/C),gx=106,gy=17,gw=148,gh=173,cw=Math.floor((gw-(C-1)*3)/C),ch=Math.floor((gh-(R-1)*3)/R);
+      ORDER.forEach((oid,i)=>{const on=i===this.cur,x=gx+(i%C)*(cw+3),y=gy+Math.floor(i/C)*(ch+3),o=CH[oid],ps=(o.skin2&&this.skin[pi]&&on&&CH[o.skin2]?CH[o.skin2]:o).pors;
+        ctx.fillStyle=on?(this.ph==='p1'?'#ff3a3a':'#3aa0ff'):'#000';ctx.fillRect(x-1,y-1,cw+2,ch+2);ctx.fillStyle='#1c1838';ctx.fillRect(x,y,cw,ch);
+        const sw=Math.min(cw,ps.width),sh=Math.min(ch,ps.height);ctx.drawImage(ps,Math.round((ps.width-sw)/2),0,sw,sh,x+Math.round((cw-sw)/2),y,sw,sh);
+        if(!on){ctx.fillStyle='rgba(8,6,24,.42)';ctx.fillRect(x,y,cw,ch)}
+        if(this.ph==='p2'&&oid===this.p1){ctx.fillStyle='#e03030';ctx.fillRect(x,y+ch-8,13,8);drawText('1P',x+1,y+ch-8,'#fff',1,{shadow:false})}
+        if(rc(oid).clear>0)drawText('*',x+cw-6,y+1,'#ffd23a',1,{outline:'#000'});
+        if(on&&((t>>3)&1)){ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(x-1.5,y-1.5,cw+3,ch+3)}});
+      if(hint)drawText(hint,4,17,'#ffe66a',1,{outline:'#000'});
+      return}
+    // full card: the portrait shrinks to the corner, the details take the screen
+    const k=Math.min(1,(this.dt||8)/8),ox=Math.round((1-k)*30);
+    ctx.globalAlpha=k;ctx.fillStyle='#000';ctx.fillRect(3,17,68,84);ctx.fillStyle=c.col.aura;ctx.fillRect(4,18,66,82);
+    const ps=sk.pors;ctx.save();ctx.beginPath();ctx.rect(4,18,66,82);ctx.clip();if(this.ph==='p2')drawMirror(ps,4+Math.round((66-ps.width)/2),18);else ctx.drawImage(ps,4+Math.round((66-ps.width)/2),18);ctx.restore();
+    if(this.done&&this.done<8){ctx.globalAlpha=.7;ctx.drawImage(silhouette(ps,'#fff'),4+Math.round((66-ps.width)/2),18);ctx.globalAlpha=k}
+    drawText(this.ph==='p1'?'1P':({vs:'CPU',training:'DUMMY'}[this.mode]||'2P'),37,104,this.ph==='p1'?'#ff5a5a':'#5ab4ff',1,{align:'center',outline:'#000'});
+    stats(6,118,10);
+    drawText('A: CONFIRM',37,160,'#ffe66a',1,{align:'center',outline:'#000'});drawText('B: BACK',37,170,'#aab',1,{align:'center',outline:'#000'});
+    const X=78+ox;ctx.drawImage(c.logo,X,17);drawFlag(c.flag,238,21);drawText(c.nick,X+2,55,'#ffe66a',1,{outline:'#000'});
+    const rows=[['STYLE',c.style],['FROM',c.country],['TYPE',A.type||'-'],['HEIGHT',c.ht.replace(/ \(.*\)/,'')],['WEIGHT',c.wt.replace(/ \(.*\)/,'')]];
+    const lines=[];if(A.trait)for(const l of wrap(A.trait,28))lines.push({s:l,c:'#7aff8a'});
+    lines.push({k:'SP',s:c.spName,c:'#ff9a6a'});if(c.sp2Name)lines.push({k:'DN+SP',s:c.sp2Name,c:'#7ad8ff'});if(c.sp3Name)lines.push({k:'BK+SP',s:c.sp3Name,c:'#ff7a8a'});
+    lines.push({k:'SUPER',s:SUPER_NAME[c.id]||'-',c:'#ff8ad8'});
+    const bh=8+rows.length*9+4+lines.length*9;box(X,65,254-X,bh);
+    rows.forEach(([kk,v],i)=>{const y=69+i*9;drawText(kk,X+4,y,'#99a',1,{shadow:false});drawText(':',X+46,y,'#99a',1,{shadow:false});drawText(v,X+52,y,'#fff',1,{shadow:false})});
+    const y0=69+rows.length*9+4;ctx.fillStyle='#3a3460';ctx.fillRect(X+4,y0-3,254-X-8,1);
+    lines.forEach((l,i)=>{const y=y0+i*9;if(l.k){drawText(l.k,X+4,y,l.c,1,{shadow:false});drawText(l.s,X+42,y,l.c,1,{shadow:false})}else drawText(l.s,X+4,y,l.c,1,{shadow:false})});
+    if(hint)drawText(hint,X+4,Math.min(183,65+bh+5),'#ffe66a',1,{outline:'#000'});
+    ctx.globalAlpha=1}};
 
 // ---------------- VS SCREEN ----------------
 const VS={enter(){this.a=skinned(RUN.p1,0);this.b=skinned(RUN.ladder[RUN.idx],1);playMusic('select');sayVs(this.a.id,this.b.id)},

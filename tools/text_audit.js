@@ -25,7 +25,7 @@ const path = require('path');
     d.go(d.Boot); d.Boot.t = 200; check('boot'); d.go(d.Title); d.Title.t = 99; check('title'); d.Title.ph = 'menu'; check('title-menu');
     d.go(d.Intro); for (const t of [40, 120, 200, 300, 400]) { d.Intro.t = t; check('intro@' + t); }
     d.go(d.Options); check('options'); d.go(d.Records); check('records');
-    for (const mode of ['arcade', 'vs', 'story', 'training']) { d.go(d.Select, mode); d.Select.slide = 0; for (let i = 0; i < O.length; i++) { d.Select.cur = i; d.Select.t = 200; check(`select-${mode}-${O[i]}`); } }
+    for (const mode of ['arcade', 'vs', 'story', 'training']) { d.go(d.Select, mode); d.Select.slide = 0; for (let i = 0; i < O.length; i++) { d.Select.cur = i; d.Select.t = 200; d.Select.det = 0; check(`select-${mode}-${O[i]}`); d.Select.det = 1; d.Select.dt = 8; check(`select-card-${mode}-${O[i]}`); d.Select.det = 0; } }
     for (let i = 0; i < O.length; i++) { const a = O[i], b = O[(i + 1) % O.length];
       d.RUN = { mode: 'arcade', p1: a, ladder: [b], idx: 0, cont: 0 }; d.go(d.VS); d.VS.t = 120; check(`vs-${a}-${b}`);
       d.go(d.Fight, { p1: a, p2: b, stage: a }); const F = d.F; F.phase = 'play'; F.pt = 300; check(`fight-${a}`); F.paused = true; F.psel = 0; check(`pause-${a}`); F.paused = false;

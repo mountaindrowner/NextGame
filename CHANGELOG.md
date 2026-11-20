@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.19.0
+
+- **New character select screen in two steps:**
+  - **Browse:** the right side is a big **3×3 grid of fighter cards** (portrait crops, much larger than the old icon row). The left shows the highlighted fighter's portrait with their name, fighting style and SPD/PWR/DEF bars. Left/right moves along a row, up/down between rows.
+  - **Press A for the full card:** the portrait shrinks to the corner and the details take the screen. It shows style, origin, type, height and weight, the trait, every special with its button, the super's name, and stats. **A** confirms, **B** goes back to the grid.
+- The text check now covers both views for every fighter (286 screens).
+
 ## 1.18.0
 
 - **Story mode is now a gritty Christian story.** Vex doesn't just steal the trophy; he tempts ("every man has a price"). You help up a beaten goon instead of finishing him, take the narrow stairs instead of the easy elevator, refuse to kneel for the whole city, and face your own shadow: every grudge and sin you've carried. The ending is mercy: you spare Vex, and by Sunday he's in the front pew of the Old Chapel.
