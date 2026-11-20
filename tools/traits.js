@@ -88,6 +88,15 @@ const path = require('path');
       check('VIZOR     Shutter Flash (nerfed)', r.F.p2.mhp - m > 0 && r.F.p2.mhp - m < 8 && !knocked, `dmg ${(r.F.p2.mhp - m).toFixed(1)}, knockdown ${knocked}`);
       r = setup('hecky', 'ivan', 50, 210); r.step(3); d.startSpecial(r.F.p1, r.F.p2, 4); let hits = 0; for (let i = 0; i < 80; i++) { r.step(1); hits = Math.max(hits, r.F.p1.sp ? r.F.p1.sp.hits : 0); }
       check('HECKY     Laser Glare (3 hits)', hits === 3, `beam hits ${hits}`); }
+    { // HIGH FLYER: double jump; Bounce Pass comes back on a hit (quick recharge); Ankle Breaker leaves them stumbling
+      const lost = (r, n, who = 'p2') => { let m = r.F[who].hp; for (let i = 0; i < n; i++) { r.step(1); m = Math.min(m, r.F[who].hp); } return r.F[who].mhp - m; };
+      let r = setup('kai', 'ivan', 100, 200); r.step(1, { up: 1, h: { up: 1 } }); let top1 = 0; for (let i = 0; i < 12; i++) { r.step(1); top1 = Math.max(top1, r.F.p1.y); }
+      r.step(1, { up: 1, h: { up: 1 } }); let top2 = top1; for (let i = 0; i < 30; i++) { r.step(1); top2 = Math.max(top2, r.F.p1.y); }
+      check('HIGH FLYER double jump', r.F.p1.dj === 1 && top2 > top1 + 10, `first jump ${top1 | 0}px, after the second ${top2 | 0}px`);
+      r = setup('kai', 'ivan', 60, 170); d.startSpecial(r.F.p1, r.F.p2, 1); const dmg = lost(r, 90); const cd = r.F.p1.spCD;
+      check('KAI       Bounce Pass (caught = recharge)', dmg > 0 && cd <= 18, `hit for ${dmg | 0}, cooldown after the catch ${cd} (normal 80)`);
+      r = setup('kai', 'ivan', 100, 140); d.startSpecial(r.F.p1, r.F.p2, 2); let stun = 0, crossed = false; for (let i = 0; i < 40; i++) { r.step(1); stun = Math.max(stun, r.F.p2.stun); if (r.F.p1.x > r.F.p2.x) crossed = true; }
+      check('KAI       Ankle Breaker (through + stumble)', crossed && stun >= 40, `went through ${crossed}, opponent stunned ${stun} frames`); }
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();

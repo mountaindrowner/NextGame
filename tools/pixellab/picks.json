@@ -168,5 +168,26 @@
    "take": "lowkick__d",
    "pk": 3
   }
+ },
+ "kai": {
+  "airkick": {
+   "take": "airkick__e",
+   "pk": 3
+  },
+  "airpunch": {
+   "take": "airpunch__a",
+   "pk": 3
+  },
+  "cpunch": {
+   "take": "cpunch__a",
+   "pk": 4
+  },
+  "hurt": {
+   "take": "hurt__b"
+  },
+  "lowkick": {
+   "take": "lowkick__d",
+   "pk": 3
+  }
  }
 }

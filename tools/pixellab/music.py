@@ -5,6 +5,7 @@ from pl import call
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SONGS = {
+    "kai": dict(name="Street Court", bpm=96, style="16-bit arcade fighting game stage theme for a streetball court at night: a hard-hitting boom-bap hip-hop beat with punchy drums and scratches, a funky bass line, sneaker squeak and ball bounce percussion, brass stabs and a catchy confident synth lead hook. Cool, swaggering and energetic, steady all the way through."),
     "select": dict(name="Choose Your Fighter", bpm=124, style="Catchy 16-bit arcade fighting game character select screen theme: a bouncy funk-rock groove with a punchy slap bass line, crisp drums with handclaps, bright brass stabs and a memorable, hooky synth-guitar lead melody that loops cleanly. Hyped and inviting but not frantic, like the moment before a big tournament, steady all the way through."),
     "rex": dict(name="Main Stage", bpm=128, style="16-bit arcade fighting game stage theme for a huge rock concert: a thick driving slap bass riff leads the song, punchy rock drums, crunchy power-chord guitars, a crowd-chant synth hook and a big stadium chorus melody. Loud, confident and anthemic, steady all the way through."),
     "lawslie": dict(name="Precinct 9", bpm=148, style="16-bit arcade fighting game stage theme for a police chase through the city at night: urgent 70s cop-show funk with driving drums and hi-hat, a punchy slap bass line, wailing brass hits like a siren, a wah guitar and a heroic synth lead. Tense, fast and heroic, steady all the way through."),

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.17.0
+
+- **New fighter: Kai "The Crown"**, a streetball player from the Courts. He's the first **HIGH FLYER**: the only fighter with a **double jump** (press up/JUMP again in the air), plus a higher jump and quick feet.
+  - **Bounce Pass** (SP): a basketball that bounces across the screen. On a hit it rebounds to Kai, and catching it recharges the move almost instantly.
+  - **Ankle Breaker** (DN+SP): a low crossover dribble straight through the opponent. If he crosses a grounded opponent, their ankles break: a long stumble with Kai behind them.
+  - **Super, Fast Break:** a dribble drive that pops the opponent into the air, then an alley-oop **slam dunk** into the floor.
+  - His own PixelLab sprite and moves, a streetball court stage with crown graffiti, a boom-bap song, Kokoro voice lines, trials and an ending.
+- Nine-fighter select screen, records, story bosses, title and itch.io art. Roster cards use SP notation.
+
 ## 1.16.3
 
 - **Ivan toned down, still a top grappler:**

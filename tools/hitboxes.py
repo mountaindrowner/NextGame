@@ -16,7 +16,7 @@ A = ROOT / "assets" / "fighters"
 MARGIN, TIPBAND = 6, 14  # px added around the limb; how far back from the tip counts as "the limb"
 BAND = {"jab": (.45, 1), "kick": (.3, .95), "cjab": (.25, .8), "sweep": (0, .42), "jpunch": (0, 1.2), "jkick": (0, 1.2)}
 MOVES = {"jab": "punch", "kick": "kick", "cjab": "cpunch", "sweep": "lowkick", "jpunch": "airpunch", "jkick": "airkick"}
-FIGHTERS = ["karl", "ivan", "vizor", "padre", "zeke", "hecky", "heckyfox", "lawslie", "rex"]
+FIGHTERS = ["karl", "ivan", "vizor", "padre", "zeke", "hecky", "heckyfox", "lawslie", "rex", "kai"]
 
 
 def frames(fid, anim):

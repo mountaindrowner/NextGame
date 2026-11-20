@@ -22,6 +22,7 @@ ROSTER = [  # id, name, style, special 1, special 2
     ("hecky", "HECKY XAVIER", "DAPPER BOXING", "HOSTILE TAKEOVER", "POWER SUIT"),
     ("lawslie", "LAWSLIE", "POLICE DEFENSE", "TASER", "CUFF 'EM"),
     ("rex", "MARCUS", "BASS BRAWLER", "BASS DROP", "MIC CHECK"),
+    ("kai", "KAI", "STREETBALL", "BOUNCE PASS", "ANKLE BREAKER"),
 ]
 
 
@@ -108,8 +109,8 @@ def roster():  # 960x? roster card, 3 x 2 fighter cards (drawn at 1x, scaled x2)
         ImageDraw.Draw(card).line([(0, 88), (CW, 88)], fill=RED)
         draw_text(card, name, 6, 93, 2 if text_w(name, 2) < CW - 10 else 1, grad=FIRE, outline="#200")
         draw_text(card, style, 6, 111, 1, col="#bbbbdd")
-        draw_text(card, "A+B    " + s1, 6, 124, 1, col="#ff9a6a")
-        draw_text(card, "DN+A+B " + s2, 6, 135, 1, col="#7ad8ff")
+        draw_text(card, "SP     " + s1, 6, 124, 1, col="#ff9a6a")
+        draw_text(card, "DN+SP  " + s2, 6, 135, 1, col="#7ad8ff")
         frame(card)
         im.alpha_composite(card, (x0, y0))
     save(im, "roster.png", 2)

@@ -29,6 +29,7 @@ const path = require('path');
     r = run('hecky', 100, 140); C('HECKY Golden Parachute (juggle)', r.dmg >= 18 && r.maxY > 40, `dmg ${r.dmg}, held ${r.maxY | 0}px up`);
     r = run('lawslie', 70, 170); C('LAWSLIE Full Arrest (cuffed 8s)', r.dmg >= 15 && r.cuffed > 400, `dmg ${r.dmg}, cuffed ${r.cuffed} frames`);
     r = run('rex', 60, 180); C('REX Stage Dive (homing leap + jam)', r.dmg >= 18 && r.landed, `dmg ${r.dmg} from 120px away`);
+    r = run('kai', 70, 170); C('KAI Fast Break (alley-oop dunk)', r.dmg >= 18 && r.maxY > 40, `dmg ${r.dmg}, popped ${r.maxY | 0}px up`);
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();
