@@ -5,7 +5,7 @@ const path = require('path');
 (async () => {
   const br = await chromium.launch(); const p = await br.newPage();
   const errs = []; p.on('pageerror', e => errs.push(e.message + ' ' + (e.stack || '').split('\n')[1]));
-  await p.goto('file://' + path.resolve(__dirname, '../dist/index.html'));
+  await p.goto('file://' + path.resolve(__dirname, '../dist/index.html') + (process.env.LAYOUT ? '?layout=' + process.env.LAYOUT : ''));
   await p.waitForFunction(() => window.__dbg && window.__dbg.CH.karl.spr, null, { timeout: 15000 });
   const out = await p.evaluate(() => {
     const d = window.__dbg, K = ['up', 'down', 'left', 'right', 'a', 'b', 'start', 'select', 'tap', 'jump', 'dl', 'dr'], res = [];

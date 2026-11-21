@@ -271,6 +271,16 @@ Ivan "The Bear" (Sambo grappler) left the roster in v1.24.0 to make room for Kek
 
 On itch.io the game runs inside itch's page, so "Add to Home Screen" from the itch page uses itch's icon. Ours shows when the game is opened at its own address (itch's full-screen view, or anywhere the files are hosted directly).
 
+### PC layout
+
+On a computer with a mouse and a wide window the handheld shell is dropped and the game fills the window at 16:9 (384×216, `PC` in `src/game.js`, `html.pc` in `src/template.html`). It's scaled by a whole number when there's room (5× at 1080p), so pixels stay sharp. `?layout=pc` forces it; automated test browsers stay on the handheld unless asked (`LAYOUT=pc node tools/story.js`).
+
+- Story mode draws natively at 384×216.
+- Fights keep the 256×192 arena and continue each stage into the margins, fading toward the edges.
+- Every other screen is 256×192 in a framed panel, with the logo on one side and the keys on the other.
+
+For itch.io, set the embed size to 16:9 (for example 960×540) and enable the fullscreen button in the game's settings (Edit game → Embed options); the game switches to the PC layout whenever its window is wide.
+
 ### Landscape (GBA style)
 
 An experimental wide handheld (`html.land` in `src/template.html`): a 3:2 screen between the D-pad and the buttons. Off by default (the game is portrait); `?layout=wide` turns it on. Story mode draws 360×240 in it; every other scene keeps 256×192, centred on a 288×192 canvas.

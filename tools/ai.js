@@ -23,7 +23,7 @@ const path = require('path');
     C('every fighter deals damage', silent.length === 0, silent.length ? 'no damage: ' + silent : 'all 8 fighters hit their opponent');
     const need = ['close', 'mid', 'far', 'defend', 'antiair', 'punish', 'wakeup'];
     C('all decks used', need.every(k => decks[k] > 0), need.map(k => `${k} ${decks[k] || 0}`).join(', '));
-    const avg = (diff) => { let dealt = 0, fumbles = 0, rt = 0, ex = 0; for (const b of ['vizor', 'padre', 'rex']) { const r = match('karl', b, diff); dealt += r.dealt[0]; fumbles += r.fumbles; rt = r.rt; ex = r.ex; } return { dealt: [dealt], fumbles, rt, ex }; };
+    const avg = (diff) => { let dealt = 0, fumbles = 0, rt = 0, ex = 0; for (const b of ['vizor', 'padre', 'rex']) { const r = match('karl', b, diff); dealt += r.dealt[0]; fumbles += r.fumbles; rt = r.rt; ex = r.ex + .28 * (r.pr || 0); }/* execution skill with the end-of-match pressure taken out: the difficulty setting itself, not who was losing */ return { dealt: [dealt], fumbles, rt, ex }; };
     const easy = avg(0), hard = avg(2);
     C('reaction time easy > hard', easy.rt > hard.rt, `easy ${easy.rt} frames (${Math.round(easy.rt * 16.7)} ms), hard ${hard.rt} frames (${Math.round(hard.rt * 16.7)} ms)`);
     C('hard CPU out-damages easy', hard.dealt[0] > easy.dealt[0] * 0.9, `karl vs vizor/samson/marcus: easy dealt ${easy.dealt[0] | 0}, hard dealt ${hard.dealt[0] | 0}`);

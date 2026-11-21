@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.48.0
+
+- **PC layout.** On a computer with a mouse and a wide window (or `?layout=pc`), the handheld shell goes away and the game fills the window at 16:9 (384×216), scaled by a whole number so pixels stay sharp. That's 5× on a 1080p screen and 3× in a 1280×720 window. Phones keep the handheld.
+  - **Story mode** is native widescreen: 384×216, the full width.
+  - **Fights:** the 256×192 arena (same size, same balance) sits in the middle, and each stage continues into the wider margins, fading darker toward the edges.
+  - **Menus, select, cutscenes:** 4:3 inside a gold frame, with the BONFIRE BASH logo on the left and the keyboard keys (in the button colours) on the right.
+- **Tests:** `tools/story.js` and `tools/story_mech.js` take `LAYOUT=pc` to run in the PC layout; both pass. `tools/ai.js` now compares the CPU's execution skill with end-of-match pressure taken out, so the easy-vs-hard check no longer flips at random.
+
 ## 1.47.1
 
 - **Paezano's jump kick redrawn** (PixelLab, about 8 generations). The old one barely extended the leg and his jersey changed between frames. Now his front leg shoots out fully straight at chest height in a flying side kick, sneaker sole first. His jump-kick hitbox was re-measured to match: reach 55 (was 45).

@@ -6,7 +6,7 @@ const OUT = process.argv[2];
 (async () => {
   const br = await chromium.launch(); const p = await br.newPage();
   const errs = []; p.on('pageerror', e => errs.push(e.message + ' ' + (e.stack || '').split('\n')[1]));
-  await p.goto('file://' + path.resolve(__dirname, '../dist/index.html'));
+  await p.goto('file://' + path.resolve(__dirname, '../dist/index.html') + (process.env.LAYOUT ? '?layout=' + process.env.LAYOUT : ''));
   await p.waitForFunction(() => window.__dbg && window.__dbg.CH.karl.spr, null, { timeout: 15000 });
   await p.evaluate(() => { const d = window.__dbg; d.SET.sound = false; d.SET.voice = false; d.SET.music = false; d.SET.diff = 1; });
   const out = [], C = (n, ok, info) => out.push(`${ok ? 'OK  ' : 'FAIL'} ${n.padEnd(30)} ${info}`);

@@ -434,12 +434,18 @@ let scene=null;const fade={a:0,dir:0,cb:null};
 // Story mode draws at 320x240 (same screen size, smaller pixels: a zoomed-out camera showing 25% more of the stage)
 // WIDE (GBA-style landscape): the screen is 3:2. Story mode really is wider (360x240); every other scene keeps its
 // 256x192 picture, centred on a 288x192 canvas with dark side bars.
-let WIDE=false;
+let WIDE=false,PC=false;
 function setView(w,h,cw=WIDE&&w===256?288:w,ch=h){if(W===w&&H===h&&cv.width===cw&&cv.height===ch)return;W=w;H=h;OX=(w-256)/2;OY=(h-192)/2;cv.width=cw;cv.height=ch;ctx.imageSmoothingEnabled=false;FY=h>192?Math.min(h-60,200):140}
-function fitView(s=scene){if(s===Brawl)return setView(WIDE?360:352,WIDE?240:264);if(s===Fight&&!WIDE)return setView(256,192,284,213);setView(256,192)}
+function fitView(s=scene){if(PC){if(s===Brawl)return setView(384,216);return setView(256,192,384,216)}if(s===Brawl)return setView(WIDE?360:352,WIDE?240:264);if(s===Fight&&!WIDE)return setView(256,192,284,213);setView(256,192)}
 function wideWanted(){const q=new URLSearchParams(location.search).get('layout');if(q==='wide')return true;if(q==='tall')return false;
   return false}// landscape is opt-in only (?layout=wide); the owner prefers the portrait handheld
-function applyLayout(){WIDE=wideWanted();document.documentElement.classList.toggle('land',WIDE);if(typeof scene!=='undefined'&&scene)fitView()}
+// PC: a computer with a mouse and a wide window (or ?layout=pc). Automated test browsers stay on the handheld unless asked.
+function pcWanted(){const q=new URLSearchParams(location.search).get('layout');if(q==='pc')return true;if(q)return false;if(navigator.webdriver)return false;
+  return matchMedia('(pointer:fine)').matches&&!matchMedia('(pointer:coarse)').matches&&innerWidth>=innerHeight*1.15&&innerWidth>=760}
+// the picture at a whole-number scale (sharp pixels); a small window gets the largest fit instead
+function pcFit(){const k=Math.min(innerWidth/384,innerHeight/216),s=k>=2?Math.floor(k):k;cv.style.width=Math.round(384*s)+'px';cv.style.height=Math.round(216*s)+'px'}
+function applyLayout(){PC=pcWanted();WIDE=!PC&&wideWanted();const R=document.documentElement.classList;R.toggle('land',WIDE);R.toggle('pc',PC);
+  if(PC)pcFit();else{cv.style.width='';cv.style.height=''}if(typeof scene!=='undefined'&&scene)fitView()}
 function go(s,...a){CEL.stop();fitView(s);scene=s;s.t=0;s.enter&&s.enter(...a);if(typeof updateVis==='function')try{updateVis()}catch(e){}}
 // ---------------- CELEBRATION (confetti + fireworks) ----------------
 const CONF=['#ff4a5a','#ffd23a','#3ae8ff','#5ad86a','#ff8ad8','#ffffff','#9a7aff'];
@@ -3064,12 +3070,24 @@ function drawToast(){if(!TOAST)return;const a=Math.max(0,Math.min(1,TOAST.l/20,(
 function fightMargins(){const S=CH[F.cfg.stage]&&CH[F.cfg.stage].stage;if(!S)return;const cw=cv.width,ch=cv.height,ox=(cw-W)/2,rm=cw-ox-W,bh=ch-H;
   ctx.save();ctx.translate(ox,0);ctx.scale(-1,1);ctx.drawImage(S,0,0,ox,H,0,0,ox,H);ctx.restore();
   ctx.save();ctx.translate(ox+W,0);ctx.scale(-1,1);ctx.drawImage(S,W-rm,0,rm,H,-rm,0,rm,H);ctx.restore();
-  ctx.save();ctx.translate(0,H*2);ctx.scale(1,-1);ctx.drawImage(cv,0,H-bh,cw,bh,0,H-bh,cw,bh);ctx.restore()}
+  ctx.save();ctx.translate(0,H*2);ctx.scale(1,-1);ctx.drawImage(cv,0,H-bh,cw,bh,0,H-bh,cw,bh);ctx.restore()
+  // the continued margin fades darker toward the screen's edges, so it reads as surroundings, not arena (and hides mirrored signs)
+  const sh=(x0,y0,x1,y1,a)=>{const g=ctx.createLinearGradient(x0,y0,x1,y1);g.addColorStop(0,`rgba(6,5,14,${a})`);g.addColorStop(1,'rgba(6,5,14,0)');return g};
+  if(ox>0){ctx.fillStyle=sh(0,0,ox,0,ox>20?.72:.4);ctx.fillRect(0,0,ox,ch);ctx.fillStyle=sh(cw,0,ox+W,0,rm>20?.72:.4);ctx.fillRect(ox+W,0,rm,ch)}
+  if(bh>0){ctx.fillStyle=sh(0,ch,0,H,.45);ctx.fillRect(0,H,cw,bh)}}
 function marginShade(){if(scene!==Fight||!F||cv.width<=W)return;const a=F.cine?.6:F.superFlash>0?.55:0;if(!a)return;const cw=cv.width,ch=cv.height,ox=(cw-W)/2;
   ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle=`rgba(0,0,16,${a})`;ctx.fillRect(0,0,ox,ch);ctx.fillRect(ox+W,0,cw-ox-W,ch);ctx.fillRect(ox,H,W,ch-H);ctx.restore()}
+// PC frame around a 256x192 screen: night-indigo panels with the menu stripes, the logo on the left, the keys on the right
+function pcFrame(){const cw=cv.width,ch=cv.height,ox=(cw-W)/2,oy=(ch-H)/2;const g=ctx.createLinearGradient(0,0,0,ch);g.addColorStop(0,'#16142e');g.addColorStop(1,'#0c0a18');ctx.fillStyle=g;ctx.fillRect(0,0,cw,ch);
+  ctx.fillStyle='rgba(255,255,255,.035)';for(let k=-ch;k<cw;k+=10){ctx.beginPath();ctx.moveTo(k,0);ctx.lineTo(k+4,0);ctx.lineTo(k+4+ch,ch);ctx.lineTo(k+ch,ch);ctx.fill()}
+  ctx.fillStyle='#000';ctx.fillRect(ox-3,oy-3,W+6,H+6);ctx.fillStyle='#e8b030';ctx.fillRect(ox-2,oy-2,W+4,1);ctx.fillRect(ox-2,oy+H+1,W+4,1);ctx.fillRect(ox-2,oy-2,1,H+4);ctx.fillRect(ox+W+1,oy-2,1,H+4);
+  const L=ox/2;drawText('BONFIRE',L,oy+10,'#fff',1,{align:'center',grad:FIRE,outline:'#300'});drawText('BASH',L,oy+20,'#fff',1,{align:'center',grad:FIRE,outline:'#300'});
+  drawText('V'+(typeof GAME_VERSION!=='undefined'?GAME_VERSION:''),L,oy+H-10,'#556',1,{align:'center',shadow:false});
+  const R=ox+W+ox/2,K=[['KEYS',''],['MOVE','ARROWS'],['A','X / K'],['B','Z / J'],['SP','C / L'],['FOCUS','V / I'],['START','ENTER'],['SELECT','SHIFT']];
+  K.forEach(([a,b],i)=>{if(!b){drawText(a,R,oy+10,'#e8b030',1,{align:'center',shadow:false});return}const y=oy+14+i*22;drawText(a,R,y,BTNC[a]||'#ff9a6a',1,{align:'center',shadow:false});drawText(b,R,y+9,'#aab',1,{align:'center',shadow:false})})}
 function render(){ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;if(cv.width>W||cv.height>H){ctx.fillStyle='#0b0a14';ctx.fillRect(0,0,cv.width,cv.height);
-    if(scene===Fight&&F&&F.cfg){const ox=(cv.width-W)/2;ctx.save();ctx.translate(ox,0);ctx.drawImage(CH[F.cfg.stage].stage,0,0);ctx.restore();fightMargins()}ctx.translate((cv.width-W)/2,0)}scene.draw();marginShade();drawToast();
-  if(NET.lock&&NET.stall>20){box(58,86,140,18,'rgba(10,10,30,.9)','#5ab4ff');drawText('WAITING FOR OPPONENT'+'...'.slice(0,(performance.now()/300|0)%4),128,92,'#fff',1,{align:'center',shadow:false})}if(fade.a>0){ctx.fillStyle=`rgba(0,0,0,${fade.a})`;ctx.fillRect(0,0,W,H)}}
+    if(scene===Fight&&F&&F.cfg){const ox=(cv.width-W)/2;ctx.save();ctx.translate(ox,0);ctx.drawImage(CH[F.cfg.stage].stage,0,0);ctx.restore();fightMargins()}else if(PC)pcFrame();ctx.translate((cv.width-W)/2,scene===Fight?0:(cv.height-H)/2)}scene.draw();marginShade();drawToast();
+  if(NET.lock&&NET.stall>20){box(58,86,140,18,'rgba(10,10,30,.9)','#5ab4ff');drawText('WAITING FOR OPPONENT'+'...'.slice(0,(performance.now()/300|0)%4),128,92,'#fff',1,{align:'center',shadow:false})}if(fade.a>0){ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle=`rgba(0,0,0,${fade.a})`;ctx.fillRect(0,0,cv.width,cv.height);ctx.restore()}}
 let last=performance.now(),acc=0;
 // the game runs at 54 ticks a second (10% slower than 60): a touch heavier, less frantic
 const TICK=1000/54;

@@ -72,6 +72,11 @@ html,body{margin:0;height:100%;background:#1a1824;overflow:hidden;touch-action:n
 #dpad .zb{left:-6px;bottom:-9px;color:#a04a4a}
 #dpad.dash .zl,#dpad.dash .zr{color:#d0a020}
 @media (max-height:640px){#controls{min-height:190px}#dpad{top:10%}#abwrap{top:2%}}
+/* PC: no handheld, just the picture (16:9, scaled by a whole number in JS) on a dark backdrop */
+html.pc #gb{max-width:none;width:100%;height:100vh;height:100dvh;padding:0;border-radius:0;box-shadow:none;justify-content:center;align-items:center;background:#05040a}
+html.pc #topline,html.pc #brand,html.pc #controls,html.pc #stripe,html.pc #hint,html.pc #speaker{display:none}
+html.pc #bezel{background:none;box-shadow:none;padding:0;border-radius:0}
+html.pc #screen{aspect-ratio:auto;border-radius:0;box-shadow:0 0 0 1px #2c2b3a,0 10px 40px rgba(0,0,0,.6)}
 /* WIDE: a GBA-style landscape shell built to make the picture as big as possible: the screen takes nearly the full height
    of the phone, and the D-pad and buttons sit in the narrow columns either side. On for a phone or tablet held
    sideways, or ?layout=wide. */
