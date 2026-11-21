@@ -76,6 +76,13 @@ const path = require('path'), fs = require('fs');
   await p.evaluate(() => { const d = window.__dbg; d.go(d.Title); d.Title.ph = 'menu'; }); await p.waitForTimeout(400); await shot('title');
   await p.evaluate(() => { const d = window.__dbg; d.RUN = { mode: '2p', p1: 'karl', ladder: ['padre'], idx: 0, cont: 0, score: [1, 0] }; d.go(d.Result, 1, { p1: 'karl', p2: 'padre', stage: 'padre' }); }); await p.waitForTimeout(1200); await shot('rematch');
   await p.evaluate(() => { localStorage.removeItem('worlddojo_rec'); });
+  // costumes: each loads a full sprite set and portraits, and plays as its fighter
+  r = await p.evaluate(() => { const d = window.__dbg, out = {};
+    for (const id of d.ORDER) { const k = d.CH[id].skin2; if (!k) continue; const c = d.CH[k];
+      d.RUN = { mode: 'vs', p1: id, ladder: ['karl'], idx: 0, cont: 0, skin: [true, false], alt: [false, false] }; d.go(d.Fight, { p1: id, p2: 'karl', stage: id });
+      out[k] = { anims: c && c.anim ? Object.keys(c.anim).length : 0, por: !!(c && c.por && c.porm && c.pors && c.head), plays: d.F.p1.c.skinKey === k && d.F.p1.c.id === id, name: d.CH[id].skinName }; }
+    return out; });
+  T('COSTUMES', Object.keys(r).length >= 3 && Object.values(r).every(v => v.anims >= 15 && v.por && v.plays && v.name), Object.entries(r).map(([k, v]) => `${v.name} ${v.anims} anims`).join(', '));
   console.log(out.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();
   process.exit(out.some(l => l.startsWith('FAIL')) || errs.length ? 1 : 0);
 })();

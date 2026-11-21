@@ -152,6 +152,10 @@ python3 ../build.py
 
 Strike timing (which frame lands the hit) and special-move frame maps live in the `AK` table in `src/game.js`; per-fighter overrides go in `CH[id].ak`. If a fighter has no animation for a state, the game falls back to the original single-sprite rendering.
 
+## Costumes
+
+Press **SELECT** on the select screen to switch costume: **Fox Skin** (Hecky), **Idol Zeke** and **Teen Rocker** (Samson). A costume is a full second sprite set (`assets/fighters/<costume>/` plus portraits) that plays exactly like its fighter; set `skin2` and `skinName` on the fighter in `src/game.js`. PixelLab tools: `tools/pixellab/make_skin.py` (sprite), `moves.py` / `redo.py` (animations), `portrait.py` (portraits).
+
 ## Ivan, the story boss
 
 Ivan "The Bear" (Sambo grappler) left the roster in v1.24.0 to make room for Keksan. Since v1.25.0 he's **the boss of the Docks** in story mode: Vex's enforcer, fought one-on-one with his full kit (Bear Slam, Iron Charge, the armored kick, Siberian Storm) and 15% more health. He isn't selectable (`STORY_FIGHTERS` in `src/game.js` loads fighters who aren't in `ORDER`).

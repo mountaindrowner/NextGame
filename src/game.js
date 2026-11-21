@@ -225,15 +225,15 @@ const CH={
     col:{skin:'#c98a5e',glove:'#25232f',leg:'#3d5a96',foot:'#f0f0f0',aura:'#3ae8ff'},sh:.72,hip:.5,
     quote:"SMILE. YOU'RE ON CAMERA... AND YOU JUST GOT CAPTURED.",lose:'SIGNAL... LOST.',stageName:'CONTROL ROOM'},
   padre:{id:'padre',name:'SAMSON',nick:'THE SHEPHERD',style:'SACRED BOXING',country:'THE PARISH',countryLabel:'ORIGIN',flag:'cross',ht:"5'10\" (178 CM)",wt:'185 LB (84 KG)',
-    speed:0.94,power:1.12,def:1.08,jump:0.95,stats:[2,5,4],special:'tome',spName:'HOLY TOME',special2:'bless',sp2Name:'BENEDICTION',tr:-2,
+    speed:0.94,power:1.12,def:1.08,jump:0.95,stats:[2,5,4],special:'tome',spName:'HOLY TOME',special2:'bless',sp2Name:'BENEDICTION',tr:-2,skin2:'padreteen',skinName:'TEEN ROCKER',
     col:{skin:'#d89a6a',glove:'#1c1a24',leg:'#24222e',foot:'#1a1820',aura:'#ffd96a'},sh:.72,hip:.5,
     quote:'THE LORD IS MY SHEPHERD. YOU, MY SON, ARE A LOST SHEEP.',lose:'FORGIVE ME... I GOT CARRIED AWAY.',stageName:'OLD CHAPEL'},
   zeke:{id:'zeke',name:'ZEKE',nick:'THE STRIKE',style:'BOWLING BRAWLER',country:'THE LANES',countryLabel:'ORIGIN',flag:'pin',ht:"5'9\" (175 CM)",wt:'205 LB (93 KG)',
-    speed:0.96,power:1.1,def:1.05,jump:0.95,stats:[3,4,4],special:'strike',spName:'STRIKE BALL',special2:'split',sp2Name:'SPLIT SHOT',tr:1,
+    speed:0.96,power:1.1,def:1.05,jump:0.95,stats:[3,4,4],special:'strike',spName:'STRIKE BALL',special2:'split',sp2Name:'SPLIT SHOT',tr:1,skin2:'zekeidol',skinName:'IDOL ZEKE',
     col:{skin:'#c98a5e',glove:'#1c1a24',leg:'#24222e',foot:'#f0f0f0',aura:'#d04aff'},sh:.72,hip:.5,
     quote:"THAT'S A STRIKE! YOU WERE ALWAYS JUST ONE MORE PIN TO ME.",lose:'GUTTER BALL...',stageName:'STRIKE LANES'},
   hecky:{id:'hecky',name:'HECKY XAVIER',nick:'THE CLOSER',style:'DAPPER BOXING',country:'PENTHOUSE',countryLabel:'ORIGIN',flag:'tie',ht:"5'10\" (178 CM)",wt:'160 LB (73 KG)',
-    speed:1.12,power:1.0,def:0.98,jump:1.02,stats:[4,3,3],special:'takeover',spName:'HOSTILE TAKEOVER',special2:'powersuit',sp2Name:'POWER SUIT',special3:'laser',sp3Name:'LASER GLARE',tr:2,skin2:'heckyfox',
+    speed:1.12,power:1.0,def:0.98,jump:1.02,stats:[4,3,3],special:'takeover',spName:'HOSTILE TAKEOVER',special2:'powersuit',sp2Name:'POWER SUIT',special3:'laser',sp3Name:'LASER GLARE',tr:2,skin2:'heckyfox',skinName:'FOX SKIN',
     col:{skin:'#e8a878',glove:'#e8a878',leg:'#f0eef6',foot:'#1a1820',aura:'#ffd23a'},sh:.72,hip:.5,
     quote:"DON'T TAKE IT PERSONALLY. IT'S JUST BUSINESS.",lose:"I'LL HAVE MY LAWYERS CALL YOU.",stageName:'PENTHOUSE'},
   lawslie:{id:'lawslie',name:'LAWSLIE',nick:'THE LAW',style:'POLICE DEFENSE',country:'PRECINCT 9',countryLabel:'ORIGIN',flag:'badge',ht:"5'3\" (160 CM)",wt:'120 LB (54 KG)',
@@ -554,7 +554,7 @@ const Select={enter(mode){this.mode=mode;setTwo(mode==='2p');this.ph='p1';this.d
     if(this.mode==='training'||this.mode==='trials')startFight();else go(VS)},
   draw(){const t=this.t,id=ORDER[this.cur],c=CH[id],pi=this.ph==='p1'?0:1,sk=c.skin2&&this.skin[pi]&&CH[c.skin2]?CH[c.skin2]:c,A=arch(c);stripes(t,'#120f30','#191540');
     const title=this.ph==='p1'?'SELECT YOUR FIGHTER':'CHOOSE YOUR OPPONENT';drawText(title,128,4,'#fff',1,{align:'center',grad:FIRE,outline:'#300'});ctx.fillStyle='#d0301a';ctx.fillRect(40,13,176,1);
-    const unl=rc(id).clear>0,hint=c.skin2&&CH[c.skin2]?'SELECT: '+(this.skin[pi]?'FOX SKIN':'COSTUME 1'):unl?'SELECT: COLOR '+(this.alt[pi]?'2':'1'):'';
+    const unl=rc(id).clear>0,hint=c.skin2&&CH[c.skin2]?'SELECT: '+(this.skin[pi]?c.skinName:'COSTUME 1'):unl?'SELECT: COLOR '+(this.alt[pi]?'2':'1'):'';
     const stats=(x,y,gap)=>['SPD','PWR','DEF'].forEach((k,j)=>{const yy=y+j*gap;drawText(k,x,yy,'#99a',1,{shadow:false});for(let q=0;q<5;q++){ctx.fillStyle=q<c.stats[j]?'#ffd23a':'#333';ctx.fillRect(x+21+q*5,yy+1,4,5)}});
     if(!this.det){
       // left: the highlighted fighter, a medium portrait over the basics
@@ -2034,7 +2034,7 @@ const Cutscene={
     if(!F)F={superFlash:0,cinema:false,superBy:null};this.card=S.title?110:0;this.n=0;this.prep();playMusic(k==='ending'?'ending':'select')},
   // speaker info: name, face, colour
   who(s){if(s==='SAM'&&RUN.p1==='padre')s='P';const c=CH[RUN.p1];
-    return{P:{n:c.name,im:c.porm,c:c.col.aura},VEX:{n:'VEX',im:vexPor(RUN.vexLit),c:RUN.vexLit?'#ffd23a':'#e0a0ff'},VIC:{n:'VICTOR',im:vexPor(true),c:'#ffd23a'},
+    return{P:{n:c.name,im:skinned(RUN.p1,0).porm,c:c.col.aura},VEX:{n:'VEX',im:vexPor(RUN.vexLit),c:RUN.vexLit?'#ffd23a':'#e0a0ff'},VIC:{n:'VICTOR',im:vexPor(true),c:'#ffd23a'},
       FOE:{n:(RUN.mercy&&RUN.mercy.name)||'SID',im:foePor(),c:'#ff9a6a'},SAM:{n:'SAMSON',im:CH.padre.porm,c:'#7ad8ff'},IVAN:{n:'IVAN',im:CH.ivan.porm,c:'#ff5a3a'},SHD:{n:'SHADOW',im:shadowPor(c.porm),c:'#b04aff'},N:{}}[s]||(CH[s]?{n:CH[s].name,im:CH[s].porm,c:CH[s].col.aura}:{})},
   fill(s){const c=CH[RUN.p1];return s.replace(/\{N\}/g,c.name).replace(/\{F\}/g,(RUN.mercy&&RUN.mercy.name)||'SID')},
   skip(b){return!!b&&((b.skipIf&&b.skipIf===RUN.p1)||(b.onlyIf&&b.onlyIf!==RUN.p1))},

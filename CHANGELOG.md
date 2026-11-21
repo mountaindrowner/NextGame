@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.29.0
+
+- **Two new costumes:** on the select screen, press **SELECT** on Zeke or Samson to switch. Both keep their fighter's moves, stats and voice.
+  - **IDOL ZEKE:** Zeke cosplaying a teal twin-tail pop idol, with a silver top and teal tie, a pleated skirt, boots and a teal bowling ball. His win pose is a wink and a heart.
+  - **TEEN ROCKER (Samson):** a skinny teenage Samson with long black hair, the collar and gold-cross stole over a band tee, ripped jeans, studded wristbands and the holy book. He wins with a rock-concert fist.
+  - Each has all 16 animations and its own select-screen portraits (full, card, grid and head icon), made from the costume sprite in the style of the fighter's original portrait.
+- The select screen names the costume you're on ("SELECT: IDOL ZEKE", "TEEN ROCKER", "FOX SKIN").
+- In story mode, your cutscene face matches your costume.
+- **PixelLab:** 124 generations to finish both (30 more went on the proof sprites earlier). 9,585 left; the $0.07 credit wasn't touched.
+- **New test:** every costume loads a full animation set and portraits, and plays as its fighter.
+
 ## 1.28.0
 
 - **Every fighter has their own story.** Story mode now follows the fighter you pick:

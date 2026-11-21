@@ -27,11 +27,16 @@ ALT = {
     ("rex", "airkick"): ("jump", 5, 4, "in mid-air, the bass slung on his back, he straightens his front leg completely and thrusts it forward horizontally in a flying side kick, the leg fully extended and straight at chest height with the sneaker sole leading, other knee tucked"),
     ("lawslie", "airkick"): ("jump", 5, 4, "in mid-air she straightens her front leg completely and thrusts it forward horizontally in a flying side kick, the leg fully extended and straight at chest height with the boot sole leading, body leaning back, other knee tucked"),
     ("zeke", "airkick"): ("jump", 5, 4, "in mid-air he straightens his front leg completely and thrusts it forward horizontally in a flying side kick, the leg fully extended and straight at chest height with the shoe sole leading, body leaning back, other knee tucked"),
+    ("padreteen", "airkick"): ("jump", 5, 4, "in mid-air, holding the book tight under his left arm, he snaps his front leg out perfectly straight forward in a flying side kick, the sole of the sneaker leading at chest height, the other knee tucked up, long hair flying"),
+    ("padreteen", "airpunch"): ("jump", 5, 4, "in mid-air, holding the book tight under his left arm, he throws a hard punch with his free right fist, the right arm fully extended forward and angled down, legs tucked, long hair flying"),
+    ("zekeidol", "airkick"): ("jump", 5, 4, "in mid-air he straightens his front leg completely and thrusts it forward horizontally in a flying side kick, the leg fully extended and straight at chest height with the boot sole leading, body leaning back, other knee tucked, teal twin-tails flying"),
     ("padre", "airkick"): ("jump", 5, 4, "in mid-air, holding the book tight under his left arm, he snaps his front leg out perfectly straight forward in a flying side kick, the sole of the boot leading at chest height, the other knee tucked up"),
     ("padre", "airpunch"): ("jump", 5, 4, "in mid-air, holding the book tight under his left arm, he throws a hard punch with his free right fist, the right arm fully extended forward and angled down, legs tucked"),
 }
 # a second per-fighter wording (CHAR:ANIM:alt2, takes g/h)
 ALT2 = {
+    ("padreteen", "airkick"): ("jump", 4, 4, "rising in mid-air, side view facing right, holding the book tight under his left arm, he snaps his front leg out perfectly straight forward in a flying side kick at chest height, sneaker sole leading, other knee tucked, long hair flying"),
+    ("padreteen", "airpunch"): ("jump", 4, 4, "rising in mid-air, side view facing right, holding the book tight under his left arm, he throws a hard punch forward and down with his free right fist, the arm fully extended, legs tucked, long hair flying"),
     ("keksan", "airkick"): ("jump", 5, 4, "in mid-air a Muay Thai flying knee: both feet off the ground, he drives his right knee forward and up hard at chest height, the left leg trailing straight back, both hands pulling down in front of him, body leaning into the knee"),
 }
 SRC_OVERRIDE = {("ivan", "crouch"): "crouch__a"}  # use the regenerated crouch as the start pose

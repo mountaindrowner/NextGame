@@ -211,5 +211,41 @@
    "take": "special3__t",
    "pk": 4
   }
+ },
+ "zekeidol": {
+  "airkick": {
+   "take": "airkick__e",
+   "pk": 4
+  },
+  "airpunch": {
+   "take": "airpunch__b",
+   "pk": 4
+  },
+  "cpunch": {
+   "take": "cpunch__b",
+   "pk": 4
+  },
+  "lowkick": {
+   "take": "lowkick__a",
+   "pk": 5
+  }
+ },
+ "padreteen": {
+  "airkick": {
+   "take": "airkick__h",
+   "pk": 4
+  },
+  "airpunch": {
+   "take": "airpunch__g",
+   "pk": 4
+  },
+  "cpunch": {
+   "take": "cpunch__x",
+   "pk": 3
+  },
+  "lowkick": {
+   "take": "lowkick__b",
+   "pk": 4
+  }
  }
 }
