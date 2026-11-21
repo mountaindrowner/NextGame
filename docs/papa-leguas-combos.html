@@ -30,10 +30,11 @@ h1{font-size:clamp(26px,6vw,40px);line-height:1.05;background:linear-gradient(18
 .lede{color:var(--muted);margin:0;max-width:60ch}
 /* input chips: colours match the on-screen buttons */
 .seq{display:flex;flex-wrap:wrap;align-items:center;gap:4px 5px}
-.k{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;border-radius:12px;font-family:var(--display);font-size:11px;font-weight:700;color:#fff;
+.k{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 7px;border-radius:12px;font-family:var(--body);font-size:13px;font-weight:600;letter-spacing:.02em;color:#fff;
   box-shadow:0 2px 0 rgba(0,0,0,.45);white-space:nowrap}
 .k.a,.k.b{background:var(--btnA)} .k.sp{background:var(--btnSP);color:#3a2404} .k.f{background:var(--btnF)} .k.ex{background:var(--ex);color:#062a33}
 .k.dir{background:transparent;color:var(--fg);box-shadow:none;border:2px solid var(--line);font-family:var(--mono);font-size:13px;min-width:22px;height:22px;padding:0 3px}
+.k.jmp{background:transparent;color:var(--fg);box-shadow:none;border:2px solid var(--line);font-size:11px;border-radius:4px;height:22px}
 .k.mv{background:var(--panel2);border:2px solid var(--line);box-shadow:none;color:var(--fg);border-radius:4px;font-size:10px}
 .op{font-family:var(--mono);font-size:13px;color:var(--muted);padding:0 1px}
 .op.can{color:var(--fire);font-weight:700}
@@ -124,6 +125,12 @@ footer{color:var(--muted);font-size:12px;border-top:2px solid var(--line);paddin
     <div class="group" id="free"></div>
   </section>
 
+  <section class="group" aria-label="Kick combos">
+    <h2>Combos: kick starters</h2>
+    <p class="lede">A standing kick is 0 on hit, so nothing links after it: always cancel it. A jumping kick is the best way in, because you land with time to start a chain.</p>
+    <div class="group" id="kick"></div>
+  </section>
+
   <section class="group" aria-label="Combos with meter">
     <h2>Combos: with meter</h2>
     <div class="group" id="paid"></div>
@@ -145,7 +152,7 @@ footer{color:var(--muted);font-size:12px;border-top:2px solid var(--line);paddin
 <script>
 const K=(t,c)=>`<span class="k ${c}">${t}</span>`;
 const T={A:K('A','a'),B:K('B','b'),SP:K('SP','sp'),FOCUS:K('FOCUS','f'),EX:K('FOCUS+SP','ex'),SUPER:K('→','dir')+K('SP','sp'),
-  '→A':K('→','dir')+K('A','a'),'↓A':K('↓','dir')+K('A','a'),'↓B':K('↓','dir')+K('B','b'),'←A':K('←','dir')+K('A','a'),'↓SP':K('↓','dir')+K('SP','sp'),
+  '→A':K('→','dir')+K('A','a'),'↓A':K('↓','dir')+K('A','a'),'↓B':K('↓','dir')+K('B','b'),'←A':K('←','dir')+K('A','a'),'↓SP':K('↓','dir')+K('SP','sp'),'JB':K('JUMP IN','jmp')+K('B','b'),
   ',':'<span class="op">,</span>','>':'<span class="op can">&gt;</span>','L':'<span class="op link">LINK</span>','HOLD':K('HOLD FOCUS','f')};
 const seq=s=>'<div class="seq">'+s.split(' ').map(x=>T[x]||x).join('')+'</div>';
 const MOVES=[
@@ -173,12 +180,20 @@ const FREE=[
  ['A , A , B , A','Target combo (Légua Finish)',6,18],
  ['←A > SP','Double Jab',4,17],
  ['HOLD , A , A , B > SP','Focus crumple',7,28]];
+const KICK=[
+ ['JB , A , A , B > SP','Jump-in kick',7,28,'jump'],
+ ['JB , A , A , A , B > SP','Jump-in kick, three jabs',8,29],
+ ['JB , B > SP','Jump-in kick, kick',5,25],
+ ['B > SP','Kick into Rush',4,20],
+ ['B , A','Kick into Légua Finish',4,13],
+ ['A , A , ↓B','Jab, jab, sweep (knockdown)',3,14],
+ ['B > EX','Kick into EX Rush',4,24,null,1]];
 const PAID=[
  ['A , A , B > EX','EX Rush ender',6,26,null,1],
  ['HOLD , A , A , A , A , B > EX','Focus into EX',9,33,null,1],
  ['A , A , B > SP > SUPER','Super cancel',10,36,null,3],
  ['→A L A , A , A , B > SP > SUPER','Overhead into super cancel',12,43,'best',3]];
-const BADGE={bnb:'<span class="badge bnb">Bread and butter</span>',best:'<span class="badge best">His best</span>',hi:'<span class="badge hi">Beats crouch block</span>',lo:'<span class="badge lo">Beats stand block</span>'};
+const BADGE={bnb:'<span class="badge bnb">Bread and butter</span>',best:'<span class="badge best">His best</span>',jump:'<span class="badge best">Best kick starter</span>',hi:'<span class="badge hi">Beats crouch block</span>',lo:'<span class="badge lo">Beats stand block</span>'};
 const row=([s,name,hits,dmg,b,m=0])=>{const pct=Math.round(dmg/HP*100);
   const pips=[0,1,2].map(i=>`<span class="${i<m?'on'+(m===3?' full':''):''}"></span>`).join('');
   return `<article class="combo${b==='best'||b==='bnb'?' star':''}"><div class="top"><div class="cname">${name}${b?BADGE[b]:''}</div>${seq(s)}</div>
@@ -187,4 +202,5 @@ const row=([s,name,hits,dmg,b,m=0])=>{const pct=Math.round(dmg/HP*100);
   <div class="meter" aria-label="meter cost">${pips}<em>${m===0?'NO METER':m===3?'FULL BAR':'1/3 BAR'}</em></div></div></article>`};
 document.getElementById('free').innerHTML=FREE.map(row).join('');
 document.getElementById('paid').innerHTML=PAID.map(row).join('');
+document.getElementById('kick').innerHTML=KICK.map(row).join('');
 </script>
