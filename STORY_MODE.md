@@ -59,10 +59,16 @@ Bosses are picked at random from the roster (never your own fighter), so every r
 - **Moving:** walk in 8 directions. Up/down moves you into or out of the screen along a floor band (depth), like Final Fight or Streets of Rage.
 - **A (punch):** a 3-hit combo, jab, jab, kick, that knocks down on the last hit. **B (kick)** on its own pushes an enemy back, and after a hit it finishes the combo with a knockdown (A, A, B).
 - **JUMP button:** jump, then A or B for a jump kick. (Up/down is depth in this mode.)
-- **SP (A+B), desperation move:** your fighter's special pose plus a shockwave that hits everyone around you. It costs a little health, like the classics, and gets you out of a crowd.
+- **SP (A+B), desperation move:** your fighter's special pose plus a shockwave that hits everyone around you. It costs 6 health, which turns **grey**: land hits and it comes back, get hit and it's gone (Streets of Rage 4's rule).
+- **Launcher (A, A, JUMP):** the third hit pops the enemy up; he floats a little, and up to 3 more hits juggle him.
+- **Back attack (JUMP + A):** an elbow behind you that knocks down. Press both together.
+- **Sidestep (tap up or down twice):** slip into or out of the screen, untouchable for a moment.
 - **Super (FWD + SP, full meter):** the cinematic cut-in, then it hits every enemy on screen.
-- **Grab and throw:** walk into a reeling enemy to grab them, then B to throw them into their friends.
-- **Hit rules:** a hit only lands if attacker and target are on roughly the same depth (within about 10 px).
+- **Grab and throw:** walk into a reeling enemy to grab them, then A three times to throw (hold back to throw behind you). A thrown enemy bowls over his friends and lights oil drums.
+- **Hit rules:** your hits land within 14 px of an enemy's depth (18 in the air), theirs only within 8, so close calls go your way. A yellow ring under an enemy means you're lined up.
+- **Telegraphs:** every committed enemy attack (punch wind-ups, charges, grabs, the bash, Vex's slam) flashes a red **!** first.
+- **Allies:** the last man of a wave may kneel. Help him up (A) and he becomes an ally (up to 3). **SELECT** calls one in: he runs across the screen and tackles every henchman in his way, even one holding you. The man you spare in Stage 1 counts too. Leave a kneeling man alone and he walks off after a few seconds.
+- **Stage results:** time, best combo, damage taken, men spared and lives lost add up to a rank (S, A, B or C) and a bonus of 500 to 5,000 points. Your best rank per stage is saved.
 - **Lives and continues:** 3 lives, then CONTINUE? 9..0.
 - **Score:** points for every hit and knockout.
 
@@ -96,6 +102,14 @@ The extras are drawn onto each animation frame at runtime: the head and fist are
 
 **The spared man keeps his look.** The one you help up in Stage 1 comes back in the cutscenes with the same size, colours and hat.
 
+**New roles (v1.40):** built from the existing henchmen, with their gear drawn in code (no new PixelLab art).
+
+| Enemy | Stage | Threat | Answer |
+|---|---|---|---|
+| **Riot** (shield) | Streets on | blocks every ground hit from the front; two blocks in a row and he bashes back | jump kick over the shield, get behind him (he turns slowly), SP, a thrown enemy, a hazard |
+| **Grappler** (title belt) | Docks on | a telegraphed reach that grabs you, then a slam | hit him first, or mash A/B to break free; an ally's tackle frees you too |
+| **Medic** (red cross) | Tower on | heals henchmen near him (+12) and pumps them up (30% harder hits), and keeps away from you | chase him down first |
+
 **Crowd rule (the classic trick):** only two enemies may attack at once. The others circle and wait their turn.
 That keeps fights fair and readable.
 
@@ -103,6 +117,9 @@ That keeps fights fair and readable.
 
 - **Backgrounds:** each level is one wide PixelLab background (768×192, three screens). The camera scrolls right and locks at each wave. A flashing **GO →** appears when it's clear.
 - **Breakable crates:** these drop food (heals) and bonus points.
+- **Oil drums** (Streets, Docks, Tower): hit one and it blows up a moment later, knocking down everyone close (you too). A thrown enemy or a car sets one off, and a blast sets off any drum near it.
+- **Traffic lane** (Streets, from the second wave): the lane at the front flashes red with an arrow, then a car speeds through. It hits anyone in that lane, much harder on henchmen. Lure them into it.
+- **Live floor panels** (Vex Tower): two panels flicker yellow, then go live for a second, hurting anyone standing on them.
 
 ## As built (v1.14.0)
 

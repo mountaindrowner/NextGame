@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.40.0
+
+Story mode, from a study of ten classic beat 'em ups (`STORY_MODE.md` has the details).
+
+- **Fairer hits:** your attacks land within 14 px of an enemy's depth (18 in the air), theirs within 8. A yellow ring under an enemy shows you're lined up.
+- **Telegraphs:** a red **!** flashes before every committed enemy attack.
+- **Back attack:** JUMP + A, an elbow behind you that knocks down.
+- **Grey health:** the desperation move's 6 health comes back as you land hits; a hit burns it.
+- **Stage results:** time, best combo, damage, men spared and lives lost give a rank (S to C) and a bonus. Best ranks are saved.
+- **Combo counter** on screen in Story mode.
+- **Sidestep:** tap up or down twice.
+- **Launcher and juggles:** A, A, JUMP pops an enemy up for up to 3 more hits.
+- **Hazards:** oil drums (hit one, or throw someone into it), a traffic lane on the Streets, and live floor panels in Vex Tower.
+- **Mercy allies:** the last man of a wave may kneel. Help him up and SELECT calls him in for a tackle that runs the length of the screen.
+- **New enemy roles:** Riot (shield), Grappler (grab and slam) and Medic (heals and pumps up the others), one new role per stage.
+- **Fix:** a JUMP pressed during hit-stop is kept, like A.
+- **Tests:** `tools/story_mech.js` checks all 17 mechanics; `tools/story.js` still clears every stage with the new enemies.
+
 ## 1.39.1
 
 - **One colour per button:** A (punch) red, B (kick) green, SP gold, FOCUS/JUMP blue. The handheld's buttons, the training input log and the Options > CONTROLS list all use them.
