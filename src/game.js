@@ -518,10 +518,10 @@ const Intro={enter(){this.slam=-1;if(!F)F={superFlash:0,cinema:false,superBy:nul
     // everyone together, then the logo slams in
     const u=t-FIN;ctx.drawImage(CH.karl.stage,0,0);ctx.fillStyle='rgba(6,4,16,.6)';ctx.fillRect(0,0,W,H);
     const g=ctx.createRadialGradient(128,150,10,128,150,150);g.addColorStop(0,'rgba(255,140,40,.35)');g.addColorStop(1,'rgba(255,140,40,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-    const back=ORDER.slice(0,5),front=ORDER.slice(5);
+    const half=Math.ceil(ORDER.length/2),back=ORDER.slice(0,half),front=ORDER.slice(half);// two rows that fit the whole roster
     const row=(ids,y,x0,dx,d)=>ids.forEach((id,i)=>{const a=this.actor(id),dl=Math.max(0,1-(u-d-i*3)/10);if(u<d+i*3)return;a.x=x0+i*dx;a.face=a.x<128?1:-1;
       ctx.globalAlpha=.4;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(a.x,y+1,16,3,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;ctx.save();ctx.translate(0,y-GY-Math.round(dl*30));drawFighter(a);ctx.restore()});
-    row(back,156,30,49,0);ctx.fillStyle='rgba(6,4,16,.35)';ctx.fillRect(0,0,W,H);row(front,190,54,49,8);
+    {const dB=Math.min(49,212/Math.max(1,back.length-1)),dF=Math.min(49,190/Math.max(1,front.length-1));row(back,156,128-dB*(back.length-1)/2,dB,0);ctx.fillStyle='rgba(6,4,16,.35)';ctx.fillRect(0,0,W,H);row(front,190,128-dF*(front.length-1)/2,dF,8)}
     if(u>=22){const k=Math.min(1,(u-22)/6),sc=1+(1-k)*1.5;ctx.save();ctx.translate(128,34);ctx.scale(sc,sc);ctx.globalAlpha=k;
       drawText('BONFIRE',0,-28,'#fff',3,{align:'center',grad:FIRE,outline:'#3a0808',ow:1});drawText('BASH',0,-4,'#fff',4,{align:'center',grad:FIRE,outline:'#3a0808',ow:1});ctx.restore();ctx.globalAlpha=1;
       if(u<28){ctx.fillStyle=`rgba(255,255,255,${(28-u)/8})`;ctx.fillRect(0,0,W,H)}}
