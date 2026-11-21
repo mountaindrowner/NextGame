@@ -1,6 +1,6 @@
 # Bonfire Bash
 
-A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with twelve fighters — Papa-Léguas, Keksan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie, Marcus, Devanté, Estrella, Reyes and Mateo Paezano — playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up with launchers, allies, hazards and stage ranks, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with twelve fighters — Papa-Léguas, Keksan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie, Marcus, Devanté, Estrella, Reyes and Paezano — playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up with launchers, allies, hazards and stage ranks, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
@@ -44,7 +44,7 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Keksan | **Tiger Knee** — a leaping flying knee that clears low attacks and launches on a hit | **Thai Clinch** — a short-range command grab: three knees in the clinch, the last shoves them away. Third special (BK+SP): **Teep** — a long push kick that shoves them across the screen; near a wall they bounce off it into a juggle |
 | Estrella | **High Note** — a slow, bobbing music note that floats across and lingers; foes near it walk slower | **Encore** — a ring of sound out in front of her that pulses five times (hits low). Third special (BK+SP): **Siren Scream** — a short cone of sound, 3 hits; it shatters projectiles |
 | Reyes | **Frontier Knuckle** — a dashing, flaming straight right that knocks down | **Drone Strike** — launches his SABR drone; it hovers ahead of him and fires three aimed laser bolts. Third special (BK+SP): **Eagle Rise** — an invincible rising uppercut, two hits, the anti-air. Air special (A+B or SP in the air, once per jump): **Rotor Kicks** — he hangs in the air flutter-kicking, floating up a little, up to five hits |
-| Mateo | **Fastball** — a windup and a fast straight pitch; every 3rd pitch in a row is a flaming 98 MPH heater that knocks down (a flame over his cap means the next one is hot) | **Steal Home** — a feet-first slide: low, goes under projectiles and high attacks, knocks down. Third special (BK+SP): **Glove Snag** — the glove goes up; a projectile that reaches it is caught and fired straight back as a heater |
+| Paezano | **Fastball** — a windup and a fast straight pitch; every 3rd pitch in a row is a flaming 98 MPH heater that knocks down (a flame over his cap means the next one is hot) | **Steal Home** — a feet-first slide: low, goes under projectiles and high attacks, knocks down. Third special (BK+SP): **Glove Snag** — the glove goes up; a projectile that reaches it is caught and fired straight back as a heater |
 | Marcus | **Bass Drop** — twin low shockwaves roll along the floor both ways across the stage (block crouching, or jump them) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen |
 
 ## Supers
@@ -63,7 +63,7 @@ Forward + A+B with a full meter. Each fighter's super is unique (`SUPERS` in `sr
 | Keksan | Eight Limbs | dash in, then fists, knees, elbows and shins (eight strikes), finished with a launching flying knee |
 | Estrella | Grand Finale | lights down and a spotlight; stage beams, a floor equalizer and five glowing rings of sound roll across the whole stage, each a sung note; the last knocks down, then fireworks and a cheering crowd |
 | Reyes | Air Support | dashing knuckle; on a hit his drone squadron flies in and strafes them, then Eagle Rise launches them ("MISSION COMPLETE!") |
-| Mateo | Strikeout | three pitches with the umpire's call ("STRIKE ONE!", "STRIKE TWO!"), then a blazing heater: "STRIKE THREE! YOU'RE OUT!"; a blocked pitch is a foul ball |
+| Paezano | Strikeout | three pitches with the umpire's call ("STRIKE ONE!", "STRIKE TWO!"), then a blazing heater: "STRIKE THREE! YOU'RE OUT!"; a blocked pitch is a foul ball |
 | Marcus | Stage Dive | homing leap that crashes down (overhead), then a five-note bass jam |
 
 ## Fighting styles
@@ -82,7 +82,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Keksan | Striker | 88 | Muay Thai shin kicks: kicks, sweeps and the jumping knee hit 15% harder |
 | Estrella | Area control | 100 | her sound slows foes: anyone standing near her note or her Encore ring walks at 70% speed |
 | Reyes | All-rounder | 92 | squad leader: starts every round with a third of his super meter |
-| Mateo | Pitcher | 104 | high heat: every 3rd pitch in a row (or the first after a Glove Snag) is a 98 MPH heater |
+| Paezano | Pitcher | 104 | high heat: every 3rd pitch in a row (or the first after a Glove Snag) is a 98 MPH heater |
 | Marcus | Long-range | 104 | slowest walk and dash, longest reach (×1.4, a sound blast off his bass) but normals start 2 frames slower; hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
 
 Reach is measured from each fighter's own sprite (`tools/hitboxes.py`); the archetype's `reach` multiplies it (Vizor 1.12, Estrella 1.05, Samson 1.05). Marcus uses the wider of his sound blast and his sprite.
@@ -119,7 +119,7 @@ Hitting someone during their attack's startup is a **counter-hit**: +20% damage 
 | Devanté | 3 / +5 / -3 | 3 / +3 / -4 | 6 / 0 / -9 | 11 / +6 / -3 | fastest overhead (11 frames) |
 | Estrella | 4 / +5 / -3 | 4 / +5 / -4 | 7 / 0 / -9 | 14 / +6 / -3 | low jab links into her jab |
 | Reyes | 4 / +6 / -3 | 4 / +3 / -4 | 7 / +1 / -9 | 14 / +6 / -3 | jab is +6 |
-| Mateo | 5 / +5 / -3 | 4 / +3 / -4 | 8 / +6 / -9 | 14 / +6 / -3 | heavy kick is +6 and links into a jab |
+| Paezano | 5 / +5 / -3 | 4 / +3 / -4 | 8 / +6 / -9 | 14 / +6 / -3 | heavy kick is +6 and links into a jab |
 
 **Command normals and target combos (Tier 2).** Every fighter has a command normal on **back + A**, and a target combo: a kick that connects, then the button shown, which the normal chain rules don't allow. Both reuse the fighter's own animation frames (`CMD` and `TCM` in `src/game.js`).
 
@@ -136,7 +136,7 @@ Hitting someone during their attack's startup is a **counter-hit**: +20% damage 
 | Devanté | Low Drive | advancing low | B: Posterize | leaping dunk kick, launches |
 | Estrella | Stage Slam | low | A: High C | two-hit scream |
 | Reyes | Breach | advancing punch | A: Salute | rising strike, launches |
-| Mateo | Glove Swat | anti-air | A: Tag Out | glove tag, knocks down |
+| Paezano | Glove Swat | anti-air | A: Tag Out | glove tag, knocks down |
 
 Trials mode teaches each fighter's tools: the basics, their bread-and-butter, an overhead link, their signature link (where they have one), their command normal, their target combo, and a super cancel. Every trial is cleared by `tools/links.js`.
 
@@ -148,7 +148,7 @@ Bread-and-butter combos (checked frame by frame by `tools/combos.js`):
 | Keksan | jab, kick > Tiger Knee | 3 |
 | Estrella | jab, kick > Siren Scream | 5 |
 | Reyes | jab, kick > Frontier Knuckle | 3 |
-| Mateo | jab, kick > Steal Home | 3 |
+| Paezano | jab, kick > Steal Home | 3 |
 | Vizor | jab, kick > Shutter Flash | 3 |
 | Samson | jab, kick > Holy Tome | 3 |
 
@@ -167,7 +167,7 @@ Every stage and the title screen have a recorded song, played looped.
 | Tiger Gym (Keksan) | Thai fight music (oboe-like lead, ching cymbals) over hard rock |
 | Control Room (Vizor) | synthwave arpeggios and pulsing bass |
 | Old Chapel (Samson) | church organ over hard rock |
-| MoundWorks Field (Mateo) | stadium rock walk-up anthem: ballpark organ riff, stomp-stomp-clap drums |
+| MoundWorks Field (Paezano) | stadium rock walk-up anthem: ballpark organ riff, stomp-stomp-clap drums |
 | Sunset Outpost (Reyes) | 80s action-movie rock anthem: marching snare, brass fanfare, palm-muted guitars |
 | Starlight Club (Estrella) | pop and R&B diva anthem: slap bass, claps, brass stabs and a soaring vocal-like synth lead |
 
@@ -219,7 +219,7 @@ Papa-Léguas has two looks. The default is his original sprite (`raw/karl`). The
 `tools/pixellab/sizes.py` sets every fighter's standing height (idle pose, head to feet). It packs each fighter at native size, runs the post-pack fixes (Estrella's covered top, Reyes's olive gear), then shrinks to the target in `tools/pixellab/sizes.json`. Fighters listed under `upscale` may also grow past native size; that uses pixel duplication, never blur (only Papa-Léguas, 91 to 94 px).
 
 - `sizes.py equal`: everyone at 91 px.
-- `sizes.py adjusted` (shipped, the owner's picks): Mateo 95; Papa-Léguas and Marcus 94; Keksan 93; Samson, Devanté and Ivan 91; Zeke, Hecky, Estrella and Reyes 88; Vizor 86; Lawslie 78. Costumes follow their fighter (WHITE GI 94, Fox Hecky 94, Idol Zeke 88).
+- `sizes.py adjusted` (shipped, the owner's picks): Paezano 95; Papa-Léguas and Marcus 94; Keksan 93; Samson, Devanté and Ivan 91; Zeke, Hecky, Estrella and Reyes 88; Vizor 86; Lawslie 78. Costumes follow their fighter (WHITE GI 94, Fox Hecky 94, Idol Zeke 88).
 - `sizes.py lineup OUT.png`: draws everyone on one floor line.
 
 Re-measure the hitboxes afterwards: `python3 tools/hitboxes.py`.
@@ -267,7 +267,7 @@ Ivan "The Bear" (Sambo grappler) left the roster in v1.24.0 to make room for Kek
 
 ### Home-screen icon
 
-`python3 tools/make_icon.py path/to/picture.png` turns any picture (square works best) into `branding/icon-512/192/180/32.png`. Without a picture it draws the default (Papa-Léguas over a pixel bonfire). `tools/build.py` embeds the iPhone and browser-tab icons in `dist/index.html` and writes `dist/manifest.webmanifest` plus `icon-192.png`/`icon-512.png` for Android; ship them in the zip next to `index.html`.
+`python3 tools/make_icon.py path/to/picture.png` turns any picture (square works best) into `branding/icon-512/192/180/32.png`. Without a picture it draws the default (a pixel-art "BB" in the fire lettering over a bonfire). `tools/build.py` embeds the iPhone and browser-tab icons in `dist/index.html` and writes `dist/manifest.webmanifest` plus `icon-192.png`/`icon-512.png` for Android; ship them in the zip next to `index.html`.
 
 On itch.io the game runs inside itch's page, so "Add to Home Screen" from the itch page uses itch's icon. Ours shows when the game is opened at its own address (itch's full-screen view, or anywhere the files are hosted directly).
 

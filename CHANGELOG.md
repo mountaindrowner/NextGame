@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.45.1
+
+- **Mateo Paezano is now just PAEZANO:** his name on screen, his logo, the announcer's call, his story lines and his ending.
+- **New default home-screen icon:** a pixel-art "BB" in the game's fire lettering, with a bevel and drop shadow, over a bonfire with embers, the menu stripes and a gold frame. (`tools/make_icon.py` still turns any picture of your own into the icon set.)
+
 ## 1.45.0
 
 - **Portrait only, zoomed out about 10%.**

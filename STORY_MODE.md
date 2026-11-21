@@ -36,7 +36,7 @@ taking a little more of its hope back, and the fight is won in the end by mercy,
 | Lawslie | suspended for asking questions; afraid of her own anger | Hecky | Vizor | a judge, not a newspaper; walks the beat by choice |
 | Marcus | Vex owns his songs; the crown is all he has left | Devanté | Zeke | buys his songs back, plays free without the crown |
 | Devanté | Vex offers a way out if he throws games | Marcus | Zeke | runs a free league; the scouts come to him |
-| Mateo | Vex bought his ballpark and will keep it open if Mateo signs with Vex's team | Devanté (only one of them keeps their field) | Zeke (bet on Mateo losing) | tears up the contract; free Sunday games at MoundWorks Field |
+| Paezano | Vex bought his ballpark and will keep it open if Paezano signs with Vex's team | Devanté (only one of them keeps their field) | Zeke (bet on Paezano losing) | tears up the contract; free Sunday games at MoundWorks Field |
 | Reyes | a SABR agent who trusts his drones, not people; works alone | Vizor (sells what his cameras see) | Lawslie (his jurisdiction or hers) | turns down his transfer; his squad is a cop, a cameraman and a priest |
 | Estrella | left the chapel choir to sing in Vex's club; he promises to make her a star | Marcus (one headliner) | Lawslie (saw what goes on backstage) | turns down his record deal and sings in the choir again |
 
