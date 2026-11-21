@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.42.0
+
+- **Story mode camera zoomed out:** Story mode now draws at 320×240 on the same screen size, so 25% more of each stage shows across and down, and the fighters look a little smaller against it. Other screens are unchanged.
+  - **Art:** backdrops are drawn at their real size, never stretched. The Penthouse is one full screen wide.
+  - **Rides:** the subway car, cargo lift and window lift fill the wider view.
+  - **On-screen text:** the HUD, results card, pause menu and continue screen are laid out for the new size.
+
 ## 1.41.0
 
 Story mode, round two.

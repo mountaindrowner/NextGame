@@ -123,6 +123,7 @@ That keeps fights fair and readable.
 - **Fire hydrants** (Streets): one shakes and drips (with a red !), then a jet of water sweeps the front lane and knocks everyone in it off their feet. Lure the henchmen into the lane.
 - **Wet floor** (Vex Tower, behind a yellow sign): henchmen who walk onto it slip and fall; you slide on it, like ice.
 - **The floor is deeper:** the walkable band is 48 px deep (it was 36).
+- **Zoomed-out camera:** Story mode draws at 320×240 instead of 256×192, on the same screen size, so you see 25% more of the stage each way (every other screen stays 256×192). Backdrops are never stretched: art narrower than the view is tiled with mirrored copies, and stages whose art has no floor get one drawn in code.
 - **Rides** (TMNT-style set pieces at the end of the first three stages): reach the exit and you board a ride for two more waves. The Streets end on a **subway car** (henchmen come through the doors), the Docks on a **cargo lift** rising past stacked containers, and Vex Tower on a **window-washer lift** up the glass (on both lifts, henchmen drop down onto the platform). The ride scenes are drawn in code.
 
 ## As built (v1.14.0)
