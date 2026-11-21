@@ -124,6 +124,21 @@ const path = require('path');
         q.F.p1.state = 'idle'; const x0 = q.F.p1.x; for (let i = 0; i < 20; i++) q.step(1, { right: 1, h: { right: 1 } }); return q.F.p1.x - x0; };
       const slow = walk(true), fast = walk(false);
       check('AREA CONTROL  her sound slows foes', slow < fast * .85, `walked ${slow | 0}px near the ring vs ${fast | 0}px normally`); }
+    { // ALL-ROUNDER (Reyes): Squad Leader meter, Frontier Knuckle, Drone Strike, Eagle Rise, Rotor Kicks
+      const mk = setup('karl', 'padre').F.p1.meter; let r = setup('reyes', 'padre'); const m0 = r.F.p1.meter;
+      check('ALL-ROUNDER  squad leader meter', m0 >= 30 && mk < 30, `round starts with ${m0 | 0} meter (Papa-Leguas ${mk | 0})`);
+      r = setup('reyes', 'padre', 60, 140); d.startSpecial(r.F.p1, r.F.p2, 1); let knock = false; for (let i = 0; i < 40; i++) { r.step(1); knock = knock || ['knock', 'down'].includes(r.F.p2.state); }
+      check('REYES  Frontier Knuckle (dash, knockdown)', knock, `knocked down ${knock} from 80px away`);
+      r = setup('reyes', 'padre', 60, 170); d.startSpecial(r.F.p1, r.F.p2, 2); const seen = new Set(), h0 = r.F.p2.hp; let drone = false;
+      for (let i = 0; i < 200; i++) { r.step(1); for (const p of r.F.proj) { if (p.kind === 'bolt') seen.add(p); if (p.kind === 'drone') drone = true; } }
+      check('REYES  Drone Strike (3 aimed bolts)', drone && seen.size === 3 && r.F.p2.hp < h0, `drone ${drone}, ${seen.size} bolts, dmg ${(h0 - r.F.p2.hp) | 0}`);
+      r = setup('reyes', 'padre', 100, 130); d.startSpecial(r.F.p1, r.F.p2, 4); const inv = r.F.p1.inv; let top = 0, hits = 0;
+      for (let i = 0; i < 40; i++) { r.step(1); top = Math.max(top, r.F.p1.y); if (r.F.p1.sp) hits = Math.max(hits, r.F.p1.sp.hits); }
+      check('REYES  Eagle Rise (invincible, 2 hits)', inv > 0 && top > 40 && hits === 2, `inv ${inv}f, rose ${top | 0}px, hits ${hits}`);
+      r = setup('reyes', 'padre', 100, 136); Object.assign(r.F.p1, { state: 'jump', st: 8, y: 40, vy: 1 }); r.step(1, { a: 1, b: 1 });
+      const kind = r.F.p1.sp && r.F.p1.sp.kind; let ymax = 0, kh = 0, landed = false;
+      for (let i = 0; i < 160; i++) { r.step(1); ymax = Math.max(ymax, r.F.p1.y); if (r.F.p1.sp && r.F.p1.sp.kind === 'hover') kh = Math.max(kh, r.F.p1.sp.hits); landed = landed || (r.F.p1.y === 0 && r.F.p1.state !== 'special'); }
+      check('REYES  Rotor Kicks (air, floats, hits)', kind === 'hover' && ymax > 45 && kh >= 4 && landed, `started ${kind}, floated to ${ymax | 0}px from 40, hits ${kh}, landed ${landed}`); }
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();

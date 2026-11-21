@@ -53,7 +53,7 @@ def logo(im, cx, y, k, two_lines=False, sub=True):
     w = text_w("BONFIRE BASH" if not two_lines else "BONFIRE", k) + 4 * k
     ImageDraw.Draw(im).rectangle((cx - w // 2, y2 + k // 2, cx + w // 2, y2 + k // 2 + max(2, k // 3)), fill=RED)
     if sub:
-        s = "10 FIGHTERS - 21 POWERS - 1 CHAMPION"
+        s = "11 FIGHTERS - 23 POWERS - 1 CHAMPION"
         sk = max(1, k // 3)
         while sk > 1 and text_w(s, sk) > im.width - 24:
             sk -= 1
@@ -105,8 +105,8 @@ def cover():  # 630x500, new cover on the arena backdrop
     draw_text(im, "BASH", 157, 52, 6, grad=FIRE, outline="#3a0808", center=True)
     ImageDraw.Draw(im).rectangle((93, 99, 221, 100), fill=RED)
     draw_text(im, "PIXEL FIGHTERS", 157, 105, 1, col=GOLD, center=True)
-    for i, (id_, flip) in enumerate([("karl", False), ("vizor", False), ("kai", False), ("lawslie", False), ("keksan", False), ("estrella", False), ("zeke", True), ("rex", True), ("hecky", True), ("padre", True)]):
-        put(im, id_, 20 + i * 30, 238 - (i % 2) * 7, "idle", 0, flip, k=1)
+    for i, (id_, flip) in enumerate([("karl", False), ("vizor", False), ("kai", False), ("lawslie", False), ("keksan", False), ("estrella", False), ("reyes", True), ("zeke", True), ("rex", True), ("hecky", True), ("padre", True)]):
+        put(im, id_, 18 + i * 27, 238 - (i % 2) * 7, "idle", 0, flip, k=1)
     im.resize((630, 500), Image.NEAREST).convert("RGB").save(OUT / "cover-arena-630x500.png")
 
 

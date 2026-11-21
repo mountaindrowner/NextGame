@@ -24,6 +24,7 @@ PRESET = {
 ALT = {
     ("keksan", "airkick"): ("jump", 5, 4, "in mid-air he whips a jumping Muay Thai roundhouse kick: the front leg swings forward fully extended at chest height striking with the shin, the other knee tucked, arms pulled in"),
     ("padreteen2", "airkick"): ("jump", 3, 4, "strict side view profile facing right: he leaps up and kicks his front leg out perfectly straight and horizontal at chest height in a flying side kick, the sole of the sneaker leading far in front, the back knee tucked, the book under his left arm, long straight hair streaming behind"),
+    ("reyes", "hover"): ("jump", 5, 6, "hovering in mid-air he kicks both legs rapidly up and down in a fast flutter-kick flurry, the boots blurring forward at waist height, body upright, arms spread out for balance"),
     ("estrella", "airkick"): ("jump", 5, 4, "in mid-air she snaps her front leg out perfectly straight forward in a flying side kick at chest height, boot sole leading, the other knee tucked, still holding the black microphone in her right hand, long hair flying"),
     ("estrella", "airpunch"): ("jump", 5, 4, "in mid-air she throws a hard punch forward and down with her free left fist, the arm fully extended, legs tucked, the black microphone held close in her right hand, long hair flying"),
     ("kai", "airkick"): ("jump", 5, 4, "in mid-air he straightens his front leg completely and thrusts it forward horizontally in a flying side kick, the leg fully extended and straight at chest height with the sneaker sole leading, other knee tucked"),

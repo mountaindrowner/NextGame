@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.33.0
+
+- **New fighter: Agent Reyes, "The Sentinel".** A patriotic agent of the Super Americas Border Regency (S.A.B.R.), made from the owner's art. He's the roster's **all-rounder**, and his kit is built from the classic all-rounder toolbox: a dashing punch, an anti-air uppercut, a zoning tool, and an air move.
+  - **Frontier Knuckle (SP):** a dashing, flaming straight right that knocks down.
+  - **Drone Strike (DN+SP):** he launches his SABR drone. It flies out ahead of him, hovers, and fires three aimed laser bolts, then peels off. Only one drone is out at a time. Estrella's Siren Scream can knock it out of the sky.
+  - **Eagle Rise (BK+SP):** an invincible rising uppercut, two hits, his anti-air.
+  - **Rotor Kicks (A+B or SP in the air):** a new kind of move, an air special. He hangs in the air flutter-kicking and floats up a little, hitting anyone close up to five times. It can be used once per jump.
+  - **Super, Air Support:** a dashing knuckle. On a hit, his drone squadron flies in and strafes them, then Eagle Rise launches them for "MISSION COMPLETE!"
+  - **Trait, Squad Leader:** he starts every round with a third of his super meter.
+  - Health 92. Across the CPU-vs-CPU round robin he wins 57%.
+- **His stage, the Sunset Outpost:** a desert patrol outpost at sunset, with mesas, a watchtower and flag, a radar dish, a patrol jeep, and drones parked on the helipad. His song is an 80s action-movie rock anthem.
+- **His story:** he came to Bonfire City to shut down Vex's smuggling ring alone, trusting his drones more than people. Vizor gives up the route and becomes his spotter. Lawslie, who doesn't want the Regency kicking down doors in her city, becomes his partner. He turns down his transfer and stays with his new squad.
+- **His voice:** announcer call, every special, the super, win and lose lines.
+- **Records screen:** the fighter list fits eleven rows.
+- **New tests** cover the leader meter, the knuckle knockdown, the drone's three bolts, Eagle Rise's invincibility and two hits, Rotor Kicks' float and hits, and the super.
+- **PixelLab:** 85 generations (character 15, animations and retakes, stage 10, song). 9,288 left; the $0.07 credit wasn't touched.
+
 ## 1.32.0
 
 - **Estrella's Grand Finale is a full stage show now.** Same hits and timing, so balance is unchanged:

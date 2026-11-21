@@ -14,6 +14,7 @@ const COMBOS = {
   kai: [['a'], ['b'], ['a', 'b']],
   keksan: [['a'], ['b'], ['a', 'b']],
   estrella: [['a'], ['b'], ['a', 'b', { left: 1 }]],
+  reyes: [['a'], ['b'], ['a', 'b']],
 };
 (async () => {
   const br = await chromium.launch();

@@ -100,8 +100,8 @@ def main():
     bar(c, 101, 150, (208, 48, 26, 255))
     draw_text(c, "PIXEL FIGHTERS", W // 2, 108, 1, col="#ffe66a", center=True)
     ground = H - 12
-    for i, (id_, flip) in enumerate([("karl", False), ("vizor", False), ("kai", False), ("lawslie", False), ("keksan", False), ("estrella", False), ("zeke", True), ("rex", True), ("hecky", True), ("padre", True)]):
-        place(c, id_, 20 + i * 30, ground - (i % 2) * 7, anim="idle", flip=flip)
+    for i, (id_, flip) in enumerate([("karl", False), ("vizor", False), ("kai", False), ("lawslie", False), ("keksan", False), ("estrella", False), ("reyes", True), ("zeke", True), ("rex", True), ("hecky", True), ("padre", True)]):
+        place(c, id_, 18 + i * 27, ground - (i % 2) * 7, anim="idle", flip=flip)
     c.resize((W * 2, H * 2), Image.NEAREST).convert("RGB").save(OUT / "cover-630x500.png")
 
     # --- banner 960x240 (drawn at 480x120, x2) ---
@@ -109,7 +109,7 @@ def main():
     b = stage("karl", W, H, 0.45)
     draw_text(b, "BONFIRE BASH", W // 2, 26, 4, grad=FIRE, outline="#3a0808", center=True)
     bar(b, 63, 200, (208, 48, 26, 255))
-    draw_text(b, "10 FIGHTERS - 21 POWERS - 1 CHAMPION", W // 2, 70, 1, col="#ffe66a", center=True)
+    draw_text(b, "11 FIGHTERS - 23 POWERS - 1 CHAMPION", W // 2, 70, 1, col="#ffe66a", center=True)
     place(b, "karl", 52, H - 6, anim="punch", frame=4)
     place(b, "keksan", 436, H - 6, anim="kick", frame=5, flip=True)
     b.resize((W * 2, H * 2), Image.NEAREST).convert("RGB").save(OUT / "banner-960x240.png")
