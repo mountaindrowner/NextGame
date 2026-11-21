@@ -253,13 +253,13 @@ const CH={
     col:{skin:'#c88a5a',glove:'#d02a2a',leg:'#1a1a22',foot:'#c88a5a',aura:'#ff3a3a'},sh:.72,hip:.5,
     quote:"RESPECT THE RING. THEN RESPECT THE TIGER.",lose:'MY GUARD... DROPPED...',stageName:'TIGER GYM'},
   estrella:{id:'estrella',name:'ESTRELLA',nick:'THE VOICE',style:'SHOWSTOPPER',country:'STARLIGHT CLUB',countryLabel:'STAGE',flag:'star',ht:"5'6\" (168 CM)",wt:'130 LB (59 KG)',
-    speed:0.98,power:0.96,def:0.98,jump:1,stats:[3,3,3],special:'note',spName:'HIGH NOTE',special2:'encore',sp2Name:'ENCORE',special3:'siren',sp3Name:'SIREN SCREAM',tr:0,
+    speed:0.98,power:1.02,def:0.98,jump:1,stats:[3,3,3],special:'note',spName:'HIGH NOTE',special2:'encore',sp2Name:'ENCORE',special3:'siren',sp3Name:'SIREN SCREAM',tr:0,
     col:{skin:'#d8a070',glove:'#2a3ad0',leg:'#3a2a5a',foot:'#1a1a22',aura:'#ffd23a'},sh:.72,hip:.5,
     quote:"THAT'S A WRAP. YOU WERE A GREAT AUDIENCE.",lose:'MY VOICE... I LOST MY VOICE...',stageName:'STARLIGHT CLUB'},
 };
 // fighters who aren't on the roster but fight in story mode (they load like everyone else)
 const STORY_FIGHTERS=['ivan'];
-const ORDER=['karl','keksan','vizor','padre','zeke','hecky','lawslie','rex','kai'];// Estrella joins once her sprites are animated (her kit, arc, portraits, voice, stage and song are in)
+const ORDER=['karl','keksan','vizor','padre','zeke','hecky','lawslie','rex','kai','estrella'];
 // ---- archetypes: every fighter plays differently (health, reach, movement, chains) and has one unique trait ----
 const ARCH={
   karl:{type:'RUSHDOWN',trait:'FAST DASH, 4-HIT CHAINS',hp:92,chain:4,dash:1.3,reach:1},
@@ -270,7 +270,7 @@ const ARCH={
   hecky:{type:'TECH RUSHDOWN',trait:'PARRY: TAP FWD ON HIT',hp:98,parry:true,reach:1.18,hh:1.35,dash:1.2},
   lawslie:{type:'ENFORCER',trait:'NO CHIP, BLOCK = METER',hp:100,enforcer:true,reach:1},
   kai:{type:'HIGH FLYER',trait:'DOUBLE JUMP, BIG HOPS',hp:96,dj:true,reach:1},
-  estrella:{type:'AREA CONTROL',trait:'HER SOUND SLOWS FOES',hp:96,sound:true,reach:1},
+  estrella:{type:'AREA CONTROL',trait:'HER SOUND SLOWS FOES',hp:100,sound:true,reach:1},
   keksan:{type:'STRIKER',trait:'SHIN KICKS: HARDER KICKS',hp:94,shin:true,reach:1},
   rex:{type:'LONG-RANGE',trait:'HUGE REACH, BEAT = +DMG',hp:104,rhythm:true,amp:true,reach:1.4,slow:2,dash:.7}};
 const arch=c=>ARCH[c.id]||{};
@@ -293,7 +293,7 @@ const TNAME={jab:'JAB',kick:'KICK',cjab:'LOW JAB',sweep:'SWEEP',jpunch:'JUMP PUN
 // bread-and-butter combos shown in the pause menu
 const BNB={karl:'JAB, JAB, KICK > SP',vizor:'JAB, KICK > SP',padre:'JAB, KICK > SP (OVERHEAD)',zeke:'JAB, KICK > SP',hecky:'LOW JAB, JAB, KICK > SP',lawslie:'JAB, KICK > SP (TASER)',rex:'JAB, KICK > DN+SP',kai:'JAB, KICK > SP',keksan:'JAB, KICK > SP (KNEE)',estrella:'JAB, KICK > BK+SP (SCREAM)'};
 // cooldown (frames) per special; second specials are stronger tools with longer cooldowns
-const SPCD={rush:75,shuriken:75,slam:110,spin:75,flash:110,tome:75,strike:75,split:120,takeover:70,powersuit:720,laser:130,taser:80,cuff:240,bassdrop:80,miccheck:150,bounce:80,crossover:200,knee:90,clinch:260,teep:150,note:95,encore:180,siren:130,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
+const SPCD={rush:75,shuriken:75,slam:110,spin:75,flash:110,tome:75,strike:75,split:120,takeover:70,powersuit:720,laser:130,taser:80,cuff:240,bassdrop:80,miccheck:150,bounce:80,crossover:200,knee:90,clinch:260,teep:150,note:80,encore:150,siren:120,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
 const IMG={};
 function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c}
 function silhouette(img,color){const c=mk(img.width,img.height),x=c.getContext('2d');x.drawImage(img,0,0);x.globalCompositeOperation='source-in';x.fillStyle=color;x.fillRect(0,0,c.width,c.height);return c}
@@ -895,13 +895,13 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
       F.shake=10;F.hitstop=10;SFX.slam();sparks(o.x,GY-o.H*.5,'#ffffff',14);addText('WALL BOUNCE!',o.x,GY-o.H-14,'#ff3a3a')}
     if(t>=32)endSpecial(f)}
   else if(s.kind==='note'){// High Note: a glowing music note that drifts slowly forward and hangs in the air, taking space
-    if(t===10&&!F.proj.some(p=>p.owner===f&&p.kind==='note')){F.proj.push({kind:'note',x:f.x+f.face*24,y:f.H*.62,y0:f.H*.62,vx:f.face*.95,owner:f,rot:0,life:220,lv:'mid',dmg:7,stun:22,kb:1.6,tag:'sp1'});SFX.ding?SFX.ding():SFX.whoosh()}
+    if(t===10&&!F.proj.some(p=>p.owner===f&&p.kind==='note')){F.proj.push({kind:'note',x:f.x+f.face*24,y:f.H*.62,y0:f.H*.62,vx:f.face*.95,owner:f,rot:0,life:220,lv:'mid',dmg:8,stun:22,kb:1.6,tag:'sp1'});SFX.ding?SFX.ding():SFX.whoosh()}
     if(t>=28)endSpecial(f)}
   else if(s.kind==='siren'){// Siren Scream: a close-range sound cone, 3 hits with pushback; it shatters projectiles in front of her
-    if(t<6)f.vx=0;if(t===6)SFX.whooshH();
-    if(t>=8&&t<30){const x1=f.face>0?f.x+6:f.x-76,x2=f.face>0?f.x+76:f.x-6;
+    if(t<4)f.vx=0;if(t===4)SFX.whooshH();
+    if(t>=5&&t<28){const x1=f.face>0?f.x+6:f.x-84,x2=f.face>0?f.x+84:f.x-6;
       for(const q of F.proj)if(q.owner!==f&&q.kind!=='giant'&&q.kind!=='zone'&&q.life>0&&q.x>x1&&q.x<x2&&q.y<f.H*1.2){q.life=0;sparks(q.x,GY-q.y,'#ffd23a',8)}
-      if(s.hits<3&&t-s.last>=7){const fin=s.hits===2,r=tryHit(f,o,{x1,x2,y1:f.y+f.H*.2,y2:f.y+f.H*1.1},{dmg:fin?6:4,stun:20,bs:10,kb:fin?4.2:1.2,lv:'mid',chip:1,tag:'sp3'});
+      if(s.hits<3&&t-s.last>=7){const fin=s.hits===2,r=tryHit(f,o,{x1,x2,y1:f.y+f.H*.2,y2:f.y+f.H*1.1},{dmg:fin?6:4,stun:20,bs:10,kb:fin?4.2:.3,lv:'mid',chip:1,tag:'sp3'});
         if(r){s.hits++;s.last=t;if(r==='block')s.hits=3}}}
     if(t>=38)endSpecial(f)}
   else if(s.kind==='bounce'){// Bounce Pass: a bouncing basketball; on a hit it rebounds to Kai (catch it = quick recharge)
@@ -932,7 +932,7 @@ function updateSpecial2(f,o){const s=f.sp,t=f.st;
         F.shake=Math.max(F.shake,fin?8:4);sparks(o.x-f.face*6,GY-o.H*.45,'#ff3a3a',fin?14:7);if(fin){s.ph='let';s.t0=t}else if(!KO_D(o))o.state='grabbed'}}
     else if(k>=16){f.inv=0;endSpecial(f)}}
   else if(s.kind==='encore'){// Encore: she sings a ring of sound onto the floor ahead; it pulses low hits for three seconds
-    if(t===12&&!F.proj.some(p=>p.owner===f&&p.kind==='zone')){F.proj.push({kind:'zone',x:clamp(f.x+f.face*86,XMIN,XMAX),y:2,vx:0,owner:f,rot:0,life:170,lv:'low',dmg:4,stun:20,kb:1.2,tag:'sp2'});SFX.whoosh()}
+    if(t===12&&!F.proj.some(p=>p.owner===f&&p.kind==='zone')){F.proj.push({kind:'zone',x:clamp(f.x+f.face*86,XMIN,XMAX),y:2,vx:0,owner:f,rot:0,life:170,lv:'low',dmg:5,stun:22,kb:1.2,tag:'sp2'});SFX.whoosh()}
     if(t>=30)endSpecial(f)}
   else if(s.kind==='charge'){// Iron Charge: armored shoulder tackle, absorbs one hit (see applyHit)
     if(t<8)f.vx=0;else if(t<30){f.vx=f.face*4.3;if(t%3===0)dust(f.x,1);
@@ -1418,7 +1418,7 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
         if(s.hits>=99)return P('idle',0);if(s.hits>=6)return A.special?P('special',last('special')):null;
         const k=s.hits%2?'kick':'punch';return A[k]?P(k,akOf(f.c,k).pk):null}
       if(s&&(s.two||s.kind==='laser'||s.kind==='teep'||s.kind==='siren')){const k=s.kind;
-        if(k==='siren')return A.special3?P('special3',kf(t,[[0,0],[8,4],[30,6],[38,8]])):null;
+        if(k==='siren')return A.special3?P('special3',kf(t,[[0,0],[5,4],[28,6],[38,8]])):null;
         if(k==='encore')return A.special2?P('special2',kf(t,[[0,0],[12,5],[30,8]])):null;
         if(k==='teep')return A.special3?P('special3',kf(t,[[0,0],[6,3],[8,4],[18,6],[30,8]])):null;
         if(k==='step'){if(!A.walk)return null;return t<4?(A.crouch?P('crouch',2):P('idle',0)):P('walk',Math.floor(t/1.5)%n('walk'))}
@@ -1554,7 +1554,7 @@ function drawZone(p){const x=Math.round(p.x),a=Math.min(1,p.life/20),pu=p.pulse|
   for(let i=0;i<3;i++){const rw=26+i*5+(pu?(8-pu)*2:0)+((frameNo>>3)&1);ctx.strokeStyle=i===0?'#ffd23a':i===1?'#5a7aff':'rgba(255,210,58,.5)';ctx.lineWidth=pu?2:1;ctx.beginPath();ctx.ellipse(x,GY-2,rw,4+i,0,0,Math.PI*2);ctx.stroke()}
   if(pu){ctx.fillStyle=`rgba(255,220,90,${pu/12})`;ctx.fillRect(x-30,GY-26,60,24)}ctx.globalAlpha=1}
 function drawSound(f){const s=f.sp,t=f.st,fc=f.face,mx=Math.round(f.x+fc*14),my=Math.round(GY-f.y-f.H*.72);
-  if(s.kind==='siren'){if(t<8||t>=32)return;for(let i=0;i<4;i++){const r=((t-8)*5+i*16)%72+6;ctx.globalAlpha=Math.max(0,1-r/76);ctx.strokeStyle=i%2?'#5a7aff':'#ffd23a';ctx.lineWidth=2;
+  if(s.kind==='siren'){if(t<5||t>=30)return;for(let i=0;i<4;i++){const r=((t-5)*5+i*16)%72+6;ctx.globalAlpha=Math.max(0,1-r/76);ctx.strokeStyle=i%2?'#5a7aff':'#ffd23a';ctx.lineWidth=2;
       ctx.beginPath();ctx.arc(mx,my,r,fc>0?-.6:Math.PI-.6,fc>0?.6:Math.PI+.6);ctx.stroke()}ctx.globalAlpha=1;return}
   // GRAND FINALE: a spotlight on her, then rings of sound across the stage
   if(t<22){ctx.fillStyle=`rgba(0,0,10,${Math.min(.6,t/20)})`;ctx.fillRect(0,0,W,H)}

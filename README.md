@@ -1,6 +1,6 @@
 # Bonfire Bash
 
-A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with nine fighters — Papa-Léguas, Keksan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie, Marcus and Devanté — playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with ten fighters — Papa-Léguas, Keksan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie, Marcus, Devanté and Estrella — playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
@@ -34,6 +34,7 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Lawslie | **Taser** — short-range prongs, a hit stuns 3× longer | **Cuff 'Em** — grab through blocks; cuffed opponents can't use specials or super for 5 s |
 | Devanté | **Bounce Pass** — a bouncing basketball; on a hit it comes back and a catch recharges it | **Ankle Breaker** — crossover dribble through the opponent; crossing them leaves them stumbling |
 | Keksan | **Tiger Knee** — a leaping flying knee that clears low attacks and launches on a hit | **Thai Clinch** — a short-range command grab: three knees in the clinch, the last shoves them away. Third special (BK+SP): **Teep** — a long push kick that shoves them across the screen; near a wall they bounce off it into a juggle |
+| Estrella | **High Note** — a slow, bobbing music note that floats across and lingers; foes near it walk slower | **Encore** — a ring of sound out in front of her that pulses five times (hits low). Third special (BK+SP): **Siren Scream** — a short cone of sound, 3 hits; it shatters projectiles |
 | Marcus | **Bass Drop** — twin low shockwaves roll along the floor both ways across the stage (block crouching, or jump them) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen |
 
 ## Supers
@@ -50,6 +51,7 @@ Forward + A+B with a full meter. Each fighter's super is unique (`SUPERS` in `sr
 | Lawslie | Full Arrest | charging grab, three taser zaps, takedown; cuffed for 8 s |
 | Devanté | Fast Break | dribble drive, pop-up, alley-oop slam dunk |
 | Keksan | Eight Limbs | dash in, then fists, knees, elbows and shins (eight strikes), finished with a launching flying knee |
+| Estrella | Grand Finale | spotlight, then rings of sound roll out across the whole stage; the last one knocks down |
 | Marcus | Stage Dive | homing leap that crashes down (overhead), then a five-note bass jam |
 
 ## Fighting styles
@@ -66,6 +68,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Lawslie | Enforcer | 100 | no chip damage when blocking, and blocking builds meter; smallest body (sprites shrunk 20% by `SCALE` in `tools/pixellab/pack.py`), same reach |
 | Devanté | High flyer | 96 | double jump, higher jump, quick feet |
 | Keksan | Striker | 94 | Muay Thai shin kicks: kicks, sweeps and the jumping knee hit 15% harder |
+| Estrella | Area control | 100 | her sound slows foes: anyone standing near her note or her Encore ring walks at 70% speed |
 | Marcus | Long-range | 104 | slowest walk and dash, longest reach (×1.4, a sound blast off his bass) but normals start 2 frames slower; hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
 
 Hecky has a second costume — an anthropomorphic fox — chosen with SELECT on the character select screen (`skin2` in his roster entry; sprites in `assets/fighters/heckyfox/`).
@@ -78,6 +81,7 @@ Bread-and-butter combos (checked frame by frame by `tools/combos.js`):
 |---|---|---|
 | Papa-Léguas | jab, jab, kick > Légua Rush | 6 |
 | Keksan | jab, kick > Tiger Knee | 3 |
+| Estrella | jab, kick > Siren Scream | 5 |
 | Vizor | jab, kick > Shutter Flash | 3 |
 | Samson | jab, kick > Holy Tome | 3 |
 
@@ -96,6 +100,7 @@ Every stage and the title screen have a recorded song, played looped.
 | Tiger Gym (Keksan) | Thai fight music (oboe-like lead, ching cymbals) over hard rock |
 | Control Room (Vizor) | synthwave arpeggios and pulsing bass |
 | Old Chapel (Samson) | church organ over hard rock |
+| Starlight Club (Estrella) | pop and R&B diva anthem: slap bass, claps, brass stabs and a soaring vocal-like synth lead |
 
 Select, win/lose jingles and the ending keep the chiptune music.
 

@@ -271,5 +271,26 @@
   "idle": {
    "take": "idle__x"
   }
+ },
+ "estrella": {
+  "airkick": {
+   "take": "airkick__e",
+   "pk": 2
+  },
+  "airpunch": {
+   "take": "airpunch__f",
+   "pk": 4
+  },
+  "cpunch": {
+   "take": "cpunch__b",
+   "pk": 4
+  },
+  "lowkick": {
+   "take": "lowkick__b",
+   "pk": 4
+  },
+  "fall": {
+   "take": "fall__c"
+  }
  }
 }

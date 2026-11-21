@@ -36,6 +36,7 @@ taking a little more of its hope back, and the fight is won in the end by mercy,
 | Lawslie | suspended for asking questions; afraid of her own anger | Hecky | Vizor | a judge, not a newspaper; walks the beat by choice |
 | Marcus | Vex owns his songs; the crown is all he has left | Devanté | Zeke | buys his songs back, plays free without the crown |
 | Devanté | Vex offers a way out if he throws games | Marcus | Zeke | runs a free league; the scouts come to him |
+| Estrella | left the chapel choir to sing in Vex's club; he promises to make her a star | Marcus (one headliner) | Lawslie (saw what goes on backstage) | turns down his record deal and sings in the choir again |
 
 Each arc has a talk with Samson at the chapel (Samson's own is a prayer), a face-off before each rival duel and a turn after it, a shadow that taunts them with their own temptation, a personal epilogue, and both rivals in the "one month later" scene.
 

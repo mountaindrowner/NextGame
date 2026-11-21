@@ -13,6 +13,7 @@ const COMBOS = {
   rex: [['a'], ['b'], ['a', 'b', { down: 1 }]],
   kai: [['a'], ['b'], ['a', 'b']],
   keksan: [['a'], ['b'], ['a', 'b']],
+  estrella: [['a'], ['b'], ['a', 'b', { left: 1 }]],
 };
 (async () => {
   const br = await chromium.launch();
@@ -43,7 +44,7 @@ const COMBOS = {
         }
         if (btns[0] === 'jump') { frame({ up: 1, right: 1, h: { up: 1, right: 1 } }); continue; }
         before = F.p1.atk ? F.p1.atk.id : null;
-        const o = { h: { down: !!opt.down } }; for (const b of btns) o[b] = 1; frame(o);
+        const o = { h: { down: !!opt.down, left: !!opt.left, right: !!opt.right } }; for (const b of btns) o[b] = 1; frame(o);
         log.push(`${btns.join('+')}->${F.p1.state}${F.p1.atk ? ':' + F.p1.atk.name : ''}`);
       }
       for (let w = 0; w < 90; w++) frame();

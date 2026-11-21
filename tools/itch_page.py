@@ -23,6 +23,7 @@ ROSTER = [  # id, name, style, special 1, special 2
     ("rex", "MARCUS", "BASS BRAWLER", "BASS DROP", "MIC CHECK"),
     ("kai", "DEVANTÉ", "STREETBALL", "BOUNCE PASS", "ANKLE BREAKER"),
     ("keksan", "KEKSAN", "MUAY THAI", "TIGER KNEE", "THAI CLINCH"),
+    ("estrella", "ESTRELLA", "SHOWSTOPPER", "HIGH NOTE", "ENCORE"),
 ]
 
 

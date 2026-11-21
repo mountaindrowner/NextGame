@@ -110,6 +110,20 @@ const path = require('path');
       check('KEKSAN    Teep (pushes them away)', far > 30 && dmg >= 5, `pushed ${far | 0}px, dmg ${dmg | 0}`);
       r = setup('keksan', 'padre', 170, 210); d.startSpecial(r.F.p1, r.F.p2, 4); let air = 0, wb = false; for (let i = 0; i < 50; i++) { r.step(1); air = Math.max(air, r.F.p2.y); if (r.F.p1.sp && r.F.p1.sp.wb) wb = true; }
       check('KEKSAN    Teep wall bounce (juggle)', wb && air > 10, `wall bounce ${wb}, lifted ${air | 0}px`);
+    { // AREA CONTROL: High Note drifts and lingers; Encore pulses low hits; Siren Scream hits 3 times and shatters projectiles; foes near her sound walk slower
+      const lost = (r, n) => { let m = r.F.p2.hp; for (let i = 0; i < n; i++) { r.step(1); m = Math.min(m, r.F.p2.hp); } return r.F.p2.mhp - m; };
+      let r = setup('estrella', 'padre', 60, 200); d.startSpecial(r.F.p1, r.F.p2, 1); r.step(30); const n = r.F.proj.find(p => p.kind === 'note'); const nx = n ? n.x : 0; r.step(60); const n2 = r.F.proj.find(p => p.kind === 'note');
+      check('ESTRELLA  High Note (slow, lingers)', n && n2 && n2.x - nx > 20 && n2.x - nx < 80, `moved ${n2 ? (n2.x - nx) | 0 : '-'}px in 60 frames, still on screen ${!!n2}`);
+      r = setup('estrella', 'padre', 60, 146); d.startSpecial(r.F.p1, r.F.p2, 2); let dmg = lost(r, 150); const z = r.F.proj.find(p => p.kind === 'zone');
+      check('ESTRELLA  Encore (pulsing floor ring)', dmg >= 6, `ring ${z ? 'placed' : 'gone'}, dmg ${dmg | 0} to someone standing in it`);
+      r = setup('estrella', 'padre', 100, 150); d.startSpecial(r.F.p1, r.F.p2, 4); let hits = 0; for (let i = 0; i < 70; i++) { r.step(1); hits = Math.max(hits, r.F.p1.sp ? r.F.p1.sp.hits : 0); }
+      check('ESTRELLA  Siren Scream (3 hits)', hits === 3, `hits ${hits}`);
+      r = setup('estrella', 'zeke', 100, 190); d.startSpecial(r.F.p2, r.F.p1, 1); r.step(16); d.startSpecial(r.F.p1, r.F.p2, 4); let ball = true; for (let i = 0; i < 40; i++) { r.step(1); ball = r.F.proj.some(p => p.owner === r.F.p2); if (!ball) break; }
+      check('ESTRELLA  Scream shatters projectiles', !ball, `Zeke's ball still flying: ${ball}`);
+      const walk = ring => { const q = setup('padre', 'estrella', 60, 200); if (ring) { d.startSpecial(q.F.p2, q.F.p1, 2); q.step(34); const zz = q.F.proj.find(p => p.kind === 'zone'); q.F.p1.x = zz.x - 24; } else { q.step(34); q.F.p1.x = 90; }
+        q.F.p1.state = 'idle'; const x0 = q.F.p1.x; for (let i = 0; i < 20; i++) q.step(1, { right: 1, h: { right: 1 } }); return q.F.p1.x - x0; };
+      const slow = walk(true), fast = walk(false);
+      check('AREA CONTROL  her sound slows foes', slow < fast * .85, `walked ${slow | 0}px near the ring vs ${fast | 0}px normally`); }
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();

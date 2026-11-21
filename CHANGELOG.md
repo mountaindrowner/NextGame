@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.31.0
+
+- **New fighter: Estrella, "The Voice".** A singer from the Starlight Club who fights with punches and kicks, mic in hand, and uses her voice for her specials. She's the game's **area controller**: she owns space instead of chasing you.
+  - **High Note (SP):** a slow, bobbing music note that floats across the stage and lingers. Like a slow fireball in other fighting games, it's there to walk behind.
+  - **Encore (DN+SP):** sets a ring of sound on the floor in front of her that pulses five times and hits low. It works like a trap or a set-play zone.
+  - **Siren Scream (BK+SP):** a short cone of sound that hits 3 times and shatters incoming projectiles, so it doubles as her anti-air and her answer to zoners.
+  - **Trait, "Her sound slows foes":** anyone standing near her note or her Encore ring walks at 70% speed.
+  - **Super, Grand Finale:** a spotlight, then rings of sound roll out across the whole stage. The last ring knocks down.
+  - Her bread-and-butter combo is jab, kick > Siren Scream (5 hits).
+- **Her stage, the Starlight Club:** a concert stage under spotlights with a star sign and a crowd. Her song is a pop and R&B diva anthem.
+- **Her story:** she left the chapel choir to sing in Vex's club, because he promised to make her a star. Marcus is her first rival (Vex says only one of them can headline his party), and Lawslie is her third (she saw what goes on backstage). In the end she turns down Vex's record deal and sings in the choir again.
+- **Her voice:** announcer call, select line, specials, super, win and lose lines.
+- **Balance:** across the CPU-vs-CPU round robin she wins 46%.
+- **New tests** cover her traits (the note lingers, Encore's pulses, Siren's 3 hits, the scream shattering Zeke's ball, the slow walk), her super and her combo. The combo harness now holds back and forward, which Siren Scream (BK+SP) needs.
+- **PixelLab:** 133 generations in all, including a first sprite that lost its detail at sprite size and was replaced by a sharper one holding the mic. 9,373 left; the $0.07 credit wasn't touched.
+
 ## 1.30.0
 
 - **Teen Rocker Samson, version 2.** Long straight black hair parted in the middle, no bangs. The collar, gold-cross stole, band tee, ripped jeans, studded wristbands and holy book are unchanged.
