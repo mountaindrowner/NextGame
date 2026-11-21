@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.46.1
+
+- **Paezano's Home Run Swing has a real animation** (PixelLab, 3 generations): he pulls the bat, settles into a batting stance, and swings level all the way through, with the ball flying off the bat at contact. The code-drawn bat is gone; the white swoosh stays.
+
 ## 1.46.0
 
 - **Paezano's specials, made obvious.**

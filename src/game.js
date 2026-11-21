@@ -1701,6 +1701,7 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
       if(s&&s.kind==='super'){if(!s.hits)return A.walk?P('walk',Math.floor(t/1.4)%n('walk')):null;
         if(s.hits>=99)return P('idle',0);if(s.hits>=6)return A.special?P('special',last('special')):null;
         const k=s.hits%2?'kick':'punch';return A[k]?P(k,akOf(f.c,k).pk):null}
+      if(s&&s.kind==='bat'&&A.batswing)return P('batswing',kf(t,[[0,3],[8,6],[10,7],[20,8],[34,8]]));// PixelLab swing: draw, cock, contact, follow-through
       if(s&&s.kind==='bat'&&A.punch){const pk=akOf(f.c,'punch').pk;return P('punch',kf(t,[[0,0],[9,Math.max(0,pk-1)],[11,pk],[18,pk],[34,last('punch')]]))}
       if(s&&(s.two||s.kind==='laser'||s.kind==='teep'||s.kind==='siren'||s.kind==='eagle'||s.kind==='hover'||s.kind==='snag')){const k=s.kind;
         if(k==='slide')return A.special2?P('special2',kf(t,[[0,0],[8,4],[10,5],[28,7],[40,8]])):null;
@@ -1870,7 +1871,8 @@ function drawPitch(p){const x=Math.round(p.x),y=Math.round(GY-p.y),d=Math.sign(p
   ctx.fillStyle='#120e1e';ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#d8d8e8';ctx.fillRect(x-1,y+2,3,1);
   ctx.fillStyle='#e02a2a';const a=p.rot;ctx.fillRect(Math.round(x+Math.cos(a)*2)-1,Math.round(y+Math.sin(a)*2),1,1);ctx.fillRect(Math.round(x-Math.cos(a)*2),Math.round(y-Math.sin(a)*2),1,1)}
 // the pitcher's tells: a flame over his cap when the next pitch is a heater, the glove's catch flash
-function drawBat(f){const s=f.sp;if(f.state!=='special'||!s||s.kind!=='bat')return;const t=f.st,fc=f.face;
+function drawBat(f){const s=f.sp;if(f.state!=='special'||!s||s.kind!=='bat')return;if(f.c.anim&&f.c.anim.batswing){// the sprite has its own bat: just the swoosh
+    const t=f.st;if(t>=9&&t<=16){ctx.save();ctx.globalAlpha=.5*(1-(t-9)/8);ctx.strokeStyle='#ffffff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(f.x+f.face*4,GY-f.y-f.H*.58,26,f.face>0?-2.2:-.94,f.face>0?.5:3.64,f.face<0);ctx.stroke();ctx.restore()}return}const t=f.st,fc=f.face;
   const a0=-2.5,a1=.35,a2=1.15,ang=t<9?a0+(-.3)*(t/9):t<15?lerp(a0-.3,a1,(t-9)/6):lerp(a1,a2,Math.min(1,(t-15)/12));
   const px=f.x+fc*7,py=GY-f.y-f.H*.6;ctx.save();ctx.translate(Math.round(px),Math.round(py));ctx.scale(fc,1);ctx.rotate(ang);
   if(t>=9&&t<=17){ctx.globalAlpha=.55;ctx.strokeStyle='#ffffff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,30,-(ang-a0)*.9,0,true);ctx.stroke();ctx.globalAlpha=1}
