@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.50.0
+
+- **Story mode: SP is its own button.** Pressing A and B together no longer fires a special by accident; it's just a punch and a kick. (Fights are unchanged.)
+- **Story mode: learn your bosses' moves.** You start with no special. Each boss you beat teaches you their signature move:
+
+  | Boss beaten | Button |
+  |---|---|
+  | First | SP |
+  | Second (Ivan's Bear Slam) | DOWN + SP |
+  | Third | BACK + SP |
+
+  The next stage opens with "NEW MOVE FROM …", and the moves you know are listed bottom-right in each boss's colour (dimmed while on cooldown). Pressing SP before you've learned anything says so.
+  - **Dash:** Papa-Léguas, Keksan, Hecky and Reyes.
+  - **Projectile:** Zeke's roll, Devanté's bouncing ball, Estrella's notes and Paezano's fastball.
+  - **Slam:** Samson and Ivan.
+  - **Double shockwave:** Marcus.
+  - **Stun flash:** Vizor and Lawslie.
+- **Story mode: Breaker.** Press SP while being hit, blocking or held to burst free with a shockwave, untouchable for a moment. It's the way out of corners and combos. It costs half the super bar, or 8 health as grey health if the bar is short. The CPU partner uses it too.
+- **Intro:** the closing group shot now fits the whole roster in two rows.
+- **Online co-op:** the SP button is sent with the other inputs; autoplayed co-op stays frame-identical.
+
 ## 1.49.0
 
 - **Standard PC fighting-game keys.**

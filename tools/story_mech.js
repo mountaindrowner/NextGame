@@ -8,7 +8,7 @@ const path = require('path');
   await p.goto('file://' + path.resolve(__dirname, '../dist/index.html') + (process.env.LAYOUT ? '?layout=' + process.env.LAYOUT : ''));
   await p.waitForFunction(() => window.__dbg && window.__dbg.CH.karl.spr, null, { timeout: 15000 });
   const out = await p.evaluate(() => {
-    const d = window.__dbg, K = ['up', 'down', 'left', 'right', 'a', 'b', 'start', 'select', 'tap', 'jump', 'dl', 'dr'], res = [];
+    const d = window.__dbg, K = ['up', 'down', 'left', 'right', 'a', 'b', 'start', 'select', 'tap', 'jump', 'dl', 'dr', 'sp'], res = [];
     d.SET.sound = false; d.SET.voice = false; d.SET.music = false; d.SET.diff = 1;
     const C = (n, ok, info) => res.push(`${ok ? 'OK  ' : 'FAIL'} ${n.padEnd(36)} ${info}`);
     // a fresh stage with the waves switched off; foes placed by hand
@@ -32,11 +32,21 @@ const path = require('path');
       C('launcher (A, A, JUMP) + juggle', peak > 30 && jm === 3 && jug, `height ${peak.toFixed(0)}, juggle hits allowed ${jm}, juggled ${jug}`); }
     // 4. sidestep: tap down twice slips out of the line, untouchable while moving
     { const q = stage(); q.P.z = 6; q.step({ down: 1, h: { down: 1 } }); q.step(); q.step({ down: 1, h: { down: 1 } }); const inv = q.P.inv; run(q, 10); C('sidestep (tap down twice)', q.P.z > 25 && inv > 0, `z 6 -> ${q.P.z.toFixed(0)}, invincible ${inv} frames`); }
-    // 5. desperation: the health goes grey and comes back as you land hits; a hit takes it away
-    { const q = stage(); q.foe('goon', 140); q.foe('goon', 150, 22); const h0 = q.P.hp; q.step({ a: 1, b: 1 }); const h1 = q.P.hp, g1 = q.P.grey; run(q, 34);
+    // 5. BREAKER: SP while being hit bursts everyone away (half the bar, or grey health without it); the grey health comes back as you land hits
+    { const q = stage(); q.foe('goon', 140); q.foe('goon', 150, 22); q.P.meter = 0; q.P.state = 'hurt'; q.P.stun = 30; const h0 = q.P.hp; q.step({ sp: 1 }); const h1 = q.P.hp, g1 = q.P.grey, st = q.P.state, inv = q.P.inv; run(q, 34);
       for (let k = 0; k < 4; k++) { const e = q.B.foes.find(f => !f.dead && f.state !== 'knock' && f.state !== 'down'); if (e) { e.x = q.P.x + 26; e.z = q.P.z; } q.step({ a: 1 }); run(q, 18); }
-      C('desperation costs grey health', h1 < h0 && g1 > 0 && q.P.hp > h1, `hp ${h0} -> ${h1} (grey ${g1}), after hits ${q.P.hp.toFixed(1)}`);
-      q.P.grey = 4; q.P.inv = 0; q.P.state = 'idle'; q.B.hurtP(2, false, 1); C('a hit burns the grey health', q.P.grey === 0, `grey ${q.P.grey}`); }
+      C('breaker (SP while hit), grey health', st === 'special' && inv > 20 && h1 < h0 && g1 > 0 && q.P.hp > h1, `${st}, invincible ${inv}, hp ${h0} -> ${h1} (grey ${g1}), after hits ${q.P.hp.toFixed(1)}`);
+      q.P.grey = 4; q.P.inv = 0; q.P.state = 'idle'; q.B.hurtP(2, false, 1); C('a hit burns the grey health', q.P.grey === 0, `grey ${q.P.grey}`);
+      const q2 = stage(); q2.P.meter = 80; q2.P.state = 'block'; q2.step({ sp: 1 }); C('breaker costs half the bar when you have it', q2.P.state === 'special' && q2.P.meter === 30, `${q2.P.state}, meter 80 -> ${q2.P.meter}`); }
+    // 5b. SP is its own button: A+B together is just a punch, and with no learned move SP does nothing
+    { const q = stage(); d.RUN.abil = []; q.step({ a: 1, b: 1 }); const ab = q.P.state + (q.P.atk ? ':' + q.P.atk.name : ''); q.P.state = 'idle'; q.P.atk = null; run(q, 30); q.step({ sp: 1 }); const none = q.P.state;
+      C('A+B is not a special; no move until learned', !ab.startsWith('special') && none !== 'special', `A+B -> ${ab}, SP with nothing learned -> ${none}`); }
+    // 5c. learned moves: beat a boss, get his move on SP (Mateo's pitch here), DOWN+SP (Ivan's slam)
+    { const q = stage(1), e = q.foe('goon', 220); e.hp = e.mhp = 100; d.RUN.abil = []; d.RUN.level = 0; d.RUN.ladder = ['mateo']; d.go(d.Result, 0, { p1: 'karl', p2: 'mateo', stage: 'mateo' }); d.Result.win = true;
+      d.Result.next(); const learned = (d.RUN.abil || []).slice(); const q2 = stage(1); d.RUN.abil = ['mateo', 'ivan']; const f = q2.foe('goon', 220); f.hp = f.mhp = 100; f.wait = 999;
+      q2.step({ sp: 1 }); let hit = false; for (let i = 0; i < 70; i++) { if (f.state === 'walk' || f.state === 'idle') { f.x = 220; f.z = 18; } q2.step(); hit = hit || f.hp < 100; }
+      const g = q2.foe('goon', q2.P.x + 40); g.hp = g.mhp = 100; q2.P.state = 'idle'; q2.P.abCD = [0, 0, 0]; q2.step({ sp: 1, down: 1, h: { down: 1 } }); let slam = false; for (let i = 0; i < 30; i++) { q2.step(); slam = slam || g.hp < 100; }
+      C('learned moves: beat a boss, SP pitch, DN+SP slam', learned[0] === 'mateo' && hit && slam, `learned [${learned}], SP pitch hit ${hit}, DN+SP slam hit ${slam}`); }
     // 6. telegraph: committed enemy attacks show "!" first
     { const q = stage(), e = q.foe('bruiser', 180); e.state = 'special'; e.st = 0; e.sp = { kind: 'charge', id: 1 }; const w = q.B.windup(e); C('telegraph (! before charges)', w === true, `windup ${w}`); }
     // 7. RIOT: front hits are blocked, a jump kick gets over, and two blocks earn a bash

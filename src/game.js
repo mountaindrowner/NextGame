@@ -53,7 +53,7 @@ function drawText(s,x,y,col='#fff',sc=1,o={}){if(PC&&!PADUSED&&typeof s==='strin
 function wrap(s,n){const out=[];let line='';for(const w of s.split(' ')){if((line+' '+w).trim().length>n){out.push(line);line=w}else line=(line+' '+w).trim()}if(line)out.push(line);return out}
 
 // ---------------- INPUT ----------------
-const KEYS=['up','down','left','right','a','b','start','select','tap','jump','dl','dr'];
+const KEYS=['up','down','left','right','a','b','start','select','tap','jump','dl','dr','sp'];
 const held={},prev={},pressed={},latch={},touchHeld={},keyHeld={},mouseHeld={};
 KEYS.forEach(k=>{held[k]=prev[k]=pressed[k]=latch[k]=false});
 // player 2 (2-player mode): its own keys and gamepad
@@ -62,7 +62,7 @@ let TWO=false;// (local 2 players was removed; online fills the player-2 input s
 function setTwo(v){if(TWO===v)return;TWO=v;for(const k of KEYS){keyHeld[k]=keyHeld2[k]=false}}
 function padState(g){const o={};if(!g)return o;const b=i=>!!(g.buttons[i]&&g.buttons[i].pressed),ax=g.axes||[];
   o.left=b(14)||ax[0]<-.5;o.right=b(15)||ax[0]>.5;o.up=b(12)||ax[1]<-.5;o.down=b(13)||ax[1]>.5;const fight=typeof scene!=='undefined'&&(scene===Fight||scene===Brawl),sp=b(3)||b(5)||b(7);
-  if(fight){o.a=b(2)||sp;o.b=b(0)||sp;o.jump=b(1)||b(4)||b(6)}else{o.a=b(0)||b(2);o.b=b(1);o.jump=b(4)}o.start=b(9);o.select=b(8);return o}
+  if(fight){o.a=b(2)||sp;o.b=b(0)||sp;o.jump=b(1)||b(4)||b(6)}else{o.a=b(0)||b(2);o.b=b(1);o.jump=b(4)}o.sp=sp;o.start=b(9);o.select=b(8);return o}
 function pollInput(){const gp=navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean):[];if(gp[0]&&gp[0].buttons.some(x=>x.pressed))PADUSED=true;
   const g1=padState(gp[0]),g2={};
   for(const k of KEYS){const h=!!(touchHeld[k]||keyHeld[k]||mouseHeld[k]||g1[k]);pressed[k]=(h&&!prev[k])||latch[k];latch[k]=false;held[k]=h;prev[k]=h;
@@ -105,8 +105,8 @@ const KM={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',KeyW
 function keyRoute(c){const k=KM[c];if(!k)return null;if(k==='esc')return[1,(typeof scene!=='undefined'&&(scene===Fight||scene===Brawl))?'start':'b'];return[1,k]}
 // SP (special) key = A+B in one press
 document.addEventListener('keydown',e=>{const r=keyRoute(e.code);if(!r)return;e.preventDefault();unlockAudio();TOUCHY=false;PADUSED=false;const[pl,k0]=r;
-  for(const k of k0==='sp'?['a','b']:[k0]){if(pl===1){if(!keyHeld[k])latch[k]=true;keyHeld[k]=true}else{if(!keyHeld2[k])latch2[k]=true;keyHeld2[k]=true}}updateVis()});
-document.addEventListener('keyup',e=>{const r=keyRoute(e.code);if(!r)return;for(const k of r[1]==='sp'?['a','b']:e.code==='Escape'?['start','b']:[r[1]]){if(r[0]===1)keyHeld[k]=false;else keyHeld2[k]=false}updateVis()});
+  for(const k of k0==='sp'?['a','b','sp']:[k0]){if(pl===1){if(!keyHeld[k])latch[k]=true;keyHeld[k]=true}else{if(!keyHeld2[k])latch2[k]=true;keyHeld2[k]=true}}updateVis()});
+document.addEventListener('keyup',e=>{const r=keyRoute(e.code);if(!r)return;for(const k of r[1]==='sp'?['a','b','sp']:e.code==='Escape'?['start','b']:[r[1]]){if(r[0]===1)keyHeld[k]=false;else keyHeld2[k]=false}updateVis()});
 document.addEventListener('contextmenu',e=>e.preventDefault());
 function updateVis(){const h=k=>touchHeld[k]||keyHeld[k]||mouseHeld[k];
   els.dpad.className='btn mode-'+stickMode()+(h('up')?' u':'')+(h('down')?' d':'')+(h('left')?' l':'')+(h('right')?' r':'')+(h('dl')||h('dr')?' dash':'');
@@ -618,7 +618,7 @@ const Controls={enter(){this.pg=0},
     else{arc(0,360,R0,R2,'#2a9a5a');for(let a=22.5;a<360;a+=45)spoke(a);
       ctx.fillStyle='#d02020';ctx.beginPath();ctx.arc(cx,cy,R0,0,Math.PI*2);ctx.fill();
       key('#2a9a5a','MOVE: 8 WAYS',8,128);drawText('UP / DOWN: IN / OUT',8,139,'#99a',1,{shadow:false});drawText('NO DASH ZONE',8,150,'#99a',1,{shadow:false});
-      list([['A','PUNCH COMBO'],['A, A, B','FINISHER'],['A, A, JUMP','LAUNCHER'],['JUMP+A','BACK ATTACK'],['B','KICK'],['JUMP','JUMP'],['HOLD JUMP','GUARD'],['SP','SPECIAL'],['FWD+SP','SUPER'],['A, CLOSE','GRAB'],['UP/DN x2','SIDESTEP'],['SELECT','CALL ALLY'],['A, BY A FOE','HELP UP']],11)}
+      list([['A','PUNCH COMBO'],['A, A, B','FINISHER'],['A, A, JUMP','LAUNCHER'],['JUMP+A','BACK ATTACK'],['B','KICK'],['JUMP','JUMP'],['HOLD JUMP','GUARD'],['SP','LEARNED MOVE'],['SP, WHEN HIT','BREAKER'],['FWD+SP','SUPER'],['A, CLOSE','GRAB'],['UP/DN x2','SIDESTEP'],['SELECT','CALL ALLY'],['A, BY A FOE','HELP UP']],10)}
     drawText('< '+(this.pg?'FIGHT':'STORY')+' >   B: BACK',128,183,'#778',1,{align:'center'})}};
 
 // ---------------- SELECT ----------------
@@ -1958,7 +1958,7 @@ const Result={enter(w,cfg){this.w=w;this.cfg=cfg;this.two=RUN.mode==='2p'||RUN.m
         goFade(()=>{if(k==='REMATCH')startFight();else if(this.online&&k==='CHARACTER SELECT'){NET.lock=false;go(OnlineSelect)}else if(this.online){netQuit();go(Title);Title.ph='menu'}
           else if(k==='CHARACTER SELECT')go(Select,RUN.mode);else{go(Title);Title.ph='menu'}})}return}
     if(pressed.a||pressed.start){SFX.ok();goFade(()=>this.next())}},
-  next(){if(RUN.mode==='story'){if(this.win){RUN.level++;go(Cutscene,SCENE_AT[Math.min(RUN.level,4)])}else go(Continue);return}
+  next(){if(RUN.mode==='story'){if(this.win){if(RUN.level<3)learnAbil(RUN.ladder[0]);RUN.level++;go(Cutscene,SCENE_AT[Math.min(RUN.level,4)])}else go(Continue);return}
     if(RUN.mode!=='arcade'){go(Select,RUN.mode);return}if(this.win){RUN.idx++;if(RUN.idx>=RUN.ladder.length)go(Ending);else go(VS)}else go(Continue)},
   draw(){const t=this.t,c=this.wc;ctx.drawImage(CH[this.cfg.stage].stage,0,0);ctx.fillStyle='rgba(6,4,20,.7)';ctx.fillRect(0,0,W,H);
     if(this.win){ctx.fillStyle='rgba(255,210,58,.07)';for(let i=0;i<12;i++){const a=t*0.006+i*Math.PI/6;ctx.beginPath();ctx.moveTo(56,120);ctx.lineTo(56+Math.cos(a)*300,120+Math.sin(a)*300);ctx.lineTo(56+Math.cos(a+0.14)*300,120+Math.sin(a+0.14)*300);ctx.fill()}}
@@ -2032,9 +2032,9 @@ function netMsg(m){switch(m.t){
   case'bye':netLost();break}}
 // inputs: held directions (bits 0-3) + presses since the last sample (bits 4-11)
 const NK=['left','right','up','down'],NP=['left','right','up','down','a','b','start','select'];
-function edgeBits(){let v=0;NP.forEach((k,i)=>{if(pressed[k])v|=1<<(4+i)});if(pressed.dl)v|=1<<13;if(pressed.dr)v|=1<<14;if(pressed.jump)v|=1<<15;return v}
+function edgeBits(){let v=0;NP.forEach((k,i)=>{if(pressed[k])v|=1<<(4+i)});if(pressed.dl)v|=1<<13;if(pressed.dr)v|=1<<14;if(pressed.jump)v|=1<<15;if(pressed.sp)v|=1<<16;return v}
 function heldBits(){let v=0;NK.forEach((k,i)=>{if(held[k])v|=1<<i});if(held.jump)v|=1<<12;return v}
-function applyIn(v,H,P){NK.forEach((k,i)=>{H[k]=!!(v&(1<<i))});NP.forEach((k,i)=>{P[k]=!!(v&(1<<(4+i)))});H.a=P.a;H.b=P.b;H.start=P.start;H.select=P.select;H.tap=P.tap=false;H.jump=!!(v&(1<<12));P.dl=!!(v&(1<<13));P.dr=!!(v&(1<<14));P.jump=!!(v&(1<<15))}
+function applyIn(v,H,P){NK.forEach((k,i)=>{H[k]=!!(v&(1<<i))});NP.forEach((k,i)=>{P[k]=!!(v&(1<<(4+i)))});H.a=P.a;H.b=P.b;H.start=P.start;H.select=P.select;H.tap=P.tap=false;H.jump=!!(v&(1<<12));P.dl=!!(v&(1<<13));P.dr=!!(v&(1<<14));P.jump=!!(v&(1<<15));P.sp=H.sp=!!(v&(1<<16))}
 function netBegin(cfg){NET.sess=cfg.s;NET.D=cfg.D;NET.lock=true;NET.sim=0;NET.lf=cfg.D;NET.loc={};NET.rem={};NET.acc=0;NET.stall=0;NET.hashes={};NET.peerH={};NET.snap=null;
   for(let i=0;i<cfg.D;i++)NET.loc[i]=NET.rem[i]=0;frameNo=0;fade.a=0;fade.dir=0;fade.cb=null;setTwo(false);seedRNG(cfg.s*2654435761+97);
   // CO-OP STORY: both games run the host's story with two fighters (host = player 1, guest = player 2)
@@ -2232,6 +2232,13 @@ Object.assign(FOES,{
   medic:{id:'medic',base:'slinger',hue:0,sat:1,whiten:true,name:'MEDIC',hp:26,speed:1.15,power:1,def:1,jump:1,dmg:4,reach:34,ranged:false,medic:true,score:400,col:{aura:'#ff5a7a'},names:['DOC','PATCH','STITCHES','SCRUBS'],vary:{sc:[.95,1],hats:['none']}}});
 function rivalFoe(id,shadow){const k='rival_'+id+(shadow?'_s':'');if(!FOES[k]){const c=CH[id];FOES[k]={id:k,name:shadow?'SHADOW':c.name.split(' ')[0],hp:shadow?150:220,speed:.8,power:1.3,def:1,jump:1,dmg:10,reach:52,windupA:2,
   heavy:true,boss:true,score:4000,col:{...c.col},sh:.72,hip:.5,names:[shadow?'SHADOW':c.name],rivalOf:id,shadow:!!shadow};FALLBACK_FOE[k]=id}return k}
+// Story mode: you start with no special; each boss you beat teaches you their signature move (SP, DOWN+SP, BACK+SP)
+const ABIL={karl:{type:'dash',dmg:12,knock:1},keksan:{type:'dash',dmg:12,launch:1},vizor:{type:'stun',r:120,dmg:6},padre:{type:'slam',r:58,dmg:14},
+  zeke:{type:'proj',pk:'roll',spd:3.6,py:6,pierce:3,knock:1,dmg:12},hecky:{type:'dash',dmg:11,launch:1,short:1},lawslie:{type:'stun',r:72,dmg:8},
+  rex:{type:'wave',dmg:10},kai:{type:'proj',pk:'ball',spd:3.8,py:30,pierce:1,knock:1,dmg:10,bounce:1},estrella:{type:'proj',pk:'note',spd:1.3,py:44,life:170,pierce:6,dmg:6,multi:1},
+  reyes:{type:'dash',dmg:13,knock:1},mateo:{type:'proj',pk:'pitch',spd:6.2,py:44,knock:1,dmg:12},ivan:{type:'slam',r:66,dmg:16}};
+const abilName=id=>(CH[id]&&CH[id].spName)||id.toUpperCase(),ABIL_IN=['SP','DN+SP','BK+SP'];
+function learnAbil(id){if(!RUN||!id||!ABIL[id])return;RUN.abil=RUN.abil||[];if(RUN.abil.includes(id)||RUN.abil.length>=3)return;RUN.abil.push(id);RUN.newAbil=RUN.abil.length-1}
 const FALLBACK_FOE={goon:'karl',slinger:'vizor',bruiser:'padre',chain:'zeke',kicker:'lawslie',vex:'hecky'};// used until a foe's own sprites exist
 const LEVELS=[
   {name:'BONFIRE STREETS',bg:'story_lvl1',bgY:-38,floor:{kind:'slabs',c1:'#3c3650',c2:'#1c1828',line:'#2a2438',edge:'#8a82a0'},alt:'vizor',song:'vizor',len:768,crates:[[236,8],[476,28]],cans:[[420,40]],hydrants:[[330],[600]],ride:{kind:'train',name:'METRO LINE 1',waves:[['goon','blade','goon'],['shield','chain','goon','slinger']]},
@@ -2460,7 +2467,7 @@ function storyScene(k){const A=ARCS[RUN.p1],b=SCENES[k];
 
 function foeData(id){const c=FOES[id];if(c.base){const b=foeData(c.base);return{...b,...c,anim:b.anim,H:b.H,spr:b.spr,alt:b.alt,white:b.white,sh:.72,hip:.5,col:{...b.col,...c.col}}}if(c.anim)return c;const b=CH[FALLBACK_FOE[id]];return{...b,...c,anim:b.anim,H:b.H,spr:b.spr,alt:b.alt,white:b.white,fake:true}}
 function startStory(p1,alt,skin){const pool=ORDER.filter(i=>i!==p1).sort(()=>RND()-.5);
-  RUN={mode:'story',p1,ladder:[],idx:0,cont:0,alt,skin,level:0,lives:3,score:0,bosses:ARCS[p1]?[ARCS[p1].r1,'ivan',ARCS[p1].r3]:[pool[0],'ivan',pool[1]],mercy:null,vexLit:false,allyQ:[]};go(Cutscene,'intro')}
+  RUN={mode:'story',p1,ladder:[],idx:0,cont:0,alt,skin,level:0,lives:3,score:0,bosses:ARCS[p1]?[ARCS[p1].r1,'ivan',ARCS[p1].r3]:[pool[0],'ivan',pool[1]],mercy:null,vexLit:false,allyQ:[],abil:[]};go(Cutscene,'intro')}
 // a bust portrait (93x112) cut from an in-game sprite frame, for characters with no portrait art: the upper body, scaled up
 function bust(fr,key,eyes,rim){const m=fxCache(fr);if(m['bust'+key])return m['bust'+key];
   const w=fr.width,h=fr.height,t=mk(w,h),tx=t.getContext('2d');tx.drawImage(fr,0,0);const d=tx.getImageData(0,0,w,h).data,A=(x,y)=>d[(y*w+x)*4+3]>40;
@@ -2579,7 +2586,7 @@ const StoryEnd={
 const Brawl={
   enter(){let L=LEVELS[RUN.level];if(L.len<W)L={...L,len:W};if(RUN.duel){const D=RUN.duel;L={...L,len:Math.max(W,320),waves:[{at:0,foes:D.foes}],ride:null,crates:[],cans:[],hydrants:[],wet:null}}this.L=L;F=this;Object.assign(this,{cinema:false,superFlash:0,superBy:null,parts:[],texts:[],hitFx:[],proj:[],items:[],foes:[],cx:0,wi:0,wave:null,q:[],qT:0,goT:0,
       ph:'intro',pt:0,mercyOn:false,bossDown:null,camFlash:0,paused:false,psel:0,hitstop:0,shake:0,target:null,targetT:0,doneT:0,contN:9,supT:0,
-      bcT:0,allyRun:null,ride:null,rf:0,hyd:(L.hydrants||[]).map(([x])=>({x,ph:'wait',t:200+rnd(0,120)})),stat:{f:0,dmg:0,maxC:0,spared:0,lost:0},res:null});RUN.allyQ=RUN.allyQ||[];
+      bcT:0,allyRun:null,pproj:[],ride:null,rf:0,hyd:(L.hydrants||[]).map(([x])=>({x,ph:'wait',t:200+rnd(0,120)})),stat:{f:0,dmg:0,maxC:0,spared:0,lost:0},res:null});RUN.allyQ=RUN.allyQ||[];
     const k=skinned(RUN.p1,0),P=this.P=new Fighter(k.skinKey||RUN.p1,0,!!RUN.bot,RUN.alt&&RUN.alt[0]);P.x=40;P.z=22;P.vz=0;P.meter=RUN.meter||0;P.inv=60;this.ps=[P];
     if(RUN.coop){const k2=skinned(RUN.p2,1),Q=new Fighter(k2.skinKey||RUN.p2,1,!!RUN.bot,false);Q.x=64;Q.z=36;Q.vz=0;Q.meter=RUN.meter2||0;Q.inv=60;this.ps.push(Q)}
     for(const[x,z]of L.crates)this.items.push({kind:'crate',x,z,y:0});for(const[x,z]of L.cans||[])this.items.push({kind:'can',x,z,y:0});
@@ -2591,13 +2598,13 @@ const Brawl={
   spark(x,z,y,c,n){sparks(x,FY+z-y,c,n)},
   dust(x,z,n){for(let i=0;i<n;i++)this.parts.push({x:x+rnd(-10,10),y:FY+z-1,vx:rnd(-1,1),vy:rnd(-1,-.2),l:rnd(12,22)|0,c:'#d8cbb0',g:0.02,dust:1})},
   input(){const P=this.P;if(P.cpu)return this.bot();const two=this.ps.indexOf(P)===1,h=two?held2:held,p=two?pressed2:pressed;
-    return{l:h.left,r:h.right,u:h.up,d:h.down,a:p.a,b:p.b,j:p.jump,jh:h.jump,sel:p.select}},
+    const sp=!!p.sp;return{l:h.left,r:h.right,u:h.up,d:h.down,a:p.a&&!sp,b:p.b&&!sp,sp,j:p.jump,jh:h.jump,sel:p.select}},// SP is its own button here: A+B together never fires it
   me(){return this.ps[RUN.coop&&NET.role==='guest'?1:0]||this.ps[0]},
   // the player an enemy goes after: the nearest one still standing (kept for a while so he doesn't flip-flop)
   tgt(e){const A=this.ps.filter(p=>!p.out);if(A.length<2)return A[0]||this.ps[0];if(e.tg&&A.includes(e.tg)&&e.tgT>0){e.tgT--;return e.tg}
     let b=A[0],bd=1e9;for(const p of A){const d=Math.abs(p.x-e.x)+2*Math.abs(p.z-e.z)+(p.ko?400:0);if(d<bd){bd=d;b=p}}e.tg=b;e.tgT=90;return b},
   // a simple autoplayer for tests and the attract demo: line up with the nearest enemy and punch
-  bot(){const P=this.P,o={l:0,r:0,u:0,d:0,a:0,b:0,j:0};if(P.state==='grabbed'){o.a=frameNo%3===0;return o}if(P.state==='jump'){o.a=P.st>8&&!P.atk?1:0;o[P.face>0?'r':'l']=1;return o}const alive=this.foes.filter(e=>!e.dead&&!e.ko&&e.state!=='down'&&e.state!=='leave'&&!(e.state==='yield'&&FOES[e.kind].boss));
+  bot(){const P=this.P,o={l:0,r:0,u:0,d:0,a:0,b:0,j:0,sp:0};if(P.state==='grabbed'){o.a=frameNo%3===0;if(P.hp<P.mhp*.5&&P.st===4)o.sp=1;return o}if(P.state==='hurt'&&P.st===2&&this.foes.filter(e=>!e.dead&&Math.abs(e.x-P.x)<60).length>=3)o.sp=1;if(P.state==='jump'){o.a=P.st>8&&!P.atk?1:0;o[P.face>0?'r':'l']=1;return o}const alive=this.foes.filter(e=>!e.dead&&!e.ko&&e.state!=='down'&&e.state!=='leave'&&!(e.state==='yield'&&FOES[e.kind].boss));
     const t0=alive.sort((a,b)=>Math.hypot(a.x-P.x,(a.z-P.z)*2)-Math.hypot(b.x-P.x,(b.z-P.z)*2))[0];
     const t=t0,crate=this.items.find(i=>i.kind!=='crate'&&i.kind!=='can'&&Math.abs(i.x-P.x)<160);
     if(!t){if(crate){o[crate.x>P.x?'r':'l']=1;if(Math.abs(crate.z-P.z)>3)o[crate.z>P.z?'d':'u']=1}else o.r=1;return o}
@@ -2605,18 +2612,19 @@ const Brawl={
     if(t.state==='yield'&&Math.abs(t.x-P.x)<46&&Math.abs(dz)<10){if(frameNo%9===0)o.a=1;return o}
     if(Math.abs(dx)>4)o[dx>0?'r':'l']=1;if(Math.abs(dz)>3)o[dz>0?'d':'u']=1;
     const crowd=alive.filter(e=>Math.abs(e.x-P.x)<50&&Math.abs(e.z-P.z)<16).length;
-    if(crowd>=2&&P.hp>20&&frameNo%40===0){o.a=o.b=1;return o}
+    if(crowd>=2&&P.hp>20&&frameNo%40===0){o.sp=1;return o}
     if(FOES[t.kind].shield&&Math.sign(P.x-t.x)===t.face&&Math.abs(t.x-P.x)<70&&Math.abs(dz)<6&&['idle','walk'].includes(P.state)&&frameNo%20===0){o.j=1;o[t.x>P.x?'r':'l']=1;return o}// jump over the shield
-    if(FOES[t.kind].shield&&Math.sign(P.x-t.x)===t.face&&Math.abs(t.x-P.x)<50&&Math.abs(dz)<12&&P.hp>16&&frameNo%90===45){o.a=o.b=1;return o}// or the SP shockwave, which a shield can't stop
+    if(FOES[t.kind].shield&&Math.sign(P.x-t.x)===t.face&&Math.abs(t.x-P.x)<50&&Math.abs(dz)<12&&P.hp>16&&frameNo%90===45){o.sp=1;return o}// or a learned move
     if(Math.abs(t.x-P.x)<44&&Math.abs(dz)<6){o.l=o.r=0;// in range: hold position, face the target, punch
       if(Math.sign(t.x-P.x)!==P.face&&t.x!==P.x&&['idle','walk'].includes(P.state)){o[t.x>P.x?'r':'l']=1;return o}if(frameNo%7===0)o.a=1}
     return o},
   // ---- the player ----
   control(){const P=this.P,i=this.input();if(i.a)P.lastA=frameNo;if(i.b)P.lastB=frameNo;
-    const fwd=P.face>0?i.r:i.l,back=P.face>0?i.l:i.r,spNow=(i.a&&frameNo-P.lastB<=4)||(i.b&&frameNo-P.lastA<=4);
+    const fwd=P.face>0?i.r:i.l,back=P.face>0?i.l:i.r,spNow=!!i.sp;
     const uE=i.u&&!P.pu,dE=i.d&&!P.pd;P.pu=i.u;P.pd=i.d;P.jh=!!i.jh;
     // SELECT: a henchman you spared runs in and tackles everything in his way (works even while you're held)
     if(i.sel&&RUN.allyQ&&RUN.allyQ.length&&!this.allyRun&&this.ph==='play'&&!P.ko){this.callAlly();}
+    if(spNow&&['hurt','block','grabbed'].includes(P.state)&&!P.ko&&this.ph==='play'){this.breaker(P);return}// BREAKER: get out of a combo or a corner
     if(P.state==='grabbed'){if(i.a||i.b){P.mash=(P.mash||0)+1;P.flash=2}return}
     // SIDESTEP: tap up or down twice to slip into or out of the screen, briefly untouchable
     if(P.stepT>0){P.stepT--;P.vz=P.stepD*2.6;P.vx=0;P.state='walk';if(P.stepT%2===0)P.ghosts.push({x:P.x,y:P.y,l:10});if(!P.stepT)P.vz=0;return}
@@ -2625,8 +2633,9 @@ const Brawl={
       if(i.a){if(back||(P.knees||0)>=2){this.toss(e,back?-P.face:P.face);return}P.knees=(P.knees||0)+1;this.hitFoe(e,3,false,P.face,'hitL');P.st=2;if(e.ko){P.thr=null;P.state='idle';P.st=0;return}}
       if(P.st>70){if(!e.ko){e.state='hurt';e.stun=10}P.thr=null;P.state='idle'}return}
     if(spNow&&['idle','walk','attack','prejump','jump'].includes(P.state)&&!(P.state==='attack'&&P.st>5)&&!(P.state==='jump'&&P.st>6)){
-      if(P.meter>=100&&fwd)return this.superMove();{const c=Math.min(6,Math.max(0,P.hp-1));P.hp-=c;P.grey=(P.grey||0)+c}P.state='special';P.st=0;P.vx=P.vz=0;P.y=0;P.atk=null;P.sp={kind:'desp',hits:0,id:++atkId,two:false};P.inv=14;
-      SFX.special();fighterVoice(P,'sp1');this.addT(P.c.spName+'!',P.x,P.z,P.c.col.aura);return}
+      if(P.meter>=100&&fwd)return this.superMove();if(P.state==='jump'||P.state==='prejump')return;
+      const slot=i.d?1:back?2:0,id=(RUN.abil||[])[slot];if(!id){if(!(this.noAbT>0)){this.noAbT=60;this.addT(RUN.abil&&RUN.abil.length?'NOTHING ON '+ABIL_IN[slot]+' YET':'BEAT A BOSS TO LEARN A MOVE',P.x,P.z,'#9a98b0')}return}
+      return this.useAbil(P,slot)}
     if(P.state==='attack'){// JUMP + A together: back attack (an elbow behind you that knocks down)
       if(i.j&&P.atk.name==='jab'&&P.st<=4&&!P.hitDone&&!(P.chainN>0)){this.backAtk();return}
       if(P.hitDone&&P.st>=P.atk.s&&!P.atk.fin){// A, A, A or finish early with B: the finisher knocks down; A, A, JUMP launches
@@ -2650,6 +2659,24 @@ const Brawl={
     if(this.onWet(P)){P.vx=lerp(P.pvx||0,P.vx,.06);P.vz=lerp(P.pvz||0,P.vz,.06);if(Math.abs(P.vx)>.15||Math.abs(P.vz)>.15)P.state='walk'}P.pvx=P.vx;P.pvz=P.vz},
   atk(f,n,fin){startAtk(f,n);f.hitIds={};if(f===this.P&&n==='kick')f.atk={...f.atk,dmg:fin?8:7,fin:!!fin};
     if(f===this.P&&f.wpn&&n==='jab'){const kn=f.wpn.kind==='knife';f.atk={...f.atk,reach:f.atk.reach+(kn?6:16),dmg:f.atk.dmg+(kn?3:5),wpn:true};SFX.whooshH&&SFX.whooshH()}},
+  breaker(P){if(P.meter>=50)P.meter-=50;else{const c=Math.min(8,Math.max(0,P.hp-1));P.hp-=c;P.grey=(P.grey||0)+c}
+    P.state='special';P.st=0;P.vx=P.vz=0;P.y=0;P.atk=null;P.stun=0;P.thr=null;P.sp={kind:'desp',hits:0,id:++atkId,two:false};P.inv=40;F.camFlash=Math.max(F.camFlash||0,3);
+    SFX.burst?SFX.burst():SFX.special();this.addT('BREAKER!',P.x,P.z,'#7ad8ff')},
+  useAbil(P,slot){const id=RUN.abil[slot],A=ABIL[id];P.abCD=P.abCD||[0,0,0];if(P.abCD[slot]>0)return;P.abCD[slot]=A.type==='proj'?70:90;
+    P.state='special';P.st=0;P.vx=P.vz=0;P.y=0;P.atk=null;P.sp={kind:'ab',ab:id,hits:{},id:++atkId};SFX.special();fighterVoice(P,'sp1');this.addT(abilName(id)+'!',P.x,P.z,CH[id].col.aura)},
+  updAbil(P){const s=P.sp,A=ABIL[s.ab],t=P.st,f=P.face,col=CH[s.ab].col.aura,end=n=>{if(t>=n){P.state='idle';P.st=0;P.sp=null;P.vx=0}};
+    const hitAll=(test,dmg,knock,o={})=>{for(const e of this.foes)if(!e.dead&&!e.ko&&!s.hits[e.uid]&&e.y<60&&test(e)){s.hits[e.uid]=1;e.inv=0;this.hitFoe(e,dmg,knock,Math.sign(e.x-P.x)||f,null,o)}};
+    if(A.type==='proj'){if(t===10){this.pproj.push({kind:A.pk,x:P.x+f*18,z:P.z,y:A.py,vx:f*A.spd,owner:P,col,life:A.life||130,hit:{},pierce:A.pierce||0,knock:!!A.knock,dmg:A.dmg,bounce:A.bounce,multi:A.multi,t:0});SFX.whooshH()}end(24)}
+    else if(A.type==='dash'){const T=A.short?14:20;if(t>=6&&t<T){P.vx=f*(A.short?4.4:5.4);P.inv=Math.max(P.inv,2);if(t%2===0)P.ghosts.push({x:P.x,y:P.y,l:12});
+        hitAll(e=>Math.abs(e.x-(P.x+f*16))<26&&Math.abs(e.z-P.z)<14,A.dmg,A.knock||A.launch,{launch:!!A.launch})}else P.vx*=.7;end(30)}
+    else if(A.type==='slam'){if(t===12){this.shake=8;SFX.slam();for(let k=0;k<14;k++)this.dust(P.x+rnd(-A.r,A.r),P.z,1);this.ring={x:P.x,z:P.z,r:A.r,l:14,col};hitAll(e=>Math.abs(e.x-P.x)<A.r&&Math.abs(e.z-P.z)<16,A.dmg,true)}end(28)}
+    else if(A.type==='wave'){if(t===10){for(const d of[1,-1])this.pproj.push({kind:'wave',x:P.x+d*16,z:P.z,y:0,vx:d*3.4,owner:P,col,life:70,hit:{},pierce:9,knock:true,dmg:A.dmg,t:0});SFX.bass&&SFX.bass();this.shake=5}end(26)}
+    else if(A.type==='stun'){if(t===10){F.camFlash=Math.max(F.camFlash||0,A.r>100?6:2);SFX.zap&&SFX.zap();hitAll(e=>(e.x-P.x)*f>-6&&(e.x-P.x)*f<A.r&&Math.abs(e.z-P.z)<18,A.dmg,false);
+        for(const e of this.foes)if(s.hits[e.uid]&&e.state==='hurt')e.stun=70}end(24)}},
+  updPProj(){for(const p of this.pproj){p.t++;p.x+=p.vx;p.life--;if(p.bounce)p.y=8+Math.abs(Math.sin(p.t/7))*26;if(p.multi&&p.t%30===0)p.hit={};
+      for(const e of this.foes)if(!e.dead&&!e.ko&&!p.hit[e.uid]&&Math.abs(e.x-p.x)<14&&Math.abs(e.z-p.z)<14&&e.y<60){p.hit[e.uid]=1;e.inv=0;this.P=p.owner;if(this.hitFoe(e,p.dmg,p.knock,Math.sign(p.vx)||1)){this.spark(p.x,p.z,p.y,p.col,8);if(--p.pierce<0)p.life=0}}
+      if(p.kind==='wave'&&p.t%3===0)this.dust(p.x,p.z,1)}
+    this.P=this.ps[0];this.pproj=this.pproj.filter(p=>p.life>0&&p.x>this.cx-30&&p.x<this.cx+W+30);if(this.ring&&--this.ring.l<=0)this.ring=null},
   backAtk(){const P=this.P;P.face=-P.face;this.atk(P,'kick',true);P.atk={...P.atk,s:4,dmg:9,back:true};P.chainN=2;SFX.whooshH()},
   callAlly(){const P=this.P,m=RUN.allyQ.shift(),C=foeData(m.kind),f=new Fighter('karl',1,true,false),dir=P.face;
     Object.assign(f,{c:C,img:C.spr,H:C.H*(m.vari?m.vari.sc:1),kind:m.kind,name:m.name,hue:m.hue,sat:m.sat,whiten:m.whiten,alt:m.alt,vari:m.vari,uid:++atkId,face:dir,state:'walk',vx:dir*4.4,vz:0,z:P.z,
@@ -2709,7 +2736,7 @@ const Brawl={
   // the player's active hitbox against every enemy and crate (each enemy once per attack)
   playerHits(){const P=this.P;let reach,dmg,knock=false,air=false,id;
     if((P.state==='attack'||P.state==='jump')&&P.atk&&phaseOf(P)==='active'){const a=P.atk;reach=a.reach;dmg=a.dmg;knock=!!a.fin||a.name==='jkick';if(a.name==='kick'&&!a.fin)dmg=7;air=a.name==='jkick';id=a.id;if(a.back&&!(P.backT>0))P.backT=1}
-    else if(P.state==='special'&&P.sp&&!P.sp.sup&&P.st>=8&&P.st<=12){reach=-58;dmg=12;knock=true;id=P.sp.id}else return;
+    else if(P.state==='special'&&P.sp&&P.sp.kind==='desp'&&!P.sp.sup&&P.st>=8&&P.st<=12){reach=-58;dmg=12;knock=true;id=P.sp.id}else return;
     P.hitIds=P.hitIds||{};let any=false;
     for(const e of this.foes){if(e.dead||P.hitIds[e.uid+':'+id])continue;const dx=e.x-P.x;
       const inX=reach<0?Math.abs(dx)<-reach:(P.face>0?dx>-6&&dx<reach+12:dx<6&&dx>-reach-12);
@@ -2806,10 +2833,10 @@ const Brawl={
     if(this.supT>0){if(--this.supT===0){{let sm=0;this.P=this.supBy||this.ps[0];for(const e of this.foes)if(!e.dead&&e.x>this.cx-10&&e.x<this.cx+W+10){e.inv=0;this.P=this.supBy||this.ps[0];this.hitFoe(e,26,true,Math.sign(e.x-this.P.x)||1,null,{sup:true});if(e.ko&&!e.smash&&sm<2&&!FOES[e.kind].boss){sm++;this.screenSmash(e)}}}F.camFlash=8;this.shake=10}return}
     if(this.hitstop>0){this.hitstop--;this.ps.forEach((Q,i)=>{const p=i?pressed2:pressed;if(p.a)Q.qA=frameNo;if(p.jump)Q.qJ=frameNo});return}
     if(this.shake>0)this.shake--;this.pt++;this.P=this.ps[0];const P=this.P,L=this.L;
-    if(this.ph==='intro'&&this.pt>80)this.ph='play';if(this.ph==='play')this.stat.f++;for(const Q of this.ps){if(Q.guard>0&&Q.state!=='block')Q.guard=Math.max(0,Q.guard-.2)}if(this.bcT>0&&--this.bcT===0)for(const Q of this.ps)Q.bc=0;
+    if(this.ph==='intro'&&this.pt>80){this.ph='play';RUN.newAbil=null}if(this.ph==='play')this.stat.f++;for(const Q of this.ps){if(Q.guard>0&&Q.state!=='block')Q.guard=Math.max(0,Q.guard-.2)}if(this.bcT>0&&--this.bcT===0)for(const Q of this.ps)Q.bc=0;
     if(this.ph==='continue'){if(this.pt%60===0){this.contN--;SFX.tick();if(this.contN<0){goFade(()=>go(GameOver));this.ph='over'}}
       if(pressed.a||pressed.start){RUN.lives=3;RUN.cont++;RUN.score=0;for(const Q of this.ps)this.respawn(Q);SFX.start()}return}
-    if(this.ph==='clear'){++this.doneT;if(this.doneT===40&&!this.res&&!RUN.duel)this.rank();if(RUN.duel&&this.doneT===90){RUN.duel=null;RUN.level++;goFade(()=>go(Cutscene,SCENE_AT[Math.min(RUN.level,4)]));return}if(RUN.duel)return;
+    if(this.ph==='clear'){++this.doneT;if(this.doneT===40&&!this.res&&!RUN.duel)this.rank();if(RUN.duel&&this.doneT===90){if(RUN.level<3)learnAbil(RUN.ladder[0]);RUN.duel=null;RUN.level++;goFade(()=>go(Cutscene,SCENE_AT[Math.min(RUN.level,4)]));return}if(RUN.duel)return;
       if(RUN.bot?this.doneT===70:(this.doneT===320||(this.doneT>110&&this.doneT<320&&(pressed.a||pressed.start)&&(this.doneT=319)))){this.doneT=320;RUN.meter=P.meter;if(this.ps[1])RUN.meter2=this.ps[1].meter;const boss=RUN.level===3?RUN.p1:RUN.bosses[RUN.level];RUN.shadow=RUN.level===3;RUN.ladder=[boss];RUN.idx=0;goFade(()=>RUN.shadow?go(Cutscene,'shadow'):boss==='ivan'?go(Cutscene,'ivan'):ARCS[RUN.p1]?go(Cutscene,RUN.level===0?'rival1':'rival3'):go(VS))}return}
     // players (one, or two in co-op)
     for(const P of this.ps){if(P.out)continue;this.P=P;const PR=this.ps.indexOf(P)?pressed2:pressed;
@@ -2822,14 +2849,15 @@ const Brawl={
       case'prejump':if(P.jh&&!P.cpu&&P.st>=7){P.state='block';P.st=0;P.vx=0;break}if(P.st>=3&&!(P.jh&&!P.cpu)){P.state='jump';P.st=0;P.vy=5.3;P.vx=P.jdir*1.8*P.c.speed;P.vz=0;SFX.jump()}break;
       case'jump':if(P.atk)P.ast++;break;
       case'attack':P.vx=0;P.vz=0;if(P.st>=P.atk.s+P.atk.a+P.atk.r){P.atk=null;P.state='idle';P.st=0;if(!P.hitDone)P.chainN=0}break;
-      case'special':if(P.st>=32){P.state='idle';P.st=0;P.sp=null}break;
+      case'special':if(P.sp&&P.sp.kind==='ab')this.updAbil(P);else if(P.st>=32){P.state='idle';P.st=0;P.sp=null}break;
       case'grabbed':break;
       case'tossing':P.vx=P.vz=0;if(P.thr)this.tossing();else if(P.st>=26){P.state='idle';P.st=0}break;
       case'hurt':if(--P.stun<=0){P.state='idle';P.st=0}break;
       case'down':if(P.ko){if(P.st>70)this.lose()}else if(P.st>=36){P.state='rise';P.st=0;P.inv=40}break;
       case'rise':if(P.st>=12){P.state='idle';P.st=0;P.inv=40}break}
     this.playerHits();this.phys(P)}
-    this.P=this.ps[0];this.updAlly();this.hazards();if(this.ph==='continue'||this.ph==='over')return;
+    for(const Q of this.ps){if(Q.abCD)Q.abCD=Q.abCD.map(v=>Math.max(0,v-1))}if(this.noAbT>0)this.noAbT--;
+    this.P=this.ps[0];this.updAlly();this.hazards();this.updPProj();if(this.ph==='continue'||this.ph==='over')return;
     // camera (forward only) and the wave lock
     const end=Math.max(0,L.len-W),lock=Math.min(end,this.wave?this.wave.at:this.wi<L.waves.length?L.waves[this.wi].at:end);// a wave's stop never runs past the end of the level
     {const xs=this.ps.filter(Q=>!Q.out).map(Q=>Q.x),hi=Math.max(...xs),lo=Math.min(...xs);this.cx=clamp(Math.max(this.cx,Math.min(hi-W*.44,lo-12)),0,lock)}
@@ -2946,6 +2974,13 @@ const Brawl={
     if(L.wet&&!this.ride)for(const[x0]of L.wet){const x=Math.round(x0-cx)+4,y=FY+FZ-2;if(x<-20||x>W+20)continue;ctx.fillStyle='#120e1e';ctx.fillRect(x-1,y-19,13,20);ctx.fillStyle='#ffd23a';ctx.fillRect(x,y-18,11,17);
       ctx.fillStyle='#120e1e';ctx.fillRect(x+5,y-15,1,6);ctx.fillRect(x+5,y-7,1,1);ctx.fillRect(x+2,y-1,1,1);ctx.fillRect(x+8,y-1,1,1)}
     for(const P of this.ps)if(!P.out&&(P.state==='block'||P.guard>2)){const gx=Math.round(P.x-cx),gy=FY+P.z-P.H-8,gw=Math.round(20*(1-(P.guard||0)/26));ctx.fillStyle='#000';ctx.fillRect(gx-11,gy-1,22,4);ctx.fillStyle=gw<7?'#ff7a3a':'#7ab4ff';ctx.fillRect(gx-10,gy,gw,2)}
+    // learned moves: projectiles, waves, the slam ring
+    for(const p of this.pproj){const x=Math.round(p.x-cx),y=Math.round(FY+p.z-p.y),d=Math.sign(p.vx);
+      if(p.kind==='wave'){ctx.globalAlpha=Math.min(1,p.life/20);for(let k=0;k<4;k++){const h=12-k*2+((frameNo+k)&3);ctx.fillStyle=k%2?p.col:'#fff';ctx.fillRect(x-k*5*d-2,FY+p.z-h,3,h)}ctx.globalAlpha=1;continue}
+      if(p.kind==='note'){ctx.fillStyle='#120e1e';ctx.fillRect(x-3,y-1,6,5);ctx.fillRect(x+1,y-10,3,10);ctx.fillStyle=p.col;ctx.fillRect(x-2,y,4,3);ctx.fillRect(x+2,y-9,1,9);ctx.fillRect(x+2,y-9,4,2);continue}
+      ctx.fillStyle='rgba(255,255,255,.4)';ctx.fillRect(Math.min(x,x-d*18),y,18,1);const r=p.kind==='roll'?5:4;ctx.fillStyle='#120e1e';ctx.beginPath();ctx.arc(x,y,r+1,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=p.kind==='roll'?'#3a3850':p.kind==='ball'?'#e07a2a':p.kind==='pitch'?'#fff':p.col;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.fillStyle='rgba(255,255,255,.6)';ctx.fillRect(x-2,y-2,2,1)}
+    if(this.ring){const R=this.ring,k=1-R.l/14;ctx.globalAlpha=R.l/14;ctx.strokeStyle=R.col;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(R.x-cx,FY+R.z,R.r*k+6,(R.r*k+6)*.3,0,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}
     // desperation shockwave
     if(P.state==='special'&&P.sp&&!P.sp.sup&&P.st>=8&&P.st<20){const k=P.st-8,R=14+k*4;ctx.globalAlpha=1-k/12;ctx.strokeStyle=P.c.col.aura;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(P.x-cx,FY+P.z-P.H*.4,R,R*.7,0,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}
     ctx.save();ctx.translate(-cx,0);for(const h of this.hitFx)drawHitFx(h);
@@ -2958,7 +2993,7 @@ const Brawl={
     this.drawHUD();
     if(this.paused){ctx.fillStyle='rgba(0,0,10,.75)';ctx.fillRect(0,0,W,H);drawText('PAUSE',W/2,12+OY,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});
       [['MOVE','D-PAD, UP/DOWN = DEPTH'],['GUARD','HOLD JUMP (TAP = JUMP)'],['SIDESTEP','TAP UP OR DOWN TWICE'],['COMBO','A, A, A  OR  A, A, B'],['LAUNCHER','A, A, JUMP'],['BACK ATTACK','JUMP + A'],['JUMP KICK','JUMP, THEN A OR B'],
-       ['SPECIAL','SP: GREY HP, HITS WIN IT BACK'],['SUPER','FWD + SP, FULL BAR'],['GRAB','WALK INTO A DAZED FOE'],['THROW','GRAB, A x3 (BACK+A: BEHIND)'],['ALLY','SELECT (SPARE A KNEELING FOE)']]
+       ['SPECIAL','SP / DN+SP / BK+SP: LEARNED'],['BREAKER','SP WHILE HIT: 1/2 BAR'],['SUPER','FWD + SP, FULL BAR'],['GRAB','WALK INTO A DAZED FOE'],['THROW','GRAB, A x3 (BACK+A: BEHIND)'],['ALLY','SELECT (SPARE A KNEELING FOE)']]
         .forEach(([k,v],i)=>{drawText(k,14,36+i*9+OY,'#ff9a6a',1,{shadow:false});drawText(v,W-14,36+i*9+OY,'#fff',1,{align:'right',shadow:false})});
       ['RESUME','QUIT TO TITLE'].forEach((s,i)=>drawText((this.psel===i?'> ':'  ')+s,W/2,148+i*12+OY,this.psel===i?'#ffe66a':'#99a',1,{align:'center'}))}},
   drawSmash(e){const s=e.smash,t=s.t,k=Math.min(1,t/18),sl=Math.max(0,t-70),px=lerp(s.x0,s.tx,k),py=lerp(s.y0,s.ty,k*k)+sl*sl*.05,sc=lerp(1,1.8,k*k),hit=t>=18&&t<24,
@@ -2982,6 +3017,8 @@ const Brawl={
   drawHUD(){const P=this.P,c=P.c,co=this.ps.length>1;ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(0,0,W,30);
     this.plPanel(this.ps[0],false);if(co)this.plPanel(this.ps[1],true);
     if(RUN.allyQ&&RUN.allyQ.length)drawText('ALLY x'+RUN.allyQ.length+(this.allyRun?'':' (SELECT)'),6,H-22,'#7aff8a',1,{outline:'#000'});
+    {const ab=RUN.abil||[],me=this.me();ab.forEach((id,k)=>{const ready=!(me.abCD&&me.abCD[k]>0),x=W-6,y=H-12-(ab.length-1-k)*9;
+      drawText(ABIL_IN[k]+' '+abilName(id),x,y,ready?CH[id].col.aura:'#5a5870',1,{align:'right',outline:'#000'})})}
     if(co)drawText(String(RUN.score||0).padStart(7,'0'),W/2,3,'#fff',1,{align:'center',outline:'#000'});else drawText('SCORE '+String(RUN.score||0).padStart(7,'0'),W-4,3,'#fff',1,{align:'right',outline:'#000'});
     const e=this.target;if(e&&this.targetT>0&&!e.dead){const w=60,ew=Math.max(0,Math.round(w*e.hp/e.mhp));const ex=co?W/2+30:W-4;drawText(e.name,co?W/2:W-4,13,FOES[e.kind].heavy?'#ffd23a':'#fff',1,{align:co?'center':'right',outline:'#000'});
       ctx.fillStyle='#000';ctx.fillRect(ex-w-2,22,w+2,6);ctx.fillStyle='#401018';ctx.fillRect(ex-w-1,23,w,4);ctx.fillStyle='#ff5a3a';ctx.fillRect(ex-w-1,23,ew,4)}
@@ -2991,7 +3028,8 @@ const Brawl={
     if(this.rf>0){ctx.fillStyle=`rgba(0,0,0,${1-Math.abs(this.rf-20)/20})`;ctx.fillRect(0,0,W,H)}
     if(this.goT>0&&!this.wave&&!this.ride&&this.ph==='play'&&(frameNo>>4)&1){const fin=this.wi>=this.L.waves.length;drawText(fin?'EXIT':'GO',W-34,72+OY,'#fff',2,{align:'right',grad:FIRE,outline:'#300'});
       ctx.fillStyle='#ffd23a';ctx.beginPath();ctx.moveTo(W-28,72+OY);ctx.lineTo(W-8,80+OY);ctx.lineTo(W-28,88+OY);ctx.fill()}
-    if(this.ph==='intro'){box(48+OX,70+OY,160,40,'rgba(10,8,30,.9)','#d04aff');drawText(RUN.level===3?'FINAL STAGE':'STAGE '+(RUN.level+1),W/2,76+OY,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});drawText(this.L.name,W/2,96+OY,'#ffe66a',1,{align:'center'})}
+    if(this.ph==='intro'){box(48+OX,70+OY,160,40,'rgba(10,8,30,.9)','#d04aff');drawText(RUN.level===3?'FINAL STAGE':'STAGE '+(RUN.level+1),W/2,76+OY,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});drawText(this.L.name,W/2,96+OY,'#ffe66a',1,{align:'center'});
+      if(RUN.newAbil!=null&&RUN.abil&&RUN.abil[RUN.newAbil]){const id=RUN.abil[RUN.newAbil];box(40+OX,116+OY,176,26,'rgba(10,8,30,.92)',CH[id].col.aura);drawText('NEW MOVE FROM '+CH[id].name.split(' ')[0],W/2,120+OY,'#fff',1,{align:'center'});drawText(ABIL_IN[RUN.newAbil]+': '+abilName(id),W/2,131+OY,CH[id].col.aura,1,{align:'center'})}}
     if(this.ph==='clear'&&!(this.res&&this.doneT>=40))drawText('STAGE CLEAR!',W/2,70+OY,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});
     if(this.ph==='clear'&&this.res&&this.doneT>=40){const R=this.res,S=this.stat,k=Math.min(1,(this.doneT-40)/12);box(52+OX,Math.round(lerp(H,34+OY,k)),152,124,'rgba(10,8,30,.92)','#d04aff');const y=Math.round(lerp(H,34+OY,k));
       drawText('STAGE CLEAR!',W/2,y+6,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});

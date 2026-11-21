@@ -9,7 +9,7 @@ Open `dist/index.html` in a browser. It is a single self-contained file (also re
 Controls: four face buttons, the same in every mode — **A** punch (`U`; also `X`), **B** kick (`J`; also `Z`), **SP** special (`I`/`O`; also `C`), **JUMP** (`K`/`L`; also `V`; in fights up jumps and this button is FOCUS; in Story up/down is depth). Arrows/WASD move, Enter = Start (pause shows each fighter's moves and combo). On touch screens the pad works differently by mode (Options > CONTROLS shows both diagrams):
 
 - **Fights:** a zoned stick, like mobile Street Fighter IV. Wide left/right bands walk (back blocks), pushing to the **far edge dashes** (no double-tap needed), up jumps, down crouches, down-back crouch-blocks. A knob follows the thumb, and the zones are labelled round the pad.
-- **Story mode (beat 'em up):** a plain 8-way stick, where up and down move in and out of the screen. No jump or dash zones; jump is the JUMP button.
+- **Story mode (beat 'em up):** a plain 8-way stick, where up and down move in and out of the screen. No jump or dash zones; jump is the JUMP button. SP is its own button here (A+B is not a special): it fires the moves you learn from beaten bosses, and pressed while you're being hit it's a Breaker.
 - **Menus:** an 8-way pad.
 
 `node tools/touch.js` checks the zones with real touch events. Gamepads work: in fights the standard layout (X punch, A kick, Y/RB/RT special, B/LB/LT focus or jump); in menus A is OK and B is back. A+B together, the **SP** button (on screen; `I`/`O` on a keyboard; Y/RB on a gamepad), or down→forward+A, fires the special move. SP is just A+B in one press, so down+SP, back+SP and forward+SP work too.
