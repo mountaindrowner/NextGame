@@ -115,6 +115,19 @@ The extras are drawn onto each animation frame at runtime: the head and fist are
 **Crowd rule (the classic trick):** only two enemies may attack at once. The others circle and wait their turn.
 That keeps fights fair and readable.
 
+- **Screen smash** (Turtles in Time): grab a henchman, hold DOWN (toward you) and press A, and he flies at the camera, splats against the glass (it cracks) and slides down out of sight. Your super sends up to two of the men it knocks out into the screen, and so does a knockout with the launcher or with the A, A, B finisher after 5 or more hits. Not in Stage 1's last fight, which is saved for the mercy moment.
+
+## Online co-op
+
+**Online > HOST CO-OP STORY** gives a 4-letter code; your friend picks **JOIN WITH A CODE**. You each pick a fighter, and you play the host's story together (the host's arc, rivals and ending; the guest fights alongside).
+
+- **Two fighters on screen,** player 2's health bar mirrored on the right, the score in the middle. Every enemy goes after the nearest player; up to three attack at once, and they have 35% more health.
+- **Lives are shared.** When they run out, the player who went down sits out until the stage ends, unless both go down (then it's CONTINUE?).
+- **Bosses:** the rival duels, Ivan and the shadow become boss fights inside the brawl, fought by both of you. In the final one you each face your own shadow.
+- **Only the host pauses** and skips cutscenes; either player can help a man up or call an ally.
+- **How it stays in sync:** both games run the same frames from the same button presses (like online versus), with one shared random seed for the session. Drawing and sound never touch that seed, so frame rate and sound settings can't change the game. Every 60 frames the two games compare a fingerprint of the players, enemies and score; if they ever differ, the host's state patches the guest's.
+- **Tests:** `tools/coop.js` wires two pages together without the network (mashing, then both players on the autoplayer through Stage 1, then a co-op boss); `tools/online_coop.js` plays through the live server.
+
 ## Levels and items
 
 - **Backgrounds:** each level is one wide PixelLab background (768×192, three screens). The camera scrolls right and locks at each wave. A flashing **GO →** appears when it's clear.

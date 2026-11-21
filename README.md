@@ -248,6 +248,8 @@ Ivan "The Bear" (Sambo grappler) left the roster in v1.24.0 to make room for Kek
 
 ## Online
 
+**Co-op Story mode:** Online > HOST CO-OP STORY, then your friend joins with the code. See `STORY_MODE.md` (Online co-op).
+
 **ONLINE > LOBBY** shows everyone who's in the lobby right now.
 - Pick a player marked READY and press A to challenge them. They get 20 seconds to accept.
 - Your lobby name is two random words, like IRON TIGER. The top row gives you a new one. Names come from fixed word lists, so nobody types anything and there's nothing to moderate.

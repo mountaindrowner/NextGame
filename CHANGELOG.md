@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.43.0
+
+- **Online co-op Story mode.** Online > HOST CO-OP STORY gives a code to send a friend; you each pick a fighter and play the host's story together.
+  - **Players:** two fighters on screen, and enemies go after whoever is nearest. Shared lives.
+  - **Tougher crowds:** three attackers at once, with 35% more health.
+  - **Bosses:** rivals, Ivan and the shadows are boss fights inside the brawl. In the finale, each player faces their own shadow.
+  - **Sync:** same frames from the same presses, plus one seeded random sequence per session. A drift check runs every 60 frames, with host snapshots if needed.
+  - **Tested:** 3,700 autoplayed frames with zero mismatches, and a full run through the live server.
+- **Screen smash** (Turtles in Time): grab, hold DOWN and press A to throw a henchman into the screen. He splats on the glass, it cracks, and he slides out of sight. Supers and big knockouts (the launcher, or a finisher after 5+ hits) do it too.
+- **Under the hood:** the game's random numbers now go through one function (`RND`), so online versus also runs the same sequence on both sides.
+
 ## 1.42.0
 
 - **Story mode camera zoomed out:** Story mode now draws at 320×240 on the same screen size, so 25% more of each stage shows across and down, and the fighters look a little smaller against it. Other screens are unchanged.

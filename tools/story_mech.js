@@ -82,6 +82,10 @@ const path = require('path');
     { const q = stage(0); q.B.L = d.LEVELS[0]; q.B.wi = q.B.L.waves.length; q.B.wave = null; q.B.rf = 21; q.step(); const R = q.B.ride; let n = 0;
       for (let i = 0; i < 4000 && q.B.ph !== 'clear'; i++) { for (const e of q.B.foes) if (!e.dead && !e.ko && e.state !== 'leave') { e.hp = 0.1; e.inv = 0; if (q.B.hitFoe(e, 1, true, 1, null, { env: true })) n++; else if (e.state === 'yield') { e.state = 'leave'; e.st = 60; } } q.step(); }
       C('ride: subway car to the end', !!R && R.kind === 'train' && q.B.ph === 'clear' && n >= 7, `ride ${R && R.kind}, ${n} enemies, ${q.B.ph}`); }
+    // 19. screen smash: grab + DOWN + A throws him at the camera; he splats on the glass and slides away
+    { const q = stage(1), e = q.foe('goon', 126); e.state = 'hurt'; e.stun = 60; q.step({ a: 1 }); q.step(); q.step({ a: 1, down: 1, h: { down: 1 } }); const sm = !!e.smash; let cracks = 0;
+      for (let i = 0; i < 140 && !e.dead; i++) { q.step(); cracks = Math.max(cracks, e.smash ? e.smash.cr.length : 0); }
+      C('screen smash (grab + DOWN + A)', sm && cracks > 5 && e.dead, `flew at the screen ${sm}, cracks ${cracks}, gone ${!!e.dead}`); }
     // 14. results: a rank and a bonus when the stage is clear
     { const q = stage(); q.B.stat = { f: 54 * 50, dmg: 5, maxC: 9, spared: 1, lost: 0 }; q.B.ph = 'clear'; q.B.doneT = 0; run(q, 45); const r = q.B.res;
       C('stage results: rank + bonus', !!r && r.r === 'S' && r.bonus === 5000, r ? `rank ${r.r}, bonus ${r.bonus}` : 'no results'); }
