@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.47.1
+
+- **Paezano's jump kick redrawn** (PixelLab, about 8 generations). The old one barely extended the leg and his jersey changed between frames. Now his front leg shoots out fully straight at chest height in a flying side kick, sneaker sole first. His jump-kick hitbox was re-measured to match: reach 55 (was 45).
+
 ## 1.47.0
 
 - **No weapons in Story mode.** Henchmen no longer carry pipes, bats or knives, nothing drops when they're knocked down, and there's nothing to pick up. It's fists, feet, throws and the stage (trash cans, hydrants, the wet floor). Riot's shield and Chain's bike-chain lash are their own moves, so they stay.
