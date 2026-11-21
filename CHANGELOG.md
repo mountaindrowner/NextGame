@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.34.1
+
+- **Mateo's full name is Mateo Paezano.** His two-line logo, the fight HUD, the select screen and the ending all use it. The announcer calls "Mateo Paezano!", and Zeke calls him "Paezano" in story mode, like a teammate would.
+
 ## 1.34.0
 
 - **New fighter: Mateo, "The Closer".** The MoundWorks ace pitcher, made from the owner's art. He's a **pitcher**: he controls the fight from range with his arm, and his specials are baseball plays.

@@ -25,7 +25,7 @@ ROSTER = [  # id, name, style, special 1, special 2
     ("keksan", "KEKSAN", "MUAY THAI", "TIGER KNEE", "THAI CLINCH"),
     ("estrella", "ESTRELLA", "SHOWSTOPPER", "HIGH NOTE", "ENCORE"),
     ("reyes", "REYES", "SABR COMBAT", "FRONTIER KNUCKLE", "DRONE STRIKE"),
-    ("mateo", "MATEO", "FASTBALL", "FASTBALL", "STEAL HOME"),
+    ("mateo", "MATEO PAEZANO", "FASTBALL", "FASTBALL", "STEAL HOME"),
 ]
 
 
