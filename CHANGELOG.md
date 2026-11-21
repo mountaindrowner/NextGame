@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.51.1
+
+- **New fire hydrant art** in Stage 1: a detailed PixelLab sprite at its real size next to the fighters (it was a small hand-drawn box). The spray and its warning come from the new nozzle height.
+
 ## 1.51.0
 
 - **Vex makes an entrance.** In the penthouse the lights go out, a spotlight comes on, and Vex walks into it tapping his cane. His name card slides in and he lets loose a shockwave before the fight starts. Letterbox bars frame the scene; A skips it.

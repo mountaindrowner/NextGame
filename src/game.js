@@ -2991,7 +2991,7 @@ const Brawl={
       if(L.floor)drawFloor(L.floor,cx);else if(H>ih)drawFloor({kind:'slabs',c1:'#3a3450',c2:'#16121f',line:'#28223a',edge:'#6a6288'},cx)}
     if(L.wet&&!this.ride)for(const[x0,x1]of L.wet){const x=Math.round(x0-cx),w=x1-x0;if(x>W||x+w<0)continue;ctx.fillStyle='rgba(120,200,255,.22)';ctx.fillRect(x,FY-6,w,FZ+8);
       ctx.fillStyle='rgba(255,255,255,.35)';for(let k=0;k<6;k++){const gx=x+((k*23+((frameNo>>3)%23))%w),gy=FY-4+((k*13)%(FZ+4));ctx.fillRect(gx,gy,6,1);ctx.fillRect(gx+2,gy+1,2,1)}}
-    for(const h of this.hyd||[]){if(h.ph!=='spray')continue;const x=Math.round(h.x-cx),y=FY+FZ-14,len=h.len;for(let k=0;k<len;k+=3){const yy=y-Math.round(Math.sin((k+frameNo*3)/9)*2+k*k/len/14*0)-3+((k/3)&1);
+    for(const h of this.hyd||[]){if(h.ph!=='spray')continue;const x=Math.round(h.x-cx),y=FY+FZ-22,len=h.len;for(let k=0;k<len;k+=3){const yy=y-Math.round(Math.sin((k+frameNo*3)/9)*2+k*k/len/14*0)-3+((k/3)&1);
       ctx.fillStyle='#2a6ad0';ctx.fillRect(x+h.dir*k,yy-1,3,6);ctx.fillStyle=(k/3+frameNo)&2?'#9ad8ff':'#ffffff';ctx.fillRect(x+h.dir*k,yy,3,3)}}
     this.drawMood(cx);
     // everyone on the floor, back to front
@@ -3016,9 +3016,9 @@ const Brawl={
       ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(x-3,FY+p.z,6,1)}
     // fire hydrants (Streets) on the front kerb
     for(const h of this.hyd||[]){const x=Math.round(h.x-cx)+(h.ph==='warn'&&(frameNo&2)?1:0),y=FY+FZ-6;if(x<-20||x>W+20)continue;
-      ctx.fillStyle='#120e1e';ctx.fillRect(x-5,y-15,10,16);ctx.fillRect(x-7,y-11,14,4);ctx.fillStyle='#d83a3a';ctx.fillRect(x-4,y-14,8,14);ctx.fillRect(x-6,y-10,12,2);
-      ctx.fillStyle='#ff8a7a';ctx.fillRect(x-4,y-14,2,14);ctx.fillStyle='#e0c040';ctx.fillRect(x-3,y-16,6,2);ctx.fillStyle='#8a1a1a';ctx.fillRect(x-4,y-2,8,2);
-      if(h.ph==='warn'){if(frameNo&4)drawText('!',x,y-28,'#ff3a3a',1,{align:'center',outline:'#000'});if(frameNo%6===0)this.parts.push({x:h.x+rnd(-4,4),y:y-14,vx:rnd(-.6,.6),vy:-rnd(.3,1),l:12,c:'#9ad8ff',g:.1})}}
+      const im=IMG.prop_hydrant;if(im){ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(x,y+1,11,3,0,0,Math.PI*2);ctx.fill();ctx.drawImage(im,x-(im.width>>1),y+2-im.height)}
+      else{ctx.fillStyle='#120e1e';ctx.fillRect(x-5,y-15,10,16);ctx.fillStyle='#d83a3a';ctx.fillRect(x-4,y-14,8,14)}
+      if(h.ph==='warn'){if(frameNo&4)drawText('!',x,y-46,'#ff3a3a',1,{align:'center',outline:'#000'});if(frameNo%6===0)this.parts.push({x:h.x+rnd(-4,4),y:y-34,vx:rnd(-.6,.6),vy:-rnd(.3,1),l:12,c:'#9ad8ff',g:.1})}}
     for(const e of this.foes)if(e.dazed&&!e.dead){for(let k=0;k<3;k++){const a=frameNo/7+k*2.1;ctx.fillStyle=k%2?'#ffe66a':'#fff';ctx.fillRect(Math.round(e.x-cx+Math.cos(a)*8),Math.round(FY+e.z-e.H-2+Math.sin(a)*2),2,2)}}
     if(this.ride)drawRideFront(this.ride);
     for(const e of this.foes)if(e.smash&&!e.dead)this.drawSmash(e);
