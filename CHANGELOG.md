@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.34.0
+
+- **New fighter: Mateo, "The Closer".** The MoundWorks ace pitcher, made from the owner's art. He's a **pitcher**: he controls the fight from range with his arm, and his specials are baseball plays.
+  - **Fastball (SP):** a windup, a leg kick and a fast straight pitch.
+  - **Trait, High Heat:** every 3rd pitch in a row is a flaming **98 MPH heater** that hits harder and knocks down. A small flame over his cap warns that the next one is hot.
+  - **Steal Home (DN+SP):** two running steps, then a feet-first slide. It's low, slides under projectiles and high attacks, and knocks down ("SAFE!").
+  - **Glove Snag (BK+SP):** the glove goes up. Any projectile that reaches it is caught ("CAUGHT!") and fired straight back as a heater. Whiffing it leaves him open.
+  - **Super, Strikeout:** three pitches with the umpire's call: "STRIKE ONE!", "STRIKE TWO!", then a blazing heater for "STRIKE THREE! YOU'RE OUT!" A blocked pitch is a foul ball.
+  - Health 104. Across the CPU-vs-CPU round robin he wins 46%.
+- **His stage, MoundWorks Field:** a hometown ballpark at night, with light towers, a packed crowd and the MOUNDWORKS scoreboard. His song is a stadium rock walk-up anthem with a ballpark organ.
+- **His story:** Vex bought his ballpark and will keep it open if Mateo signs with Vex's team. Devanté is his first rival (Vex says only one of them keeps their field), and Zeke is his third (Zeke bet on Mateo losing). He tears up the contract, and Sunday games at MoundWorks Field are free.
+- **His voice:** announcer call, every special, "Ninety-eight!" on a heater, the super, and win and lose lines.
+- **New tests** cover the heater on every 3rd pitch, sliding under a projectile, catching one and firing it back, and the super.
+- **PixelLab:** 81 generations (character 15, animations and retakes, stage 10, song). 9,207 left; the $0.07 credit wasn't touched.
+
 ## 1.33.2
 
 - **Reyes' gear is olive drab now**, matching his cargo pants, instead of the bright emerald from 1.33.1. His cap, vest and collar read as one military outfit. His aura, drone stripe and super text are olive too. The recolour runs from the original red art, so there's no double-tinting.

@@ -1,6 +1,6 @@
 # Bonfire Bash
 
-A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with eleven fighters — Papa-Léguas, Keksan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie, Marcus, Devanté, Estrella and Reyes — playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with twelve fighters — Papa-Léguas, Keksan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie, Marcus, Devanté, Estrella, Reyes and Mateo — playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
@@ -36,6 +36,7 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Keksan | **Tiger Knee** — a leaping flying knee that clears low attacks and launches on a hit | **Thai Clinch** — a short-range command grab: three knees in the clinch, the last shoves them away. Third special (BK+SP): **Teep** — a long push kick that shoves them across the screen; near a wall they bounce off it into a juggle |
 | Estrella | **High Note** — a slow, bobbing music note that floats across and lingers; foes near it walk slower | **Encore** — a ring of sound out in front of her that pulses five times (hits low). Third special (BK+SP): **Siren Scream** — a short cone of sound, 3 hits; it shatters projectiles |
 | Reyes | **Frontier Knuckle** — a dashing, flaming straight right that knocks down | **Drone Strike** — launches his SABR drone; it hovers ahead of him and fires three aimed laser bolts. Third special (BK+SP): **Eagle Rise** — an invincible rising uppercut, two hits, the anti-air. Air special (A+B or SP in the air, once per jump): **Rotor Kicks** — he hangs in the air flutter-kicking, floating up a little, up to five hits |
+| Mateo | **Fastball** — a windup and a fast straight pitch; every 3rd pitch in a row is a flaming 98 MPH heater that knocks down (a flame over his cap means the next one is hot) | **Steal Home** — a feet-first slide: low, goes under projectiles and high attacks, knocks down. Third special (BK+SP): **Glove Snag** — the glove goes up; a projectile that reaches it is caught and fired straight back as a heater |
 | Marcus | **Bass Drop** — twin low shockwaves roll along the floor both ways across the stage (block crouching, or jump them) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen |
 
 ## Supers
@@ -54,6 +55,7 @@ Forward + A+B with a full meter. Each fighter's super is unique (`SUPERS` in `sr
 | Keksan | Eight Limbs | dash in, then fists, knees, elbows and shins (eight strikes), finished with a launching flying knee |
 | Estrella | Grand Finale | lights down and a spotlight; stage beams, a floor equalizer and five glowing rings of sound roll across the whole stage, each a sung note; the last knocks down, then fireworks and a cheering crowd |
 | Reyes | Air Support | dashing knuckle; on a hit his drone squadron flies in and strafes them, then Eagle Rise launches them ("MISSION COMPLETE!") |
+| Mateo | Strikeout | three pitches with the umpire's call ("STRIKE ONE!", "STRIKE TWO!"), then a blazing heater: "STRIKE THREE! YOU'RE OUT!"; a blocked pitch is a foul ball |
 | Marcus | Stage Dive | homing leap that crashes down (overhead), then a five-note bass jam |
 
 ## Fighting styles
@@ -72,6 +74,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Keksan | Striker | 94 | Muay Thai shin kicks: kicks, sweeps and the jumping knee hit 15% harder |
 | Estrella | Area control | 100 | her sound slows foes: anyone standing near her note or her Encore ring walks at 70% speed |
 | Reyes | All-rounder | 92 | squad leader: starts every round with a third of his super meter |
+| Mateo | Pitcher | 104 | high heat: every 3rd pitch in a row (or the first after a Glove Snag) is a 98 MPH heater |
 | Marcus | Long-range | 104 | slowest walk and dash, longest reach (×1.4, a sound blast off his bass) but normals start 2 frames slower; hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
 
 Hecky has a second costume — an anthropomorphic fox — chosen with SELECT on the character select screen (`skin2` in his roster entry; sprites in `assets/fighters/heckyfox/`).
@@ -86,6 +89,7 @@ Bread-and-butter combos (checked frame by frame by `tools/combos.js`):
 | Keksan | jab, kick > Tiger Knee | 3 |
 | Estrella | jab, kick > Siren Scream | 5 |
 | Reyes | jab, kick > Frontier Knuckle | 3 |
+| Mateo | jab, kick > Steal Home | 3 |
 | Vizor | jab, kick > Shutter Flash | 3 |
 | Samson | jab, kick > Holy Tome | 3 |
 
@@ -104,6 +108,7 @@ Every stage and the title screen have a recorded song, played looped.
 | Tiger Gym (Keksan) | Thai fight music (oboe-like lead, ching cymbals) over hard rock |
 | Control Room (Vizor) | synthwave arpeggios and pulsing bass |
 | Old Chapel (Samson) | church organ over hard rock |
+| MoundWorks Field (Mateo) | stadium rock walk-up anthem: ballpark organ riff, stomp-stomp-clap drums |
 | Sunset Outpost (Reyes) | 80s action-movie rock anthem: marching snare, brass fanfare, palm-muted guitars |
 | Starlight Club (Estrella) | pop and R&B diva anthem: slap bass, claps, brass stabs and a soaring vocal-like synth lead |
 

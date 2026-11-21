@@ -20,7 +20,7 @@ BAND_FOR = {("keksan", "jkick"): (.3, .7)}
 MIN_REACH = {("keksan", "jkick"): 40}
 BAND = {"jab": (.45, 1), "kick": (.3, .95), "cjab": (.25, .8), "sweep": (0, .42), "jpunch": (0, 1.2), "jkick": (0, 1.2)}
 MOVES = {"jab": "punch", "kick": "kick", "cjab": "cpunch", "sweep": "lowkick", "jpunch": "airpunch", "jkick": "airkick"}
-FIGHTERS = ["karl", "ivan", "vizor", "padre", "zeke", "hecky", "heckyfox", "lawslie", "rex", "kai", "keksan", "estrella", "reyes"]
+FIGHTERS = ["karl", "ivan", "vizor", "padre", "zeke", "hecky", "heckyfox", "lawslie", "rex", "kai", "keksan", "estrella", "reyes", "mateo"]
 
 
 def frames(fid, anim):

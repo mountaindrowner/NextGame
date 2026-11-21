@@ -31,6 +31,7 @@ const path = require('path');
     r = run('rex', 60, 180); C('REX Stage Dive (homing leap + jam)', r.dmg >= 18 && r.landed, `dmg ${r.dmg} from 120px away`);
     r = run('kai', 70, 170); C('DEVANTE Fast Break (alley-oop dunk)', r.dmg >= 18 && r.maxY > 40, `dmg ${r.dmg}, popped ${r.maxY | 0}px up`);
     r = run('keksan', 70, 170); C('KEKSAN Eight Limbs (8 strikes + knee)', r.dmg >= 20 && r.maxY > 15, `dmg ${r.dmg}, knee lifted them ${r.maxY | 0}px`);
+    r = run('mateo', 40, 200); C('MATEO Strikeout (3 pitches, strike three)', r.dmg >= 20, `dmg ${r.dmg} from 160px away`);
     r = run('reyes', 80, 150); C('REYES Air Support (drones + rise)', r.dmg >= 20, `dmg ${r.dmg}`);
     r = run('estrella', 40, 200); C('ESTRELLA Grand Finale (rings across)', r.dmg >= 18, `dmg ${r.dmg} from 160px away`);
     return out;
