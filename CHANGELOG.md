@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.39.1
+
+- **One colour per button:** A (punch) red, B (kick) green, SP gold, FOCUS/JUMP blue. The handheld's buttons, the training input log and the Options > CONTROLS list all use them.
+- **Combo chart:** `docs/papa-leguas-combos.html` (with a high-res PNG, also split into three parts for chat apps) lists Papa-Léguas's moves and measured combos in the same colours.
+
 ## 1.39.0
 
 - **EX specials** (combo depth, Tier 3). Hold FOCUS and press SP, or press FOCUS just after SP, for an EX version of any special.

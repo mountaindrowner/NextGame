@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#1a1824">
 <title>Bonfire Bash</title>
 <style>
-:root{--shell:#d8d3df;--shell2:#c6bfd0;--bezel:#55546b;--bezel2:#45445a;--ink:#2a2a6a;--ab:#b0306c;--ab2:#7d1e4c}
+:root{--shell:#d8d3df;--shell2:#c6bfd0;--bezel:#55546b;--bezel2:#45445a;--ink:#2a2a6a;--ab:#b0306c;--ab2:#7d1e4c;--hl:#d24a8a;--sh:#5a1236}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;background:#1a1824;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
 #gb{position:relative;margin:0 auto;height:100vh;height:100dvh;max-width:460px;display:flex;flex-direction:column;
@@ -42,9 +42,11 @@ html,body{margin:0;height:100%;background:#1a1824;overflow:hidden;touch-action:n
 #dpad.u .v{transform:perspective(200px) rotateX(10deg)} #dpad.d .v{transform:perspective(200px) rotateX(-10deg)}
 #dpad.l .h{transform:perspective(200px) rotateY(-10deg)} #dpad.r .h{transform:perspective(200px) rotateY(10deg)}
 #abwrap{right:3%;top:4%;width:clamp(144px,41vw,174px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#c9c2d2 55%,#bdb5c8 70%,transparent 71%)}
-.ab{position:absolute;width:clamp(46px,13.2vw,56px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 35%,#d24a8a,var(--ab) 55%,var(--ab2));box-shadow:0 4px 0 #5a1236,0 6px 8px rgba(0,0,0,.25)}
-.ab.on{transform:translateY(3px);box-shadow:0 1px 0 #5a1236}
-.ab b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ffe3f0;font-size:17px;font-weight:900;font-style:italic;text-shadow:0 1px 0 #5a1236}
+/* one colour per button, matched by the combo charts: A red, B green, SP gold, FOCUS/JUMP blue */
+#bA{--ab:#c8303a;--ab2:#7a141c;--hl:#ee6a6a;--sh:#4e0c12} #bB{--ab:#2a9a4e;--ab2:#14602c;--hl:#5ad07a;--sh:#0c3a1a}
+.ab{position:absolute;width:clamp(46px,13.2vw,56px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--hl),var(--ab) 55%,var(--ab2));box-shadow:0 4px 0 var(--sh),0 6px 8px rgba(0,0,0,.25)}
+.ab.on{transform:translateY(3px);box-shadow:0 1px 0 var(--sh)}
+.ab b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;font-weight:900;font-style:italic;text-shadow:0 1px 0 var(--sh)}
 .ab i{position:absolute;left:-10px;right:-10px;bottom:-14px;text-align:center;color:var(--ink);font-size:8px;font-weight:900;font-style:normal;letter-spacing:.5px}
 #bA{right:0;top:calc(50% - clamp(23px,6.6vw,28px))} #bB{left:0;top:calc(50% - clamp(23px,6.6vw,28px))}
 #bSp{left:calc(50% - clamp(23px,6.6vw,28px));top:0;background:radial-gradient(circle at 40% 35%,#f0c24a,#c8901a 60%,#8a5a0a);box-shadow:0 4px 0 #5a3a06,0 6px 8px rgba(0,0,0,.25)}

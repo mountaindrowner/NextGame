@@ -322,6 +322,8 @@ const TRIALS={
   mateo:[['jab','kick'],['jab','kick','sp2'],['leap','jab','kick','sp2'],['kick','jab','kick','sp2'],['cmd'],['jab','kick','tc'],['focus','jab','kick','sp2'],['sp2','super']]};
 // every fighter: an EX special to cash out a basic chain (second to last, before the super trial)
 for(const k in TRIALS)TRIALS[k].splice(TRIALS[k].length-1,0,['jab','kick','ex']);
+// button colours (same as the on-screen buttons and the combo charts): A red, B green, SP gold, FOCUS blue
+const BTNC={A:'#ff6a6a',B:'#6ae08a',SP:'#ffd23a',FOCUS:'#6ab4ff',JUMP:'#6ab4ff'};
 const TKEY={focus:'HOLD FOCUS',leap:'FWD+A',jab:'A',kick:'B',cjab:'DN+A',sweep:'DN+B',jpunch:'JUMP+A',jkick:'JUMP+B',sp1:'SP',sp2:'DN+SP',sp3:'BK+SP',super:'FWD+SP',throw:'FWD+B',ex:'FOCUS+SP'};
 const TNAME={focus:'FOCUS',leap:'OVERHEAD',jab:'JAB',kick:'KICK',cjab:'LOW JAB',sweep:'SWEEP',jpunch:'JUMP PUNCH',jkick:'JUMP KICK',sp1:'SPECIAL',sp2:'SPECIAL 2',sp3:'SPECIAL 3',super:'SUPER',throw:'THROW',ex:'EX SPECIAL'};
 // bread-and-butter combos shown in the pause menu
@@ -579,7 +581,7 @@ const Controls={enter(){this.pg=0},
     const cx=58,cy=80,R0=9,R1=28,R2=42,rad=a=>a*Math.PI/180,arc=(a0,a1,r0,r1,c)=>{ctx.fillStyle=c;ctx.beginPath();ctx.arc(cx,cy,r1,rad(a0),rad(a1));ctx.arc(cx,cy,r0,rad(a1),rad(a0),true);ctx.fill()};
     const spoke=a=>{ctx.beginPath();ctx.moveTo(cx+Math.cos(rad(a))*R0,cy+Math.sin(rad(a))*R0);ctx.lineTo(cx+Math.cos(rad(a))*R2,cy+Math.sin(rad(a))*R2);ctx.stroke()};
     const key=(c,s,x,y)=>{ctx.fillStyle='#000';ctx.fillRect(x-1,y-1,9,9);ctx.fillStyle=c;ctx.fillRect(x,y,7,7);drawText(s,x+11,y,'#fff',1,{shadow:false})};
-    const list=(rows,dy)=>rows.forEach(([k,v],i)=>{drawText(k,124,34+i*dy,'#ffe66a',1,{shadow:false});drawText(v,252,34+i*dy,'#fff',1,{align:'right',shadow:false})});
+    const list=(rows,dy)=>rows.forEach(([k,v],i)=>{const last=k.split(/[+ ,]/).filter(Boolean).pop();drawText(k,124,34+i*dy,BTNC[last]||'#ffe66a',1,{shadow:false});drawText(v,252,34+i*dy,'#fff',1,{align:'right',shadow:false})});
     ctx.strokeStyle='#000';ctx.lineWidth=1;
     if(!this.pg){
       arc(-148,-32,R0,R2,'#2a6ad0');arc(32,148,R0,R2,'#2a6ad0');arc(-32,32,R0,R1,'#2a9a5a');arc(148,212,R0,R1,'#2a9a5a');arc(-32,32,R1,R2,'#d0a020');arc(148,212,R1,R2,'#d0a020');
@@ -1520,7 +1522,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     L.forEach((e,i)=>{const y=46+i*9,cx=8,cy=y+3;ctx.fillStyle=i?'#9ab':'#fff';
       if(e.d===5)ctx.fillRect(cx-1,cy-1,2,2);else{const dx=((e.d-1)%3)-1,dy=1-Math.floor((e.d-1)/3);
         for(let k=-3;k<=3;k++)ctx.fillRect(Math.round(cx+dx*k*.8)-1,Math.round(cy+dy*k*.8)-1,2,2);ctx.fillRect(cx+dx*3-1+(dy?-1:0),cy+dy*3-1+(dx?-1:0),dx?2:4,dy?2:4)}
-      if(e.a)drawText('A',16,y,'#ff9a6a',1,{shadow:false});if(e.b)drawText('B',23,y,'#7ad8ff',1,{shadow:false})})},
+      if(e.a)drawText('A',16,y,BTNC.A,1,{shadow:false});if(e.b)drawText('B',23,y,BTNC.B,1,{shadow:false})})},
   updateTrial(){const T=this.trial,seq=TRIALS[this.p1.c.id];
     if(T.clear>0&&--T.clear===0){T.i++;T.step=0;T.lastId=null;if(T.i>=seq.length){T.i=seq.length;T.done=true;REC.trials[this.p1.c.id]=seq.length;saveRec();badge('trials');CEL.start(1)}}
     if(!T.clear&&!T.done&&this.p1.comboT===0&&T.step>0&&this.p1.state!=='special')T.step=0;
