@@ -252,10 +252,14 @@ const CH={
     speed:1.02,power:1,def:1,jump:1,stats:[3,4,3],special:'knee',spName:'TIGER KNEE',special2:'clinch',sp2Name:'THAI CLINCH',special3:'teep',sp3Name:'TEEP',tr:0,
     col:{skin:'#c88a5a',glove:'#d02a2a',leg:'#1a1a22',foot:'#c88a5a',aura:'#ff3a3a'},sh:.72,hip:.5,
     quote:"RESPECT THE RING. THEN RESPECT THE TIGER.",lose:'MY GUARD... DROPPED...',stageName:'TIGER GYM'},
+  estrella:{id:'estrella',name:'ESTRELLA',nick:'THE VOICE',style:'SHOWSTOPPER',country:'STARLIGHT CLUB',countryLabel:'STAGE',flag:'star',ht:"5'6\" (168 CM)",wt:'130 LB (59 KG)',
+    speed:0.98,power:0.96,def:0.98,jump:1,stats:[3,3,3],special:'note',spName:'HIGH NOTE',special2:'encore',sp2Name:'ENCORE',special3:'siren',sp3Name:'SIREN SCREAM',tr:0,
+    col:{skin:'#d8a070',glove:'#2a3ad0',leg:'#3a2a5a',foot:'#1a1a22',aura:'#ffd23a'},sh:.72,hip:.5,
+    quote:"THAT'S A WRAP. YOU WERE A GREAT AUDIENCE.",lose:'MY VOICE... I LOST MY VOICE...',stageName:'STARLIGHT CLUB'},
 };
 // fighters who aren't on the roster but fight in story mode (they load like everyone else)
 const STORY_FIGHTERS=['ivan'];
-const ORDER=['karl','keksan','vizor','padre','zeke','hecky','lawslie','rex','kai'];
+const ORDER=['karl','keksan','vizor','padre','zeke','hecky','lawslie','rex','kai'];// Estrella joins once her sprites are animated (her kit, arc, portraits, voice, stage and song are in)
 // ---- archetypes: every fighter plays differently (health, reach, movement, chains) and has one unique trait ----
 const ARCH={
   karl:{type:'RUSHDOWN',trait:'FAST DASH, 4-HIT CHAINS',hp:92,chain:4,dash:1.3,reach:1},
@@ -266,13 +270,14 @@ const ARCH={
   hecky:{type:'TECH RUSHDOWN',trait:'PARRY: TAP FWD ON HIT',hp:98,parry:true,reach:1.18,hh:1.35,dash:1.2},
   lawslie:{type:'ENFORCER',trait:'NO CHIP, BLOCK = METER',hp:100,enforcer:true,reach:1},
   kai:{type:'HIGH FLYER',trait:'DOUBLE JUMP, BIG HOPS',hp:96,dj:true,reach:1},
+  estrella:{type:'AREA CONTROL',trait:'HER SOUND SLOWS FOES',hp:96,sound:true,reach:1},
   keksan:{type:'STRIKER',trait:'SHIN KICKS: HARDER KICKS',hp:94,shin:true,reach:1},
   rex:{type:'LONG-RANGE',trait:'HUGE REACH, BEAT = +DMG',hp:104,rhythm:true,amp:true,reach:1.4,slow:2,dash:.7}};
 const arch=c=>ARCH[c.id]||{};
 // RHYTHM trait: a steady 128-ish bpm beat on the shared frame counter (same on both sides online)
 const BEAT=28,onBeat=()=>{const m=frameNo%BEAT;return m<4||m>BEAT-4};
-const SUPER_NAME={"karl": "MIL LÉGUAS", "ivan": "SIBERIAN STORM", "vizor": "FULL EXPOSURE", "padre": "FINAL SERMON", "zeke": "PERFECT GAME", "hecky": "GOLDEN PARACHUTE", "lawslie": "FULL ARREST", "rex": "STAGE DIVE", "kai": "FAST BREAK", "keksan": "EIGHT LIMBS"};
-const ENDING={"keksan": "KEKSAN HUNG THE BONFIRE BASH TROPHY OVER THE TIGER GYM DOOR AND OPENED IT TO EVERY KID IN THE CITY. FREE CLASSES EVERY NIGHT. RESPECT FIRST, THEN FISTS.", "kai": "DEVANTE TOOK THE BONFIRE BASH TROPHY TO THE STREET COURT AND RAN A MIDNIGHT TOURNAMENT. NOBODY COULD GUARD HIM. NOBODY EVER WILL.", "rex": "MARCUS PLAYED THE BONFIRE BASH VICTORY SHOW TO A SOLD-OUT CROWD. THE CROWN STAYED ON FOR THE ENCORE, AND THE ENCORE, AND THE ENCORE.", "lawslie": "OFFICER LAWSLIE CLOSED THE BONFIRE BASH CASE FILE: EVERY FIGHTER BOOKED, EVERY TROPHY ACCOUNTED FOR. THE CHIEF MADE HER DETECTIVE BY MORNING.", "hecky": "HECKY XAVIER BOUGHT THE BONFIRE BASH TOURNAMENT THE NEXT MORNING. NEXT YEAR'S TROPHY IS GOLD-PLATED, AND SO IS THE PENTHOUSE.", "zeke": "ZEKE BOWLED A PERFECT 300 AT THE CHAMPIONS PARTY, THEN BOUGHT EVERYONE NACHOS. THE STRIKE LANES ARE NOW THE MOST FAMOUS ALLEY ON EARTH.", "karl": "PAPA-LEGUAS RAN STRAIGHT FROM THE FINAL FIGHT TO HIS DOJO AND HUNG UP A SIGN: EVERYONE WELCOME. JUST KEEP UP.", "vizor": "VIZOR REPLAYED EVERY FIGHT FRAME BY FRAME. THE FOOTAGE BECAME THE MOST WATCHED VIDEO ON EARTH.", "padre": "SAMSON RANG THE OLD CHAPEL BELL FOR THE FIRST TIME IN YEARS. EVEN HIS RIVALS CAME TO LISTEN."};
+const SUPER_NAME={"karl": "MIL LÉGUAS", "ivan": "SIBERIAN STORM", "vizor": "FULL EXPOSURE", "padre": "FINAL SERMON", "zeke": "PERFECT GAME", "hecky": "GOLDEN PARACHUTE", "lawslie": "FULL ARREST", "rex": "STAGE DIVE", "kai": "FAST BREAK", "keksan": "EIGHT LIMBS", "estrella": "GRAND FINALE"};
+const ENDING={"estrella": "ESTRELLA TURNED DOWN EVERY RECORD DEAL WITH STRINGS ON IT. SHE SINGS IN THE CHAPEL CHOIR ON SUNDAYS, AND THE WHOLE STREET COMES TO LISTEN.", "keksan": "KEKSAN HUNG THE BONFIRE BASH TROPHY OVER THE TIGER GYM DOOR AND OPENED IT TO EVERY KID IN THE CITY. FREE CLASSES EVERY NIGHT. RESPECT FIRST, THEN FISTS.", "kai": "DEVANTE TOOK THE BONFIRE BASH TROPHY TO THE STREET COURT AND RAN A MIDNIGHT TOURNAMENT. NOBODY COULD GUARD HIM. NOBODY EVER WILL.", "rex": "MARCUS PLAYED THE BONFIRE BASH VICTORY SHOW TO A SOLD-OUT CROWD. THE CROWN STAYED ON FOR THE ENCORE, AND THE ENCORE, AND THE ENCORE.", "lawslie": "OFFICER LAWSLIE CLOSED THE BONFIRE BASH CASE FILE: EVERY FIGHTER BOOKED, EVERY TROPHY ACCOUNTED FOR. THE CHIEF MADE HER DETECTIVE BY MORNING.", "hecky": "HECKY XAVIER BOUGHT THE BONFIRE BASH TOURNAMENT THE NEXT MORNING. NEXT YEAR'S TROPHY IS GOLD-PLATED, AND SO IS THE PENTHOUSE.", "zeke": "ZEKE BOWLED A PERFECT 300 AT THE CHAMPIONS PARTY, THEN BOUGHT EVERYONE NACHOS. THE STRIKE LANES ARE NOW THE MOST FAMOUS ALLEY ON EARTH.", "karl": "PAPA-LEGUAS RAN STRAIGHT FROM THE FINAL FIGHT TO HIS DOJO AND HUNG UP A SIGN: EVERYONE WELCOME. JUST KEEP UP.", "vizor": "VIZOR REPLAYED EVERY FIGHT FRAME BY FRAME. THE FOOTAGE BECAME THE MOST WATCHED VIDEO ON EARTH.", "padre": "SAMSON RANG THE OLD CHAPEL BELL FOR THE FIRST TIME IN YEARS. EVEN HIS RIVALS CAME TO LISTEN."};
 // combo trials: each step is the move that must hit, in order, inside one combo
 const TRIALS={karl:[['jab','kick'],['jab','jab','kick','sp1'],['jab','kick','super']],
   vizor:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],padre:[['jab','kick'],['jab','kick','sp1'],['cjab','cjab','sweep']],
@@ -281,13 +286,14 @@ const TRIALS={karl:[['jab','kick'],['jab','jab','kick','sp1'],['jab','kick','sup
   lawslie:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],
   rex:[['jab','kick'],['jab','kick','sp2'],['jab','kick','super']],
   kai:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],
-  keksan:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']]};
+  keksan:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],
+  estrella:[['jab','kick'],['jab','kick','sp3'],['jab','kick','super']]};
 const TKEY={jab:'A',kick:'B',cjab:'DN+A',sweep:'DN+B',jpunch:'JUMP+A',jkick:'JUMP+B',sp1:'SP',sp2:'DN+SP',sp3:'BK+SP',super:'FWD+SP',throw:'FWD+B'};
 const TNAME={jab:'JAB',kick:'KICK',cjab:'LOW JAB',sweep:'SWEEP',jpunch:'JUMP PUNCH',jkick:'JUMP KICK',sp1:'SPECIAL',sp2:'SPECIAL 2',super:'SUPER',throw:'THROW'};
 // bread-and-butter combos shown in the pause menu
-const BNB={karl:'JAB, JAB, KICK > SP',vizor:'JAB, KICK > SP',padre:'JAB, KICK > SP (OVERHEAD)',zeke:'JAB, KICK > SP',hecky:'LOW JAB, JAB, KICK > SP',lawslie:'JAB, KICK > SP (TASER)',rex:'JAB, KICK > DN+SP',kai:'JAB, KICK > SP',keksan:'JAB, KICK > SP (KNEE)'};
+const BNB={karl:'JAB, JAB, KICK > SP',vizor:'JAB, KICK > SP',padre:'JAB, KICK > SP (OVERHEAD)',zeke:'JAB, KICK > SP',hecky:'LOW JAB, JAB, KICK > SP',lawslie:'JAB, KICK > SP (TASER)',rex:'JAB, KICK > DN+SP',kai:'JAB, KICK > SP',keksan:'JAB, KICK > SP (KNEE)',estrella:'JAB, KICK > BK+SP (SCREAM)'};
 // cooldown (frames) per special; second specials are stronger tools with longer cooldowns
-const SPCD={rush:75,shuriken:75,slam:110,spin:75,flash:110,tome:75,strike:75,split:120,takeover:70,powersuit:720,laser:130,taser:80,cuff:240,bassdrop:80,miccheck:150,bounce:80,crossover:200,knee:90,clinch:260,teep:150,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
+const SPCD={rush:75,shuriken:75,slam:110,spin:75,flash:110,tome:75,strike:75,split:120,takeover:70,powersuit:720,laser:130,taser:80,cuff:240,bassdrop:80,miccheck:150,bounce:80,crossover:200,knee:90,clinch:260,teep:150,note:95,encore:180,siren:130,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
 const IMG={};
 function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c}
 function silhouette(img,color){const c=mk(img.width,img.height),x=c.getContext('2d');x.drawImage(img,0,0);x.globalCompositeOperation='source-in';x.fillStyle=color;x.fillRect(0,0,c.width,c.height);return c}
@@ -369,6 +375,7 @@ function drawFlag(code,x,y){x|=0;y|=0;ctx.fillStyle='#000';ctx.fillRect(x-1,y-1,
   else if(code==='badge'){ctx.fillStyle='#1c2450';ctx.fillRect(x,y,14,10);ctx.fillStyle='#ffd23a';ctx.fillRect(x+5,y+1,4,1);ctx.fillRect(x+4,y+2,6,5);ctx.fillRect(x+5,y+7,4,1);ctx.fillRect(x+6,y+8,2,1);ctx.fillStyle='#1c2450';ctx.fillRect(x+6,y+4,2,1)}
   else if(code==='tie'){ctx.fillStyle='#e8e6ee';ctx.fillRect(x,y,14,10);ctx.fillStyle='#1a1820';ctx.fillRect(x+6,y+1,2,2);ctx.fillRect(x+5,y+3,4,5);ctx.fillRect(x+6,y+8,2,1);ctx.fillStyle='#ffd23a';ctx.fillRect(x+1,y+1,1,8);ctx.fillRect(x+12,y+1,1,8)}
   else if(code==='pin'){ctx.fillStyle='#2a1640';ctx.fillRect(x,y,14,10);ctx.fillStyle='#fff';ctx.fillRect(x+6,y+1,2,2);ctx.fillRect(x+5,y+3,4,6);ctx.fillRect(x+6,y+9,2,1);ctx.fillStyle='#e02a2a';ctx.fillRect(x+5,y+4,4,1)}
+  else if(code==='star'){ctx.fillStyle='#2a3ad0';ctx.fillRect(x,y,14,10);ctx.fillStyle='#ffd23a';ctx.fillRect(x+6,y+1,2,8);ctx.fillRect(x+3,y+4,8,2);ctx.fillRect(x+5,y+3,4,4)}
   else if(code==='tiger'){ctx.fillStyle='#ff8a1a';ctx.fillRect(x,y,14,10);ctx.fillStyle='#120e1e';for(const sx of[2,6,10])ctx.fillRect(x+sx,y,2,4+(sx%4));ctx.fillRect(x+4,y+7,2,3);ctx.fillRect(x+9,y+6,2,4);ctx.fillStyle='#fff3e0';ctx.fillRect(x,y+8,14,2)}
   else if(code==='hoop'){ctx.fillStyle='#2a1640';ctx.fillRect(x,y,14,10);ctx.fillStyle='#ff8a2a';ctx.fillRect(x+4,y+1,6,8);ctx.fillRect(x+3,y+2,8,6);ctx.fillStyle='#3a1a08';ctx.fillRect(x+6,y+1,1,8);ctx.fillRect(x+3,y+5,8,1)}
   else if(code==='crown'){ctx.fillStyle='#3a1030';ctx.fillRect(x,y,14,10);ctx.fillStyle='#ffd23a';ctx.fillRect(x+3,y+5,8,3);ctx.fillRect(x+3,y+2,1,3);ctx.fillRect(x+6,y+2,2,3);ctx.fillRect(x+10,y+2,1,3);ctx.fillStyle='#e02a2a';ctx.fillRect(x+6,y+6,2,1)}
@@ -689,7 +696,10 @@ function control(f,o,inp){
   if(inp.u){setS(f,'prejump');f.crouch=false;f.jdir=fwd?1:back?-1:0;f.vx=0;return}
   if(inp.d){f.crouch=true;setS(f,'crouch');f.vx=0;return}
   f.crouch=false;
-  if(fwd){setS(f,'walk');f.vx=f.face*1.35*f.c.speed*(f.buff>0?1.2:1)}else if(back){setS(f,'walk');f.vx=-f.face*1.05*f.c.speed}else{setS(f,'idle');f.vx=0}}
+  const slow=inSound(f)?.7:1;
+  if(fwd){setS(f,'walk');f.vx=f.face*1.35*f.c.speed*(f.buff>0?1.2:1)*slow}else if(back){setS(f,'walk');f.vx=-f.face*1.05*f.c.speed*slow}else{setS(f,'idle');f.vx=0}}
+// AREA CONTROL trait: an opponent near one of her notes or sound rings moves at 70% speed
+const inSound=f=>F.proj.some(p=>p.owner!==f&&(p.kind==='note'||p.kind==='zone')&&arch(p.owner.c).sound&&Math.abs(p.x-f.x)<(p.kind==='zone'?40:34)&&(p.kind==='zone'||Math.abs(p.y-f.y-f.H*.5)<46));
 function startAtk(f,n){f.atk={...ATK[n],name:n,id:++atkId};f.atk.reach*=arch(f.c).reach||1;f.atk.hh*=arch(f.c).hh||1;
   {const m=HBX[f.c.id]&&HBX[f.c.id].moves[n];if(m){f.atk.tip=m.reach-6;f.atk.reach=arch(f.c).amp?Math.max(m.reach,f.atk.reach):m.reach;f.atk.y1=m.y1;f.atk.y2=m.y2}}if(arch(f.c).slow){f.atk.s+=arch(f.c).slow;f.atk.r+=2}f.hitDone=false;if(f.atk.air)f.ast=0;else{f.state='attack';f.st=0;f.vx=0;f.crouch=!!f.atk.crouch}
   (n==='kick'||n==='sweep'||n==='jkick'?SFX.whooshH:SFX.whoosh)()}
@@ -775,6 +785,12 @@ const SUPERS={
       if(k===40){SH(f,o,12,{unblockable:true,knock:true,heavy:true,kb:3});if(o.hp>0){o.cuffed=480;addText('ARRESTED!',o.x,GY-o.H-16,'#c8d0e0')}SFX.cuff();F.shake=8;supEnd(f,s,t)}
       else if(o.ko)supEnd(f,s,t);return}
     s.pa='special2';s.pf=99;s.loop=0;supEnd(f,s,t)},
+  estrella(f,o,s,t){// GRAND FINALE: a spotlight, then she holds one big note and rings of sound roll across the whole stage
+    f.vx=0;s.loop=0;s.pa=t<22?'special':'special3';s.pf=t<22?Math.min(5,t/4):5+((t>>3)&1);s.rings=s.rings||[];
+    if(t>=22&&t<=70&&(t-22)%12===0){s.rings.push({r:10,hit:false,c:s.rings.length%2?'#5a7aff':'#ffd23a',fin:t===70});SFX.whooshH()}
+    for(const r of s.rings){r.r+=5;if(!r.hit&&Math.abs(Math.abs(o.x-f.x)-r.r)<14&&!KO_D(o)){r.hit=true;const blk=o.state==='block';
+        SH(f,o,blk?2:r.fin?10:5,r.fin?{knock:true,heavy:true,kb:3.4}:{stun:40});if(r.fin){F.shake=10;F.camFlash=6;addText('ENCORE!',o.x,GY-o.H-14,'#ffd23a')}}}
+    if(t>=118){s.rings=[];supEnd(f,s,t,0)}},
   keksan(f,o,s,t){const fc=f.face;// EIGHT LIMBS: dash in, then fists, knees, elbows and shins (eight strikes), and a flying knee to finish
     if(!s.ph){s.pa='walk';s.loop=1;s.pf=Math.floor(t/1.4);if(t<22){f.vx=fc*6.6;if(t%2===0)f.ghosts.push({x:f.x,y:f.y,l:12});
         const r=tryHit(f,o,{x1:fc>0?f.x:f.x-46,x2:fc>0?f.x+46:f.x,y1:f.y+f.H*.15,y2:f.y+f.H*.95},{dmg:3,stun:60,bs:14,kb:0,lv:'mid',chip:3,tag:'super',minScale:.7});
@@ -878,6 +894,16 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
       applyHit(f,o,{dmg:3,stun:30,bs:8,kb:-2.6,lv:'mid',unblockable:true,knock:true,launch:true,heavy:true,tag:'sp3'},o.x,GY-o.H*.5);
       F.shake=10;F.hitstop=10;SFX.slam();sparks(o.x,GY-o.H*.5,'#ffffff',14);addText('WALL BOUNCE!',o.x,GY-o.H-14,'#ff3a3a')}
     if(t>=32)endSpecial(f)}
+  else if(s.kind==='note'){// High Note: a glowing music note that drifts slowly forward and hangs in the air, taking space
+    if(t===10&&!F.proj.some(p=>p.owner===f&&p.kind==='note')){F.proj.push({kind:'note',x:f.x+f.face*24,y:f.H*.62,y0:f.H*.62,vx:f.face*.95,owner:f,rot:0,life:220,lv:'mid',dmg:7,stun:22,kb:1.6,tag:'sp1'});SFX.ding?SFX.ding():SFX.whoosh()}
+    if(t>=28)endSpecial(f)}
+  else if(s.kind==='siren'){// Siren Scream: a close-range sound cone, 3 hits with pushback; it shatters projectiles in front of her
+    if(t<6)f.vx=0;if(t===6)SFX.whooshH();
+    if(t>=8&&t<30){const x1=f.face>0?f.x+6:f.x-76,x2=f.face>0?f.x+76:f.x-6;
+      for(const q of F.proj)if(q.owner!==f&&q.kind!=='giant'&&q.kind!=='zone'&&q.life>0&&q.x>x1&&q.x<x2&&q.y<f.H*1.2){q.life=0;sparks(q.x,GY-q.y,'#ffd23a',8)}
+      if(s.hits<3&&t-s.last>=7){const fin=s.hits===2,r=tryHit(f,o,{x1,x2,y1:f.y+f.H*.2,y2:f.y+f.H*1.1},{dmg:fin?6:4,stun:20,bs:10,kb:fin?4.2:1.2,lv:'mid',chip:1,tag:'sp3'});
+        if(r){s.hits++;s.last=t;if(r==='block')s.hits=3}}}
+    if(t>=38)endSpecial(f)}
   else if(s.kind==='bounce'){// Bounce Pass: a bouncing basketball; on a hit it rebounds to Kai (catch it = quick recharge)
     if(t===10&&!F.proj.some(p=>p.owner===f&&p.kind==='bball')){F.proj.push({kind:'bball',x:f.x+f.face*20,y:f.H*.5,vx:f.face*4.1,vy:-1.2,owner:f,rot:0,life:150,lv:'mid',dmg:8,stun:22,kb:2.2,tag:'sp1',bounces:0});SFX.whoosh()}
     if(t>=28)endSpecial(f)}
@@ -905,6 +931,9 @@ function updateSpecial2(f,o){const s=f.sp,t=f.st;
       if(k===12||k===24||k===36){const fin=k===36;applyHit(f,o,{dmg:fin?8:4,stun:30,bs:10,kb:fin?3.4:0,lv:'mid',unblockable:true,tag:'sp2',...(fin?{knock:true,heavy:true}:{})},o.x-f.face*6,GY-o.H*.45);
         F.shake=Math.max(F.shake,fin?8:4);sparks(o.x-f.face*6,GY-o.H*.45,'#ff3a3a',fin?14:7);if(fin){s.ph='let';s.t0=t}else if(!KO_D(o))o.state='grabbed'}}
     else if(k>=16){f.inv=0;endSpecial(f)}}
+  else if(s.kind==='encore'){// Encore: she sings a ring of sound onto the floor ahead; it pulses low hits for three seconds
+    if(t===12&&!F.proj.some(p=>p.owner===f&&p.kind==='zone')){F.proj.push({kind:'zone',x:clamp(f.x+f.face*86,XMIN,XMAX),y:2,vx:0,owner:f,rot:0,life:170,lv:'low',dmg:4,stun:20,kb:1.2,tag:'sp2'});SFX.whoosh()}
+    if(t>=30)endSpecial(f)}
   else if(s.kind==='charge'){// Iron Charge: armored shoulder tackle, absorbs one hit (see applyHit)
     if(t<8)f.vx=0;else if(t<30){f.vx=f.face*4.3;if(t%3===0)dust(f.x,1);
       if(!s.hits){const hb={x1:f.face>0?f.x:f.x-44,x2:f.face>0?f.x+44:f.x,y1:f.y+f.H*.25,y2:f.y+f.H*.9};
@@ -1042,21 +1071,25 @@ function updateGiant(p,o){p.x+=p.vx;p.rot+=p.vx*0.07;p.life--;if(frameNo%4===0)d
       if(fin){p.life=0;F.shake=9;addText('STRIKE!',o.x,GY-o.H-16,'#d04aff');SFX.slam();
         for(let i=0;i<10;i++)F.parts.push({x:p.x+rnd(-6,6),y:GY-rnd(4,20),vx:rnd(-3.5,3.5),vy:rnd(-5,-2),l:rnd(26,40)|0,c:i%3?'#ffffff':'#e02a2a',g:.18,pin:1})}}}}
 function updateProj(){for(const p of F.proj){if(p.dim==null)p.dim=(p.owner.sp&&p.owner.sp.dim)||1;if(p.kind==='giant'){updateGiant(p,p.owner===F.p1?F.p2:F.p1);continue}
-    if(p.kind==='wave')for(const q of F.proj)if(q.owner!==p.owner&&q.kind!=='giant'&&q.kind!=='wave'&&q.life>0&&Math.abs(q.x-p.x)<16&&q.y<p.y+24){// Mic Check bats it back
+    if(p.kind==='wave')for(const q of F.proj)if(q.owner!==p.owner&&q.kind!=='giant'&&q.kind!=='wave'&&q.kind!=='zone'&&q.life>0&&Math.abs(q.x-p.x)<16&&q.y<p.y+24){// Mic Check bats it back
       if(q.kind==='prong')q.life=0;else{q.owner=p.owner;q.vx=-q.vx*1.2;q.id=null;q.life=Math.max(q.life,60)}sparks(q.x,GY-q.y,'#ff4a6a',10);SFX.parry();addText('REFLECT!',q.x,GY-q.y-14,'#ff4a6a')}
+    if(p.kind==='zone'){p.life--;const o=p.owner===F.p1?F.p2:F.p1,k=170-p.life;if(k%40===12){p.pulse=8;p.id=++atkId;SFX.whoosh()}
+      if(p.pulse>0){p.pulse--;const r=tryHit(p.owner,o,{x1:p.x-30,x2:p.x+30,y1:0,y2:34},{dmg:p.dmg,stun:p.stun,bs:8,kb:p.kb,lv:'low',chip:1,tag:'sp2',dim:p.dim,tid:p.id});if(r)p.pulse=0}continue}
+    if(p.kind==='note'){p.y=p.y0+Math.sin(p.life/9)*5;if(p.life<60)p.vx*=.97}
     p.x+=p.vx;if(p.kind==='quake'&&frameNo%4===0)dust(p.x,1);
     if(p.kind==='bball'){p.vy-=.32;p.y+=p.vy;if(p.y<=5&&p.vy<0){p.y=5;p.vy=Math.max(3.2,-p.vy*.82);p.bounces++;SFX.land()}
       if(p.ret){const ow=p.owner;p.vx=Math.sign(ow.x-p.x)*4.6;if(Math.abs(ow.x-p.x)<14){p.life=0;ow.spCD=Math.min(ow.spCD,18);addText('CAUGHT!',ow.x,GY-ow.H-14,'#ffb43a');SFX.ok()}continue}}p.rot+=p.kind?p.vx*0.14:0.5;p.life--;const o=p.owner===F.p1?F.p2:F.p1;
     if(p.g){p.y+=p.vy;p.vy-=p.g;if(p.y<=4&&p.vy<0){p.life=0;dust(p.x,8);SFX.land();F.shake=Math.max(F.shake,2)}}
-    const R2=p.kind?7:6,RY=p.kind==='wave'?15:p.kind==='quake'?10:R2,r=tryHit(p.owner,o,{x1:p.x-R2,x2:p.x+R2,y1:p.y-RY,y2:p.y+RY},{dmg:p.dmg||9,stun:p.stun||18,bs:12,kb:p.kb||2.4,lv:p.lv||'mid',chip:2,knock:!!p.knock,heavy:!!p.knock,tag:p.tag||'sp1',dim:p.dim,tid:p.id||(p.id=++atkId)});
+    const R2=p.kind==='note'?10:p.kind?7:6,RY=p.kind==='note'?10:p.kind==='wave'?15:p.kind==='quake'?10:R2,r=tryHit(p.owner,o,{x1:p.x-R2,x2:p.x+R2,y1:p.y-RY,y2:p.y+RY},{dmg:p.dmg||9,stun:p.stun||18,bs:12,kb:p.kb||2.4,lv:p.lv||'mid',chip:2,knock:!!p.knock,heavy:!!p.knock,tag:p.tag||'sp1',dim:p.dim,tid:p.id||(p.id=++atkId)});
     if(r==='block'&&p.kind==='ball'&&arch(p.owner.c).spare){p.owner.spCD=Math.min(p.owner.spCD,25);addText('SPARE!',p.owner.x,GY-p.owner.H-14,'#d04aff');SFX.ok()}
     if(r&&p.kind==='bball'){p.ret=true;p.vy=Math.max(p.vy,3);if(r==='hit')SFX.thud()}
     else if(r&&p.kind==='quake'){p.life=0;if(r==='hit')sparks(p.x,GY-p.y-4,'#5ae0ff',8)}
     else if(r&&p.kind==='wave'){p.life=0;if(r==='hit')o.vx=Math.sign(p.vx)*5.2}
     else if(r&&p.kind==='prong'){p.life=0;if(r==='hit'){o.zap=46;SFX.zap()}}
+    else if(r&&p.kind==='note'){p.life=0;sparks(p.x,GY-p.y,'#ffd23a',12);if(r==='hit')SFX.thud()}
     else if(r){p.life=0;if(r==='hit'&&p.kind){SFX.thud();for(let i=0;i<6;i++)F.parts.push({x:p.x,y:GY-p.y,vx:rnd(-2,2),vy:rnd(-3,-1),l:rnd(12,20)|0,c:i%2?'#ffffff':'#e02a2a',g:.15})}}}
   if(F.proj.length===2&&F.proj.some(p=>p.kind==='giant')){const g=F.proj.find(p=>p.kind==='giant'),q=F.proj.find(p=>p!==g);if(q&&Math.abs(g.x-q.x)<g.r+6&&Math.abs(g.y-q.y)<g.r+8){q.life=0;sparks(q.x,GY-q.y,'#fff',8)}}
-  else if(F.proj.length===2&&!F.proj.some(p=>p.kind==='wave')&&Math.abs(F.proj[0].x-F.proj[1].x)<10&&Math.abs(F.proj[0].y-F.proj[1].y)<14){sparks(F.proj[0].x,GY-F.proj[0].y,'#fff',10);SFX.block();
+  else if(F.proj.length===2&&!F.proj.some(p=>p.kind==='wave'||p.kind==='zone')&&Math.abs(F.proj[0].x-F.proj[1].x)<10&&Math.abs(F.proj[0].y-F.proj[1].y)<14){sparks(F.proj[0].x,GY-F.proj[0].y,'#fff',10);SFX.block();
     // HIGH/LOW ZONER trait: a bowling ball smashes through any other projectile
     F.proj.forEach(p=>{const other=F.proj.find(q=>q!==p);if(!(arch(p.owner.c).heavyBalls&&p.kind&&!(other&&other.kind)))p.life=0})}
   F.proj=F.proj.filter(p=>p.life>0&&p.x>-10&&p.x<W+10)}
@@ -1072,7 +1105,7 @@ function addCombo(att){F.comboShow={side:att.side,n:att.combo,l:70}}
 //    then draws one card from that deck by weight; difficulty shifts the weights.
 // 3. Execution ability: tricky cards (specials, combos, anti-airs) are rolled; a fumbled special comes out as a jab.
 // 4. Pressure: getting hit and falling behind raises an internal meter that makes its execution sloppier.
-const SUP_RANGE={keksan:100,kai:120,ivan:50,lawslie:110,vizor:230,zeke:220,padre:230,karl:130,rex:190};
+const SUP_RANGE={estrella:240,keksan:100,kai:120,ivan:50,lawslie:110,vizor:230,zeke:220,padre:230,karl:130,rex:190};
 function aiSnap(o){return{x:o.x,y:o.y,vy:o.vy,state:o.state,st:o.st,atk:o.atk,ph:phaseOf(o),sp:o.sp,crouch:o.crouch}}
 function drawCard(cards){let t=0;for(const c of cards)if(c[0]>0)t+=c[0];let r=Math.random()*t;for(const c of cards){if(c[0]<=0)continue;if((r-=c[0])<=0){c[1]();return c[2]}}return null}
 function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:0},ai=f.ai;
@@ -1112,6 +1145,7 @@ function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:
       if(s2==='rising'&&rdy2)cards.push([lerp(.1,.9,L),()=>{ai.aaMove='sp2'},'martelo']);
       if(sp==='takeover'&&rdy)cards.push([lerp(.1,.8,L),()=>{ai.aaMove='sp'},'hostile takeover']);
       if(sp==='knee'&&rdy)cards.push([lerp(.1,.7,L),()=>{ai.aaMove='sp'},'tiger knee']);
+      if(s3==='siren'&&rdy3)cards.push([lerp(.1,.6,L),()=>{ai.aaMove='sp3'},'siren scream']);
       if(s3==='laser'&&rdy3)cards.push([.1+.2*L,()=>{ai.aaMove='sp3'},'laser glare']);
       card('antiair',cards)}
     if(ai.aaMove&&O.vy<1.5&&dist<(ai.aaMove==='kick'?72:ai.aaMove==='jump'?90:85)){const m=ai.aaMove;ai.aaMove=null;
@@ -1163,7 +1197,7 @@ function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:
     if(rdy2&&dist>90)C.push([.05,SPC('sp2'),'mic check'])}
   if(dist>110){// FAR deck
     C.push([1,plan('walkF',14+wait),'walk in'],[.12*rage,both('u',tw),'jump in'],[.07*(.5+L),()=>{inp.dash=1},'dash in']);
-    if(rdy&&sp==='bounce')C.push([.6,SPC('sp'),'bounce pass']);if(rdy&&(sp==='shuriken'||sp==='strike'))C.push([(sp==='strike'?.55:.8)*(ai.lastBall==='strike'?.4:1),()=>{SPC('sp')();ai.lastBall='strike'},'projectile']);if(rdy&&sp==='rush'&&dist<150)C.push([.4*rage,SPC('sp'),'rush']);
+    if(rdy&&sp==='bounce')C.push([.6,SPC('sp'),'bounce pass']);if(rdy&&sp==='note')C.push([.55,SPC('sp'),'high note']);if(rdy2&&s2==='encore'&&dist<200)C.push([.25+.2*L,SPC('sp2'),'encore']);if(rdy&&(sp==='shuriken'||sp==='strike'))C.push([(sp==='strike'?.55:.8)*(ai.lastBall==='strike'?.4:1),()=>{SPC('sp')();ai.lastBall='strike'},'projectile']);if(rdy&&sp==='rush'&&dist<150)C.push([.4*rage,SPC('sp'),'rush']);
     if(rdy3&&s3==='laser'&&O.state!=='crouch')C.push([.15+.15*L,SPC('sp3'),'laser glare']);if(rdy2&&s2==='split'&&dist<150)C.push([(.15+.2*L)*(ai.lastBall==='strike'?3:1),()=>{SPC('sp2')();ai.lastBall='split'},'split shot']);
     if(rdy2&&s2==='charge'&&dist<140)C.push([.1+.1*L,SPC('sp2'),'iron charge']);return card('far',C)}
   if(dist>58){// MID deck (footsies)
@@ -1173,7 +1207,7 @@ function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:
     if(rdy&&sp==='takeover'&&dist<105&&O.state!=='attack')C.push([.03+.05*L,SPC('sp'),'takeover rush']);
     if(rdy2&&s2==='charge')C.push([.06+.1*L,SPC('sp2'),'iron charge']);if(rdy2&&s2==='split')C.push([(.08+.1*L)*(ai.lastBall==='strike'?3:1),()=>{SPC('sp2')();ai.lastBall='split'},'split shot']);
     if(rdy&&sp==='strike')C.push([(.1+.1*L)*(ai.lastBall==='split'?3:1),()=>{SPC('sp')();ai.lastBall='strike'},'strike ball']);
-    if(rdy3&&s3==='laser'&&O.state!=='crouch')C.push([.06+.08*L,SPC('sp3'),'laser glare']);if(rdy3&&s3==='teep'&&dist<90)C.push([.06+.08*L,SPC('sp3'),'teep']);
+    if(rdy3&&s3==='laser'&&O.state!=='crouch')C.push([.06+.08*L,SPC('sp3'),'laser glare']);if(rdy3&&s3==='teep'&&dist<90)C.push([.06+.08*L,SPC('sp3'),'teep']);if(rdy3&&s3==='siren'&&dist<80)C.push([.12+.14*L,SPC('sp3'),'siren scream']);
     return card('mid',C)}
   // CLOSE deck (pressure)
   C.push([.28,hold('aP'),'jab'],[.2,hold('bP'),'kick'],[.12,both('d','bP'),'sweep'],[.07,both('d','aP'),'low jab'],[.1,plan('walkB',12),'back off'],[.16,plan('guard',wait),'guard']);
@@ -1267,12 +1301,13 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     for(const f of[this.p1,this.p2]){const s=Math.max(.35,1-f.y/110);ctx.fillStyle='rgba(0,0,0,.32)';ctx.beginPath();ctx.ellipse(f.x,GY+1,22*s,3.5*s,0,0,Math.PI*2);ctx.fill()}
     const order=(this.p2.state==='attack'||this.p2.state==='special'||this.p2.state==='slamming')?[this.p1,this.p2]:[this.p2,this.p1];
     order.forEach(drawFighter);
-    for(const p of this.proj)p.kind==='prong'?drawProng(p):p.kind==='wave'?drawWave(p):p.kind==='quake'?drawQuake(p):p.kind==='bball'?drawBBall(p):p.kind?drawBall(p):drawStar(p);
+    for(const p of this.proj)p.kind==='note'?drawNote(p):p.kind==='zone'?drawZone(p):p.kind==='prong'?drawProng(p):p.kind==='wave'?drawWave(p):p.kind==='quake'?drawQuake(p):p.kind==='bball'?drawBBall(p):p.kind?drawBall(p):drawStar(p);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='bassdrop'&&f.st>=10&&f.st<24)drawRing(f.x,f.st-10,f.c.col.aura,14);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='super')drawSuperFx(f);
     for(const f of[this.p1,this.p2])if(f.cuffed>0)drawCuffs(f);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='flash'&&f.sp.lx!=null&&f.st<24)drawReticle(f);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='laser')drawLaser(f);
+    for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&(f.sp.kind==='siren'||(f.sp.kind==='super'&&f.c.id==='estrella')))drawSound(f);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='bless'&&f.st>6){const a=Math.min(.35,(f.st-6)/40)*(f.st>70?(78-f.st)/8:1);
       const g=ctx.createLinearGradient(0,0,0,GY);g.addColorStop(0,'rgba(255,230,140,0)');g.addColorStop(1,`rgba(255,230,140,${a})`);ctx.fillStyle=g;ctx.fillRect(Math.round(f.x-22),0,44,GY)}
     // LONG-RANGE (Marcus): a visible sound wave fills the gap from his fist/foot to the end of his reach
@@ -1347,7 +1382,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
 // Key frames per animation: pk = frame where the strike lands; jump = [prep, rise, apex, fall, land];
 // special = [[tick,frame],...] piecewise map over the move's own timeline. Per-fighter overrides in CH[id].ak.
 const AK={punch:{pk:4},kick:{pk:4},sweep:{pk:4},lowkick:{pk:3},cpunch:{pk:2},airkick:{pk:2},airpunch:{pk:2},jump:{prep:2,rise:3,apex:5,fall:6,land:7},fall:{air:4},
-  special:{knee:[[0,0],[5,3],[9,6],[22,6],[32,8]],rush:[[0,0],[7,3]],shuriken:[[0,0],[9,6],[18,8]],slam:[[0,0],[10,8]],spin:[[0,0],[40,99]],flash:[[0,0],[17,3],[18,4],[26,7],[36,8]],tome:[[0,0],[13,6],[14,7],[22,7],[34,8]],taser:[[0,0],[7,5],[8,6],[14,7],[30,8]],strike:[[0,0],[10,7],[28,8]],takeover:[[0,0],[5,2],[7,3],[11,4],[30,7]],bassdrop:[[0,0],[9,4],[10,5],[13,6],[22,7],[34,8]],throwB:[[0,0],[10,5],[12,7],[26,8]],bounce:[[0,0],[9,4],[11,6],[28,8]],charge:[[0,0],[24,5],[27,6],[30,7],[60,7],[78,8]]}};
+  special:{note:[[0,0],[10,5],[20,7],[28,8]],knee:[[0,0],[5,3],[9,6],[22,6],[32,8]],rush:[[0,0],[7,3]],shuriken:[[0,0],[9,6],[18,8]],slam:[[0,0],[10,8]],spin:[[0,0],[40,99]],flash:[[0,0],[17,3],[18,4],[26,7],[36,8]],tome:[[0,0],[13,6],[14,7],[22,7],[34,8]],taser:[[0,0],[7,5],[8,6],[14,7],[30,8]],strike:[[0,0],[10,7],[28,8]],takeover:[[0,0],[5,2],[7,3],[11,4],[30,7]],bassdrop:[[0,0],[9,4],[10,5],[13,6],[22,7],[34,8]],throwB:[[0,0],[10,5],[12,7],[26,8]],bounce:[[0,0],[9,4],[11,6],[28,8]],charge:[[0,0],[24,5],[27,6],[30,7],[60,7],[78,8]]}};
 // the strike frame shown while a move is active = the frame its hitbox was measured on (fully extended)
 const HB_ANIM={punch:'jab',kick:'kick',cpunch:'cjab',lowkick:'sweep',airpunch:'jpunch',airkick:'jkick'};
 function akOf(c,k){const o=(c.ak&&c.ak[k])||AK[k],m=c.anim&&c.anim[k],h=HB_ANIM[k]&&HBX[c.id]&&HBX[c.id].moves[HB_ANIM[k]];
@@ -1382,7 +1417,9 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
       if(s&&s.kind==='super'){if(!s.hits)return A.walk?P('walk',Math.floor(t/1.4)%n('walk')):null;
         if(s.hits>=99)return P('idle',0);if(s.hits>=6)return A.special?P('special',last('special')):null;
         const k=s.hits%2?'kick':'punch';return A[k]?P(k,akOf(f.c,k).pk):null}
-      if(s&&(s.two||s.kind==='laser'||s.kind==='teep')){const k=s.kind;
+      if(s&&(s.two||s.kind==='laser'||s.kind==='teep'||s.kind==='siren')){const k=s.kind;
+        if(k==='siren')return A.special3?P('special3',kf(t,[[0,0],[8,4],[30,6],[38,8]])):null;
+        if(k==='encore')return A.special2?P('special2',kf(t,[[0,0],[12,5],[30,8]])):null;
         if(k==='teep')return A.special3?P('special3',kf(t,[[0,0],[6,3],[8,4],[18,6],[30,8]])):null;
         if(k==='step'){if(!A.walk)return null;return t<4?(A.crouch?P('crouch',2):P('idle',0)):P('walk',Math.floor(t/1.5)%n('walk'))}
         if(k==='counter'){if(s.trig==null)return A.block?P('block',Math.min(t,last('block'))):null;const kk=t-s.trig;return A.kick?P('kick',kf(kk,[[0,1],[7,4],[16,5],[24,7]])):null}
@@ -1508,6 +1545,21 @@ function drawSuperFx(f){const s=f.sp,t=f.st;
   if(s.ph==='laser'&&s.lx!=null&&t>=s.t0){const ex=Math.round(f.x+f.face*9),ey=Math.round(GY-f.y-f.H*.86),lx=Math.round(s.lx),ly=Math.round(s.ly);
     ctx.lineCap='round';ctx.strokeStyle='rgba(255,40,60,.45)';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(lx,ly);ctx.stroke();
     ctx.strokeStyle='#ff2a3a';ctx.lineWidth=3;ctx.stroke();ctx.strokeStyle='#ffe0e0';ctx.lineWidth=1;ctx.stroke();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(lx,ly,3+((frameNo>>1)&1)*2,0,Math.PI*2);ctx.fill()}}
+// Estrella's sound: a gold music note, a ring of sound on the floor, the scream cone, the super's spotlight and rings
+function drawNote(p){const x=Math.round(p.x),y=Math.round(GY-p.y),a=Math.min(1,p.life/30);ctx.globalAlpha=a;
+  const g=ctx.createRadialGradient(x,y,1,x,y,14);g.addColorStop(0,'rgba(255,220,90,.55)');g.addColorStop(1,'rgba(255,220,90,0)');ctx.fillStyle=g;ctx.fillRect(x-14,y-14,28,28);
+  ctx.fillStyle='#120e1e';ctx.fillRect(x-5,y+1,7,6);ctx.fillRect(x+1,y-9,3,12);ctx.fillRect(x+1,y-10,7,4);
+  ctx.fillStyle='#ffd23a';ctx.fillRect(x-4,y+2,5,4);ctx.fillRect(x+2,y-8,1,11);ctx.fillRect(x+2,y-9,5,2);ctx.fillStyle='#fff3a0';ctx.fillRect(x-3,y+2,2,1);ctx.globalAlpha=1}
+function drawZone(p){const x=Math.round(p.x),a=Math.min(1,p.life/20),pu=p.pulse||0;ctx.globalAlpha=a*.85;
+  for(let i=0;i<3;i++){const rw=26+i*5+(pu?(8-pu)*2:0)+((frameNo>>3)&1);ctx.strokeStyle=i===0?'#ffd23a':i===1?'#5a7aff':'rgba(255,210,58,.5)';ctx.lineWidth=pu?2:1;ctx.beginPath();ctx.ellipse(x,GY-2,rw,4+i,0,0,Math.PI*2);ctx.stroke()}
+  if(pu){ctx.fillStyle=`rgba(255,220,90,${pu/12})`;ctx.fillRect(x-30,GY-26,60,24)}ctx.globalAlpha=1}
+function drawSound(f){const s=f.sp,t=f.st,fc=f.face,mx=Math.round(f.x+fc*14),my=Math.round(GY-f.y-f.H*.72);
+  if(s.kind==='siren'){if(t<8||t>=32)return;for(let i=0;i<4;i++){const r=((t-8)*5+i*16)%72+6;ctx.globalAlpha=Math.max(0,1-r/76);ctx.strokeStyle=i%2?'#5a7aff':'#ffd23a';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(mx,my,r,fc>0?-.6:Math.PI-.6,fc>0?.6:Math.PI+.6);ctx.stroke()}ctx.globalAlpha=1;return}
+  // GRAND FINALE: a spotlight on her, then rings of sound across the stage
+  if(t<22){ctx.fillStyle=`rgba(0,0,10,${Math.min(.6,t/20)})`;ctx.fillRect(0,0,W,H)}
+  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgba(255,240,180,.35)');g.addColorStop(1,'rgba(255,240,180,.05)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(f.x-6,0);ctx.lineTo(f.x+6,0);ctx.lineTo(f.x+30,GY);ctx.lineTo(f.x-30,GY);ctx.fill();
+  for(const r of s.rings||[]){ctx.globalAlpha=Math.max(0,1-r.r/260);ctx.strokeStyle=r.c;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(f.x,GY-f.H*.5,r.r,r.r*.55,0,0,Math.PI*2);ctx.stroke()}ctx.globalAlpha=1}
 function drawLaser(f){const s=f.sp,t=f.st,ex=Math.round(f.x+f.face*9),ey=Math.round(GY-f.y-f.H*.86);
   if(t>=3&&t<9){const r=1+((t>>1)&1);ctx.fillStyle='#ff3a3a';ctx.fillRect(ex-r,ey-r-1,r*2,r);ctx.fillRect(ex-r-4*f.face,ey-r-1,r*2,r);ctx.fillStyle='#fff';ctx.fillRect(ex,ey-1,1,1)}
   if(t<9||t>=29||s.end==null)return;const x2=Math.round(s.end),a=t<27?1:(29-t)/2,w=t<11||t>24?4:6;ctx.globalAlpha=a;
@@ -1902,6 +1954,14 @@ const SCENE_AT=['intro','post1','ch3','post3','ending'];// the scene after each 
 // theirs (a face-off before each duel, a turn after it), what their shadow knows about them, and where they end up.
 // Lines use speakers P (you), SAM (Samson), N (narration) or a fighter id ('keksan', 'hecky'...).
 const ARCS={
+  estrella:{why:[['SAM',"ESTRELLA. YOU USED TO SING IN THIS CHOIR EVERY SUNDAY."],['P',"NOW I SING IN VEX'S CLUB EVERY NIGHT. HE SAYS HE'LL MAKE ME A STAR."],
+      ['SAM',"YOU WERE ALREADY SINGING TO SOMEONE BIGGER THAN A CROWD, MIJA."]],
+    r1:'rex',pre1:[['rex',"ESTRELLA? VEX SAYS ONLY ONE OF US HEADLINES HIS FINALS PARTY."],['P',"THEN I GUESS IT'S ME, MARCUS."]],
+    post1:[['rex',"...HE SET US UP TO FIGHT OVER HIS STAGE."],['P',"THEN LET'S BUILD OUR OWN. TOGETHER."]],
+    r3:'lawslie',pre3:[['lawslie',"ESTRELLA. VEX'S CLUB IS A FRONT. YOU KNOW WHAT GOES ON BACKSTAGE."],['P',"I JUST SING. I DON'T ASK."],['lawslie',"THAT'S THE PROBLEM."]],
+    post3:[['P',"...YOU'RE RIGHT. I SAW THINGS. I'LL TELL YOU ALL OF IT."],['lawslie',"THAT TOOK MORE COURAGE THAN ANY SHOW."]],
+    shadow:"SING FOR THE CROWD, ESTRELLA. THE APPLAUSE IS ALL THAT MATTERS.",
+    end:"ESTRELLA TURNED DOWN VEX'S RECORD DEAL AND CAME HOME TO THE CHAPEL CHOIR. ON SUNDAYS THE WHOLE STREET COMES TO HEAR HER."},
   karl:{why:[['SAM',"PAPA-LÉGUAS. I HAVEN'T SEEN YOU SINCE YOUR FATHER'S FUNERAL."],['P',"I'VE BEEN BUSY. ONE CITY TO THE NEXT. I NEVER STAY ANYWHERE LONG."],
       ['SAM',"HIS DOJO HAS BEEN EMPTY FOR TWO YEARS. VEX WANTS THE BUILDING. MAYBE IT'S TIME YOU STOPPED RUNNING."]],
     r1:'keksan',pre1:[['keksan',"THEY SAY YOU RUN A THOUSAND LEAGUES, PAPA-LÉGUAS. TRY RUNNING FROM THIS."],['P',"KEKSAN? YOU FIGHT FOR VEX NOW?"],['keksan',"HE PAYS THE TIGER GYM'S RENT. SAME AS EVERYBODY."]],

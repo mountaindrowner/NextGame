@@ -23,7 +23,7 @@ ANN = {
     "ko": "K. O.!", "perfect": "Perfect!", "time": "Time!", "you_win": "You win!", "you_lose": "You lose.",
     "player_one_wins": "Player one wins!", "player_two_wins": "Player two wins!", "game_over": "Game over.",
     "congratulations": "Congratulations!", "versus": "versus", "announcer_on": "Announcer on.",
-    "name_karl": "Pah-pah Lay-gwahs!", "name_ivan": "Ivan!",     "name_vizor": "Vizor!", "name_padre": "Samson!", "name_zeke": "Zeke!", "name_hecky": "Heck-ee Zay-vee-er!", "name_lawslie": "Laws-lee!", "name_rex": "Marcus!", "name_kai": "Deh-vahn-tay!", "name_keksan": "Kek-sahn!",
+    "name_karl": "Pah-pah Lay-gwahs!", "name_ivan": "Ivan!",     "name_vizor": "Vizor!", "name_padre": "Samson!", "name_zeke": "Zeke!", "name_hecky": "Heck-ee Zay-vee-er!", "name_lawslie": "Laws-lee!", "name_rex": "Marcus!", "name_kai": "Deh-vahn-tay!", "name_keksan": "Kek-sahn!", "name_estrella": "Es-tray-yah!",
 }
 # fighter -> (voice, speed, {line: text})
 CAST = {
@@ -36,6 +36,7 @@ CAST = {
     "rex": ("am_adam", 1.0, {"sp1": "Bass drop!", "sp2": "Mic check!", "super": "Stage dive!", "win": "Thank you, good night!", "ko": "Encore... later..."}),
     "kai": ("am_liam", 1.05, {"sp1": "Bounce pass!", "sp2": "Ankles... broken!", "super": "Fast break!", "win": "That's game.", "ko": "That was a foul..."}),
     "keksan": ("am_liam+am_eric", 1.02, {"sp1": "Tiger knee!", "sp2": "Clinch!", "sp3": "Teep!", "super": "Eight limbs!", "win": "Respect the ring.", "ko": "My guard... dropped..."}),
+    "estrella": ("af_bella", 1.02, {"sp1": "High note!", "sp2": "Encore!", "sp3": "Hear me!", "super": "Grand finale!", "win": "Thank you, Bonfire City!", "ko": "Losing... my voice..."}),
     "padre": ("bm_george", 0.9, {"sp1": "Holy tome!", "sp2": "Benediction!", "super": "Final sermon!", "win": "Go in peace, my son.", "ko": "Forgive me..."}),
 }
 TRIM = "silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse"
