@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.47.0
+
+- **No weapons in Story mode.** Henchmen no longer carry pipes, bats or knives, nothing drops when they're knocked down, and there's nothing to pick up. It's fists, feet, throws and the stage (trash cans, hydrants, the wet floor). Riot's shield and Chain's bike-chain lash are their own moves, so they stay.
+- **Tests:** `tools/story.js` checks that no henchman is armed and nothing drops, replacing the old weapon test.
+
 ## 1.46.1
 
 - **Paezano's Home Run Swing has a real animation** (PixelLab, 3 generations): he pulls the bat, settles into a batting stance, and swings level all the way through, with the ball flying off the bat at contact. The code-drawn bat is gone; the white swoosh stays.

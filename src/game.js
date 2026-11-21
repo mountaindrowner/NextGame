@@ -406,7 +406,7 @@ function dressed(src,fr,V,k,i,pk,H){const m=fxCache(src),key='v'+V.key+k+i;if(m[
   return m[key]=c}
 const pickOf=a=>a[(RND()*a.length)|0];
 function rollVariant(C){const VR=C.vary;if(!VR)return null;const v={sc:pickOf(VR.sc||[1]),top:null,bot:null,hat:VR.hats?pickOf(VR.hats):'none',shades:!!VR.hats&&RND()<.3,
-    hc:pickOf(['#d02a2a','#2a5ad0','#e0c020','#26262e','#2aa04a','#e07a1a','#8a3ad0']),w:VR.weapon||(VR.weapons&&RND()<(VR.wchance||.35)?pickOf(VR.weapons):null)};
+    hc:pickOf(['#d02a2a','#2a5ad0','#e0c020','#26262e','#2aa04a','#e07a1a','#8a3ad0']),w:null};// no weapons in Story mode (owner's call, v1.47)
   if(VR.outfit){const H=[0,0,45,100,150,200,250,300];if(RND()<.75)v.top=pickOf(H);if(RND()<.65)v.bot=pickOf(H)}
   v.key=[v.top,v.bot,v.hat,v.shades?1:0,v.hc,v.w].join('');return v}
 
@@ -2666,7 +2666,7 @@ const Brawl={
     P.state='idle';P.st=0;P.vx=P.vz=0;this.score(2000);this.addT('MERCY +2000',e.x,e.z,'#ffd23a');try{SFX.bless()}catch(x){SFX.ok()}},
   score(n){RUN.score=(RUN.score||0)+n},
   // weapons: a henchman drops his when knocked down; walk over one to pick it up (A swings it, it breaks after a few hits)
-  dropWeapon(e){const v=e.vari;if(!v||!v.w||(e.c.vary&&e.c.vary.weapon))return;this.items.push({kind:'w_'+v.w,x:e.x,z:e.z,y:0,l:900});e.vari={...v,w:null,key:v.key+'x'};e.reachB=Math.round((v.sc-1)*30);e.dmgM=v.sc},
+  dropWeapon(e){const v=e.vari;if(!v||!v.w||(e.c.vary&&e.c.vary.weapon)||true)return;this.items.push({kind:'w_'+v.w,x:e.x,z:e.z,y:0,l:900});e.vari={...v,w:null,key:v.key+'x'};e.reachB=Math.round((v.sc-1)*30);e.dmgM=v.sc},
   wpnBreak(P,drop){const k=P.wpn.kind;if(drop)this.items.push({kind:'w_'+k,x:P.x,z:P.z,y:0,l:600});else{this.addT(k.toUpperCase()+' BROKE!',P.x,P.z,'#ff9a6a');this.spark(P.x+P.face*20,P.z,40,'#c8c8d0',10);SFX.block()}P.wpn=null;P.vari=null},
   // ---- damage ----
   hitFoe(e,dmg,knock,dir,snd,o={}){const P=this.P;if(e.dead||e.ko||e.inv>0||e.state==='down'||e.state==='yield'||e.state==='leave'||e.yieldNext||(e.state==='knock'&&(e.jug||0)>=(e.jugMax||1)))return false;const C=FOES[e.kind];

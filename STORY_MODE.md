@@ -96,11 +96,10 @@ Bosses are picked at random from the roster (never your own fighter), so every r
 - **Size:** 0.9× to 1.18×. Bigger means more health, harder hits, slower feet, and a BIG name.
 - **Colours:** shirt and trousers are recoloured separately; skin stays as it is.
 - **Headgear:** cap, beanie or bandana, sometimes shades.
-- **A weapon:** some carry a pipe, bat or knife, with longer reach and harder hits.
 
 The extras are drawn onto each animation frame at runtime: the head and fist are found from the frame's own pixels.
 
-**Weapons:** a henchman drops his weapon when knocked down. Walk over it to pick it up; A swings it (+reach, +damage). It breaks after 8 hits (a knife after 12), and you drop it if you're knocked down.
+**No weapons (v1.47):** henchmen don't carry pipes, bats or knives, and there's nothing to pick up; it's fists and feet (and throws, trash cans and hydrants).
 
 **The spared man keeps his look.** The one you help up in Stage 1 comes back in the cutscenes with the same size, colours and hat.
 

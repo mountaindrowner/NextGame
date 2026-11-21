@@ -77,17 +77,13 @@ const OUT = process.argv[2];
   const f = await p.evaluate(() => { const d = window.__dbg; d.go(d.Fight, { p1: 'karl', p2: 'karl', stage: 'karl' }); const F = d.F; return { shadow: F.p2.shadow, hp: F.p2.mhp, cpu: F.p2.cpu }; });
   await p.waitForTimeout(300); await shot('story-shadow');
   C('shadow duel', f.shadow && f.hp > 92 && f.cpu, `shadow ${f.shadow}, hp ${f.hp}`);
-  // henchman variety: sizes, outfits and headgear vary; a weapon drops on a knockdown, you pick it up, it breaks
+  // henchman variety: sizes, outfits and headgear vary; no weapons in Story mode (none carried, none dropped)
   const v = await p.evaluate(() => { const d = window.__dbg; d.startStory('karl', [0, 0], [0, 0]); d.RUN.level = 1; d.go(d.Brawl); const B = d.scene; B.ph = 'play';
-    const keys = new Set(), sizes = new Set(); for (let i = 0; i < 30; i++) { B.spawn('goon'); const e = B.foes.pop(); keys.add(e.vari.key); sizes.add(e.vari.sc); }
-    B.spawn('goon'); const e = B.foes[0]; e.vari = { ...e.vari, w: 'pipe', key: e.vari.key + 'p' }; e.x = B.P.x + 30; e.z = B.P.z; B.hitFoe(e, 1, true, 1);
-    const drop = B.items.find(it => it.kind === 'w_pipe'); if (!drop) return { keys: keys.size, sizes: sizes.size };
-    B.foes = []; drop.x = B.P.x; drop.z = B.P.z; for (let i = 0; i < 30 && !B.P.wpn; i++) { d.tick(); B.update(); } const got = !!B.P.wpn && B.P.wpn.kind; if (!got) return { keys: keys.size, sizes: sizes.size, drop: true };
-    B.atk(B.P, 'jab'); const reach = B.P.atk.reach; B.P.wpn.uses = 1; B.P.atk = { ...B.P.atk, wpn: true }; B.P.state = 'attack';
-    B.spawn('goon'); const t = B.foes[0]; t.x = B.P.x + B.P.face * 20; t.z = B.P.z; t.inv = 0; B.P.st = B.P.atk.s; B.playerHits();
-    return { keys: keys.size, sizes: sizes.size, drop: true, got, reach, broke: !B.P.wpn }; });
-  C('henchman variety', v.keys >= 10 && v.sizes >= 3, `${v.keys} different looks and ${v.sizes} sizes in 30 goons`);
-  C('weapons: drop, pick up, break', v.drop && v.got === 'pipe' && v.reach > 40 && v.broke, `dropped ${v.drop}, picked up ${v.got}, reach ${v.reach}, broke after its last hit ${v.broke}`);
+    const keys = new Set(), sizes = new Set(); let armed = 0; for (const k of ['goon', 'bruiser', 'blade', 'enforcer', 'chain']) for (let i = 0; i < 12; i++) { B.spawn(k); const e = B.foes.pop(); if (e.vari) { keys.add(e.vari.key); sizes.add(e.vari.sc); if (e.vari.w) armed++; } }
+    B.spawn('goon'); const e = B.foes[0]; e.x = B.P.x + 30; e.z = B.P.z; B.hitFoe(e, 1, true, 1); const drops = B.items.filter(it => it.kind.startsWith('w_')).length;
+    return { keys: keys.size, sizes: sizes.size, armed, drops }; });
+  C('henchman variety', v.keys >= 10 && v.sizes >= 3, `${v.keys} different looks and ${v.sizes} sizes`);
+  C('no weapons in Story mode', v.armed === 0 && v.drops === 0, `${v.armed} of 60 henchmen armed, ${v.drops} weapons dropped`);
   console.log(out.join('\n')); console.log('errors:', errs.length ? errs.slice(0, 5) : 'none'); await br.close();
   process.exit(out.some(l => l.startsWith('FAIL')) || errs.length ? 1 : 0);
 })();
