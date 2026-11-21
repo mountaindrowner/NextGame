@@ -6,7 +6,7 @@ A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with twelve figh
 
 Open `dist/index.html` in a browser. It is a single self-contained file (also ready to upload to itch.io as an HTML game).
 
-Controls: four face buttons, the same in every mode — **A** punch (`X`/`K`), **B** kick (`Z`/`J`), **SP** special (`C`/`L`), **JUMP** (`V`/`I`; up also jumps in fights; in Story up/down is depth). Arrows/WASD move, Enter = Start (pause shows each fighter's moves and combo). On touch screens the pad works differently by mode (Options > CONTROLS shows both diagrams):
+Controls: four face buttons, the same in every mode — **A** punch (`X`/`K`), **B** kick (`Z`/`J`), **SP** special (`C`/`L`), **JUMP** (`V`/`I`; in fights up jumps and this button is FOCUS; in Story up/down is depth). Arrows/WASD move, Enter = Start (pause shows each fighter's moves and combo). On touch screens the pad works differently by mode (Options > CONTROLS shows both diagrams):
 
 - **Fights:** a zoned stick, like mobile Street Fighter IV. Wide left/right bands walk (back blocks), pushing to the **far edge dashes** (no double-tap needed), up jumps, down crouches, down-back crouch-blocks. A knob follows the thumb, and the zones are labelled round the pad.
 - **Story mode (beat 'em up):** a plain 8-way stick, where up and down move in and out of the screen. No jump or dash zones; jump is the JUMP button.
@@ -21,6 +21,7 @@ Controls: four face buttons, the same in every mode — **A** punch (`X`/`K`), *
 - **Special cancel** — any connected normal except the sweep cancels into the special (A+B). A+B pressed together cancels the first button's normal straight into the special.
 - **Dash** — double-tap forward or back; the back-dash has brief invincibility.
 - **Super meter** — fills when you hit (+7, heavy +10), get hit (+5) or block; forward + A+B with a full bar fires your fighter's unique super (see Supers). The meter carries between rounds.
+- **Focus attack** — hold the FOCUS button (the JUMP button becomes FOCUS in fights; `V`/`I` on a keyboard, X/LB on a gamepad), then let go to strike. While charging it absorbs one hit at half damage. Held 18 frames (level 2) the strike crumples the opponent, who slowly falls: a free combo starter. At 42 frames (level 3) it fires by itself and can't be blocked. A dash (push to the stick's edge, or double-tap) cancels the charge, or the strike once it hits. **Focus cancel:** press FOCUS during a special to cancel it into a focus for half the super bar; then dash to make it safe, or keep charging.
 - **Throws** — forward/back + B right next to a grounded opponent; press A or B during the grab to break it. Back throws switch sides. Keksan's Thai Clinch is an unblockable command grab.
 - **Counter hits** — hitting a move in its start-up does +20% damage and extra hit-stun.
 - **Juggles & scaling** — at most 2 extra hits on a falling opponent; damage scales down from the 3rd hit (85%, 75%, … 50%).

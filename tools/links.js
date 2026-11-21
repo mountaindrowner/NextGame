@@ -11,7 +11,7 @@ const { chromium } = require('playwright'); const path = require('path');
   await p.goto('file://' + path.resolve(__dirname, '../dist/index.html'));
   await p.waitForFunction(() => window.__dbg && window.__dbg.CH.karl.spr, null, { timeout: 20000 });
   const res = await p.evaluate(only => {
-    const d = window.__dbg, K = ['up', 'down', 'left', 'right', 'a', 'b', 'start', 'select', 'tap'], out = [];
+    const d = window.__dbg, K = ['up', 'down', 'left', 'right', 'a', 'b', 'start', 'select', 'tap', 'jump', 'dl', 'dr'], out = [];
     const setup = (a, dummy = 'STAND', x2 = 138) => { d.RUN = { mode: 'training', p1: a, ladder: ['padre'], idx: 0, cont: 0 }; d.go(d.Fight, { p1: a, p2: 'padre', stage: 'padre' });
       const F = d.F, sc = d.scene, orig = d.Fight.__u || (d.Fight.__u = d.Fight.update), upd = orig.bind(sc); sc.update = () => {};
       F.phase = 'play'; F.dummy = dummy; F.p1.x = 100; F.p2.x = x2; F.p1.face = 1; F.p2.face = -1;
@@ -64,17 +64,32 @@ const { chromium } = require('playwright'); const path = require('path');
         check(`${id.padEnd(9)} jab > kick > ${T.btn.toUpperCase()}: ${T.m.nm}`, tcOk && !extra.includes('NOT'), `${r.combo} hits${extra}`); }
       if (T.m.stun >= 30) { const r = play(id, [['a', 'link'], ['b', 'cancel'], [T.btn, 'cancel'], ['b', 'link']]); check(`${id.padEnd(9)} ${T.m.nm} links into kick`, r.combo >= 4, `${r.combo} hits`); }
     }
-    const KEY = { cmd: ['a', 'left'], tc: null, jab: ['a'], kick: ['b'], cjab: ['a', 'down'], sweep: ['b', 'down'], leap: ['a', 'right'], sp1: ['a+b'], sp2: ['a+b', 'down'], sp3: ['a+b', 'left'], super: ['a+b', 'right'] };
+    // FOCUS (hold the focus button, let go): armor, crumple, dash cancel, focus cancel, unblockable level 3
+    for (const id of only ? [only] : d.ORDER) {
+      const hold = (q, n, o = {}) => { q.step({ jump: 1, h: { jump: 1 } }); for (let i = 1; i < n; i++) q.step({ h: { jump: 1 }, ...o }); };
+      { const q = setup(id, 'STAND', 136); hold(q, 6); const h0 = q.F.p1.hp; d.startAtk(q.F.p2, 'jab'); q.F.p2.state = 'attack'; q.F.p2.st = 0; for (let i = 0; i < 10; i++) q.step({ h: { jump: 1 } });
+        check(`${id.padEnd(9)} focus absorbs a hit`, q.F.p1.state === 'focus' && q.F.p1.hp < h0 && q.F.p1.hp > h0 - 4, `still charging ${q.F.p1.state === 'focus'}, took ${(h0 - q.F.p1.hp).toFixed(1)}`); }
+      { const q = setup(id, 'STAND', 140); hold(q, 24); let crumple = false, down = false; for (let i = 0; i < 140; i++) { q.step(); crumple = crumple || !!q.F.p2.crumple; down = down || q.F.p2.state === 'down'; }
+        check(`${id.padEnd(9)} level-2 focus crumples, then they fall`, crumple && down, `crumpled ${crumple}, fell ${down}`); }
+      { const q = setup(id, 'STAND', 140); hold(q, 8); q.step({ right: 1, dr: 1, h: { right: 1 } }); let dashed = false; for (let i = 0; i < 4; i++) { q.step({ h: { right: 1 } }); dashed = dashed || q.F.p1.state === 'dash'; }
+        check(`${id.padEnd(9)} dash cancels the focus`, dashed, dashed ? 'dashed' : q.F.p1.state); }
+      { const q = setup(id, 'STAND', 140); q.F.p1.meter = 100; d.startSpecial(q.F.p1, q.F.p2, 1); for (let i = 0; i < 3; i++) q.step(); const fly = q.F.p1.y > 0 || (q.F.p1.sp && q.F.p1.sp.fly); q.step({ jump: 1, h: { jump: 1 } }); for (let i = 0; i < 14 && q.F.p1.state !== 'focus'; i++) q.step({ h: { jump: 1 } });
+        check(`${id.padEnd(9)} focus cancel (half the bar)`, fly || (q.F.p1.state === 'focus' && q.F.p1.meter === 50), fly ? 'airborne special: not cancellable' : `${q.F.p1.state}, meter ${q.F.p1.meter}`); }
+      { const q = setup(id, 'BLOCK', 140); q.F.p1.x = 192; q.F.p2.x = 229; hold(q, 48); let st = null; for (let i = 0; i < 20; i++) { q.step(); st = st || (['hurt', 'block'].includes(q.F.p2.state) ? q.F.p2.state : null); }
+        check(`${id.padEnd(9)} level-3 focus is unblockable`, st === 'hurt', `opponent ${st}`); }
+    }
+    const KEY = { focus: ['jump'], cmd: ['a', 'left'], tc: null, jab: ['a'], kick: ['b'], cjab: ['a', 'down'], sweep: ['b', 'down'], leap: ['a', 'right'], sp1: ['a+b'], sp2: ['a+b', 'down'], sp3: ['a+b', 'left'], super: ['a+b', 'right'] };
     for (const id of only ? [only] : d.ORDER) d.TRIALS[id].forEach((seq, i) => {
       d.RUN = { mode: 'trials', p1: id, ladder: ['padre'], idx: 0, cont: 0 }; d.go(d.Fight, { p1: id, p2: 'padre', stage: 'padre' });
       const F = d.F, sc = d.scene, orig = d.Fight.__u || (d.Fight.__u = d.Fight.update), upd = orig.bind(sc); sc.update = () => {};
-      F.phase = 'play'; F.trial = { i, step: 0, clear: 0 }; F.p1.x = 100; F.p2.x = 138; F.p1.face = 1; F.p2.face = -1;
+      F.phase = 'play'; F.dummy = 'STAND'; F.trial = { i, step: 0, clear: 0 }; F.p1.x = 100; F.p2.x = 138; F.p1.face = 1; F.p2.face = -1;
       const { held, pressed } = d.inp; const step = (o = {}) => { for (const k of K) { pressed[k] = !!o[k]; held[k] = !!(o.h && o.h[k]); } d.tick(); upd(); };
       for (let k = 0; k < 3; k++) step(); let cleared = false;
       let last = null;
       for (const tag of seq) { const [btn, dir] = tag === 'tc' ? [d.TCM[id].btn] : KEY[tag], chain = (['jab', 'cjab'].includes(last) && ['jab', 'cjab', 'kick', 'sweep'].includes(tag)) || tag === 'tc', sp = /^sp|super/.test(tag) || chain; let t = 0; last = tag;
         if (sp) { while (!((F.p1.hitDone && F.hitstop === 0) || (F.p1.sp && F.p1.sp.conn != null) || free(F.p1)) && t++ < 80) step(); }
         else while (!free(F.p1) && t++ < 80) step();
+        if (tag === 'focus') { step({ jump: 1, h: { jump: 1 } }); for (let k = 0; k < 23; k++) step({ h: { jump: 1 } }); step(); last = tag; continue; }
         if (tag === 'super') { F.p1.meter = 100; for (let k = 0; k < 40 && !(F.p1.sp && F.p1.sp.kind === 'super'); k++) step({ a: 1, b: 1, right: 1, h: { right: 1 } }); cleared = cleared || !!F.trial.clear; continue; }// pressed until it comes out, like a player would
         const prev = F.p1.atk ? F.p1.atk.id : F.p1.sp ? F.p1.sp.id : null, o = { h: {} }; for (const k of btn.split('+')) o[k] = 1; if (dir) { o[dir] = 1; o.h[dir] = 1; }
         if (dir === 'down' && !sp) { step({ down: 1, h: { down: 1 } }); }
