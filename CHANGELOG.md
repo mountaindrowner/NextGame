@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.51.0
+
+- **Vex makes an entrance.** In the penthouse the lights go out, a spotlight comes on, and Vex walks into it tapping his cane. His name card slides in and he lets loose a shockwave before the fight starts. Letterbox bars frame the scene; A skips it.
+- **Vex fights in three phases** (marks on his health bar at two-thirds and one-third):
+  1. Cane strikes and the ground shockwave.
+  2. "YOU'RE GOOD, CHAMP. I'M BETTER." He knocks everyone back, calls two more men, the room turns purple, he adds a rushing charge, and his shockwave comes twice.
+  3. "NO MORE GAMES!" The room pulses red, he moves faster, his shockwaves go both ways, and he vanishes and reappears behind you to strike (a red **!** warns you).
+- **You can't pin Vex in a corner any more.**
+  - A long combo on him and he bursts free ("BACK OFF!"). He takes 7 hits before bursting in phase 1, 6 in phase 2 and 5 in phase 3, then waits about 5 seconds before he can burst again.
+  - Pinned against the screen edge, he vaults over you to the middle of the room.
+- **The Shadow dissolves** when beaten: it fades and breaks apart into purple smoke, in the final duel and in co-op.
+
 ## 1.50.0
 
 - **Story mode: SP is its own button.** Pressing A and B together no longer fires a special by accident; it's just a punch and a kick. (Fights are unchanged.)

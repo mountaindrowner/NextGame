@@ -76,6 +76,18 @@ Bosses are picked at random from the roster (never your own fighter), so every r
 - **Lives and continues:** 3 lives, then CONTINUE? 9..0.
 - **Score:** points for every hit and knockout.
 
+## Vex, the final boss
+
+- **Entrance:** the penthouse lights go out, a spotlight comes on, and Vex walks into it with letterbox bars and his name card ("THE MAN WHO OWNS THE CITY"). A skips it. Nobody can be hurt and the game can't be paused while it plays.
+- **Three phases**, marked on his health bar at 66% and 33%. Each change is a roar that knocks everyone back while he can't be hurt.
+  1. Cane strikes and the ground shockwave.
+  2. Calls two more men; the room tints purple; adds a rushing charge; his shockwave comes twice.
+  3. The room pulses red; he's 30% faster; his shockwaves go both ways; he vanishes and reappears behind you to strike (telegraphed).
+- **No corner traps:**
+  - After 7, 6 or 5 hits in a row (by phase), he bursts free. That can't happen again for about 5 seconds.
+  - Pinned at a screen edge with you close, he vaults over you to the middle.
+- **The Shadow** fades into purple smoke when it's beaten.
+
 ## Enemies (PixelLab characters, side view, same style as the roster)
 
 | Enemy | Role | HP | Behaviour |

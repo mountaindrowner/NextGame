@@ -97,6 +97,14 @@ const path = require('path');
       for (let i = 0; i < 140 && !e.dead; i++) { q.step(); cracks = Math.max(cracks, e.smash ? e.smash.cr.length : 0); }
       C('screen smash (grab + DOWN + A)', sm && cracks > 5 && e.dead, `flew at the screen ${sm}, cracks ${cracks}, gone ${!!e.dead}`); }
     // 14. results: a rank and a bonus when the stage is clear
+    // 5d. VEX: an entrance (no damage, no pause, A skips), three phases, he bursts out of a long combo and vaults out of a corner
+    { const q = stage(3), B = q.B; B.cx = 0; const e = q.foe('vex', 300); const cine0 = B.ph === 'cine' && e.inv > 0; e.wait = 30; let t = 0; while (B.cine && t++ < 400) q.step();
+      const len = t; const q2 = stage(3), B2 = q2.B; const v = q2.foe('vex', 300); for (let i = 0; i < 40; i++) q2.step(); q2.step({ a: 1 }); const skipped = !B2.cine && B2.ph === 'play';
+      v.x = B2.cx + 160; v.z = 18; q2.P.x = v.x - 30; let ph = [], burst = false; for (let i = 0; i < 40 && !burst; i++) { v.inv = 0; if (v.state === 'special') { ph.push(v.sp.kind); if (v.sp.kind === 'burst') burst = true; for (let k = 0; k < 60 && v.state === 'special'; k++) q2.step(); continue }
+        B2.P = q2.P; B2.hitFoe(v, v.phase === 3 ? 1 : 14, false, 1); for (let k = 0; k < 9; k++) q2.step(); }
+      v.state = 'idle'; v.sp = null; v.inv = 0; v.leapCD = 0; v.hp = v.mhp * .2; v.yieldNext = false; v.burstNext = v.phaseNext = false; v.x = B2.cx + 20; q2.P.x = v.x + 30; q2.P.z = v.z; q2.P.state = 'idle'; for (let i = 0; i < 60; i++) q2.step();
+      C('Vex: entrance, phases, burst, vault', cine0 && len > 150 && skipped && ph.filter(k => k === 'roar').length === 2 && v.phase === 3 && burst && v.x - B2.cx > 80,
+        `entrance ${cine0} (${len} frames, A skips ${skipped}), moves [${ph}], phase ${v.phase}, vaulted to x ${Math.round(v.x - B2.cx)}`); }
     { const q = stage(); q.B.stat = { f: 54 * 50, dmg: 5, maxC: 9, spared: 1, lost: 0 }; q.B.ph = 'clear'; q.B.doneT = 0; run(q, 45); const r = q.B.res;
       C('stage results: rank + bonus', !!r && r.r === 'S' && r.bonus === 5000, r ? `rank ${r.r}, bonus ${r.bonus}` : 'no results'); }
     return res;
