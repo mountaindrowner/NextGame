@@ -81,6 +81,38 @@ Hecky has a second costume — an anthropomorphic fox — chosen with SELECT on 
 
 `tools/powers.js` checks each of these mechanics.
 
+## Combo system
+
+Combos are built from four tools (all checked with real button presses by `node tools/links.js`):
+
+- **Chains:** a normal that connects can be followed by another (jab or low jab into jab, low jab, kick or sweep; up to 3, or 4 for Papa-Léguas).
+- **Special cancels:** any grounded normal except the sweep can be cancelled into a special once it connects.
+- **Links:** a normal that leaves the opponent in hit-stun long enough lets the next one start before they recover. A move links when its advantage on hit is at least the next move's startup + 1. The input buffer (7 frames, 11 on touch) holds a press made early, so links don't need frame-perfect timing.
+- **Super cancel:** a special that connects (hit or block) can be cancelled into the super (forward + A+B) within half a second. A reeling opponent is held for the super's first hit.
+
+Hitting someone during their attack's startup is a **counter-hit**: +20% damage and +8 frames of hit-stun, so a counter-hit kick links into another kick.
+
+**High and low:** the low jab (down + A) and the sweep must be blocked crouching. The **overhead** (forward + A, a short leaping punch) must be blocked standing, and it links into a jab. Holding down-back no longer blocks everything.
+
+**Frame data** differs per fighter (`FDATA` in `src/game.js`; `node tools/framedata.js` measures it in the game). Advantage is measured in frames; + means the attacker recovers first.
+
+| Fighter | Jab (startup / on hit / on block) | Low jab | Kick | Overhead | Identity |
+|---|---|---|---|---|---|
+| Papa-Léguas | 3 / +5 / -3 | 3 / +3 / -4 | 6 / 0 / -9 | 13 / +6 / -3 | fastest buttons (3-frame jab and low jab) |
+| Keksan | 4 / +5 / -3 | 4 / +3 / -4 | 7 / +2 / -9 | 14 / +6 / -3 | shin kick is +2 |
+| Vizor | 4 / +5 / -3 | 4 / +3 / -4 | 7 / +2 / -7 | 14 / +6 / -3 | safer kick, no light links (zoner) |
+| Samson | 5 / +5 / -3 | 4 / +3 / -4 | 9 / +6 / -8 | 16 / +6 / -3 | slow, but his big kick is +6 and links into a jab |
+| Zeke | 4 / +5 / -3 | 4 / +5 / -4 | 8 / +1 / -9 | 14 / +6 / -3 | low jab links into itself |
+| Hecky Xavier | 4 / +5 / -3 | 4 / +4 / -4 | 7 / 0 / -9 | 14 / +6 / -3 | low jab, low jab, jab chains |
+| Lawslie | 4 / +5 / -2 | 4 / +3 / -3 | 7 / 0 / -7 | 14 / +6 / -3 | safest on block |
+| Marcus | 6 / +3 / -5 | 6 / +1 / -6 | 9 / +2 / -11 | 16 / +7 / -5 | slowest buttons, longest reach |
+| Devanté | 3 / +5 / -3 | 3 / +3 / -4 | 6 / 0 / -9 | 11 / +6 / -3 | fastest overhead (11 frames) |
+| Estrella | 4 / +5 / -3 | 4 / +5 / -4 | 7 / 0 / -9 | 14 / +6 / -3 | low jab links into her jab |
+| Reyes | 4 / +6 / -3 | 4 / +3 / -4 | 7 / +1 / -9 | 14 / +6 / -3 | jab is +6 |
+| Mateo | 5 / +5 / -3 | 4 / +3 / -4 | 8 / +6 / -9 | 14 / +6 / -3 | heavy kick is +6 and links into a jab |
+
+Trials mode teaches each fighter's tools: the basics, their bread-and-butter, an overhead link, their signature link (where they have one), and a super cancel. Every trial is cleared by `tools/links.js`.
+
 Bread-and-butter combos (checked frame by frame by `tools/combos.js`):
 
 | Fighter | Combo | Hits |

@@ -1,5 +1,38 @@
 # Changelog
 
+## 1.35.0
+
+**Deeper combos (Tier 1).** The same engine ideas that give Street Fighter III its combos, kept phone-friendly:
+
+- **Links:** a normal that leaves the opponent in hit-stun long enough lets the next attack start before they recover. The jab is now +5 on hit, so it links into another jab. The input buffer holds an early press, so links don't need frame-perfect timing.
+- **Per-fighter frame data:** every fighter's normals have their own startup, damage and hit-stun instead of one shared table.
+  - Papa-Léguas has the fastest buttons.
+  - Samson and Mateo are slow, but their big kicks are +6 and link into a jab.
+  - Estrella's and Zeke's low jabs link.
+  - Lawslie is the safest on block.
+  - Devanté has the fastest overhead.
+  - The full table is in the README, measured by `tools/framedata.js`.
+- **A real low and a new overhead:**
+  - The low jab now has to be blocked crouching.
+  - **Forward + A** is a universal overhead: a short leaping punch that must be blocked standing, and it links into a jab.
+  - Holding down-back no longer blocks everything.
+- **Super cancel:** a special that connects (on hit or block) can be cancelled into the super with forward + A+B. A reeling opponent is held for the super's first hit, so it combos. For example, Samson's heavy kick, jab, kick > Holy Tome > SUPER CANCEL into Final Sermon is a 7-hit, 55-damage combo (his best used to be 3 hits for 22).
+  - **Supers adjusted to combo:** Lawslie's Full Arrest can grab a reeling opponent; Marcus's Stage Dive is faster and homes in harder when cancelled into; Estrella's Grand Finale rings start sooner.
+- **Counter-hits** (already +20% damage and extra stun) now open links: a counter-hit kick links into another kick.
+- **Trials mode:** 4–5 trials per fighter: the basics, their bread-and-butter, an overhead link, their signature link and a super cancel.
+- **Pause menu:** lists the overhead and the super cancel.
+- **The CPU** uses overheads (more against a crouching guard) and super cancels.
+- **Input fixes:**
+  - A+B pressed during hit-stop now still counts as A+B, so a super cancel input made during the freeze isn't lost.
+  - A+B pressed with back no longer comes out as special 2 just because down was pressed shortly before. Estrella's low jab, jab, kick > Siren Scream works.
+  - Trials showed "UNDEFINED" for special 3; it now reads SPECIAL 3.
+- **Balance:** a full CPU round robin after the change; 10 of 12 fighters win 42–63%.
+  - Keksan's health went to 88 (he rose to 67% with the new frame data).
+  - Devanté got 104 health and a little more power and speed; he was at 17% before this update and is at 42% now.
+  - Vizor's buttons were made a little stronger; he is at 34–45% between runs.
+  - **Hecky stays strong (about 70%).** He was 67% before this update too. Health, power, reach, parry, dash and his specials were each tested and none of them is the cause on its own, so this needs its own investigation.
+- **New tests:** `tools/framedata.js` (frame data per fighter) and `tools/links.js` (every link, the high/low mix-up, counter-hit links, super cancels, and clearing every trial with real inputs).
+
 ## 1.34.1
 
 - **Mateo's full name is Mateo Paezano.** His two-line logo, the fight HUD, the select screen and the ending all use it. The announcer calls "Mateo Paezano!", and Zeke calls him "Paezano" in story mode, like a teammate would.

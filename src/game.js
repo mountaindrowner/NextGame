@@ -249,7 +249,7 @@ const CH={
     col:{skin:'#c98a5e',glove:'#1c1a24',leg:'#3d5a96',foot:'#f0f0f0',aura:'#ff4a6a'},sh:.72,hip:.5,
     quote:"THANK YOU, GOOD NIGHT! YOU'VE BEEN A GREAT OPENING ACT.",lose:'ENCORE... LATER...',stageName:'MAIN STAGE'},
   kai:{id:'kai',name:'DEVANTÉ',nick:'THE CROWN',style:'STREETBALL',country:'THE COURTS',countryLabel:'ORIGIN',flag:'hoop',ht:"6'3\" (191 CM)",wt:'185 LB (84 KG)',
-    speed:1.08,power:0.98,def:0.96,jump:1.12,stats:[4,3,3],special:'bounce',spName:'BOUNCE PASS',special2:'crossover',sp2Name:'ANKLE BREAKER',tr:0,
+    speed:1.134,power:1.098,def:0.96,jump:1.12,stats:[4,3,3],special:'bounce',spName:'BOUNCE PASS',special2:'crossover',sp2Name:'ANKLE BREAKER',tr:0,
     col:{skin:'#e0a070',glove:'#1c1a24',leg:'#24202e',foot:'#f0f0f0',aura:'#ffb43a'},sh:.72,hip:.5,
     quote:"THAT'S GAME. YOU NEVER HAD A CHANCE ON MY COURT.",lose:'FOUL... THAT WAS A FOUL...',stageName:'STREET COURT'},
   keksan:{id:'keksan',name:'KEKSAN',nick:'THE TIGER',style:'MUAY THAI',country:'TIGER GYM',countryLabel:'GYM',flag:'tiger',ht:"5'10\" (178 CM)",wt:'172 LB (78 KG)',
@@ -281,11 +281,11 @@ const ARCH={
   zeke:{type:'HIGH/LOW ZONER',trait:'BLOCKED BALL: RELOAD',hp:100,spare:true,reach:1},
   hecky:{type:'TECH RUSHDOWN',trait:'PARRY: TAP FWD ON HIT',hp:98,parry:true,reach:1.18,hh:1.35,dash:1.2},
   lawslie:{type:'ENFORCER',trait:'NO CHIP, BLOCK = METER',hp:100,enforcer:true,reach:1},
-  kai:{type:'HIGH FLYER',trait:'DOUBLE JUMP, BIG HOPS',hp:96,dj:true,reach:1},
+  kai:{type:'HIGH FLYER',trait:'DOUBLE JUMP, BIG HOPS',hp:104,dj:true,reach:1},
   estrella:{type:'AREA CONTROL',trait:'HER SOUND SLOWS FOES',hp:100,sound:true,reach:1},
   mateo:{type:'PITCHER',trait:'3RD PITCH IS A HEATER',hp:104,heat:true,reach:1},
   reyes:{type:'ALL-ROUNDER',trait:'STARTS WITH 1/3 SUPER',hp:92,leader:true,reach:1},
-  keksan:{type:'STRIKER',trait:'SHIN KICKS: HARDER KICKS',hp:94,shin:true,reach:1},
+  keksan:{type:'STRIKER',trait:'SHIN KICKS: HARDER KICKS',hp:88,shin:true,reach:1},
   rex:{type:'LONG-RANGE',trait:'HUGE REACH, BEAT = +DMG',hp:104,rhythm:true,amp:true,reach:1.4,slow:2,dash:.7}};
 const arch=c=>ARCH[c.id]||{};
 // RHYTHM trait: a steady 128-ish bpm beat on the shared frame counter (same on both sides online)
@@ -293,19 +293,22 @@ const BEAT=28,onBeat=()=>{const m=frameNo%BEAT;return m<4||m>BEAT-4};
 const SUPER_NAME={"karl": "MIL LÉGUAS", "ivan": "SIBERIAN STORM", "vizor": "FULL EXPOSURE", "padre": "FINAL SERMON", "zeke": "PERFECT GAME", "hecky": "GOLDEN PARACHUTE", "lawslie": "FULL ARREST", "rex": "STAGE DIVE", "kai": "FAST BREAK", "keksan": "EIGHT LIMBS", "estrella": "GRAND FINALE", "reyes": "AIR SUPPORT", "mateo": "STRIKEOUT"};
 const ENDING={"mateo": "MATEO THREW THE FIRST PITCH AT THE BONFIRE BASH CHAMPIONS GAME. NINETY-EIGHT MILES AN HOUR. NOBODY EVEN SWUNG.", "reyes": "AGENT REYES FILED THE BONFIRE BASH REPORT IN TRIPLICATE, THEN TOOK HIS WHOLE SQUAD OUT FOR BURGERS. MISSION ACCOMPLISHED.", "estrella": "ESTRELLA TURNED DOWN EVERY RECORD DEAL WITH STRINGS ON IT. SHE SINGS IN THE CHAPEL CHOIR ON SUNDAYS, AND THE WHOLE STREET COMES TO LISTEN.", "keksan": "KEKSAN HUNG THE BONFIRE BASH TROPHY OVER THE TIGER GYM DOOR AND OPENED IT TO EVERY KID IN THE CITY. FREE CLASSES EVERY NIGHT. RESPECT FIRST, THEN FISTS.", "kai": "DEVANTE TOOK THE BONFIRE BASH TROPHY TO THE STREET COURT AND RAN A MIDNIGHT TOURNAMENT. NOBODY COULD GUARD HIM. NOBODY EVER WILL.", "rex": "MARCUS PLAYED THE BONFIRE BASH VICTORY SHOW TO A SOLD-OUT CROWD. THE CROWN STAYED ON FOR THE ENCORE, AND THE ENCORE, AND THE ENCORE.", "lawslie": "OFFICER LAWSLIE CLOSED THE BONFIRE BASH CASE FILE: EVERY FIGHTER BOOKED, EVERY TROPHY ACCOUNTED FOR. THE CHIEF MADE HER DETECTIVE BY MORNING.", "hecky": "HECKY XAVIER BOUGHT THE BONFIRE BASH TOURNAMENT THE NEXT MORNING. NEXT YEAR'S TROPHY IS GOLD-PLATED, AND SO IS THE PENTHOUSE.", "zeke": "ZEKE BOWLED A PERFECT 300 AT THE CHAMPIONS PARTY, THEN BOUGHT EVERYONE NACHOS. THE STRIKE LANES ARE NOW THE MOST FAMOUS ALLEY ON EARTH.", "karl": "PAPA-LEGUAS RAN STRAIGHT FROM THE FINAL FIGHT TO HIS DOJO AND HUNG UP A SIGN: EVERYONE WELCOME. JUST KEEP UP.", "vizor": "VIZOR REPLAYED EVERY FIGHT FRAME BY FRAME. THE FOOTAGE BECAME THE MOST WATCHED VIDEO ON EARTH.", "padre": "SAMSON RANG THE OLD CHAPEL BELL FOR THE FIRST TIME IN YEARS. EVEN HIS RIVALS CAME TO LISTEN."};
 // combo trials: each step is the move that must hit, in order, inside one combo
-const TRIALS={karl:[['jab','kick'],['jab','jab','kick','sp1'],['jab','kick','super']],
-  vizor:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],padre:[['jab','kick'],['jab','kick','sp1'],['cjab','cjab','sweep']],
-  zeke:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],
-  hecky:[['jab','kick'],['cjab','jab','kick','sp1'],['jab','kick','super']],
-  lawslie:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],
-  rex:[['jab','kick'],['jab','kick','sp2'],['jab','kick','super']],
-  kai:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],
-  keksan:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],
-  estrella:[['jab','kick'],['jab','kick','sp3'],['jab','kick','super']],
-  reyes:[['jab','kick'],['jab','kick','sp1'],['jab','kick','super']],
-  mateo:[['jab','kick'],['jab','kick','sp2'],['jab','kick','super']]};
-const TKEY={jab:'A',kick:'B',cjab:'DN+A',sweep:'DN+B',jpunch:'JUMP+A',jkick:'JUMP+B',sp1:'SP',sp2:'DN+SP',sp3:'BK+SP',super:'FWD+SP',throw:'FWD+B'};
-const TNAME={jab:'JAB',kick:'KICK',cjab:'LOW JAB',sweep:'SWEEP',jpunch:'JUMP PUNCH',jkick:'JUMP KICK',sp1:'SPECIAL',sp2:'SPECIAL 2',super:'SUPER',throw:'THROW'};
+// trials: the basics, the bread-and-butter, an overhead link, the fighter's signature link (where their frame data has one), a super cancel
+const TRIALS={
+  karl:[['jab','kick'],['jab','jab','kick','sp1'],['leap','jab','kick','sp1'],['leap','jab','jab','kick','sp1'],['sp1','super']],
+  vizor:[['jab','kick'],['jab','kick','sp1'],['leap','jab','kick','sp1'],['sp1','super']],
+  padre:[['jab','kick'],['jab','kick','sp1'],['leap','jab','kick','sp1'],['kick','jab','kick','sp1'],['sp1','super']],
+  zeke:[['jab','kick'],['jab','kick','sp1'],['leap','jab','kick','sp1'],['cjab','cjab','sweep'],['sp1','super']],
+  hecky:[['jab','kick'],['cjab','jab','kick','sp1'],['leap','jab','kick','sp1'],['cjab','cjab','jab','kick','sp1'],['sp1','super']],
+  lawslie:[['jab','kick'],['jab','kick','sp1'],['leap','jab','kick','sp1'],['jab','jab','kick','sp1'],['sp1','super']],
+  rex:[['jab','kick'],['jab','kick','sp2'],['leap','jab','kick','sp2'],['sp2','super']],
+  kai:[['jab','kick'],['jab','kick','sp1'],['leap','jab','kick','sp1'],['jab','jab','kick','sp1'],['sp1','super']],
+  keksan:[['jab','kick'],['jab','kick','sp1'],['leap','jab','kick','sp1'],['jab','jab','kick','sp1'],['sp1','super']],
+  estrella:[['jab','kick'],['jab','kick','sp3'],['leap','jab','kick','sp3'],['cjab','jab','kick','sp3'],['sp3','super']],
+  reyes:[['jab','kick'],['jab','kick','sp1'],['leap','jab','kick','sp1'],['jab','jab','kick','sp1'],['sp1','super']],
+  mateo:[['jab','kick'],['jab','kick','sp2'],['leap','jab','kick','sp2'],['kick','jab','kick','sp2'],['sp2','super']]};
+const TKEY={leap:'FWD+A',jab:'A',kick:'B',cjab:'DN+A',sweep:'DN+B',jpunch:'JUMP+A',jkick:'JUMP+B',sp1:'SP',sp2:'DN+SP',sp3:'BK+SP',super:'FWD+SP',throw:'FWD+B'};
+const TNAME={leap:'OVERHEAD',jab:'JAB',kick:'KICK',cjab:'LOW JAB',sweep:'SWEEP',jpunch:'JUMP PUNCH',jkick:'JUMP KICK',sp1:'SPECIAL',sp2:'SPECIAL 2',sp3:'SPECIAL 3',super:'SUPER',throw:'THROW'};
 // bread-and-butter combos shown in the pause menu
 const BNB={karl:'JAB, JAB, KICK > SP',vizor:'JAB, KICK > SP',padre:'JAB, KICK > SP (OVERHEAD)',zeke:'JAB, KICK > SP',hecky:'LOW JAB, JAB, KICK > SP',lawslie:'JAB, KICK > SP (TASER)',rex:'JAB, KICK > DN+SP',kai:'JAB, KICK > SP',keksan:'JAB, KICK > SP (KNEE)',estrella:'JAB, KICK > BK+SP (SCREAM)',reyes:'JAB, KICK > SP (KNUCKLE)',mateo:'JAB, KICK > DN+SP (SLIDE)'};
 // cooldown (frames) per special; second specials are stronger tools with longer cooldowns
@@ -635,10 +638,28 @@ const VS={enter(){this.a=skinned(RUN.p1,0);this.b=skinned(RUN.ladder[RUN.idx],1)
 // ---------------- FIGHT ENGINE ----------------
 // a normal that whiffs (hits nothing, not even a block) recovers 3 frames slower: mashing is punishable
 const WHIFF=3;
+// PER-FIGHTER FRAME DATA: each fighter's normals differ from the shared ATK table (startup s, active a, recovery r,
+// damage, hit-stun, block-stun). Advantage on hit = stun - a - r - 1 (see tools/framedata.js); a move links into
+// another when its advantage on hit is at least the next move's startup + 1 (checked by tools/links.js).
+const FDATA={
+  karl:{jab:{s:3},cjab:{s:3},kick:{s:6,dmg:6},leap:{s:13}},                          // rushdown: fastest buttons
+  keksan:{kick:{dmg:8,stun:23},sweep:{dmg:9}},                          // striker: the shin kick is +2
+  vizor:{kick:{r:13,stun:21},jab:{dmg:5}},                                         // zoner: safer pokes, fewer links
+  padre:{jab:{s:5,dmg:5},kick:{s:9,dmg:9,stun:27,bs:13},leap:{s:16,dmg:9}},        // powerhouse: slow, and the big kick links
+  zeke:{kick:{s:8,dmg:8,stun:22},cjab:{stun:18}},                                    // the low jab links into itself
+  hecky:{cjab:{stun:17}},                                               // tech rushdown: low jab, low jab, jab...
+  lawslie:{jab:{bs:11},kick:{bs:14},cjab:{bs:10}},                                    // enforcer: safe on block
+  rex:{kick:{stun:25},leap:{stun:24}},                                                               // long range (already +2 startup)
+  kai:{leap:{s:11,dmg:6},jab:{s:3},cjab:{s:3},kick:{s:6}},                                                  // high flyer: the fastest overhead
+  estrella:{cjab:{stun:18},jab:{dmg:5}},                                              // the low jab links into her jab
+  reyes:{kick:{stun:22},jab:{stun:19}},                                               // all-rounder: a bit of everything
+  mateo:{kick:{s:8,dmg:8,stun:27},jab:{s:5,dmg:5}}};                                  // pitcher: heavy, the kick links
 const ATK={
-  jab:{s:4,a:4,r:10,dmg:4,reach:48,hy:.7,hh:16,stun:15,bs:9,kb:2,limb:'arm',lv:'mid'},
-  kick:{s:7,a:5,r:16,dmg:7,reach:60,hy:.5,hh:18,stun:19,bs:11,kb:3,limb:'leg',lv:'mid'},
-  cjab:{s:4,a:4,r:10,dmg:4,reach:46,hy:.62,hh:14,stun:14,bs:8,kb:1.8,limb:'arm',lv:'mid',crouch:true},
+  jab:{s:4,a:3,r:9,dmg:4,reach:48,hy:.7,hh:16,stun:18,bs:10,kb:1.6,limb:'arm',lv:'mid'},
+  kick:{s:7,a:5,r:15,dmg:7,reach:60,hy:.5,hh:18,stun:21,bs:12,kb:2.4,limb:'leg',lv:'mid'},
+  cjab:{s:4,a:3,r:9,dmg:4,reach:46,hy:.62,hh:14,stun:16,bs:9,kb:1.4,limb:'arm',lv:'low',crouch:true},
+  // universal overhead (forward + A): a short leaping punch that must be blocked standing; +6 on hit, so it links into a jab
+  leap:{s:14,a:4,r:10,dmg:7,reach:46,hy:.55,hh:26,stun:21,bs:12,kb:1.6,limb:'arm',lv:'high',leap:true},
   sweep:{s:8,a:6,r:20,dmg:8,reach:62,hy:.1,hh:14,stun:0,bs:12,kb:2,limb:'leg',lv:'low',knock:true,crouch:true},
   jpunch:{s:3,a:10,r:0,dmg:6,reach:44,hy:.42,hh:22,stun:17,bs:9,kb:2,limb:'arm',lv:'high',air:true},
   jkick:{s:4,a:12,r:0,dmg:8,reach:52,hy:.22,hh:22,stun:19,bs:10,kb:2.6,limb:'leg',lv:'high',air:true},
@@ -677,7 +698,7 @@ function control(f,o,inp){
   const both=Math.abs(f.lastA-f.lastB)<=(tch?6:4)&&frameNo-Math.max(f.lastA,f.lastB)<=BF;
   // BURST: A or B (buffered, so a press during hit-stop counts) breaks out of a detected loop
   if(f.burstOK){if(!['hurt','knock'].includes(f.state)||!o.ips||o.state==='slamming'||(o.sp&&o.sp.kind==='super'))f.burstOK=false;else if(btn){use();burst(f,o);return}}
-  const wantSp2=!(f.cuffed>0)&&f.c.special2&&(inp.sp2||(btn&&both&&inp.d)||(inp.bP&&qcb(f.hist)));
+  const wantSp2=!(f.cuffed>0)&&f.c.special2&&(inp.sp2||(btn&&both&&inp.d)||(inp.bP&&qcb(f.hist)&&!both));// A+B pressed together goes by the direction held, not an old motion
   const wantSp3=!(f.cuffed>0)&&!wantSp2&&f.c.special3&&(inp.sp3||(btn&&both&&back&&!inp.d));
   const wantSp=!(f.cuffed>0)&&!wantSp2&&!wantSp3&&(inp.sp||(btn&&both)||((inp.aP||inp.bP)&&qcf(f.hist)));
   // double-tap dash detection (edges of forward/back)
@@ -688,6 +709,8 @@ function control(f,o,inp){
   if(f.state==='grabbed'){if(btn&&o.state==='throwing'&&o.thr===f&&o.st<15){use();techThrow(o,f)}return}
   // super: forward + A+B with a full meter
   const cuffed=f.cuffed>0,wantSup=!cuffed&&f.meter>=100&&(inp.sup||(btn&&both&&fwd&&!inp.d));
+  if(f.state==='special'&&f.sp&&f.sp.kind!=='super'&&f.sp.conn!=null&&frameNo-f.sp.conn<=30&&f.y<=0&&!f.sp.fly&&wantSup){use();
+    addText('SUPER CANCEL!',f.x,GY-f.H-22,'#ffe66a');F.camFlash=Math.max(F.camFlash,2);if(o.state==='hurt')o.stun=Math.max(o.stun,36);/* held for the super's first hit */startSpecial(f,o,3);return}
   if(f.state==='attack'){const a=f.atk;
     if(wantSup&&(f.st<5||cancelOk(f))){use();startSpecial(f,o,3);return}
     // A+B pressed together: the first button's normal is cancelled straight into the special (kara cancel),
@@ -709,7 +732,7 @@ function control(f,o,inp){
   if(wantSp&&f.spCD<=0){use();startSpecial(f,o);return}
   // throw: forward or back + B right next to a grounded opponent who isn't reeling
   if(bB&&(fwd||back)&&!inp.d&&canThrow(f,o)){use();startThrow(f,o,!!back);return}
-  if(bA){use();startAtk(f,inp.d?'cjab':'jab');return}
+  if(bA){use();startAtk(f,inp.d?'cjab':fwd?'leap':'jab');return}
   if(bB){use();startAtk(f,inp.d?'sweep':'kick');return}
   if(dash&&!inp.d&&!inp.u){setS(f,'dash');f.st=0;f.dashDir=dash;f.vx=f.face*dash*(dash>0?4.6:4.0)*Math.min(1.15,f.c.speed)*(arch(f.c).dash||1);f.crouch=false;if(dash<0)f.inv=7;SFX.whoosh();dust(f.x,3);return}
   if(inp.u){setS(f,'prejump');f.crouch=false;f.jdir=fwd?1:back?-1:0;f.vx=0;return}
@@ -719,7 +742,7 @@ function control(f,o,inp){
   if(fwd){setS(f,'walk');f.vx=f.face*1.35*f.c.speed*(f.buff>0?1.2:1)*slow}else if(back){setS(f,'walk');f.vx=-f.face*1.05*f.c.speed*slow}else{setS(f,'idle');f.vx=0}}
 // AREA CONTROL trait: an opponent near one of her notes or sound rings moves at 70% speed
 const inSound=f=>F.proj.some(p=>p.owner!==f&&(p.kind==='note'||p.kind==='zone')&&arch(p.owner.c).sound&&Math.abs(p.x-f.x)<(p.kind==='zone'?40:34)&&(p.kind==='zone'||Math.abs(p.y-f.y-f.H*.5)<46));
-function startAtk(f,n){f.atk={...ATK[n],name:n,id:++atkId};f.atk.reach*=arch(f.c).reach||1;f.atk.hh*=arch(f.c).hh||1;
+function startAtk(f,n){f.atk={...ATK[n],...(FDATA[f.c.id]&&FDATA[f.c.id][n]),name:n,id:++atkId};if(f.atk.leap){f.vy=2.7;f.y=Math.max(f.y,.5)}f.atk.reach*=arch(f.c).reach||1;f.atk.hh*=arch(f.c).hh||1;
   {const m=HBX[f.c.id]&&HBX[f.c.id].moves[n];if(m){f.atk.tip=m.reach-6;f.atk.reach=arch(f.c).amp?Math.max(m.reach,f.atk.reach):m.reach;f.atk.y1=m.y1;f.atk.y2=m.y2}}if(arch(f.c).slow){f.atk.s+=arch(f.c).slow;f.atk.r+=2}f.hitDone=false;if(f.atk.air)f.ast=0;else{f.state='attack';f.st=0;f.vx=0;f.crouch=!!f.atk.crouch}
   (n==='kick'||n==='sweep'||n==='jkick'?SFX.whooshH:SFX.whoosh)()}
 const canThrow=(f,o)=>Math.abs(o.x-f.x)<48&&o.y<=0&&f.y<=0&&o.inv<=0&&!(o.throwInv>0)&&['idle','walk','crouch','attack','land','dash','prejump'].includes(o.state)&&!(o.state==='attack'&&phaseOf(o)==='active');
@@ -804,7 +827,7 @@ const SUPERS={
     s.pa=f.c.anim&&f.c.anim.special3?'special3':'special';s.pf=8;supEnd(f,s,t,20)},
   lawslie(f,o,s,t){const fc=f.face;// FULL ARREST: charging grab, three taser zaps, takedown, cuffed for 8 seconds
     if(!s.ph){s.pa='walk';s.loop=1;s.pf=Math.floor(t/1.4);if(t<16){f.vx=fc*6.5;if(t%3===0)f.ghosts.push({x:f.x,y:f.y,l:10});
-        if(canGrab(o)&&overlap({x1:fc>0?f.x:f.x-44,x2:fc>0?f.x+44:f.x,y1:f.y+8,y2:f.y+f.H},o.hurt())){grab(f,o,s,t);SFX.cuff()}}else{f.vx*=.7;if(t>30)supEnd(f,s,t,0)}return}
+        if((canGrab(o)||(o.state==='hurt'&&o.y<=2&&o.inv<=0))&&overlap({x1:fc>0?f.x:f.x-44,x2:fc>0?f.x+44:f.x,y1:f.y+8,y2:f.y+f.H},o.hurt())){grab(f,o,s,t);SFX.cuff()}}else{f.vx*=.7;if(t>30)supEnd(f,s,t,0)}return}
     if(s.ph==='hold'){const k=t-s.t0;s.loop=0;o.x=clamp(f.x+fc*28,XMIN,XMAX);o.y=0;
       if(k<10){s.pa='special2';s.pf=kf(k,[[0,2],[10,6]])}else{s.pa='special';s.pf=(k>>2)&1?7:6}
       if(k===10||k===18||k===26){SH(f,o,4,{unblockable:true});o.zap=24;SFX.zap();if(!KO_D(o)){o.state='grabbed';o.st=0}}
@@ -818,7 +841,8 @@ const SUPERS={
     if(t<12){s.pa='special';s.pf=Math.min(2,t/4)}else if(t<22){s.pa='special';s.pf=3}else if(t<74){s.pa='special';s.pf=4+((t>>2)%3)}
     else if(t<90){s.pa='special';s.pf=t<82?7:8}else{s.pa='win';s.pf=Math.min(8,(t-90)/3)}
     if(t===2)SFX.sparkle();if(t===14){F.camFlash=3;SFX.sparkle()}
-    if(t>=22&&t<=70&&(t-22)%12===0){const i=s.rings.length,fin=t===70;s.rings.push({r:10,hit:false,c:['#ffd23a','#ff4aa8','#3ae8ff','#b04aff','#ffd23a'][i%5],fin});s.beat=t;
+    if(s.r0==null)s.r0=o.state==='hurt'||o.state==='knock'?6:22;/* a super cancel: the rings start sooner, before they recover */const r0=s.r0;
+    if(t>=r0&&t<=r0+48&&(t-r0)%12===0){const i=s.rings.length,fin=t===r0+48;s.rings.push({r:10,hit:false,c:['#ffd23a','#ff4aa8','#3ae8ff','#b04aff','#ffd23a'][i%5],fin});s.beat=t;
       SFX.whooshH();SFX.sing(i);F.shake=Math.max(F.shake,fin?6:2);if(fin){SFX.finale();F.camFlash=4}}
     // glitter falling through her spotlight, music notes streaming off the mic
     if(t>=6&&t<100&&t%2===0)F.parts.push({x:f.x+rnd(-24,24),y:rnd(-2,50),vx:rnd(-.2,.2),vy:rnd(.4,1),l:rnd(30,60)|0,c:['#fff3a0','#ffffff','#ffd23a','#ffb0e0'][(t>>1)%4],g:.01});
@@ -875,7 +899,7 @@ const SUPERS={
     s.fly=0;s.pa='win';s.pf=Math.min(8,(t-s.t0)/3);supEnd(f,s,t,26)},
   rex(f,o,s,t){// STAGE DIVE: a homing leap, a crash-down smash, then a four-note bass jam and a big finish
     s.rings=s.rings||[];
-    if(!s.ph){const T=32;if(s.x0==null){s.x0=f.x;s.tx=o.x;f.inv=40}s.fly=1;s.tx+=clamp(o.x-s.tx,-.8,.8);const p=Math.min(1,t/T);
+    if(!s.ph){if(s.x0==null){s.x0=f.x;s.tx=o.x;f.inv=40;s.T=o.state==='hurt'||o.state==='knock'?18:32}const T=s.T,hm=T<32?5:.8;/* a super cancel (they're still reeling): a faster dive that homes in harder */s.fly=1;s.tx+=clamp(o.x-s.tx,-hm,hm);const p=Math.min(1,t/T);
       f.x=clamp(lerp(s.x0,s.tx,p),XMIN,XMAX);f.y=Math.sin(p*Math.PI)*74;f.vy=0;f.vx=0;if(Math.abs(o.x-f.x)>6)f.face=o.x>f.x?1:-1;
       const j=akOf(f.c,'jump');s.pa='jump';s.pf=p<.45?j.rise:p<.6?j.apex:j.fall;if(t%3===0)f.ghosts.push({x:f.x,y:f.y,l:10});
       if(t>=T){f.y=0;s.fly=0;F.shake=10;SFX.slam();SFX.bass();dust(f.x,12);s.rings.push(t);
@@ -1093,6 +1117,7 @@ function applyHit(att,def,d,cx,cy){const push=def.x>=att.x?1:-1,A=arch(def.c);
     def.x=clamp(att.x-att.face*30,XMIN,XMAX);def.face=att.x>def.x?1:-1;F.hitstop=8;SFX.lock();addText('COUNTER!',def.x,GY-def.H-10,def.c.col.aura);return'block'}
   if(ds&&def.sp.kind==='charge'&&def.sp.armor>0&&def.st<32){def.sp.armor--;const dm=d.dmg*att.c.power/def.c.def*.5;def.hp=Math.max(1,def.hp-dm);def.flash=4;F.hitstop=7;
     sparks(cx,cy,'#ff9a3a',10);SFX.block();addText('ARMOR!',def.x,GY-def.H-10,'#ff9a3a');return'hit'}
+  if(att.state==='special'&&att.sp&&att.sp.kind!=='super')att.sp.conn=frameNo;
   const canBlock=!d.unblockable&&def.holdBack&&def.y<=0&&['idle','walk','crouch','block'].includes(def.state)&&(d.lv==='low'?def.crouch:d.lv==='high'?!def.crouch:true);
   const dim=d.tag==='super'?1:d.dim!=null?d.dim:(att.state==='special'&&att.sp&&att.sp.dim)||1;
   if(d.tag!=='super'){att.meter=Math.min(100,att.meter+(canBlock?3:d.heavy?10:7));def.meter=Math.min(100,def.meter+(canBlock?2:5))}
@@ -1100,7 +1125,7 @@ function applyHit(att,def,d,cx,cy){const push=def.x>=att.x?1:-1,A=arch(def.c);
     if((def.x<=XMIN+1&&push<0)||(def.x>=XMAX-1&&push>0))att.vx=-push*1.6;return'block'}
   let dmg=d.dmg*att.c.power/def.c.def*(att.buff>0?1.25:1)*dim*(att.shadow?1.15:1)*(arch(att.c).shin&&!d.tag&&att.state!=='special'&&att.atk&&['kick','sweep','jkick'].includes(att.atk.name)?1.15:1);if(att.cpu)dmg*=[0.75,0.95,1.1][SET.diff];
   if(arch(att.c).rhythm&&onBeat()){dmg*=1.25;if(!F.texts.some(x=>x.s==='ON BEAT!'&&x.l>34))addText('ON BEAT!',def.x,GY-def.y-def.H-20,'#ff4a6a')}
-  const inCombo=(def.state==='hurt'&&def.stun>0)||def.state==='knock';
+  const inCombo=(def.state==='hurt'&&def.stun>0)||def.state==='knock'||(def.state==='grabbed'&&att.comboT>0);
   if(inCombo)att.combo++;else att.combo=1;
   // INFINITE PROTECTION (Skullgirls-style): the same move landing for a 4th time in one combo is a loop;
   // sparks turn blue and the defender can BURST out with A or B
@@ -1137,7 +1162,7 @@ function updateF(f,o){f.st++;if(f.buff>0){f.buff--;if(frameNo%4===0)F.parts.push
     case'dash':f.vx*=0.88;if(f.st>=(f.dashDir>0?13:15)){f.vx=0;setS(f,'idle')}break;
     case'attack':{const a=f.atk,ph=phaseOf(f);if(ph==='active'&&!f.hitDone){const h=f.H*(a.crouch?.7:1),cy=f.y+h*a.hy;
         if(tryHit(f,o,{x1:f.face>0?f.x:f.x-a.reach,x2:f.face>0?f.x+a.reach:f.x,y1:a.y1!=null?f.y+a.y1:cy-a.hh/2,y2:a.y1!=null?f.y+a.y2:cy+a.hh/2},a))f.hitDone=true}
-      f.vx*=.75;if(f.st>=a.s+a.a+a.r+(f.hitDone?0:WHIFF)){f.atk=null;f.state=a.crouch&&f.holdDown?'crouch':'idle';f.st=0;if(f.state==='idle')f.crouch=false}}break;
+      if(a.leap&&f.st<a.s+a.a)f.vx=f.face*1.7;else f.vx*=.75;if(f.st>=a.s+a.a+a.r+(f.hitDone?0:WHIFF)){f.atk=null;f.state=a.crouch&&f.holdDown?'crouch':'idle';f.st=0;if(f.state==='idle')f.crouch=false}}break;
     case'hurt':f.vx*=.86;if(--f.stun<=0){f.state='idle';f.st=0}break;
     case'block':f.vx*=.84;if(--f.stun<=0){f.state=f.crouch?'crouch':'idle';f.st=0}break;
     case'down':f.vx*=.8;if(f.st>=40){f.state='rise';f.st=0;f.inv=14}break;
@@ -1218,6 +1243,7 @@ function aiSnap(o){return{x:o.x,y:o.y,vy:o.vy,state:o.state,st:o.st,atk:o.atk,ph
 function drawCard(cards){let t=0;for(const c of cards)if(c[0]>0)t+=c[0];let r=Math.random()*t;for(const c of cards){if(c[0]<=0)continue;if((r-=c[0])<=0){c[1]();return c[2]}}return null}
 function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:0},ai=f.ai;
   const L=clamp([0.15,0.45,0.75][SET.diff]+(RUN&&RUN.mode==='arcade'?RUN.idx*0.1:0),0,1);
+  if(f.state==='special'&&f.sp&&f.sp.kind!=='super'&&f.sp.conn!=null&&f.meter>=100&&frameNo-f.sp.conn<14&&f.sp.conn===frameNo-6&&Math.random()<.15+.5*L){inp.sup=1;return inp}
   // perception (reaction delay)
   const seen=ai.seen||(ai.seen=[]);seen.push(aiSnap(o));const RT=Math.round(lerp(16,5,L));while(seen.length>RT+1)seen.shift();const O=seen[0];
   // pressure: rises when hit or behind on health; execution gets sloppier under pressure
@@ -1321,7 +1347,7 @@ function aiInput(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup:
     if(rdy3&&s3==='laser'&&O.state!=='crouch')C.push([.06+.08*L,SPC('sp3'),'laser glare']);if(rdy3&&s3==='teep'&&dist<90)C.push([.06+.08*L,SPC('sp3'),'teep']);if(rdy3&&s3==='siren'&&dist<80)C.push([.12+.14*L,SPC('sp3'),'siren scream']);
     return card('mid',C)}
   // CLOSE deck (pressure)
-  C.push([.28,hold('aP'),'jab'],[.2,hold('bP'),'kick'],[.12,both('d','bP'),'sweep'],[.07,both('d','aP'),'low jab'],[.1,plan('walkB',12),'back off'],[.16,plan('guard',wait),'guard']);
+  C.push([.06+.1*L+(O.state==='crouch'||O.crouch?.15:0),both(tw,'aP'),'overhead'],[.28,hold('aP'),'jab'],[.2,hold('bP'),'kick'],[.12,both('d','bP'),'sweep'],[.07,both('d','aP'),'low jab'],[.1,plan('walkB',12),'back off'],[.16,plan('guard',wait),'guard']);
   if(rdy&&sp==='slam')C.push([.32*(0.5+L),SPC('sp'),'bear slam']);if(rdy2&&s2==='clinch')C.push([.26*(0.5+L),SPC('sp2'),'thai clinch']);if(rdy&&!['shuriken','slam','bassdrop'].includes(sp))C.push([.07*rage,SPC('sp'),'special']);
   if(canThrow(f,o))C.push([(O.state==='crouch'||O.state==='idle'?.5:.2)*(0.4+L),()=>{inp.bP=1;inp[tw]=1},'throw']);
   if(rdy2&&s2==='cuff'&&!['hurt','jump'].includes(O.state))C.push([.2+.3*L,SPC('sp2'),"cuff 'em"]);if(rdy2&&s2==='crossover'&&O.state!=='attack'&&O.y<=0)C.push([.06+.12*L,SPC('sp2'),'ankle breaker']);if(rdy2&&s2==='step'&&O.state!=='attack')C.push([.05+.1*L,SPC('sp2'),'legua step']);
@@ -1348,10 +1374,13 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     if(this.cine){if(++this.cine.t>=this.cine.n)this.cine=null;return}
     // freezes (hit-stop, super flash, slow-mo): presses still go into the buffer, and the buffer doesn't age
     const frozen=this.hitstop>0||this.superFlash>0||(this.slow>0&&(this.slow-1)%3);
-    if(frozen){for(const f of[this.p1,this.p2]){for(const k of['bufA','bufB','tapF','tapB'])if(f[k]!=null)f[k]++}
+    // hit-stop: buffered presses stay fresh; presses made during this freeze (lastA/B >= frz) do too, so A+B pressed
+    // during a special's hit-stop still counts as A+B (super cancel), while presses from before it age normally
+    if(frozen){if(this.frz==null)this.frz=frameNo;for(const f of[this.p1,this.p2]){for(const k of['bufA','bufB','tapF','tapB'])if(f[k]!=null)f[k]++;for(const k of['lastA','lastB'])if(f[k]>=this.frz)f[k]++}
       if(this.phase==='play'){if(pressed.a){this.p1.bufA=this.p1.lastA=frameNo}if(pressed.b){this.p1.bufB=this.p1.lastB=frameNo}
         if(this.two){if(pressed2.a){this.p2.bufA=this.p2.lastA=frameNo}if(pressed2.b){this.p2.bufB=this.p2.lastB=frameNo}}}
       if(this.hitstop>0)this.hitstop--;else if(this.superFlash>0)this.superFlash--;else this.slow--;return}
+    this.frz=null;
     if(this.slow>0)this.slow--;
     this.pt++;const p1=this.p1,p2=this.p2;
     if(this.phase==='intro'){if(this.pt===80){SFX.special();say('Fight!',1.1,0.6)}if(this.pt>=105)this.phase='play'}
@@ -1487,7 +1516,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     const s2=Math.max(1,Math.round(sc*k));drawText(s,128,84-s2*3.5,'#fff',s2,{align:'center',grad,outline:'#200',ow:1})},
   drawPause(){ctx.fillStyle='rgba(0,0,10,.75)';ctx.fillRect(0,0,W,H);drawText('PAUSE',128,4,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});drawText('V'+VER,252,184,'#667',1,{align:'right',shadow:false});
     const c=this.p1.c;
-    const m=[['PUNCH / KICK','A / B'],['LOW PUNCH / SWEEP','DOWN + A / B'],['JUMP ATTACK','UP/JUMP, THEN A OR B'],['BLOCK','HOLD BACK'],['DASH','TAP FWD OR BACK TWICE'],[c.spName,'SP'],...(c.sp2Name?[[c.sp2Name,'DOWN+SP']]:[]),...(c.sp3Name?[[c.sp3Name,'BACK+SP']]:[]),[SUPER_NAME[c.id],'FWD+SP, FULL BAR'],['THROW','FWD/BACK+B CLOSE'],...(arch(c).type?[[arch(c).type,arch(c).trait]]:[]),['COMBO',BNB[c.id]||'']];
+    const m=[['PUNCH / KICK','A / B'],['LOW PUNCH / SWEEP','DOWN + A / B'],['JUMP ATTACK','UP/JUMP, THEN A OR B'],['OVERHEAD','FWD + A (BLOCK STANDING)'],['BLOCK / DASH','HOLD BACK / TAP TWICE'],[c.spName,'SP'],...(c.sp2Name?[[c.sp2Name,'DOWN+SP']]:[]),...(c.sp3Name?[[c.sp3Name,'BACK+SP']]:[]),[SUPER_NAME[c.id],'FWD+SP, FULL BAR'],['SUPER CANCEL','SP HITS > FWD+SP'],['THROW','FWD/BACK+B CLOSE'],...(arch(c).type?[[arch(c).type,arch(c).trait]]:[]),['COMBO',BNB[c.id]||'']];
     const bh=18+m.length*9;box(12,22,232,bh);drawText('MOVES - '+c.name,128,26,'#ffe66a',1,{align:'center'});this.pmy=22+bh+6;
     m.forEach(([k,v],i)=>{const y=38+i*9,cm=k==='COMBO';drawText(k,18,y,cm?'#ffe66a':'#ff9a6a',1,{shadow:false});drawText(v,238,y,cm?'#ffe66a':'#fff',1,{align:'right',shadow:false})});
     ['RESUME','QUIT TO TITLE','HITBOXES: '+(SHOWBOX?'ON':'OFF')].forEach((s,i)=>drawText((this.psel===i?'> ':'  ')+s,128,this.pmy+i*11,this.psel===i?'#ffe66a':'#99a',1,{align:'center'}))}};
@@ -1513,7 +1542,7 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
     case'land':return A.jump?P('jump',akOf(f.c,'jump').land):null;
     case'jump':{const a=f.atk;if(a){const k=a.name==='jkick'?(A.airkick?'airkick':'kick'):(A.airpunch?'airpunch':'punch');if(A[k])return strike(k,a,f.ast)}
       if(!A.jump)return null;const j=akOf(f.c,'jump');return P('jump',f.vy>2?j.rise:f.vy>-1.5?j.apex:j.fall)}
-    case'attack':{const a=f.atk;const k={jab:'punch',kick:'kick',sweep:A.lowkick?'lowkick':'sweep',cjab:A.cpunch?'cpunch':null}[a.name];
+    case'attack':{const a=f.atk;const k={jab:'punch',kick:'kick',leap:A.airpunch?'airpunch':'punch',sweep:A.lowkick?'lowkick':'sweep',cjab:A.cpunch?'cpunch':null}[a.name];
       if(k&&A[k])return strike(k,a,t);if(a.crouch&&A.crouch)return{...P('crouch',last('crouch')),limbs:true};return null}
     case'hurt':if(f.hurtK==='crouch'&&A.crouch)return P('crouch',last('crouch'));return A.hurt?P('hurt',Math.min(t/3,last('hurt'))):null;
     case'yield':if(A.kneel)return P('kneel',Math.min(t/4,last('kneel')));return A.hurt?P('hurt',last('hurt')):null;
@@ -2660,5 +2689,5 @@ const TICK=1000/54;
 function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=now;let n=0;while(acc>=TICK&&n<4){step();acc-=TICK;n++}if(n>=4)acc=0;render();musicTick()}
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
-window.__dbg={ARCH,SPCD,Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,ARCS,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
+window.__dbg={TRIALS,ATK,ARCH,SPCD,Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,ARCS,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
 
