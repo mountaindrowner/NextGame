@@ -262,7 +262,7 @@ const CH={
     quote:"THAT'S A WRAP. YOU WERE A GREAT AUDIENCE.",lose:'MY VOICE... I LOST MY VOICE...',stageName:'STARLIGHT CLUB'},
   reyes:{id:'reyes',name:'REYES',nick:'THE SENTINEL',style:'SABR COMBAT',country:'SABR OUTPOST',countryLabel:'POST',flag:'sabr',ht:"6'0\" (183 CM)",wt:'198 LB (90 KG)',
     speed:1,power:.96,def:1,jump:1,stats:[3,3,3],special:'knuckle',spName:'FRONTIER KNUCKLE',special2:'drone',sp2Name:'DRONE STRIKE',special3:'eagle',sp3Name:'EAGLE RISE',airSp:'hover',airName:'ROTOR KICKS',tr:0,
-    col:{skin:'#c88a5a',glove:'#2a2a3a',leg:'#5a6a2a',foot:'#7a4a2a',aura:'#3ad86a'},sh:.72,hip:.5,
+    col:{skin:'#c88a5a',glove:'#2a2a3a',leg:'#5a6a2a',foot:'#7a4a2a',aura:'#a0b048'},sh:.72,hip:.5,
     quote:"AREA SECURE. NOBODY HURTS THIS CITY ON MY WATCH.",lose:'MAN DOWN... CALL IT IN...',stageName:'SUNSET OUTPOST'},
 };
 // fighters who aren't on the roster but fight in story mode (they load like everyone else)
@@ -823,7 +823,7 @@ const SUPERS={
         const r=tryHit(f,o,{x1:fc>0?f.x:f.x-48,x2:fc>0?f.x+48:f.x,y1:f.y+f.H*.2,y2:f.y+f.H*.95},{dmg:3,stun:60,bs:14,kb:0,lv:'mid',chip:3,tag:'super',minScale:.7});
         if(r==='hit'){s.ph='call';s.t0=t;f.vx=0;f.inv=200;F.shake=6;sparks(o.x,GY-o.y-o.H*.6,'#ff9a3a',12)}else if(r==='block'){f.vx=-fc*2;supEnd(f,s,t)}}
       else if(t>=24){f.vx*=.7;supEnd(f,s,t)}return}
-    if(s.ph==='call'){const k=t-s.t0;f.vx=0;o.vx=0;s.pa='special2';s.pf=Math.min(8,k/3);if(k===4){SFX.lock();addText('AIR SUPPORT!',f.x,GY-f.H-16,'#3ad86a')}
+    if(s.ph==='call'){const k=t-s.t0;f.vx=0;o.vx=0;s.pa='special2';s.pf=Math.min(8,k/3);if(k===4){SFX.lock();addText('AIR SUPPORT!',f.x,GY-f.H-16,'#b8c860')}
       s.dr=[0,1,2].map(i=>{const q=Math.min(1,Math.max(0,(k-6-i*4)/14));return{x:lerp(fc>0?-24:W+24,o.x-fc*(14-i*14),q),y:lerp(140,96-i*12,q),flash:0}});
       if(k>=22&&k<=46&&(k-22)%6===0){const i=((k-22)/6)%3;s.zap={i,k};SH(f,o,3.5,{unblockable:true});F.shake=Math.max(F.shake,4);SFX.pew();
         sparks(o.x+rnd(-6,6),GY-o.y-o.H*rnd(.3,.8),'#ff5a3a',6);if(KO_D(o)){s.dr=null;supEnd(f,s,t);return}}
@@ -1650,7 +1650,7 @@ function drawDrone(p){const X=Math.round(p.x),Y=Math.round(GY-p.y),b=(frameNo>>1
   ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.ellipse(X,GY+1,12,2,0,0,Math.PI*2);ctx.fill();ctx.save();ctx.translate(X,Y);ctx.scale(1.5,1.5);const x=0,y=0;
   ctx.fillStyle='#14161c';ctx.fillRect(x-10,y-2,20,2);ctx.fillRect(x-11,y-4,2,3);ctx.fillRect(x+9,y-4,2,3);
   ctx.fillStyle='rgba(220,226,236,.85)';ctx.fillRect(x-15+b*2,y-5,10-b*4,1);ctx.fillRect(x+5+b*2,y-5,10-b*4,1);
-  ctx.fillStyle='#3a3e48';ctx.fillRect(x-5,y-3,10,6);ctx.fillStyle='#1f9a4a';ctx.fillRect(x-4,y-2,8,2);ctx.fillStyle='#fff';ctx.fillRect(x-1,y-2,2,1);
+  ctx.fillStyle='#3a3e48';ctx.fillRect(x-5,y-3,10,6);ctx.fillStyle='#6a7a30';ctx.fillRect(x-4,y-2,8,2);ctx.fillStyle='#fff';ctx.fillRect(x-1,y-2,2,1);
   ctx.fillStyle='#14161c';ctx.fillRect(x-1,y+3,3,2);if(p.flash>0){ctx.fillStyle='#ffe0a0';ctx.fillRect(x-2,y+4,5,3)}
   ctx.fillStyle=(frameNo>>3)&1?'#ff3a3a':'#3a8aff';ctx.fillRect((frameNo>>3)&1?x+4:x-5,y-4,1,1);ctx.restore()}
 function drawBolt(p){const x=p.x,y=GY-p.y,l=Math.hypot(p.vx,p.vy)||1,ux=p.vx/l,uy=-p.vy/l;ctx.lineCap='round';

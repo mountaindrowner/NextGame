@@ -1,4 +1,4 @@
-"""Turn Agent Reyes' red gear (cap, vest, collar) green, keeping every pixel's shading.
+"""Turn Agent Reyes' red gear (cap, vest, collar) olive green like his pants, keeping every pixel's shading.
 
 His gear reds are very saturated (S >= 0.75, hue 325-8 degrees); his boots and skin shadows are
 duller (S 0.5-0.7), so they stay. Safe to run again (green pixels don't match).
@@ -8,7 +8,7 @@ import colorsys, glob, pathlib, sys
 from PIL import Image
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent / "assets"
-HUE = 135 / 360  # emerald green
+HUE = 55 / 360  # olive drab, a shade greener and brighter than his cargo pants (hue 45, s .52)
 
 
 def is_red(r, g, b):
@@ -18,7 +18,7 @@ def is_red(r, g, b):
 
 def green(px, x, y):
     r, g, b, a = px[x, y]; h, s, v = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
-    nr, ng, nb = colorsys.hsv_to_rgb(HUE, s * .85, v * .92); px[x, y] = (round(nr * 255), round(ng * 255), round(nb * 255), a)
+    nr, ng, nb = colorsys.hsv_to_rgb(HUE, min(.58, s * .6), v * .7); px[x, y] = (round(nr * 255), round(ng * 255), round(nb * 255), a)
 
 
 def recolor_big(path, min_px=3000):
@@ -52,7 +52,7 @@ def recolor(path):
                 continue
             h, s, v = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
             if (h * 360 >= 325 or h * 360 <= 8) and s >= .75:
-                nr, ng, nb = colorsys.hsv_to_rgb(HUE, s * .85, v * .92)
+                nr, ng, nb = colorsys.hsv_to_rgb(HUE, min(.58, s * .6), v * .7)
                 px[x, y] = (round(nr * 255), round(ng * 255), round(nb * 255), a); n += 1
     (im if mode == "RGBA" else im.convert(mode)).save(path)
     return n

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.33.2
+
+- **Reyes' gear is olive drab now**, matching his cargo pants, instead of the bright emerald from 1.33.1. His cap, vest and collar read as one military outfit. His aura, drone stripe and super text are olive too. The recolour runs from the original red art, so there's no double-tinting.
+- No PixelLab generations used.
+
 ## 1.33.1
 
 - **Agent Reyes wears green.** His cap, vest and collar are emerald green in every animation, his standing sprite, his portraits and his head icon. His aura colour (the select card, effect outlines, his move names) and his drone's stripe are green too.
