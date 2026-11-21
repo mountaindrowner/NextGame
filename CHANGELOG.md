@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.38.0
+
+- **Owner-picked heights.** Mateo 95; Papa-Léguas and Marcus 94; Keksan 93; Samson, Devanté and Ivan 91; Zeke, Hecky, Estrella and Reyes 88; Vizor 86; Lawslie back to 78.
+- **Papa-Léguas:** his original look is the default again. The 1.37 redraw is now his **WHITE GI** costume on the select screen.
+  - **Portrait:** the purple halo around the top and left of his hair is now a clean brown outline.
+  - **Height:** the original sprite is 91 px, so it is scaled up to 94 by pixel duplication (no blur).
+- **Balance:** 11 of 12 fighters stay in 35–65% in the CPU round robin. Hecky is still high (73%), a known issue.
+
 ## 1.37.0
 
 - **Focus attack** (SF4-style). In fights the JUMP button becomes **FOCUS** (up on the stick jumps); story mode keeps JUMP.

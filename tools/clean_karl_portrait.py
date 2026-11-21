@@ -29,9 +29,22 @@ for k in ("por", "porm", "pors"):
             r, g, b, a = px[x, y]
             if a:
                 h, s, v = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
-                if 235 <= h * 360 <= 310 and s > .2 and v > .25: px[x, y] = (0, 0, 0, 0); n += 1
+                if 235 <= h * 360 <= 310 and s > .2 and v > .25: px[x, y] = (36, 22, 24, 255) if v < .45 else (78, 48, 36, 255); n += 1  # part of his hair: recoloured brown
     for y in range(int(44 * sy), int(62 * sy) + 1):
         for x in range(int(30 * sx), int(52 * sx) + 1):
             if px[x, y][3] and sum(1 for dx in (-1, 0, 1) for dy in (-1, 0, 1) if (dx or dy) and 0 <= x + dx < W and 0 <= y + dy < H and px[x + dx, y + dy][3]) <= 2:
                 px[x, y] = (0, 0, 0, 0); n += 1
+    # the halo round his hair (top and left of his head): purple/lavender edge pixels, background blended into the brown
+    # outline; within 2 px of the outside they're recoloured to his dark brown hair outline
+    def edge(x, y):
+        return any(not (0 <= x + dx < W and 0 <= y + dy < H) or px[x + dx, y + dy][3] == 0 for dx in range(-2, 3) for dy in range(-2, 3))
+    hal = []
+    for y in range(0, int(36 * sy) + 1):
+        for x in range(int(26 * sx), min(W, int(76 * sx) + 1)):
+            r, g, b, a = px[x, y]
+            if not a: continue
+            h, s, v = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
+            if 200 <= h * 360 <= 350 and s > .12 and v > .18 and edge(x, y): hal.append((x, y, v))
+    for x, y, v in hal:
+        px[x, y] = (36, 22, 24, 255) if v < .5 else (62, 38, 32, 255); n += 1
     im.save(A / f"karl_{k}.png"); print(k, n, "px")

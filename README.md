@@ -209,14 +209,14 @@ Moves per fighter: idle, walk, crouch, jump, punch, kick, crouch punch, low kick
 
 Vizor was made from the concept art in `tools/pixellab/concept/vizor.png` (with Papa-Léguas as the PixelLab style reference); his portraits and logo are cut from that art, and his stage was generated with PixelLab's image generator using Ivan's stage as the style image. Samson (internal id `padre`) was made the same way from `tools/pixellab/concept/padre.png` (his logo is drawn with `tools/make_logo.py`), with an Old Chapel stage.
 
-Papa-Léguas was rebuilt in v1.37 (`karl2` in `tools/pixellab/make_skin.py`, from a text description in Keksan's crisp style). His first sprite, from the original pipeline, was flat and washed out next to the newer fighters. The old frames are kept in `tools/pixellab/raw/karl_v1/` and `raw/karl_v1_assets/`. `tools/clean_karl_portrait.py` removed leftover background (a blue slab behind his fist, a purple blob on his head) from his portraits.
+Papa-Léguas has two looks. The default is his original sprite (`raw/karl`). The v1.37 redraw in Keksan's crisp style (`karl2` in `tools/pixellab/make_skin.py`, frames in `raw/karl2`) is his WHITE GI costume. A backup of the original packed assets and portraits is in `raw/karl_v1_assets/`. `tools/clean_karl_portrait.py` cleans his portraits: it removes a blue slab behind his fist and recolours the purple blob and halo on his hair to brown.
 
 ### Fighter sizes
 
-`tools/pixellab/sizes.py` sets every fighter's standing height (idle pose, head to feet). It packs each fighter at native size, runs the post-pack fixes (Estrella's covered top, Reyes's olive gear), then shrinks to the target in `tools/pixellab/sizes.json`. It never enlarges, so nothing blurs.
+`tools/pixellab/sizes.py` sets every fighter's standing height (idle pose, head to feet). It packs each fighter at native size, runs the post-pack fixes (Estrella's covered top, Reyes's olive gear), then shrinks to the target in `tools/pixellab/sizes.json`. Fighters listed under `upscale` may also grow past native size; that uses pixel duplication, never blur (only Papa-Léguas, 91 to 94 px).
 
-- `sizes.py equal`: everyone at 91 px, the smallest native sprite (Samson).
-- `sizes.py adjusted` (shipped): half of their real height differences (91 px at 5'10"), from Devanté's 95 px (6'3") down to Lawslie's 84 px (5'3"). Mateo and Ivan are 94, Papa-Léguas and Reyes 93, Vizor 92, Keksan, Samson and Hecky 91, Zeke 90, Marcus 89 (crown included) and Estrella 88.
+- `sizes.py equal`: everyone at 91 px.
+- `sizes.py adjusted` (shipped, the owner's picks): Mateo 95; Papa-Léguas and Marcus 94; Keksan 93; Samson, Devanté and Ivan 91; Zeke, Hecky, Estrella and Reyes 88; Vizor 86; Lawslie 78. Costumes follow their fighter (WHITE GI 94, Fox Hecky 94, Idol Zeke 88).
 - `sizes.py lineup OUT.png`: draws everyone on one floor line.
 
 Re-measure the hitboxes afterwards: `python3 tools/hitboxes.py`.

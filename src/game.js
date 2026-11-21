@@ -229,7 +229,7 @@ document.addEventListener('visibilitychange',()=>{if(!AU.ctx)return;if(document.
 // ---------------- CHARACTERS ----------------
 const CH={
   karl:{id:'karl',name:'PAPA-LÉGUAS',nick:'',style:'KARATE',country:'BRAZIL',flag:'br',ht:"6'0\" (183 CM)",wt:'165 LB (75 KG)',
-    speed:1.25,power:1.0,def:1.0,jump:1.0,stats:[5,3,3],special:'rush',spName:'LÉGUA RUSH',special2:'step',sp2Name:'LÉGUA STEP',tr:0,
+    speed:1.25,power:1.0,def:1.0,jump:1.0,stats:[5,3,3],special:'rush',spName:'LÉGUA RUSH',special2:'step',sp2Name:'LÉGUA STEP',skin2:'karl2',skinName:'WHITE GI',tr:0,
     col:{skin:'#e0965c',glove:'#2c2a44',leg:'#e9e7f3',foot:'#f6f6f6',aura:'#ffd23a'},sh:.72,hip:.5,
     quote:"TOO SLOW! THEY DON'T CALL ME PAPA-LÉGUAS FOR NOTHING!",lose:'I RAN OUT OF ROAD...',stageName:'CROSSROADS DOJO'},
   // Ivan isn't on the roster (not in ORDER): he's Vex's enforcer, the boss of the Docks in story mode
