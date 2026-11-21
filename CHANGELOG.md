@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.41.0
+
+Story mode, round two.
+
+- **Guard:** hold JUMP to block hits from the front (tap still jumps). A bar shows the guard wearing down; too many hits break it. Grabs, hits from behind and hazards get through.
+- **Throws are animated:** every fighter lifts the henchman over the head, spins him and slings him forward or behind.
+- **Nobody dies:** beaten henchmen get up dazed and stagger off the screen. The hazards are non-lethal too:
+  - **Trash cans** replace the oil drums: hit one and it rolls, bowling henchmen over.
+  - **Fire hydrants** replace the car on the Streets: a water jet sweeps the front lane.
+  - **Wet floor** replaces the live panels in Vex Tower: henchmen slip and fall, you slide.
+- **Bigger stages:**
+  - **Deeper floor:** the walkable band is 48 px deep (was 36).
+  - **Rides at the end of the first three stages,** each with two more waves: a subway car (Streets), a cargo lift (Docks) and a window-washer lift up Vex Tower. They're drawn in code, so no PixelLab cost.
+- **Tests:** `tools/story_mech.js` now checks 22 mechanics.
+
 ## 1.40.0
 
 Story mode, from a study of ten classic beat 'em ups (`STORY_MODE.md` has the details).

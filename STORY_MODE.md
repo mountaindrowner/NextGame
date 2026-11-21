@@ -58,13 +58,15 @@ Bosses are picked at random from the roster (never your own fighter), so every r
 
 - **Moving:** walk in 8 directions. Up/down moves you into or out of the screen along a floor band (depth), like Final Fight or Streets of Rage.
 - **A (punch):** a 3-hit combo, jab, jab, kick, that knocks down on the last hit. **B (kick)** on its own pushes an enemy back, and after a hit it finishes the combo with a knockdown (A, A, B).
-- **JUMP button:** jump, then A or B for a jump kick. (Up/down is depth in this mode.)
+- **JUMP button:** tap to jump, then A or B for a jump kick. (Up/down is depth in this mode.)
+- **Guard (hold JUMP):** blocks every hit from the front, bottles included. A bar over your head shows the guard wearing down; take too much and it breaks (you're stunned). Grabs, hits from behind and the stage hazards get through. You can sidestep straight out of a guard.
 - **SP (A+B), desperation move:** your fighter's special pose plus a shockwave that hits everyone around you. It costs 6 health, which turns **grey**: land hits and it comes back, get hit and it's gone (Streets of Rage 4's rule).
 - **Launcher (A, A, JUMP):** the third hit pops the enemy up; he floats a little, and up to 3 more hits juggle him.
 - **Back attack (JUMP + A):** an elbow behind you that knocks down. Press both together.
 - **Sidestep (tap up or down twice):** slip into or out of the screen, untouchable for a moment.
 - **Super (FWD + SP, full meter):** the cinematic cut-in, then it hits every enemy on screen.
-- **Grab and throw:** walk into a reeling enemy to grab them, then A three times to throw (hold back to throw behind you). A thrown enemy bowls over his friends and lights oil drums.
+- **Grab and throw:** walk into a reeling enemy to grab them, then A three times (two knees, then the throw); hold back to throw behind you. Every fighter lifts him over the head, spins him and slings him. A thrown enemy bowls over his friends and sends trash cans rolling.
+- **Nobody dies:** a beaten henchman gets up seeing stars and staggers off the screen (sometimes with a parting line).
 - **Hit rules:** your hits land within 14 px of an enemy's depth (18 in the air), theirs only within 8, so close calls go your way. A yellow ring under an enemy means you're lined up.
 - **Telegraphs:** every committed enemy attack (punch wind-ups, charges, grabs, the bash, Vex's slam) flashes a red **!** first.
 - **Allies:** the last man of a wave may kneel. Help him up (A) and he becomes an ally (up to 3). **SELECT** calls one in: he runs across the screen and tackles every henchman in his way, even one holding you. The man you spare in Stage 1 counts too. Leave a kneeling man alone and he walks off after a few seconds.
@@ -117,9 +119,11 @@ That keeps fights fair and readable.
 
 - **Backgrounds:** each level is one wide PixelLab background (768×192, three screens). The camera scrolls right and locks at each wave. A flashing **GO →** appears when it's clear.
 - **Breakable crates:** these drop food (heals) and bonus points.
-- **Oil drums** (Streets, Docks, Tower): hit one and it blows up a moment later, knocking down everyone close (you too). A thrown enemy or a car sets one off, and a blast sets off any drum near it.
-- **Traffic lane** (Streets, from the second wave): the lane at the front flashes red with an arrow, then a car speeds through. It hits anyone in that lane, much harder on henchmen. Lure them into it.
-- **Live floor panels** (Vex Tower): two panels flicker yellow, then go live for a second, hurting anyone standing on them.
+- **Trash cans** (Streets, Docks, Tower): hit one, or throw someone into it, and it rolls along the floor, bowling over every henchman in its path.
+- **Fire hydrants** (Streets): one shakes and drips (with a red !), then a jet of water sweeps the front lane and knocks everyone in it off their feet. Lure the henchmen into the lane.
+- **Wet floor** (Vex Tower, behind a yellow sign): henchmen who walk onto it slip and fall; you slide on it, like ice.
+- **The floor is deeper:** the walkable band is 48 px deep (it was 36).
+- **Rides** (TMNT-style set pieces at the end of the first three stages): reach the exit and you board a ride for two more waves. The Streets end on a **subway car** (henchmen come through the doors), the Docks on a **cargo lift** rising past stacked containers, and Vex Tower on a **window-washer lift** up the glass (on both lifts, henchmen drop down onto the platform). The ride scenes are drawn in code.
 
 ## As built (v1.14.0)
 

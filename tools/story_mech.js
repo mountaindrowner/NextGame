@@ -12,8 +12,9 @@ const path = require('path');
     d.SET.sound = false; d.SET.voice = false; d.SET.music = false; d.SET.diff = 1;
     const C = (n, ok, info) => res.push(`${ok ? 'OK  ' : 'FAIL'} ${n.padEnd(36)} ${info}`);
     // a fresh stage with the waves switched off; foes placed by hand
+    const FZ0 = 48;
     const stage = (lv = 0) => { d.startStory('karl', [false, false], [false, false]); const R = d.RUN; R.level = lv; R.lives = 3; d.go(d.Brawl); const B = d.scene;
-      B.ph = 'play'; B.pt = 100; B.L = { ...B.L, waves: [{ at: 0, foes: [] }] }; B.wave = B.L.waves[0]; B.q = []; B.wi = 0; B.items = []; if (B.car) B.car = null; B.P.inv = 0; B.P.x = 100; B.P.z = 18; B.P.face = 1;
+      B.ph = 'play'; B.pt = 100; B.L = { ...B.L, waves: [{ at: 0, foes: [] }] }; B.wave = B.L.waves[0]; B.q = []; B.wi = 0; B.items = []; B.hyd = []; B.P.inv = 0; B.P.x = 100; B.P.z = 18; B.P.face = 1;
       const step = (o = {}) => { for (const k of K) { d.inp.pressed[k] = !!o[k]; d.inp.held[k] = !!(o.h && o.h[k]); } d.tick(); B.update(); };
       const foe = (kind, x, z = 18) => { B.spawn(kind); const e = B.foes[B.foes.length - 1]; e.x = x; e.z = z; e.inside = true; e.wait = 999; e.tok = false; e.vari = null; e.reachB = 0; e.dmgM = 1; e.H = d.FOES[kind] ? e.H : e.H; return e; };
       return { B, P: B.P, step, foe }; };
@@ -51,19 +52,36 @@ const path = require('path');
       C('GRAPPLER slams if you don\'t mash', h2 && q2.P.hp < q2.P.mhp, `hp ${q2.P.hp.toFixed(0)}/${q2.P.mhp}`); }
     // 9. MEDIC heals and pumps up the henchmen near him
     { const q = stage(), g = q.foe('goon', 220), m = q.foe('medic', 200); g.hp = 5; m.cool = 0; m.wait = 0; run(q, 60); C('MEDIC heals and pumps up allies', g.hp > 5 && g.pump > 0, `goon hp 5 -> ${g.hp.toFixed(0)}, pumped ${g.pump > 0}`); }
-    // 10. oil drum: hit it, it blows up and knocks down everyone near it
-    { const q = stage(), e = q.foe('goon', 160); q.B.items.push({ kind: 'drum', x: 132, z: 18, y: 0 }); const h0 = e.hp; q.step({ a: 1 }); run(q, 50);
-      C('oil drum explodes', q.B.items.every(i => i.kind !== 'drum') && e.hp < h0, `drum gone ${q.B.items.every(i => i.kind !== 'drum')}, goon hp ${h0.toFixed(0)} -> ${e.hp.toFixed(0)}`); }
-    // 11. Streets traffic: the car hits anyone in the front lane
-    { const q = stage(0), e = q.foe('goon', 180, 34); e.hp = e.mhp = 100; q.P.z = 4; q.B.car = { ph: 'warn', t: 2, dir: 1 }; for (let i = 0; i < 80; i++) { if (e.state === 'walk' || e.state === 'idle') { e.z = 34; e.x = 180; } q.step(); }
-      C('Streets traffic lane hits enemies', e.hp < 100 && q.P.hp === q.P.mhp, `goon hp 100 -> ${e.hp.toFixed(0)}, you ${q.P.hp}/${q.P.mhp} (out of the lane)`); }
-    // 12. Vex Tower: live floor panels
-    { const q = stage(2), e = q.foe('goon', 270, 18); e.hp = e.mhp = 100; q.P.x = 100; q.B.zapT = 228; for (let i = 0; i < 40; i++) { e.x = 270; q.step(); } C('Vex Tower live floor panels', e.hp < 100, `goon hp 100 -> ${e.hp.toFixed(0)}`); }
+    // 10. trash can: hit it and it rolls, bowling over the henchmen in its path
+    { const q = stage(), e = q.foe('goon', 190); q.B.items.push({ kind: 'can', x: 128, z: 18, y: 0 }); const h0 = e.hp; q.step({ a: 1 }); for (let i = 0; i < 40; i++) { if (e.state === 'walk' || e.state === 'idle') { e.x = 190; e.z = 18; } q.step(); }
+      C('trash can rolls and bowls them over', e.hp < h0 && ['knock', 'down'].includes(e.state), `goon hp ${h0.toFixed(0)} -> ${e.hp.toFixed(0)}, ${e.state}`); }
+    // 11. Streets hydrant: the jet knocks down everyone in the front lane
+    { const q = stage(0), e = q.foe('goon', 170, FZ0 - 2); e.hp = e.mhp = 100; q.P.z = 4; q.B.hyd = [{ x: 120, ph: 'warn', t: 2 }]; for (let i = 0; i < 50; i++) { if (e.state === 'walk' || e.state === 'idle') { e.z = FZ0 - 2; e.x = 170; } q.step(); }
+      C('Streets hydrant knocks them down', e.hp < 100 && q.P.hp === q.P.mhp, `goon hp 100 -> ${e.hp.toFixed(0)}, you ${q.P.hp}/${q.P.mhp} (out of the lane)`); }
+    // 12. Vex Tower wet floor: a henchman who walks onto it slips; you slide
+    { const q = stage(2), e = q.foe('goon', 330, 18); e.hp = e.mhp = 100; q.P.x = 200; for (let i = 0; i < 90 && e.hp === 100; i++) { e.tok = false; q.step(); }
+      const q3 = stage(2); q3.P.x = 250; q3.P.state = 'idle'; const P = q3.P; for (let i = 0; i < 10; i++) q3.step({ h: { right: 1 } }); const v1 = P.vx; for (let i = 0; i < 6; i++) q3.step(); const slide = Math.abs(P.vx) > .2;
+      C('wet floor: they slip, you slide', e.hp < 100 && v1 < 1.4 && slide, `goon hp 100 -> ${e.hp.toFixed(0)}, your speed builds to ${v1.toFixed(2)}, still sliding after letting go ${slide}`); }
     // 13. allies: the last man of a wave kneels; help him up, then SELECT sends him in
     { const q = stage(1), e = q.foe('goon', 130); e.hp = 1; q.step({ a: 1 }); run(q, 100); const knelt = e.state === 'yield' && e.ally;
       q.P.x = e.x - 24; q.P.z = e.z; q.P.state = 'idle'; q.step({ a: 1 }); const got = d.RUN.allyQ.length; run(q, 10);
       const t = q.foe('goon', 190); const h0 = t.hp; q.step({ select: 1 }); run(q, 70);
       C('mercy ally: help up, then SELECT', knelt && got === 1 && t.hp < h0 && d.RUN.allyQ.length === 0, `knelt ${knelt}, allies ${got}, tackled ${h0.toFixed(0)} -> ${t.hp.toFixed(0)}`); }
+    // 15. block: hold JUMP to guard; a hit from the front does nothing, enough of them break the guard
+    { const q = stage(), e = q.foe('goon', 126); e.face = -1; for (let i = 0; i < 9; i++) q.step({ jump: i === 0, h: { jump: 1 } }); const st = q.P.state, h0 = q.P.hp; const r = q.B.hurtP(6, false, -1), h1 = q.P.hp;
+      for (let i = 0; i < 4; i++) q.B.hurtP(6, false, -1); C('block (hold JUMP), guard break', st === 'block' && r === 'block' && h1 === h0 && q.P.state === 'hurt', `${st}, hit -> ${r}, hp ${h1}/${h0}, after 5 hits ${q.P.state}`);
+      const q2 = stage(); q2.step({ jump: 1, h: { jump: 1 } }); q2.step(); let jumped = false; for (let i = 0; i < 8; i++) { q2.step(); jumped = jumped || q2.P.state === 'jump'; } C('a tap of JUMP still jumps', jumped, q2.P.state); }
+    // 16. throw: grab, then a lift over the head and a sling (forward or behind)
+    { const q = stage(), e = q.foe('goon', 116); e.state = 'hurt'; e.stun = 40; q.step({ a: 1 }); const grabbed = q.P.state === 'throwing'; q.step({ a: 1, left: 1, h: { left: 1 } }); let top = 0, rot = 0;
+      for (let i = 0; i < 18; i++) { q.step(); top = Math.max(top, e.y); rot = Math.max(rot, Math.abs(e.rot || 0)); } let flew = false; for (let i = 0; i < 20; i++) { q.step(); flew = flew || e.state === 'knock'; }
+      C('animated throw (lift, spin, sling)', grabbed && top > 40 && rot > 2 && flew && e.x < q.P.x, `grab ${grabbed}, lifted ${top.toFixed(0)} px, spun ${rot.toFixed(1)} rad, thrown behind ${e.x < q.P.x}`); }
+    // 17. nobody dies: a beaten henchman gets up dazed and staggers off the screen
+    { const q = stage(1); q.foe('goon', 130); const x = q.foe('goon', 220); x.hp = 1; x.wait = 999; q.B.hitFoe(x, 5, true, 1); let dz = false, gone = false; for (let i = 0; i < 300; i++) { q.step(); dz = dz || !!x.dazed; gone = gone || x.dead; }
+      C('KO: up dazed, staggers off', dz && gone, `dazed ${dz}, left the screen ${gone}`); }
+    // 18. rides: at the end of the stage you board the subway car; its waves clear the stage
+    { const q = stage(0); q.B.L = d.LEVELS[0]; q.B.wi = q.B.L.waves.length; q.B.wave = null; q.B.rf = 21; q.step(); const R = q.B.ride; let n = 0;
+      for (let i = 0; i < 4000 && q.B.ph !== 'clear'; i++) { for (const e of q.B.foes) if (!e.dead && !e.ko && e.state !== 'leave') { e.hp = 0.1; e.inv = 0; if (q.B.hitFoe(e, 1, true, 1, null, { env: true })) n++; else if (e.state === 'yield') { e.state = 'leave'; e.st = 60; } } q.step(); }
+      C('ride: subway car to the end', !!R && R.kind === 'train' && q.B.ph === 'clear' && n >= 7, `ride ${R && R.kind}, ${n} enemies, ${q.B.ph}`); }
     // 14. results: a rank and a bonus when the stage is clear
     { const q = stage(); q.B.stat = { f: 54 * 50, dmg: 5, maxC: 9, spared: 1, lost: 0 }; q.B.ph = 'clear'; q.B.doneT = 0; run(q, 45); const r = q.B.res;
       C('stage results: rank + bonus', !!r && r.r === 'S' && r.bonus === 5000, r ? `rank ${r.r}, bonus ${r.bonus}` : 'no results'); }

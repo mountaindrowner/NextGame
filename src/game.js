@@ -592,7 +592,7 @@ const Controls={enter(){this.pg=0},
     else{arc(0,360,R0,R2,'#2a9a5a');for(let a=22.5;a<360;a+=45)spoke(a);
       ctx.fillStyle='#d02020';ctx.beginPath();ctx.arc(cx,cy,R0,0,Math.PI*2);ctx.fill();
       key('#2a9a5a','MOVE: 8 WAYS',8,128);drawText('UP / DOWN: IN / OUT',8,139,'#99a',1,{shadow:false});drawText('NO DASH ZONE',8,150,'#99a',1,{shadow:false});
-      list([['A','PUNCH COMBO'],['A, A, B','FINISHER'],['A, A, JUMP','LAUNCHER'],['JUMP+A','BACK ATTACK'],['B','KICK'],['JUMP','JUMP'],['SP','SPECIAL'],['FWD+SP','SUPER'],['A, CLOSE','GRAB'],['UP/DN x2','SIDESTEP'],['SELECT','CALL ALLY'],['A, BY A FOE','HELP UP']],12)}
+      list([['A','PUNCH COMBO'],['A, A, B','FINISHER'],['A, A, JUMP','LAUNCHER'],['JUMP+A','BACK ATTACK'],['B','KICK'],['JUMP','JUMP'],['HOLD JUMP','GUARD'],['SP','SPECIAL'],['FWD+SP','SUPER'],['A, CLOSE','GRAB'],['UP/DN x2','SIDESTEP'],['SELECT','CALL ALLY'],['A, BY A FOE','HELP UP']],11)}
     drawText('< '+(this.pg?'FIGHT':'STORY')+' >   B: BACK',128,183,'#778',1,{align:'center'})}};
 
 // ---------------- SELECT ----------------
@@ -832,6 +832,7 @@ function startAtk(f,n){f.atk={...ATK[n],...(n==='cmd'?CMD[f.c.id]:n==='tc'?TCM[f
   {const m=HBX[f.c.id]&&HBX[f.c.id].moves[n];if(m){const A=arch(f.c),R=A.reach||1,K=A.hh||1,c=(m.y1+m.y2)/2,h=(m.y2-m.y1)/2*K;f.atk.tip=m.reach-6;f.atk.reach=A.amp?Math.max(m.reach,f.atk.reach):Math.round(m.reach*R);f.atk.y1=c-h;f.atk.y2=c+h}}if(arch(f.c).slow){f.atk.s+=arch(f.c).slow;f.atk.r+=2}f.hitDone=false;if(f.atk.air)f.ast=0;else{f.state='attack';f.st=0;f.vx=0;f.crouch=!!f.atk.crouch}
   (n==='kick'||n==='sweep'||n==='jkick'?SFX.whooshH:SFX.whoosh)()}
 const canThrow=(f,o)=>Math.abs(o.x-f.x)<48&&o.y<=0&&f.y<=0&&o.inv<=0&&!(o.throwInv>0)&&['idle','walk','crouch','attack','land','dash','prejump'].includes(o.state)&&!(o.state==='attack'&&phaseOf(o)==='active');
+const fw0=(dir,P)=>dir===P.face;// a forward throw flies flatter than a back throw
 function startThrow(f,o,back){f.state='throwing';f.st=0;f.vx=0;f.atk=null;f.crouch=false;f.thBack=back;f.thr=null;f.thrId=++atkId;SFX.whoosh()}
 function techThrow(a,d){a.thr=null;a.grabbed=null;for(const f of[a,d]){f.state='block';f.st=0;f.stun=14;f.vx=-f.face*3.2;f.rot=0;f.y=0;f.throwInv=30}
   addText('THROW BREAK!',(a.x+d.x)/2,GY-a.H-12,'#7ad8ff');sparks((a.x+d.x)/2,GY-a.H*.6,'#ffffff',10);SFX.block();F.hitstop=6;if(!d.cpu)badge('tech')}
@@ -1663,6 +1664,7 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
     case'grabbed':return A.hurt?P('hurt',last('hurt')):null;
     case'leave':return f.st<60||!A.walk?P('idle',0):P('walk',Math.floor(frameNo/6)%n('walk'));
     case'throwing':{if(!A.punch)return null;const pk=akOf(f.c,'punch').pk;return P('punch',f.thr?pk:Math.min(t/1.4,last('punch')))}
+    case'tossing':{if(t<9&&A.punch)return P('punch',Math.min(last('punch'),akOf(f.c,'punch').pk));const a=A.kick?'kick':'punch';return P(a,Math.min(last(a),(t-9)/2.2))}
     case'block':return A.block?P('block',Math.min(t,last('block'))):null;
     case'knock':{const fa=akOf(f.c,'fall');if(fa.hurtAir&&A.hurt)return P('hurt',last('hurt'));return A.fall?P('fall',Math.min(t/4,fa.air)):null}
     case'down':case'ko':return A.fall?P('fall',Math.min(akOf(f.c,'fall').air+(f.state==='ko'?t:t)/3,last('fall'))):null;
@@ -2146,7 +2148,7 @@ let ASSETS_READY=false;
 // Controls: move in 8 directions (up/down = depth), A = attack combo, B = jump (B then A = jump kick),
 // SP (A+B) = desperation special (hits all around, costs a little health), FWD+SP with a full meter = super.
 // Walk into a reeling enemy to grab them: A = knee, 3rd A (or BACK+A) = throw.
-const FY=148,FZ=36;// floor band: feet at screen y FY..FY+FZ (z = depth, 0 = far)
+const FY=140,FZ=48;// floor band: feet at screen y FY..FY+FZ (z = depth, 0 = far)
 const FOES={
   goon:{id:'goon',name:'GOON',hp:30,speed:.95,power:1,def:1,jump:1,dmg:5,reach:40,score:100,col:{aura:'#ff5a3a',skin:'#c98a5e',glove:'#222',leg:'#3d5a96',foot:'#222'},sh:.72,hip:.5,
     names:['SID','KNOX','BUZZ','DUKE','ROCCO','JAKE','MOE','NICKY'],vary:{sc:[.9,1,1,1.08,1.18],hats:['cap','beanie','bandana','none','none'],outfit:true,weapons:['pipe','bat','knife']}},
@@ -2173,11 +2175,11 @@ Object.assign(FOES,{
   medic:{id:'medic',base:'slinger',hue:0,sat:1,whiten:true,name:'MEDIC',hp:26,speed:1.15,power:1,def:1,jump:1,dmg:4,reach:34,ranged:false,medic:true,score:400,col:{aura:'#ff5a7a'},names:['DOC','PATCH','STITCHES','SCRUBS'],vary:{sc:[.95,1],hats:['none']}}});
 const FALLBACK_FOE={goon:'karl',slinger:'vizor',bruiser:'padre',chain:'zeke',kicker:'lawslie',vex:'hecky'};// used until a foe's own sprites exist
 const LEVELS=[
-  {name:'BONFIRE STREETS',bg:'story_lvl1',bgY:-38,floor:{kind:'slabs',c1:'#3c3650',c2:'#1c1828',line:'#2a2438',edge:'#8a82a0'},alt:'vizor',song:'vizor',len:768,crates:[[236,8],[476,28]],drums:[[420,30]],car:true,
+  {name:'BONFIRE STREETS',bg:'story_lvl1',bgY:-38,floor:{kind:'slabs',c1:'#3c3650',c2:'#1c1828',line:'#2a2438',edge:'#8a82a0'},alt:'vizor',song:'vizor',len:768,crates:[[236,8],[476,28]],cans:[[420,40]],hydrants:[[330],[600]],ride:{kind:'train',name:'METRO LINE 1',waves:[['goon','blade','goon'],['shield','chain','goon','slinger']]},
     waves:[{at:70,foes:['goon','goon']},{at:300,foes:['goon','shield','slinger']},{at:512,foes:['goon','bruiser','chain','shield']}]},
-  {name:'THE DOCKS',bg:'story_lvl2',bgY:-38,floor:{kind:'boards',c1:'#6a5034',c2:'#2e2216',line:'#3a2a18',edge:'#a07a4a'},alt:'zeke',song:'ivan',len:768,crates:[[200,22],[430,6],[650,28]],drums:[[340,10],[580,26]],
+  {name:'THE DOCKS',bg:'story_lvl2',bgY:-38,floor:{kind:'boards',c1:'#6a5034',c2:'#2e2216',line:'#3a2a18',edge:'#a07a4a'},alt:'zeke',song:'ivan',len:768,crates:[[200,22],[430,6],[650,28]],cans:[[340,12],[580,34]],ride:{kind:'lift',name:'CARGO LIFT',waves:[['goon','kicker','blade'],['grappler','goon','molotov','chain']]},
     waves:[{at:50,foes:['goon','slinger','blade']},{at:290,foes:['bruiser','grappler','blade','slinger']},{at:512,foes:['molotov','grappler','kicker','blade','shield']}]},
-  {name:'VEX TOWER',bg:'story_lvl3',alt:'vizor',song:'hecky',len:768,crates:[[180,14],[420,26],[620,10]],drums:[[360,20]],zap:[[250,300],[560,610]],
+  {name:'VEX TOWER',bg:'story_lvl3',alt:'vizor',song:'hecky',len:768,crates:[[180,14],[420,26],[620,10]],cans:[[360,24]],wet:[[240,310],[550,620]],ride:{kind:'wash',name:'WINDOW LIFT',waves:[['blade','kicker','goon'],['enforcer','medic','blade','kicker']]},
     waves:[{at:60,foes:['blade','kicker','medic','goon']},{at:290,foes:['enforcer','chain','medic','shield']},{at:512,foes:['bruiser','kicker','enforcer','grappler','medic','blade']}]},
   {name:"VEX'S PENTHOUSE",bg:'hecky_stage',alt:'hecky',song:'rex',len:256,crates:[],
     waves:[{at:0,foes:['enforcer','shield','medic','goon']},{at:0,foes:['vex','chain','kicker']}]}];
@@ -2518,9 +2520,9 @@ const StoryEnd={
 const Brawl={
   enter(){const L=this.L=LEVELS[RUN.level];F=this;Object.assign(this,{cinema:false,superFlash:0,superBy:null,parts:[],texts:[],hitFx:[],proj:[],items:[],foes:[],cx:0,wi:0,wave:null,q:[],qT:0,goT:0,
       ph:'intro',pt:0,mercyOn:false,bossDown:null,camFlash:0,paused:false,psel:0,hitstop:0,shake:0,target:null,targetT:0,doneT:0,contN:9,supT:0,
-      bcT:0,allyRun:null,car:L.car?{ph:'wait',t:360}:null,zapT:0,stat:{f:0,dmg:0,maxC:0,spared:0,lost:0},res:null});RUN.allyQ=RUN.allyQ||[];
+      bcT:0,allyRun:null,ride:null,rf:0,hyd:(L.hydrants||[]).map(([x])=>({x,ph:'wait',t:200+rnd(0,120)})),stat:{f:0,dmg:0,maxC:0,spared:0,lost:0},res:null});RUN.allyQ=RUN.allyQ||[];
     const k=skinned(RUN.p1,0),P=this.P=new Fighter(k.skinKey||RUN.p1,0,!!RUN.bot,RUN.alt&&RUN.alt[0]);P.x=40;P.z=22;P.vz=0;P.meter=RUN.meter||0;P.inv=60;
-    for(const[x,z]of L.crates)this.items.push({kind:'crate',x,z,y:0});for(const[x,z]of L.drums||[])this.items.push({kind:'drum',x,z,y:0});
+    for(const[x,z]of L.crates)this.items.push({kind:'crate',x,z,y:0});for(const[x,z]of L.cans||[])this.items.push({kind:'can',x,z,y:0});
     if(!playTrack(L.song))stageMusic(L.song);SFX.start()},
   // ---- helpers ----
   sy(e){return FY+e.z-e.y},
@@ -2529,11 +2531,11 @@ const Brawl={
   spark(x,z,y,c,n){sparks(x,FY+z-y,c,n)},
   dust(x,z,n){for(let i=0;i<n;i++)this.parts.push({x:x+rnd(-10,10),y:FY+z-1,vx:rnd(-1,1),vy:rnd(-1,-.2),l:rnd(12,22)|0,c:'#d8cbb0',g:0.02,dust:1})},
   input(){const P=this.P;if(P.cpu)return this.bot();
-    return{l:held.left,r:held.right,u:held.up,d:held.down,a:pressed.a,b:pressed.b,j:pressed.jump,sel:pressed.select}},
+    return{l:held.left,r:held.right,u:held.up,d:held.down,a:pressed.a,b:pressed.b,j:pressed.jump,jh:held.jump,sel:pressed.select}},
   // a simple autoplayer for tests and the attract demo: line up with the nearest enemy and punch
   bot(){const P=this.P,o={l:0,r:0,u:0,d:0,a:0,b:0,j:0};if(P.state==='grabbed'){o.a=frameNo%3===0;return o}if(P.state==='jump'){o.a=P.st>8&&!P.atk?1:0;o[P.face>0?'r':'l']=1;return o}const alive=this.foes.filter(e=>!e.dead&&!e.ko&&e.state!=='down'&&e.state!=='leave'&&!(e.state==='yield'&&FOES[e.kind].boss));
     const t0=alive.sort((a,b)=>Math.hypot(a.x-P.x,(a.z-P.z)*2)-Math.hypot(b.x-P.x,(b.z-P.z)*2))[0];
-    const t=t0,crate=this.items.find(i=>i.kind!=='crate'&&i.kind!=='drum'&&Math.abs(i.x-P.x)<160);
+    const t=t0,crate=this.items.find(i=>i.kind!=='crate'&&i.kind!=='can'&&Math.abs(i.x-P.x)<160);
     if(!t){if(crate){o[crate.x>P.x?'r':'l']=1;if(Math.abs(crate.z-P.z)>3)o[crate.z>P.z?'d':'u']=1}else o.r=1;return o}
     const side=P.x<t.x?-1:1,gx=t.x+side*(t.state==='yield'?22:30),dx=gx-P.x,dz=t.z-P.z;
     if(t.state==='yield'&&Math.abs(t.x-P.x)<46&&Math.abs(dz)<10){if(frameNo%9===0)o.a=1;return o}
@@ -2547,7 +2549,7 @@ const Brawl={
   // ---- the player ----
   control(){const P=this.P,i=this.input();if(i.a)P.lastA=frameNo;if(i.b)P.lastB=frameNo;
     const fwd=P.face>0?i.r:i.l,back=P.face>0?i.l:i.r,spNow=(i.a&&frameNo-P.lastB<=4)||(i.b&&frameNo-P.lastA<=4);
-    const uE=i.u&&!P.pu,dE=i.d&&!P.pd;P.pu=i.u;P.pd=i.d;
+    const uE=i.u&&!P.pu,dE=i.d&&!P.pd;P.pu=i.u;P.pd=i.d;P.jh=!!i.jh;
     // SELECT: a henchman you spared runs in and tackles everything in his way (works even while you're held)
     if(i.sel&&RUN.allyQ&&RUN.allyQ.length&&!this.allyRun&&this.ph==='play'&&!P.ko){this.callAlly();}
     if(P.state==='grabbed'){if(i.a||i.b){P.mash=(P.mash||0)+1;P.flash=2}return}
@@ -2566,6 +2568,9 @@ const Brawl={
         if(i.b){this.atk(P,'kick',true);return}if(i.a&&(P.chainN||0)<2){P.chainN=(P.chainN||0)+1;this.atk(P,P.chainN===2?'kick':'jab',P.chainN===2)}}return}
     if(P.state==='jump'){if((i.a||i.b)&&!P.atk){startAtk(P,'jkick');P.hitIds={}}return}
     if(P.state==='prejump'&&i.a){this.backAtk();return}
+    // GUARD: hold JUMP. Blocks hits from the front (grabs and the stage itself get through); too many in a row breaks it
+    if(P.state==='block'){if(!i.jh){P.state='idle';P.st=0;return}if(uE||dE){const k=uE?-1:1;if(P.tapK===k&&frameNo-P.tapT<=12){P.tapK=0;P.stepT=10;P.stepD=k;P.inv=Math.max(P.inv,12);SFX.whoosh();return}P.tapK=k;P.tapT=frameNo}
+      if(i.l||i.r){const f=i.r?1:-1;if(f!==P.face&&P.st>6)P.face=f}return}
     if(!['idle','walk'].includes(P.state))return;
     if(uE||dE){const k=uE?-1:1;if(P.tapK===k&&frameNo-P.tapT<=12){P.tapK=0;P.stepT=10;P.stepD=k;P.inv=Math.max(P.inv,12);SFX.whoosh();return}P.tapK=k;P.tapT=frameNo}
     if(i.j){P.state='prejump';P.st=0;P.jdir=i.r?1:i.l?-1:0;P.vx=0;return}
@@ -2575,7 +2580,8 @@ const Brawl={
       const g=this.foes.find(e=>!e.dead&&e.state==='hurt'&&Math.abs(e.x-P.x)<30&&this.near(P,e,6)&&Math.sign(e.x-P.x)===P.face&&!FOES[e.kind].heavy);
       if(g){P.state='throwing';P.st=0;P.thr=g;P.knees=0;g.state='grabbed';g.st=0;g.vx=0;SFX.grab();return}
       P.chainN=0;this.atk(P,'jab');return}
-    P.vx=(i.r-i.l)*1.45*P.c.speed;P.vz=(i.d-i.u)*0.95;if(P.vx)P.face=Math.sign(P.vx);P.state=P.vx||P.vz?'walk':'idle'},
+    P.vx=(i.r-i.l)*1.45*P.c.speed;P.vz=(i.d-i.u)*0.95;if(P.vx)P.face=Math.sign(P.vx);P.state=P.vx||P.vz?'walk':'idle';
+    if(this.onWet(P)){P.vx=lerp(P.pvx||0,P.vx,.06);P.vz=lerp(P.pvz||0,P.vz,.06);if(Math.abs(P.vx)>.15||Math.abs(P.vz)>.15)P.state='walk'}P.pvx=P.vx;P.pvz=P.vz},
   atk(f,n,fin){startAtk(f,n);f.hitIds={};if(f===this.P&&n==='kick')f.atk={...f.atk,dmg:fin?8:7,fin:!!fin};
     if(f===this.P&&f.wpn&&n==='jab'){const kn=f.wpn.kind==='knife';f.atk={...f.atk,reach:f.atk.reach+(kn?6:16),dmg:f.atk.dmg+(kn?3:5),wpn:true};SFX.whooshH&&SFX.whooshH()}},
   backAtk(){const P=this.P;P.face=-P.face;this.atk(P,'kick',true);P.atk={...P.atk,s:4,dmg:9,back:true};P.chainN=2;SFX.whooshH()},
@@ -2590,7 +2596,11 @@ const Brawl={
     const nb=!best||o.indexOf(r)>o.indexOf(best);if(nb){REC.srank[RUN.level]=r;saveRec()}this.score(bonus);this.res={r,bonus,secs,nb}},
   superMove(){const P=this.P;P.meter=0;P.state='special';P.st=0;P.vx=P.vz=0;P.atk=null;P.sp={kind:'desp',hits:0,id:++atkId,sup:true};P.inv=90;this.supT=50;
     SFX.superS();fighterVoice(P,'super')},
-  toss(e,dir){const P=this.P;P.thr=null;P.state='idle';P.st=0;e.state='knock';e.st=0;e.vy=4.2;e.vx=dir*5;e.y=1;e.thrown=true;e.hp-=8;e.flash=4;SFX.slam();this.shake=6;
+  toss(e,dir){const P=this.P;P.state='tossing';P.st=0;P.tdir=dir;P.thr=e;SFX.whooshH()},
+  tossing(){const P=this.P,e=P.thr;if(!e||e.dead){P.thr=null;P.state='idle';P.st=0;return}const T=18,k=Math.min(1,P.st/T),f=P.face,fw=P.tdir===f,
+      x0=26,xm=4,x1=fw?30:-30,a=k<.5?k*2:(k-.5)*2,x=k<.5?lerp(x0,xm,a):lerp(xm,x1,a),y=k<.5?lerp(4,48,Math.sin(a*Math.PI/2)):lerp(48,fw?22:16,a*a);
+    e.x=P.x+f*x;e.z=P.z;e.y=y;e.rot=(fw?1:-1)*f*k*Math.PI*(fw?1.1:.9);if(P.st===T)this.release(e,P.tdir)},
+  release(e,dir){const P=this.P;P.thr=null;e.rot=0;e.state='knock';e.st=0;e.vy=fw0(dir,P)?2.4:3.4;e.vx=dir*5;e.y=Math.max(e.y,8);e.thrown=true;e.hp-=8;e.flash=4;SFX.slam();this.shake=6;
     if(e.hp<=0){if(this.mercyOK(e)){e.hp=1;e.yieldNext=true;this.mercyOn=true}else if(this.allyOK(e)){e.hp=1;e.yieldNext=true;e.ally=true}else e.ko=true}this.score(80)},
   // Stage 1's last man standing begs for mercy; walk up and press A to help him up (he's the one who points you to the docks)
   mercyOK(e){return RUN.level===0&&!RUN.mercy&&!this.mercyOn&&this.wave&&this.wi===this.L.waves.length-1&&!this.q.length&&!this.foes.some(f=>f!==e&&!f.dead&&!f.ko)},
@@ -2621,8 +2631,11 @@ const Brawl={
     if(knock){e.state='knock';e.st=0;e.vz=0;e.vy=o.launch?3.9:3.6;e.vx=dir*(o.launch?.3:2.6);e.y=Math.max(e.y,1);e.atk=null;e.sp=null;this.dropWeapon(e);if(o.launch&&!e.ko){e.jugMax=3;e.floaty=true;this.addT('LAUNCH!',e.x,e.z,'#ffe66a')}}
     else if(!armored){e.state='hurt';e.st=0;e.stun=22;e.vx=dir*1.2;e.atk=null;e.sp=null}
     this.hitstop=knock?9:5;this.shake=knock?4:2;this.spark(e.x,e.z,e.y+e.H*.6,'#ffe66a',knock?12:7);(SFX[snd]||(knock?SFX.heavy:SFX.hit))();return true},
-  hurtP(dmg,knock,dir){const P=this.P;if(P.inv>0||['knock','down','rise'].includes(P.state)||this.ph!=='play'&&this.ph!=='intro')return false;P.grey=0;P.stepT=0;
-    if(P.thr){if(!P.thr.ko){P.thr.state='hurt';P.thr.stun=8}P.thr=null}
+  hurtP(dmg,knock,dir,o={}){const P=this.P;if(P.inv>0||['knock','down','rise'].includes(P.state)||this.ph!=='play'&&this.ph!=='intro')return false;
+    if(P.state==='block'&&!o.env&&dir===-P.face){P.guard=(P.guard||0)+dmg;P.vx=dir*1.6;this.hitstop=3;
+      if(P.guard>=26){P.guard=0;P.state='hurt';P.st=0;P.stun=40;this.addT('GUARD BREAK!',P.x,P.z,'#ff9a3a');SFX.hit()}else{this.spark(P.x+P.face*10,P.z,P.y+P.H*.6,'#9ad0ff',6);SFX.block()}return'block'}
+    P.grey=0;P.stepT=0;
+    if(P.thr){P.thr.rot=0;if(!P.thr.ko){P.thr.state='hurt';P.thr.stun=8}P.thr=null}
     dmg*=[0.7,1,1.25][SET.diff];this.stat.dmg+=Math.min(dmg,P.hp);P.hp=Math.max(0,P.hp-dmg);P.flash=4;P.atk=null;P.sp=null;this.hitstop=6;this.shake=3;this.spark(P.x,P.z,P.y+P.H*.6,'#ff6a5a',8);SFX.hit();
     if((P.hp<=0||knock)&&P.wpn)this.wpnBreak(P,true);
     if(P.hp<=0||knock){P.state='knock';P.st=0;P.vy=3.8;P.vx=dir*2.4;P.y=Math.max(P.y,1);if(P.hp<=0){P.ko=true;SFX.ko()}}else{P.state='hurt';P.st=0;P.stun=16;P.vx=dir*1.4;P.hurtK='mid'}return true},
@@ -2635,14 +2648,15 @@ const Brawl={
       const inX=reach<0?Math.abs(dx)<-reach:(P.face>0?dx>-6&&dx<reach+12:dx<6&&dx>-reach-12);
       if(inX&&this.near(P,e,reach<0?20:air?18:14)&&(air||e.y<40)){P.hitIds[e.uid+':'+id]=1;if(this.hitFoe(e,dmg,knock,Math.sign(dx)||P.face,null,{air,desp:reach<0,launch:!!(P.atk&&P.atk.launch)}))any=true;if(P.atk)P.hitDone=true}}
     if(any&&P.atk&&P.atk.wpn&&P.wpn&&--P.wpn.uses<=0)this.wpnBreak(P,false);
-    for(const it of this.items)if((it.kind==='crate'||it.kind==='drum')&&!it.broken){const dx=it.x-P.x;const inX=reach<0?Math.abs(dx)<-reach:(P.face>0?dx>-6&&dx<reach+14:dx<6&&dx>-reach-14);
-      if(inX&&Math.abs(it.z-P.z)<14&&it.kind==='drum'){if(!it.fuse){it.fuse=30;SFX.block()}continue}
+    for(const it of this.items)if((it.kind==='crate'||it.kind==='can')&&!it.broken){const dx=it.x-P.x;const inX=reach<0?Math.abs(dx)<-reach:(P.face>0?dx>-6&&dx<reach+14:dx<6&&dx>-reach-14);
+      if(inX&&Math.abs(it.z-P.z)<14&&it.kind==='can'){if(!it.roll)this.kickCan(it,Math.sign(dx)||P.face);continue}
       if(inX&&Math.abs(it.z-P.z)<14){it.broken=true;this.spark(it.x,it.z,8,'#c08040',12);SFX.block();this.score(50);const r=Math.random();
         this.items.push({kind:r<.45?'pizza':r<.7?'chicken':'cash',x:it.x,z:it.z,y:0,l:600})}}},
   // ---- physics for anyone on the floor band ----
   phys(e){if(e.state==='throwing'||e.state==='grabbed')return;
     if(e.y>0||e.vy){e.vy-=GRAV*(e.floaty?.6:1);e.y+=e.vy;if(e.y<=0&&e.vy<=0){e.y=0;e.vy=0;
       if(e.state==='jump'){e.state='idle';e.st=0;e.atk=null;SFX.land();this.dust(e.x,e.z,3)}
+      else if(e.state==='idle'||e.state==='walk'){SFX.land();this.dust(e.x,e.z,4)}
       else if(e.state==='knock'){e.state='down';e.st=0;e.vx*=.3;e.jug=0;e.jugMax=1;e.floaty=false;this.shake=Math.max(this.shake,3);SFX.thud();this.dust(e.x,e.z,6);e.thrown=false}}}
     e.x+=e.vx;e.z=clamp(e.z+(e.vz||0),0,FZ);if(['hurt','down','attack','special'].includes(e.state))e.vx*=.85},
   // ---- enemy AI: only two may hold an attack token at once; the rest circle and wait ----
@@ -2663,7 +2677,7 @@ const Brawl={
     if(C.heavy&&!C.boss&&e.cool<=0&&Math.abs(dz)<6&&adx>56&&adx<150){e.state='special';e.st=0;e.vx=e.vz=0;e.sp={kind:'charge',id:++atkId,hit:false};e.cool=170;return}
     const side=e.x<P.x?-1:1;go(P.x+side*30,P.z,1);
     if(adx<C.reach+(e.reachB||0)+4&&Math.abs(dz)<6&&e.cool<=0){e.state='attack';e.st=0;e.vx=e.vz=0;e.atk={...ATK.jab,name:C.atkName||'jab',s:[18,13,9][D]+(C.heavy?4:0)+(C.windupA||0),a:4,r:14,id:++atkId};e.hitDone=false}},
-  foeUpdate(e){const P=this.P,C=FOES[e.kind];e.st++;if(e.pump>0){e.pump--;if(e.pump%24===0)this.parts.push({x:e.x+rnd(-6,6),y:FY+e.z-e.y-e.H,vx:0,vy:-.6,l:16,c:'#ff5a5a',g:0})}if(e.ko&&!['knock','down'].includes(e.state)){e.state='knock';e.st=0;e.vy=Math.max(e.vy||0,2);e.y=Math.max(e.y,1);e.atk=null;e.sp=null}/* a KO'd enemy only ever falls */if(e.flash>0)e.flash--;if(e.inv>0)e.inv--;
+  foeUpdate(e){const P=this.P,C=FOES[e.kind];e.st++;if(e.slipT>0)e.slipT--;if(e.pump>0){e.pump--;if(e.pump%24===0)this.parts.push({x:e.x+rnd(-6,6),y:FY+e.z-e.y-e.H,vx:0,vy:-.6,l:16,c:'#ff5a5a',g:0})}if(e.ko&&!e.dazed&&!['knock','down'].includes(e.state)){e.state='knock';e.st=0;e.vy=Math.max(e.vy||0,2);e.y=Math.max(e.y,1);e.atk=null;e.sp=null}/* a KO'd enemy only ever falls */if(e.flash>0)e.flash--;if(e.inv>0)e.inv--;
     switch(e.state){
       case'idle':case'walk':this.foeAI(e);break;
       case'attack':{const a=e.atk;if(C.lunge&&e.st<a.s&&e.st>a.s-8)e.vx=e.face*C.lunge;if(e.st===a.s){SFX.whoosh()}if(e.st>=a.s&&e.st<a.s+a.a&&!e.hitDone){const dx=P.x-e.x;
@@ -2697,15 +2711,17 @@ const Brawl={
         break}
       case'hurt':if(--e.stun<=0){e.state='idle';e.st=0}break;
       case'grabbed':break;
-      case'down':if(e.ko){if(e.st>50){e.dead=true;this.score(C.score);if(Math.random()<(C.heavy?.6:.12))this.items.push({kind:Math.random()<.5?'pizza':'cash',x:e.x,z:e.z,y:0,l:600})}}
+      case'down':if(e.ko){if(e.st>50){this.score(C.score);if(Math.random()<(C.heavy?.6:.12))this.items.push({kind:Math.random()<.5?'pizza':'cash',x:e.x,z:e.z,y:0,l:600});
+          // nobody dies here: a beaten henchman gets up seeing stars and staggers off
+          e.dazed=true;e.state='leave';e.st=60;e.face=e.x<this.cx+W/2?-1:1;if(Math.random()<.35)this.addT(pickOf(["I'M DONE!",'OW OW OW...','I QUIT!','MY BACK...','TELL VEX I QUIT']),e.x,e.z,'#c8c8d8')}}
         else if(e.st>=40&&!e.yieldNext){e.state='rise';e.st=0;e.inv=16}break;
       case'rise':if(e.st>=12){e.state='idle';e.st=0}break;
       case'yield':e.vx=e.vz=0;e.face=P.x>e.x?1:-1;if(e.st===2)this.addT(C.boss?'...ENOUGH.':'PLEASE... I GIVE UP!',e.x,e.z,'#fff');if(e.ally&&e.st>300){e.state='leave';e.st=60}break;
-      case'leave':if(e.st===36)this.addT('THANK YOU...',e.x,e.z,'#fff');if(e.st<60)e.vx=0;else{e.face=e.x<this.cx+W/2?-1:1;e.vx=e.face*1.3;if(e.x<this.cx-30||e.x>this.cx+W+30)e.dead=true}break}
+      case'leave':if(e.st===36)this.addT('THANK YOU...',e.x,e.z,'#fff');if(e.st<60)e.vx=0;else{e.face=e.x<this.cx+W/2?-1:1;e.vx=e.face*(e.dazed?2.2:1.3);if(e.x<this.cx-30||e.x>this.cx+W+30)e.dead=true}break}
     if(e.yieldNext&&e.state==='down'&&e.st>=34){e.yieldNext=false;e.state='yield';e.st=0;e.inv=0;e.x=clamp(e.x,this.cx+40,this.cx+W-40)}
     // a thrown enemy bowls over the others
     if(e.thrown&&e.state==='knock'){for(const o of this.foes)if(o!==e&&!o.dead&&o.state!=='knock'&&Math.abs(o.x-e.x)<22&&this.near(o,e,12)){this.hitFoe(o,8,true,Math.sign(e.vx),null,{thrown:true});}
-      for(const it of this.items)if(it.kind==='drum'&&!it.fuse&&Math.abs(it.x-e.x)<18&&Math.abs(it.z-e.z)<14)it.fuse=8}
+      for(const it of this.items)if(it.kind==='can'&&!it.roll&&Math.abs(it.x-e.x)<18&&Math.abs(it.z-e.z)<14)this.kickCan(it,Math.sign(e.vx)||1)}
     this.phys(e);
     const inside=e.x>this.cx+8&&e.x<this.cx+W-8;if(inside)e.inside=true;if(e.inside&&e.state!=='leave')e.x=clamp(e.x,this.cx+8,this.cx+W-8)},
   spawn(kind){const C=foeData(kind),right=this.q.length%2===0||this.cx<20,f=new Fighter('karl',1,true,false);
@@ -2713,6 +2729,7 @@ const Brawl={
     f.name=C.names[(Math.random()*C.names.length)|0];f.alt=!!C.fake||(kind==='goon'&&Math.random()<.4);if(C.hue!=null&&!C.fake){f.hue=C.hue;f.sat=C.sat||1;f.whiten=!!C.whiten;f.alt=false}f.wait=30+rnd(0,40);f.cool=0;
     const v=C.fake?null:rollVariant(C);if(v){f.vari=v;if(v.top!=null||v.bot!=null)f.alt=false;f.hp=f.mhp=Math.round(f.hp*Math.pow(v.sc,1.6));f.spd=1/Math.sqrt(v.sc);f.dmgM=v.sc*(v.w?1.25:1);
       f.reachB=Math.round((v.sc-1)*30)+(v.w==='pipe'||v.w==='bat'?14:v.w==='knife'?4:0);f.H=C.H*v.sc;if(v.sc>=1.15)f.name='BIG '+f.name}
+    if(this.ride&&this.ride.kind!=='train'){f.x=clamp(this.P.x+(Math.random()<.5?-1:1)*rnd(60,110),this.cx+24,this.cx+W-24);f.y=118;f.inside=true;f.vy=0}
     if(C.boss){f.x=this.cx+W-40;f.wait=90;this.addT('ENOUGH. I\'LL DO THIS MYSELF.',f.x,f.z,'#e0a0ff');f.name='VEX'}
     this.foes.push(f)},
   // ---- the level: camera, waves, items ----
@@ -2721,7 +2738,7 @@ const Brawl={
     if(this.supT>0){if(--this.supT===0){for(const e of this.foes)if(!e.dead&&e.x>this.cx-10&&e.x<this.cx+W+10){e.inv=0;this.hitFoe(e,26,true,Math.sign(e.x-this.P.x)||1,null,{sup:true})}F.camFlash=8;this.shake=10}return}
     if(this.hitstop>0){this.hitstop--;if(pressed.a)this.P.qA=frameNo;if(pressed.jump)this.P.qJ=frameNo;return}
     if(this.shake>0)this.shake--;this.pt++;const P=this.P,L=this.L;
-    if(this.ph==='intro'&&this.pt>80)this.ph='play';if(this.ph==='play')this.stat.f++;if(this.bcT>0&&--this.bcT===0)P.bc=0;
+    if(this.ph==='intro'&&this.pt>80)this.ph='play';if(this.ph==='play')this.stat.f++;if(P.guard>0&&P.state!=='block')P.guard=Math.max(0,P.guard-.2);if(this.bcT>0&&--this.bcT===0)P.bc=0;
     if(this.ph==='continue'){if(this.pt%60===0){this.contN--;SFX.tick();if(this.contN<0){goFade(()=>go(GameOver));this.ph='over'}}
       if(pressed.a||pressed.start){RUN.lives=3;RUN.cont++;RUN.score=0;this.respawn();SFX.start()}return}
     if(this.ph==='clear'){++this.doneT;if(this.doneT===40&&!this.res)this.rank();if(RUN.bot?this.doneT===70:(this.doneT===320||(this.doneT>110&&this.doneT<320&&(pressed.a||pressed.start)&&(this.doneT=319)))){this.doneT=320;RUN.meter=P.meter;const boss=RUN.level===3?RUN.p1:RUN.bosses[RUN.level];RUN.shadow=RUN.level===3;RUN.ladder=[boss];RUN.idx=0;goFade(()=>RUN.shadow?go(Cutscene,'shadow'):boss==='ivan'?go(Cutscene,'ivan'):ARCS[RUN.p1]?go(Cutscene,RUN.level===0?'rival1':'rival3'):go(VS))}return}
@@ -2731,11 +2748,13 @@ const Brawl={
     P.ghosts.forEach(g=>g.l--);P.ghosts=P.ghosts.filter(g=>g.l>0);
     if(this.ph==='play'||this.ph==='intro')this.control();
     switch(P.state){
-      case'prejump':if(P.st>=3){P.state='jump';P.st=0;P.vy=5.3;P.vx=P.jdir*1.8*P.c.speed;P.vz=0;SFX.jump()}break;
+      case'block':P.vx*=.7;P.vz=0;break;
+      case'prejump':if(P.jh&&!P.cpu&&P.st>=7){P.state='block';P.st=0;P.vx=0;break}if(P.st>=3&&!(P.jh&&!P.cpu)){P.state='jump';P.st=0;P.vy=5.3;P.vx=P.jdir*1.8*P.c.speed;P.vz=0;SFX.jump()}break;
       case'jump':if(P.atk)P.ast++;break;
       case'attack':P.vx=0;P.vz=0;if(P.st>=P.atk.s+P.atk.a+P.atk.r){P.atk=null;P.state='idle';P.st=0;if(!P.hitDone)P.chainN=0}break;
       case'special':if(P.st>=32){P.state='idle';P.st=0;P.sp=null}break;
       case'grabbed':break;
+      case'tossing':P.vx=P.vz=0;if(P.thr)this.tossing();else if(P.st>=26){P.state='idle';P.st=0}break;
       case'hurt':if(--P.stun<=0){P.state='idle';P.st=0}break;
       case'down':if(P.ko){if(P.st>70)this.lose()}else if(P.st>=36){P.state='rise';P.st=0;P.inv=40}break;
       case'rise':if(P.st>=12){P.state='idle';P.st=0;P.inv=40}break}
@@ -2745,11 +2764,14 @@ const Brawl={
     this.cx=clamp(Math.max(this.cx,P.x-112),0,lock);
     if(!this.wave&&this.wi<L.waves.length&&this.cx>=L.waves[this.wi].at-.5){this.wave=L.waves[this.wi];this.q=[...this.wave.foes];this.qT=0;this.goT=0}
     P.x=clamp(P.x,this.cx+12,Math.min(this.cx+W-12,L.len-10));
-    if(this.wave){if(this.q.length&&--this.qT<=0&&this.foes.filter(e=>!e.dead).length<4){this.spawn(this.q.shift());this.qT=45}
-      if(!this.q.length&&!this.foes.some(e=>!e.dead)){this.wave=null;this.wi++;this.goT=150;SFX.ok();if(this.wi>=L.waves.length)this.goT=400}}
+    if(this.wave){if(this.q.length&&--this.qT<=0&&this.foes.filter(e=>!e.dead&&!e.dazed).length<4){this.spawn(this.q.shift());this.qT=45}
+      if(!this.q.length&&!this.foes.some(e=>!e.dead&&!e.dazed)){this.wave=null;if(this.ride)return void SFX.ok();this.wi++;this.goT=150;SFX.ok();if(this.wi>=L.waves.length)this.goT=400}}
     if(this.goT>0)this.goT--;
     if(this.bossDown&&this.bossDown.state==='yield'&&this.bossDown.st>80&&this.ph==='play'){this.wave=null;this.wi=L.waves.length;this.ph='clear';this.doneT=0;P.state='win';P.st=0;P.vx=P.vz=0;this.score(5000)}
-    if(!this.wave&&this.wi>=L.waves.length&&P.x>=Math.min(L.len,this.cx+W)-40&&this.ph==='play'){this.ph='clear';this.doneT=0;P.state='win';P.st=0;P.vx=P.vz=0;SFX.cheer();this.score(1000)}
+    if(this.rf>0){this.rf--;if(this.rf===20)this.boardRide()}
+    if(this.ride)this.updRide();
+    if(!this.wave&&this.wi>=L.waves.length&&P.x>=Math.min(L.len,this.cx+W)-40&&this.ph==='play'&&L.ride&&!this.ride&&!this.rf){this.rf=40;SFX.ok()}
+    if(!this.wave&&this.wi>=L.waves.length&&P.x>=Math.min(L.len,this.cx+W)-40&&this.ph==='play'&&!(L.ride&&!(this.ride&&this.ride.done))){this.ph='clear';this.doneT=0;P.state='win';P.st=0;P.vx=P.vz=0;SFX.cheer();this.score(1000)}
     for(const e of this.foes)this.foeUpdate(e);this.foes=this.foes.filter(e=>!e.dead||e.st<0);
     // projectiles (bottles)
     for(const p of this.proj){if(p.kind==='wave'){p.x+=p.vx;p.life--;if(p.life%3===0)this.dust(p.x,p.z,1);if(Math.abs(p.x-P.x)<12&&Math.abs(p.z-P.z)<10&&P.y<8&&this.hurtP(10,true,Math.sign(p.vx)))p.life=0;continue}
@@ -2760,31 +2782,40 @@ const Brawl={
         for(let i=0;i<6;i++)this.parts.push({x:p.x,y:FY+p.z-p.y,vx:rnd(-2,2),vy:rnd(-2,0),l:14,c:'#7aff8a',g:.15})}}
     this.proj=this.proj.filter(p=>p.life>0&&p.x>this.cx-30&&p.x<this.cx+W+30);
     // pickups
-    for(const it of this.items){if(it.kind==='crate'||it.kind==='drum'||it.taken)continue;it.l--;if(!(it.kind[0]==='w'&&P.wpn)&&Math.abs(it.x-P.x)<14&&Math.abs(it.z-P.z)<9&&P.y<=0&&P.state!=='knock'){it.taken=true;SFX.coin();
+    for(const it of this.items){if(it.kind==='crate'||it.kind==='can'||it.taken)continue;it.l--;if(!(it.kind[0]==='w'&&P.wpn)&&Math.abs(it.x-P.x)<14&&Math.abs(it.z-P.z)<9&&P.y<=0&&P.state!=='knock'){it.taken=true;SFX.coin();
       if(it.kind[0]==='w'){const k=it.kind.slice(2);P.wpn={kind:k,uses:k==='knife'?12:8};P.vari={sc:1,top:null,bot:null,hat:'none',shades:false,w:k,key:'P'+k};this.addT(k.toUpperCase()+'!',it.x,it.z,'#fff')}
       else if(it.kind==='cash'){this.score(1000);this.addT('+1000',it.x,it.z,'#ffd23a')}else{const g=it.kind==='chicken'?60:30;P.hp=Math.min(P.mhp,P.hp+g);this.addT('+'+g+' HP',it.x,it.z,'#7aff8a')}}}
-    this.items=this.items.filter(it=>!(it.taken||it.l<=0||((it.kind==='crate'||it.kind==='drum')&&it.broken)));
+    this.items=this.items.filter(it=>!(it.taken||it.l<=0||((it.kind==='crate'||it.kind==='can')&&it.broken)));
     for(const p of this.parts){p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.l--}this.parts=this.parts.filter(p=>p.l>0);
     for(const t of this.texts){t.y-=.4;t.l--}this.texts=this.texts.filter(t=>t.l>0);for(const h of this.hitFx)h.l--;this.hitFx=this.hitFx.filter(h=>h.l>0);
     if(this.targetT>0)this.targetT--},
   // ---- stage hazards: oil drums (hit or throw someone into one), the Streets traffic lane, Vex Tower's live floor panels ----
   hazards(){const P=this.P,L=this.L;
-    for(const it of this.items)if(it.kind==='drum'&&it.fuse>0&&!it.broken&&--it.fuse===0)this.explode(it);
-    const c=this.car;if(c&&this.ph==='play'){const lane=e=>e.z>=FZ-13;
-      if(c.ph==='wait'){if(this.wave&&this.wi>=1&&--c.t<=0){c.ph='warn';c.t=70;c.dir=Math.random()<.5?1:-1;SFX.lock()}}
-      else if(c.ph==='warn'){if(--c.t<=0){c.ph='go';c.x=c.dir>0?this.cx-60:this.cx+W+60;c.hit={};c.col=pickOf(['#d83a3a','#3a7ad8','#e0c040','#e8e8f0'])}}
-      else{c.x+=c.dir*6.5;if(frameNo%4===0)SFX.whoosh();
-        if(lane(P)&&!c.hit.P&&Math.abs(P.x-c.x)<46&&P.y<18){c.hit.P=1;this.hurtP(14,true,c.dir)}
-        for(const e of this.foes)if(!e.dead&&lane(e)&&!c.hit[e.uid]&&Math.abs(e.x-c.x)<46&&e.y<18){c.hit[e.uid]=1;e.inv=0;this.hitFoe(e,24,true,c.dir,null,{env:true})}
-        for(const it of this.items)if(it.kind==='drum'&&!it.fuse&&lane(it)&&Math.abs(it.x-c.x)<20)it.fuse=4;
-        if((c.dir>0&&c.x>this.cx+W+60)||(c.dir<0&&c.x<this.cx-60)){c.ph='wait';c.t=320+rnd(0,160)}}}
-    if(L.zap){this.zapT=(this.zapT+1)%300;if(this.zapT===180)SFX.lock();const on=this.zapT>=230;
-      if(on&&this.zapT%15===0)for(const[x0,x1]of L.zap){if(P.y<=0&&P.x>x0&&P.x<x1)this.hurtP(5,false,P.face);
-        for(const e of this.foes)if(!e.dead&&e.y<=0&&e.x>x0&&e.x<x1)this.hitFoe(e,6,false,1,null,{env:true})}}},
-  explode(it){it.broken=true;this.shake=10;SFX.slam();this.addT('BOOM!',it.x,it.z,'#ff9a3a');for(let k=0;k<3;k++)this.spark(it.x+rnd(-10,10),it.z,rnd(4,24),k%2?'#ff9a3a':'#ffe66a',14);this.dust(it.x,it.z,10);
-    for(const e of this.foes)if(!e.dead&&Math.abs(e.x-it.x)<48&&Math.abs(e.z-it.z)<16){e.inv=0;this.hitFoe(e,20,true,Math.sign(e.x-it.x)||1,null,{env:true})}
-    const P=this.P;if(Math.abs(P.x-it.x)<36&&Math.abs(P.z-it.z)<12)this.hurtP(10,true,Math.sign(P.x-it.x)||1);
-    for(const o of this.items)if(o.kind==='drum'&&!o.fuse&&!o.broken&&Math.abs(o.x-it.x)<56&&Math.abs(o.z-it.z)<18)o.fuse=6},
+    // trash cans: knock one over and it rolls along the floor, bowling over every henchman in its path
+    for(const it of this.items)if(it.kind==='can'&&it.roll&&!it.broken){it.x+=it.roll;it.rot=(it.rot||0)+it.roll*.12;it.dist=(it.dist||0)+Math.abs(it.roll);if(frameNo%6===0)SFX.tick&&SFX.tick();
+      for(const e of this.foes)if(!e.dead&&!it.hit[e.uid]&&Math.abs(e.x-it.x)<14&&Math.abs(e.z-it.z)<13&&e.y<20){it.hit[e.uid]=1;e.inv=0;if(this.hitFoe(e,10,true,Math.sign(it.roll),null,{env:true}))this.addT('STRIKE!',e.x,e.z,'#ffe66a')}
+      if(it.dist>300||it.x<this.cx-30||it.x>this.cx+W+30){it.broken=true}}
+    // fire hydrants (Streets): one shakes, then a jet of water sweeps the front lane and knocks everyone in it off their feet
+    for(const h of this.hyd||[]){const on=Math.abs(h.x-P.x)<240&&h.x>this.cx-20&&h.x<this.cx+W+20;
+      if(h.ph==='wait'){if(this.wave&&on&&this.ph==='play'&&--h.t<=0){h.ph='warn';h.t=60;h.dir=h.x<this.cx+W/2?1:-1;SFX.lock()}}
+      else if(h.ph==='warn'){h.dir=h.dir||(h.x<this.cx+W/2?1:-1);if(--h.t<=0){h.ph='spray';h.t=44;h.len=0;h.hit={};SFX.whooshH()}}
+      else{h.len=Math.min(170,h.len+16);const x0=h.x,x1=h.x+h.dir*h.len,inJet=e=>e.z>=FZ-14&&(e.x-x0)*h.dir>0&&(e.x-x1)*h.dir<0&&e.y<24;
+        if(inJet(P)&&!h.hit.P){h.hit.P=1;this.hurtP(4,true,h.dir,{env:true})}
+        for(const e of this.foes)if(!e.dead&&inJet(e)&&!h.hit[e.uid]){h.hit[e.uid]=1;e.inv=0;if(this.hitFoe(e,12,true,h.dir,null,{env:true}))this.addT('SPLASH!',e.x,e.z,'#9ad8ff')}
+        if(frameNo%2===0)this.parts.push({x:x1+rnd(-4,4),y:FY+FZ-14+rnd(-6,4),vx:h.dir*rnd(.5,1.5),vy:-rnd(.5,1.5),l:14,c:Math.random()<.5?'#9ad8ff':'#fff',g:.15});
+        if(--h.t<=0){h.ph='wait';h.t=300+rnd(0,140)}}}
+    // wet floor (Vex Tower): you slide on it; a henchman who walks onto it slips and falls
+    if(L.wet){for(const e of this.foes)if(!e.dead&&!e.dazed&&e.state==='walk'&&!(e.slipT>0)&&this.onWet(e)&&Math.abs(e.vx)+Math.abs(e.vz)>.4){e.slipT=150;e.inv=0;if(this.hitFoe(e,4,true,Math.sign(e.vx)||1,null,{env:true}))this.addT('SLIP!',e.x,e.z,'#9ad8ff')}}},
+  onWet(e){return !this.ride&&!!this.L.wet&&e.y<=0&&this.L.wet.some(([a,b])=>e.x>a&&e.x<b)},
+  // ---- rides (TMNT-style set pieces): a subway car, the Docks cargo lift, a window-washer lift up Vex Tower ----
+  boardRide(){const L=this.L,P=this.P;this.ride={kind:L.ride.kind,name:L.ride.name,waves:L.ride.waves,wi:0,t:0,done:false,doneT:0};this.items=[];this.hyd=[];
+    for(const e of this.foes)e.dead=true;this.foes=[];this.cx=L.len-W;P.x=this.cx+70;P.z=24;P.state='idle';P.st=0;P.vx=P.vz=0;P.thr=null;
+    this.addT(this.ride.kind==='train'?'ALL ABOARD!':'GOING UP!',P.x+60,P.z,'#ffe66a');playTrack(L.song)},
+  updRide(){const R=this.ride;R.t++;if(this.ph!=='play')return;
+    if(!this.wave&&R.wi<R.waves.length&&R.t>50+R.wi*30){this.wave={at:this.cx,foes:R.waves[R.wi]};this.q=[...R.waves[R.wi]];this.qT=0;R.wi++}
+    if(!this.wave&&R.wi>=R.waves.length&&!R.done){R.done=true;R.doneT=R.t;this.addT(R.kind==='train'?'NEXT STOP!':'DING! TOP FLOOR',this.P.x,this.P.z,'#ffe66a');SFX.ok()}
+    if(R.done&&R.t-R.doneT>70&&this.ph==='play'){const P=this.P;this.ph='clear';this.doneT=0;P.state='win';P.st=0;P.vx=P.vz=0;SFX.cheer();this.score(1000)}},
+  kickCan(it,dir){it.roll=dir*4.6;it.hit={};SFX.block();this.spark(it.x,it.z,10,'#c8c8d8',6)},
   windup(e){const s=e.sp,C=FOES[e.kind];if(e.state==='attack'&&e.atk)return e.st<e.atk.s&&e.st>=e.atk.s-12;if(e.state!=='special'||!s)return false;const k=s.kind;
     return k==='slam'?e.st<22:k==='charge'?e.st<(C.windup||24):k==='fly'?e.st<9:k==='throwB'?e.st<12:k==='bash'?e.st<10:k==='grab'?!s.held&&e.st<16:k==='heal'?e.st<18:false},
   lose(){RUN.lives--;this.stat.lost++;if(RUN.lives>0)this.respawn();else{this.ph='continue';this.contN=9;this.pt=0;stopMusic()}},
@@ -2795,21 +2826,19 @@ const Brawl={
   // ---- drawing ----
   draw(){const L=this.L,P=this.P,sh=this.shake,ox=sh?Math.round(rnd(-sh,sh)):0,oy=sh?Math.round(rnd(-sh,sh))/2:0,cx=Math.round(this.cx);
     ctx.save();ctx.translate(ox,oy);
-    const bg=IMG[L.bg];if(bg&&bg.width>=L.len){ctx.drawImage(bg,-cx,L.bgY||0,bg.width,H);if(L.floor)drawFloor(L.floor,cx)}
+    const bg=IMG[L.bg];if(this.ride)drawRide(this.ride);else if(bg&&bg.width>=L.len){ctx.drawImage(bg,-cx,L.bgY||0,bg.width,H);if(L.floor)drawFloor(L.floor,cx)}
     else{const im=bg||CH[L.alt].stage;for(let x=0;x<L.len;x+=W){const fl=(x/W)%2===1;ctx.save();ctx.translate(x-cx+(fl?W:0),0);ctx.scale(fl?-1:1,1);ctx.drawImage(im,0,0,W,H);ctx.restore()}}
-    if(L.zap){const on=this.zapT>=230,warn=this.zapT>=180&&!on;for(const[x0,x1]of L.zap){const x=Math.round(x0-cx),w=x1-x0;if(x>W||x+w<0)continue;
-        ctx.fillStyle='#120e1e';ctx.fillRect(x-1,FY-2,w+2,FZ+4);ctx.fillStyle=on?'#2a6ad0':warn&&(frameNo&4)?'#d0a020':'#3a3850';ctx.fillRect(x,FY-1,w,FZ+2);
-        ctx.fillStyle=on?'#9ad8ff':'#5a5870';for(let gx=x+4;gx<x+w;gx+=8)ctx.fillRect(gx,FY,1,FZ);
-        if(on){ctx.strokeStyle=(frameNo&2)?'#ffffff':'#7ad8ff';ctx.lineWidth=1;ctx.beginPath();for(let k=0;k<3;k++){let zx=x+rnd(2,w-2);ctx.moveTo(zx,FY);for(let zy=FY;zy<FY+FZ;zy+=5){zx+=rnd(-4,4);ctx.lineTo(zx,zy+5)}}ctx.stroke()}}}
-    if(this.car&&this.car.ph==='warn'&&(frameNo&8)){ctx.fillStyle='rgba(255,60,40,.28)';ctx.fillRect(0,FY+FZ-14,W,16);const lx=this.car.dir>0?6:W-22;
-      drawText('!',lx+8,FY+FZ-26,'#ff3a3a',2,{align:'center',outline:'#000'});drawText(this.car.dir>0?'>>':'<<',lx+8,FY+FZ-10,'#ffe66a',1,{align:'center',outline:'#000'})}
+    if(L.wet&&!this.ride)for(const[x0,x1]of L.wet){const x=Math.round(x0-cx),w=x1-x0;if(x>W||x+w<0)continue;ctx.fillStyle='rgba(120,200,255,.22)';ctx.fillRect(x,FY-6,w,FZ+8);
+      ctx.fillStyle='rgba(255,255,255,.35)';for(let k=0;k<6;k++){const gx=x+((k*23+((frameNo>>3)%23))%w),gy=FY-4+((k*13)%(FZ+4));ctx.fillRect(gx,gy,6,1);ctx.fillRect(gx+2,gy+1,2,1)}}
+    for(const h of this.hyd||[]){if(h.ph!=='spray')continue;const x=Math.round(h.x-cx),y=FY+FZ-14,len=h.len;for(let k=0;k<len;k+=3){const yy=y-Math.round(Math.sin((k+frameNo*3)/9)*2+k*k/len/14*0)-3+((k/3)&1);
+      ctx.fillStyle='#2a6ad0';ctx.fillRect(x+h.dir*k,yy-1,3,6);ctx.fillStyle=(k/3+frameNo)&2?'#9ad8ff':'#ffffff';ctx.fillRect(x+h.dir*k,yy,3,3)}}
     // everyone on the floor, back to front
     const ents=[P,...this.foes,...this.items,...(this.allyRun?[this.allyRun]:[])].sort((a,b)=>a.z-b.z);
     for(const e of ents){const s=Math.max(.35,1-(e.y||0)/110);ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(Math.round(e.x-cx),FY+e.z+1,(e.kind&&ITEMDRAW[e.kind]?9:18)*s,3*s,0,0,Math.PI*2);ctx.fill();
       // lined up: your hits reach this enemy's depth (a yellow ring under him)
       if(e!==P&&!e.ally&&FOES[e.kind]&&!e.dead&&!e.ko&&!['leave','yield','down'].includes(e.state)&&Math.abs(e.z-P.z)<=14&&Math.abs(e.x-P.x)<80){ctx.strokeStyle='rgba(255,230,106,.75)';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(Math.round(e.x-cx),FY+e.z+1,16*s,3*s,0,0,Math.PI*2);ctx.stroke()}}
     for(const e of ents){if(ITEMDRAW[e.kind]){if(e.kind!=='crate'&&e.l<120&&(frameNo&4))continue;ITEMDRAW[e.kind](Math.round(e.x-cx),FY+e.z,e);continue}
-      if(e.dead||(e.ko&&e.state==='down'&&e.st>20&&(frameNo&2)))continue;if(e===P&&P.inv>0&&this.ph==='play'&&(frameNo&4)&&P.state!=='special')continue;
+      if(e.dead)continue;if(e===P&&P.inv>0&&this.ph==='play'&&(frameNo&4)&&P.state!=='special')continue;
       ctx.save();ctx.translate(-cx,FY+e.z-GY);drawFighter(e);ctx.restore();
       const C=FOES[e.kind];if(e===P||!C)continue;const ex=Math.round(e.x-cx),top=FY+e.z-e.y-e.H;
       if(C.shield&&!['down','yield','leave'].includes(e.state)&&!(e.state==='knock')){const sx=ex+e.face*11,sy=Math.round(top+e.H*.2),sh=Math.round(e.H*.62);
@@ -2823,13 +2852,16 @@ const Brawl={
         ctx.fillStyle='#120e1e';ctx.fillRect(fx-1,y-h-1,4,h+1);ctx.fillStyle=i%2?'#ff7a2a':'#ffd23a';ctx.fillRect(fx,y-h,2,h);ctx.fillStyle='#fff3a0';ctx.fillRect(fx,y-2,2,2)}ctx.globalAlpha=1;continue}
       const x=Math.round(p.x-cx),y=Math.round(FY+p.z-p.y);ctx.save();ctx.translate(x,y);ctx.rotate(p.rot);ctx.fillStyle='#120e1e';ctx.fillRect(-5,-3,10,6);ctx.fillStyle=p.kind==='molotov'?'#a04a1a':'#3aa04a';ctx.fillRect(-4,-2,6,4);ctx.fillStyle=p.kind==='molotov'?'#ffd23a':'#7aff8a';ctx.fillRect(2,-1,3,2);ctx.restore();
       ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(x-3,FY+p.z,6,1)}
-    // the car in the traffic lane (Streets), drawn over everyone
-    if(this.car&&this.car.ph==='go'){const c=this.car,x=Math.round(c.x-cx),y=FY+FZ+4,d=c.dir,R=(a,b,w,h,col)=>{ctx.fillStyle=col;ctx.fillRect(d>0?x+a:x-a-w,y+b,w,h)};
-      ctx.fillStyle='rgba(0,0,0,.45)';ctx.fillRect(x-48,y-2,96,4);
-      R(-49,-31,98,25,'#120e1e');R(-26,-49,58,20,'#120e1e');R(-48,-30,96,23,c.col);R(-25,-48,56,19,c.col);// body and cabin
-      R(-21,-45,22,14,'#9ad0ff');R(5,-45,22,14,'#9ad0ff');R(-21,-45,22,3,'#e0f0ff');R(5,-45,22,3,'#e0f0ff');R(-48,-30,96,3,'rgba(255,255,255,.35)');R(-48,-17,96,2,'rgba(0,0,0,.35)');
-      R(44,-24,4,6,'#ffe66a');R(46,-24,30,6,'rgba(255,240,160,.25)');R(-48,-24,3,6,'#ff3a3a');R(-4,-26,2,14,'rgba(0,0,0,.3)');
-      for(const wx of[-30,30]){ctx.fillStyle='#120e1e';ctx.fillRect(x+wx-10,y-14,20,15);ctx.fillStyle='#5a5870';ctx.fillRect(x+wx-5,y-9,10,6);ctx.fillStyle='#9a98b0';ctx.fillRect(x+wx-2,y-7,4,2)}}
+    // fire hydrants (Streets) on the front kerb
+    for(const h of this.hyd||[]){const x=Math.round(h.x-cx)+(h.ph==='warn'&&(frameNo&2)?1:0),y=FY+FZ-6;if(x<-20||x>W+20)continue;
+      ctx.fillStyle='#120e1e';ctx.fillRect(x-5,y-15,10,16);ctx.fillRect(x-7,y-11,14,4);ctx.fillStyle='#d83a3a';ctx.fillRect(x-4,y-14,8,14);ctx.fillRect(x-6,y-10,12,2);
+      ctx.fillStyle='#ff8a7a';ctx.fillRect(x-4,y-14,2,14);ctx.fillStyle='#e0c040';ctx.fillRect(x-3,y-16,6,2);ctx.fillStyle='#8a1a1a';ctx.fillRect(x-4,y-2,8,2);
+      if(h.ph==='warn'){if(frameNo&4)drawText('!',x,y-28,'#ff3a3a',1,{align:'center',outline:'#000'});if(frameNo%6===0)this.parts.push({x:h.x+rnd(-4,4),y:y-14,vx:rnd(-.6,.6),vy:-rnd(.3,1),l:12,c:'#9ad8ff',g:.1})}}
+    for(const e of this.foes)if(e.dazed&&!e.dead){for(let k=0;k<3;k++){const a=frameNo/7+k*2.1;ctx.fillStyle=k%2?'#ffe66a':'#fff';ctx.fillRect(Math.round(e.x-cx+Math.cos(a)*8),Math.round(FY+e.z-e.H-2+Math.sin(a)*2),2,2)}}
+    if(this.ride)drawRideFront(this.ride);
+    if(L.wet&&!this.ride)for(const[x0]of L.wet){const x=Math.round(x0-cx)+4,y=FY+FZ-2;if(x<-20||x>W+20)continue;ctx.fillStyle='#120e1e';ctx.fillRect(x-1,y-19,13,20);ctx.fillStyle='#ffd23a';ctx.fillRect(x,y-18,11,17);
+      ctx.fillStyle='#120e1e';ctx.fillRect(x+5,y-15,1,6);ctx.fillRect(x+5,y-7,1,1);ctx.fillRect(x+2,y-1,1,1);ctx.fillRect(x+8,y-1,1,1)}
+    if(P.state==='block'||P.guard>2){const gx=Math.round(P.x-cx),gy=FY+P.z-P.H-8,gw=Math.round(20*(1-(P.guard||0)/26));ctx.fillStyle='#000';ctx.fillRect(gx-11,gy-1,22,4);ctx.fillStyle=gw<7?'#ff7a3a':'#7ab4ff';ctx.fillRect(gx-10,gy,gw,2)}
     // desperation shockwave
     if(P.state==='special'&&P.sp&&!P.sp.sup&&P.st>=8&&P.st<20){const k=P.st-8,R=14+k*4;ctx.globalAlpha=1-k/12;ctx.strokeStyle=P.c.col.aura;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(P.x-cx,FY+P.z-P.H*.4,R,R*.7,0,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}
     ctx.save();ctx.translate(-cx,0);for(const h of this.hitFx)drawHitFx(h);
@@ -2841,7 +2873,7 @@ const Brawl={
     if(this.supT>0)this.drawSuper();
     this.drawHUD();
     if(this.paused){ctx.fillStyle='rgba(0,0,10,.75)';ctx.fillRect(0,0,W,H);drawText('PAUSE',128,12,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});
-      [['MOVE','D-PAD, UP/DOWN = DEPTH'],['SIDESTEP','TAP UP OR DOWN TWICE'],['COMBO','A, A, A  OR  A, A, B'],['LAUNCHER','A, A, JUMP'],['BACK ATTACK','JUMP + A'],['JUMP KICK','JUMP, THEN A OR B'],
+      [['MOVE','D-PAD, UP/DOWN = DEPTH'],['GUARD','HOLD JUMP (TAP = JUMP)'],['SIDESTEP','TAP UP OR DOWN TWICE'],['COMBO','A, A, A  OR  A, A, B'],['LAUNCHER','A, A, JUMP'],['BACK ATTACK','JUMP + A'],['JUMP KICK','JUMP, THEN A OR B'],
        ['SPECIAL','SP: GREY HP, HITS WIN IT BACK'],['SUPER','FWD + SP, FULL BAR'],['GRAB','WALK INTO A DAZED FOE'],['THROW','GRAB, A x3 (BACK+A: BEHIND)'],['ALLY','SELECT (SPARE A KNEELING FOE)']]
         .forEach(([k,v],i)=>{drawText(k,14,36+i*9,'#ff9a6a',1,{shadow:false});drawText(v,242,36+i*9,'#fff',1,{align:'right',shadow:false})});
       ['RESUME','QUIT TO TITLE'].forEach((s,i)=>drawText((this.psel===i?'> ':'  ')+s,128,148+i*12,this.psel===i?'#ffe66a':'#99a',1,{align:'center'}))}},
@@ -2863,7 +2895,9 @@ const Brawl={
       ctx.fillStyle='#000';ctx.fillRect(252-w-2,22,w+2,6);ctx.fillStyle='#401018';ctx.fillRect(252-w-1,23,w,4);ctx.fillStyle='#ff5a3a';ctx.fillRect(252-w-1,23,ew,4)}
     const bz=this.foes.find(e=>FOES[e.kind].boss&&!e.dead&&e.state!=='yield');if(bz){const w=170,bw=Math.max(0,Math.round(w*bz.hp/bz.mhp));drawText('VEX',43,176,'#e0a0ff',1,{outline:'#000'});
       ctx.fillStyle='#000';ctx.fillRect(64,176,w+2,8);ctx.fillStyle='#301040';ctx.fillRect(65,177,w,6);ctx.fillStyle='#b04aff';ctx.fillRect(65,177,bw,6);ctx.fillStyle='#e0a0ff';ctx.fillRect(65,177,bw,1)}
-    if(this.goT>0&&!this.wave&&this.ph==='play'&&(frameNo>>4)&1){const fin=this.wi>=this.L.waves.length;drawText(fin?'EXIT':'GO',222,72,'#fff',2,{align:'right',grad:FIRE,outline:'#300'});
+    if(this.ride&&this.ph==='play'&&this.ride.t<90)drawText(this.ride.name,128,40,'#ffe66a',1,{align:'center',outline:'#000'});
+    if(this.rf>0){ctx.fillStyle=`rgba(0,0,0,${1-Math.abs(this.rf-20)/20})`;ctx.fillRect(0,0,W,H)}
+    if(this.goT>0&&!this.wave&&!this.ride&&this.ph==='play'&&(frameNo>>4)&1){const fin=this.wi>=this.L.waves.length;drawText(fin?'EXIT':'GO',222,72,'#fff',2,{align:'right',grad:FIRE,outline:'#300'});
       ctx.fillStyle='#ffd23a';ctx.beginPath();ctx.moveTo(228,72);ctx.lineTo(248,80);ctx.lineTo(228,88);ctx.fill()}
     if(this.ph==='intro'){box(48,70,160,40,'rgba(10,8,30,.9)','#d04aff');drawText(RUN.level===3?'FINAL STAGE':'STAGE '+(RUN.level+1),128,76,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});drawText(this.L.name,128,96,'#ffe66a',1,{align:'center'})}
     if(this.ph==='clear'&&!(this.res&&this.doneT>=40))drawText('STAGE CLEAR!',128,70,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});
@@ -2876,6 +2910,42 @@ const Brawl={
       if(this.doneT>110&&(frameNo>>4)&1)drawText('A: NEXT',128,y+110,'#ffe66a',1,{align:'center'})}
     if(this.ph==='continue'){ctx.fillStyle='rgba(0,0,0,.7)';ctx.fillRect(0,0,W,H);drawText('CONTINUE?',128,60,'#fff',2,{align:'center',grad:ICE,outline:'#002'});
       drawText(String(Math.max(0,this.contN)),128,90,'#fff',4,{align:'center',grad:FIRE,outline:'#300'});drawText('PRESS A',128,140,'#ffe66a',1,{align:'center'})}}};
+// ---- ride scenes (code pixel art). Everything scrolls with the ride's own clock ----
+function drawRide(R){const t=R.t,F_=(c,x,y,w,h)=>{ctx.fillStyle=c;ctx.fillRect(x,y,w,h)},y0=FY-10;
+  if(R.kind==='train'){const sway=Math.round(Math.sin(t/9)*.6);ctx.save();ctx.translate(0,sway);
+    F_('#232733',0,-2,W,20);for(let x=10;x<W;x+=64){F_('#9ab0c0',x-1,7,42,5);F_('#eef8ff',x,8,40,3)}F_('#a8b0bc',0,18,W,2);F_('#5a6070',0,20,W,1);
+    F_('#d8cfb4',0,21,W,64);F_('#4a6a7a',0,85,W,y0-85);F_('#2f4a58',0,85,W,2);
+    const ads=['#d83a3a','#2a6ad0','#e0c040','#3aa05a'];for(let k=0;k<4;k++){const x=10+k*64;F_('#1a1a24',x-1,23,42,11);F_(ads[k],x,24,40,9);F_('#fff',x+4,26,18,2);F_('#fff',x+4,29,26,1);F_('rgba(255,255,255,.5)',x+30,25,7,7)}
+    for(let k=0;k<4;k++){const x=8+k*64,wy=38,ww=46,wh=34;F_('#1a1a24',x-2,wy-2,ww+4,wh+4);F_('#7a8090',x-1,wy-1,ww+2,1);
+      const station=((t+k*7)>>7)%5===0;F_(station?'#c8b880':'#07070f',x,wy,ww,wh);
+      ctx.save();ctx.beginPath();ctx.rect(x,wy,ww,wh);ctx.clip();
+      if(station){for(let c=0;c<6;c++){const cx2=x+((c*19-t*7)%(ww+40)+ww+40)%(ww+40)-20;F_('#8a7a50',cx2,wy,5,wh)}F_('#fff3c0',x,wy+3,ww,2)}
+      else for(let l=0;l<7;l++){const lx=x+((l*53+k*29-t*9)%(ww+80)+ww+80)%(ww+80)-40,ly=wy+5+((l*11+k*5)%(wh-10));F_(l%3?'#ffe6a0':'#9ad8ff',lx,ly,14+(l%3)*6,1)}
+      F_('rgba(255,255,255,.07)',x,wy,ww,wh/2);ctx.restore();F_('rgba(255,255,255,.25)',x+3,wy+3,1,8)}
+    for(let k=0;k<4;k++){const x=6+k*64;F_('#1a1a24',x,y0-34,52,20);F_('#3a5a8a',x+1,y0-33,50,8);F_('#2a4470',x+1,y0-26,50,4);for(let s=0;s<4;s++)F_('#4a6a9a',x+2+s*12,y0-33,10,6);F_('#1a1a24',x+6,y0-22,3,12);F_('#1a1a24',x+43,y0-22,3,12)}
+    F_('#1a1a24',0,21,9,y0-21);F_('#6a7a88',1,22,7,y0-22);F_('#07070f',2,34,5,30);F_('#1a1a24',W-9,21,9,y0-21);F_('#6a7a88',W-8,22,7,y0-22);F_('#07070f',W-7,34,5,30);
+    for(const px of[38,166]){F_('#5a6070',px-1,20,4,y0-12);F_('#e8eef8',px,20,1,y0-12);F_('#a8b0bc',px+1,20,1,y0-12)}
+    F_('#5c5c68',0,y0,W,H-y0);F_('#8a8a96',0,y0,W,2);F_('#3a3a46',0,y0+2,W,1);for(let k=0;k<70;k++){const sx=(k*37+Math.floor(k/7)*11)%W,sy=y0+4+(k*17)%(H-y0-4);F_(k%3?'#6c6c78':'#4c4c58',sx,sy,2,1)}
+    ctx.restore();return}
+  const up=t*1.1;
+  if(R.kind==='lift'){const g=ctx.createLinearGradient(0,0,0,y0);g.addColorStop(0,'#0e0c2a');g.addColorStop(1,'#3a2a5a');ctx.fillStyle=g;ctx.fillRect(0,0,W,y0);
+    for(let k=0;k<26;k++){const sx=(k*61)%W,sy=((k*37+up*.2)%y0);F_(k%4?'#8a86c0':'#fff',sx,sy,1,1)}
+    const cols=['#b04a2a','#2a6a8a','#3a8a4a','#c8902a','#8a3a6a'];
+    for(let row=-1;row<6;row++){const ry=Math.round(row*30+(up%30));for(let c=0;c<5;c++){const off=(row&1)?-20:0,cx2=off+c*58+((row*7)%3)*6,col=cols[(c*3+row*2+100)%5];
+        if((c+row*3)%7===3)continue;F_('#120e1e',cx2,ry,56,29);F_(col,cx2+1,ry+1,54,27);ctx.fillStyle='rgba(0,0,0,.22)';for(let v=cx2+3;v<cx2+54;v+=3)ctx.fillRect(v,ry+2,1,25);F_('rgba(255,255,255,.18)',cx2+1,ry+1,54,2);F_('#120e1e',cx2+40,ry+6,1,18);F_('#120e1e',cx2+46,ry+6,1,18)}}
+    for(const gx of[0,W-14]){F_('#120e1e',gx,0,14,y0);F_('#d8a020',gx+1,0,2,y0);F_('#d8a020',gx+11,0,2,y0);ctx.strokeStyle='#a07818';ctx.lineWidth=1;ctx.beginPath();for(let yy=-((up*1)%16);yy<y0;yy+=16){ctx.moveTo(gx+2,yy);ctx.lineTo(gx+12,yy+16);ctx.moveTo(gx+12,yy);ctx.lineTo(gx+2,yy+16)}ctx.stroke()}
+    F_('#8a8a96',18,0,1,y0-4);F_('#8a8a96',W-19,0,1,y0-4);F_('#d8a020',0,y0-6,W,3);F_('#8a6a18',0,y0-3,W,1);
+    F_('#4a4a58',0,y0,W,H-y0);F_('#6a6a78',0,y0,W,2);for(let yy=y0+10;yy<H-6;yy+=12)F_('#3a3a46',0,yy,W,1);for(let xx=0;xx<W;xx+=32)F_('#3a3a46',xx,y0+2,1,H-y0-8);return}
+  // window-washer lift on the face of Vex Tower: glass curtain wall sliding down as you rise
+  F_('#0a1024',0,0,W,y0);const pw=32,ph=26;
+  for(let r=-1;r<8;r++){const yy=Math.round(r*ph+(up%ph));for(let c=0;c<9;c++){const x=c*pw-8,lit=((c*7+(r-Math.floor(up/ph))*13)%9+9)%9===0;
+      F_('#2a3040',x,yy,pw,ph);F_(lit?'#c8a050':'#16284a',x+2,yy+2,pw-3,ph-3);if(!lit){F_('#22406e',x+2,yy+2,pw-3,4);ctx.fillStyle='rgba(140,190,255,.18)';for(let d=0;d<4;d++)ctx.fillRect(x+6+d*2,yy+ph-6-d*4,6,1)}else F_('#f0d890',x+4,yy+4,6,3)}}
+  F_('#2a3040',0,0,W,1);F_('#8a8a96',22,0,1,y0-2);F_('#8a8a96',W-23,0,1,y0-2);
+  F_('#5a5a68',0,y0-8,W,3);F_('#9a9aa8',0,y0-8,W,1);for(let xx=6;xx<W;xx+=28)F_('#5a5a68',xx,y0-8,2,10);
+  F_('#6a6a78',0,y0,W,H-y0);F_('#8a8a96',0,y0,W,2);for(let xx=0;xx<W;xx+=6)F_('#5a5a68',xx,y0+3,3,H-y0-8)}
+function drawRideFront(R){if(R.kind==='train')return;const F_=(c,x,y,w,h)=>{ctx.fillStyle=c;ctx.fillRect(x,y,w,h)},y1=H-5;
+  if(R.kind==='lift'){for(let xx=0;xx<W;xx+=8){F_((xx>>3)&1?'#120e1e':'#e0b020',xx,y1,8,5)}return}
+  F_('#120e1e',0,y1-7,W,3);F_('#b8b8c8',0,y1-6,W,1);for(let xx=4;xx<W;xx+=30){F_('#120e1e',xx,y1-7,3,12);F_('#b8b8c8',xx+1,y1-6,1,10)}F_('#4a4a58',0,y1+2,W,3)}
 // the walkable floor band under a level backdrop: pavement slabs or dock boards, scrolling with the camera
 // stage backdrop drawn 1:1 (no stretching: stretching 256->264 doubled every 32nd pixel row/column and made
 // straight lines look twisted and wobble during screen shake). The 4 px border for shake repeats the edge pixels.
@@ -2890,9 +2960,10 @@ function drawFloor(f,cx){const y0=FY-10,g=ctx.createLinearGradient(0,y0,0,H);g.a
   ctx.fillStyle='rgba(255,255,255,.035)';for(let wx=Math.floor(cx/97)*97;wx<cx+W+97;wx+=97)ctx.fillRect(Math.round(wx-cx+30),y0+16,22,3)}
 // pickups and crates, drawn in pixels
 const ITEMDRAW={
-  drum(x,y,it){const lit=it&&it.fuse>0&&(frameNo&2);ctx.fillStyle='#120e1e';ctx.fillRect(x-8,y-21,16,21);ctx.fillStyle=lit?'#fff':'#b02a2a';ctx.fillRect(x-7,y-20,14,19);
-    ctx.fillStyle=lit?'#ffe66a':'#e05a3a';ctx.fillRect(x-7,y-20,3,19);ctx.fillStyle='#120e1e';ctx.fillRect(x-7,y-15,14,1);ctx.fillRect(x-7,y-6,14,1);
-    ctx.fillStyle='#ffd23a';for(let k=0;k<4;k++)ctx.fillRect(x-6+k*4,y-12,2,3);if(it&&it.fuse>0){ctx.fillStyle=(frameNo&2)?'#ffe66a':'#ff7a2a';ctx.fillRect(x-1+rnd(-2,2),y-24-rnd(0,4),2,2)}},
+  can(x,y,it){if(it&&it.roll){const r=it.rot||0;ctx.fillStyle='#120e1e';ctx.fillRect(x-10,y-13,20,13);ctx.fillStyle='#8a92a8';ctx.fillRect(x-9,y-12,18,11);ctx.fillStyle='#c8d0e0';ctx.fillRect(x-9,y-12,18,2);
+      ctx.fillStyle='#5a6278';for(let k=0;k<3;k++){const sx=x-9+((Math.round(r*4)+k*6)%18+18)%18;ctx.fillRect(sx,y-12,1,11)}ctx.fillStyle='#3a3850';ctx.fillRect(it.roll>0?x+8:x-10,y-12,2,11);return}
+    ctx.fillStyle='#120e1e';ctx.fillRect(x-8,y-19,16,19);ctx.fillRect(x-9,y-21,18,3);ctx.fillStyle='#8a92a8';ctx.fillRect(x-7,y-18,14,17);ctx.fillStyle='#c8d0e0';ctx.fillRect(x-7,y-18,3,17);
+    ctx.fillStyle='#5a6278';ctx.fillRect(x-1,y-18,1,17);ctx.fillRect(x+4,y-18,1,17);ctx.fillStyle='#a8b0c4';ctx.fillRect(x-8,y-20,16,2);ctx.fillStyle='#120e1e';ctx.fillRect(x-2,y-23,4,2)},
   crate(x,y){ctx.fillStyle='#120e1e';ctx.fillRect(x-10,y-17,20,17);ctx.fillStyle='#a06a32';ctx.fillRect(x-9,y-16,18,15);ctx.fillStyle='#c8904a';ctx.fillRect(x-9,y-16,18,2);
     ctx.fillStyle='#6a4220';ctx.fillRect(x-9,y-9,18,1);ctx.fillRect(x-1,y-16,2,15);ctx.fillRect(x-9,y-16,1,15);ctx.fillRect(x+8,y-16,1,15)},
   pizza(x,y){ctx.fillStyle='#120e1e';ctx.beginPath();ctx.moveTo(x-8,y-2);ctx.lineTo(x+8,y-2);ctx.lineTo(x,y-14);ctx.fill();ctx.fillStyle='#ffd06a';ctx.beginPath();ctx.moveTo(x-6,y-3);ctx.lineTo(x+6,y-3);ctx.lineTo(x,y-12);ctx.fill();
