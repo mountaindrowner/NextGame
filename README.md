@@ -76,7 +76,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Samson | Powerhouse | 106 | counter-hit kicks knock down |
 | Zeke | High/low zoner | 100 | Spare: a blocked Strike Ball recharges his special to nearly ready |
 | Hecky Xavier | Tech rushdown | 98 | parry: tap forward just as a hit lands (no damage, +meter); bigger hitboxes, fast dash |
-| Lawslie | Enforcer | 100 | no chip damage when blocking, and blocking builds meter; smallest body (sprites shrunk 20% by `SCALE` in `tools/pixellab/pack.py`), same reach |
+| Lawslie | Enforcer | 100 | no chip damage when blocking, and blocking builds meter; the smallest fighter (84 px, see Fighter sizes) |
 | Devanté | High flyer | 96 | double jump, higher jump, quick feet |
 | Keksan | Striker | 94 | Muay Thai shin kicks: kicks, sweeps and the jumping knee hit 15% harder |
 | Estrella | Area control | 100 | her sound slows foes: anyone standing near her note or her Encore ring walks at 70% speed |
@@ -208,6 +208,18 @@ The four fighters were redrawn with [PixelLab](https://www.pixellab.ai) as side-
 Moves per fighter: idle, walk, crouch, jump, punch, kick, crouch punch, low kick, air punch, air kick, block, hurt, knockdown, win and a special (Papa-Léguas's Légua Rush, Ivan's Bear Slam, Vizor's Shutter Flash, Samson's Holy Tome, plus Samson's Benediction prayer).
 
 Vizor was made from the concept art in `tools/pixellab/concept/vizor.png` (with Papa-Léguas as the PixelLab style reference); his portraits and logo are cut from that art, and his stage was generated with PixelLab's image generator using Ivan's stage as the style image. Samson (internal id `padre`) was made the same way from `tools/pixellab/concept/padre.png` (his logo is drawn with `tools/make_logo.py`), with an Old Chapel stage.
+
+Papa-Léguas was rebuilt in v1.37 (`karl2` in `tools/pixellab/make_skin.py`, from a text description in Keksan's crisp style). His first sprite, from the original pipeline, was flat and washed out next to the newer fighters. The old frames are kept in `tools/pixellab/raw/karl_v1/` and `raw/karl_v1_assets/`. `tools/clean_karl_portrait.py` removed leftover background (a blue slab behind his fist, a purple blob on his head) from his portraits.
+
+### Fighter sizes
+
+`tools/pixellab/sizes.py` sets every fighter's standing height (idle pose, head to feet). It packs each fighter at native size, runs the post-pack fixes (Estrella's covered top, Reyes's olive gear), then shrinks to the target in `tools/pixellab/sizes.json`. It never enlarges, so nothing blurs.
+
+- `sizes.py equal`: everyone at 91 px, the smallest native sprite (Samson).
+- `sizes.py adjusted` (shipped): half of their real height differences (91 px at 5'10"), from Devanté's 95 px (6'3") down to Lawslie's 84 px (5'3"). Mateo and Ivan are 94, Papa-Léguas and Reyes 93, Vizor 92, Keksan, Samson and Hecky 91, Zeke 90, Marcus 89 (crown included) and Estrella 88.
+- `sizes.py lineup OUT.png`: draws everyone on one floor line.
+
+Re-measure the hitboxes afterwards: `python3 tools/hitboxes.py`.
 
 To regenerate or add moves (needs a PixelLab API token; set `PIXELLAB_TOKEN` outside this environment):
 

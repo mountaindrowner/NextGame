@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.37.0
+
+- **Focus attack** (SF4-style). In fights the JUMP button becomes **FOCUS** (up on the stick jumps); story mode keeps JUMP.
+  - **Hold:** you charge and glow (white, then orange, then red), and the charge absorbs one hit at half damage.
+  - **Let go:** a strike. At level 2 (18 frames) it **crumples** the opponent, who slowly falls: a free combo starter. Level 3 (42 frames) fires itself and is unblockable.
+  - **Dash cancel:** a dash cancels the charge, or the strike once it hits.
+  - **Focus cancel:** press FOCUS during a special to cancel it into a focus for half the super bar.
+  - **Buffering:** the press is buffered like A and B, and it also works online.
+  - **Everywhere else:** the CPU focuses through attacks, every fighter has a Focus trial, and the pause menu and Options > CONTROLS explain it.
+- **Papa-Léguas rebuilt.** His original sprite, the game's first, was flat and washed out next to the newer fighters. He's redrawn in Keksan's crisp style: a bright white gi with real folds, glasses, the black belt with gold stripes, red and white sneakers, and all 15 animations.
+  - **Portraits:** a leftover blue background slab behind his fist and a purple blob on his head are removed (`tools/clean_karl_portrait.py`).
+  - **Old version:** kept in `tools/pixellab/raw/karl_v1/`.
+- **Fighter sizes.** Heights ranged from 78 to 98 px and didn't match the characters (Estrella, 5'6", stood as tall as Mateo, 6'2").
+  - **Step 1, equal:** every fighter was brought to the same 91 px.
+  - **Step 2, adjusted** (shipped): about half of their real height differences. Devanté is tallest (95), Mateo and Ivan 94, Papa-Léguas and Reyes 93, Lawslie smallest (84), Estrella 88.
+  - **The tool:** `tools/pixellab/sizes.py` packs, re-applies Estrella's covered top and Reyes's olive gear, then shrinks (never enlarges). Hitboxes were re-measured.
+- **Balance after the size change:** 11 of 12 fighters at 36–56% in the CPU round robin.
+  - **Estrella:** a little more reach and power; she lost reach when she got smaller.
+  - **Vizor:** +7% power and 104 health, with Shutter Flash trimmed to stay under its damage cap.
+  - **Mateo:** his slide is a little lower, so it still goes under Estrella's (now lower) note.
+  - **Hecky:** still about 78%, the long-standing outlier.
+- **Found, not fixed yet:** the "long reach" multiplier on archetypes (Vizor's ×1.25) is mostly overridden by each fighter's measured hitboxes, so it does very little. Worth a proper fix along with the Hecky investigation.
+- **PixelLab:** 55 generations for the new Papa-Léguas. 9,152 left; the $0.07 credit wasn't touched.
+
 ## 1.36.0
 
 **Deeper combos (Tier 2) and new touch controls.**

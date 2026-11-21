@@ -1,0 +1,6 @@
+{
+ "_about": "Standing height (idle pose, head to feet) in pixels for each fighter. 'equal': everyone the same. 'adjusted': half of their real height differences (91 px at 5'10\"; height^0.6), Devante tallest, Lawslie smallest. Costumes keep their base fighter's scale unless listed. Never above the fighter's native size. Applied by sizes.py.",
+ "equal": 91,
+ "adjusted": {"karl": 93, "keksan": 91, "vizor": 92, "padre": 91, "zeke": 90, "hecky": 91, "lawslie": 84, "rex": 89, "kai": 95, "estrella": 88, "reyes": 93, "mateo": 94, "ivan": 94, "padreteen2": 92},
+ "skins": {"heckyfox": "hecky", "zekeidol": "zeke"}
+}

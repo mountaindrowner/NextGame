@@ -238,7 +238,7 @@ const CH={
     col:{skin:'#e3a272',glove:'#2e2f4a',leg:'#2b3168',foot:'#2c3a8a',aura:'#ff4a3a'},sh:.75,hip:.5,
     quote:'IN MY GYM, THE FLOOR IS MY FRIEND. SAY HELLO TO IT.',lose:'NEXT TIME... I BRING BIGGER BEAR.',stageName:'IRON GYM'},
   vizor:{id:'vizor',name:'VIZOR',nick:'THE WATCHER',style:'TECH BRAWLER',country:'UNKNOWN',countryLabel:'ORIGIN',flag:'unk',ht:"5'11\" (180 CM)",wt:'190 LB (86 KG)',
-    speed:1.04,power:1.06,def:1.0,jump:1.0,stats:[3,4,4],special:'flash',spName:'SHUTTER FLASH',special2:'replay',sp2Name:'INSTANT REPLAY',tr:1,
+    speed:1.04,power:1.134,def:1.0,jump:1.0,stats:[3,4,4],special:'flash',spName:'SHUTTER FLASH',special2:'replay',sp2Name:'INSTANT REPLAY',tr:1,
     col:{skin:'#c98a5e',glove:'#25232f',leg:'#3d5a96',foot:'#f0f0f0',aura:'#3ae8ff'},sh:.72,hip:.5,
     quote:"SMILE. YOU'RE ON CAMERA... AND YOU JUST GOT CAPTURED.",lose:'SIGNAL... LOST.',stageName:'CONTROL ROOM'},
   padre:{id:'padre',name:'SAMSON',nick:'THE SHEPHERD',style:'SACRED BOXING',country:'THE PARISH',countryLabel:'ORIGIN',flag:'cross',ht:"5'10\" (178 CM)",wt:'185 LB (84 KG)',
@@ -270,7 +270,7 @@ const CH={
     col:{skin:'#c88a5a',glove:'#d02a2a',leg:'#1a1a22',foot:'#c88a5a',aura:'#ff3a3a'},sh:.72,hip:.5,
     quote:"RESPECT THE RING. THEN RESPECT THE TIGER.",lose:'MY GUARD... DROPPED...',stageName:'TIGER GYM'},
   estrella:{id:'estrella',name:'ESTRELLA',nick:'THE VOICE',style:'SHOWSTOPPER',country:'STARLIGHT CLUB',countryLabel:'STAGE',flag:'star',ht:"5'6\" (168 CM)",wt:'130 LB (59 KG)',
-    speed:0.98,power:1.02,def:0.98,jump:1,stats:[3,3,3],special:'note',spName:'HIGH NOTE',special2:'encore',sp2Name:'ENCORE',special3:'siren',sp3Name:'SIREN SCREAM',tr:0,
+    speed:0.98,power:1.045,def:0.98,jump:1,stats:[3,3,3],special:'note',spName:'HIGH NOTE',special2:'encore',sp2Name:'ENCORE',special3:'siren',sp3Name:'SIREN SCREAM',tr:0,
     col:{skin:'#d8a070',glove:'#2a3ad0',leg:'#3a2a5a',foot:'#1a1a22',aura:'#ffd23a'},sh:.72,hip:.5,
     quote:"THAT'S A WRAP. YOU WERE A GREAT AUDIENCE.",lose:'MY VOICE... I LOST MY VOICE...',stageName:'STARLIGHT CLUB'},
   reyes:{id:'reyes',name:'REYES',nick:'THE SENTINEL',style:'SABR COMBAT',country:'SABR OUTPOST',countryLabel:'POST',flag:'sabr',ht:"6'0\" (183 CM)",wt:'198 LB (90 KG)',
@@ -289,13 +289,13 @@ const ORDER=['karl','keksan','vizor','padre','zeke','hecky','lawslie','rex','kai
 const ARCH={
   karl:{type:'RUSHDOWN',trait:'FAST DASH, 4-HIT CHAINS',hp:92,chain:4,dash:1.3,reach:1},
   ivan:{type:'GRAPPLER',trait:'ARMORED KICK, MOST HP',hp:118,dash:.8,armor:true,reach:1},
-  vizor:{type:'ZONER',trait:'LONG REACH',hp:98,reach:1.25},
+  vizor:{type:'ZONER',trait:'LONG REACH',hp:104,reach:1.25},
   padre:{type:'POWERHOUSE',trait:'COUNTERS KNOCK DOWN',hp:106,heavy:true,reach:1.05},
   zeke:{type:'HIGH/LOW ZONER',trait:'BLOCKED BALL: RELOAD',hp:100,spare:true,reach:1},
   hecky:{type:'TECH RUSHDOWN',trait:'PARRY: TAP FWD ON HIT',hp:98,parry:true,reach:1.18,hh:1.35,dash:1.2},
   lawslie:{type:'ENFORCER',trait:'NO CHIP, BLOCK = METER',hp:100,enforcer:true,reach:1},
   kai:{type:'HIGH FLYER',trait:'DOUBLE JUMP, BIG HOPS',hp:104,dj:true,reach:1},
-  estrella:{type:'AREA CONTROL',trait:'HER SOUND SLOWS FOES',hp:100,sound:true,reach:1},
+  estrella:{type:'AREA CONTROL',trait:'HER SOUND SLOWS FOES',hp:100,sound:true,reach:1.1},
   mateo:{type:'PITCHER',trait:'3RD PITCH IS A HEATER',hp:104,heat:true,reach:1},
   reyes:{type:'ALL-ROUNDER',trait:'STARTS WITH 1/3 SUPER',hp:92,leader:true,reach:1},
   keksan:{type:'STRIKER',trait:'SHIN KICKS: HARDER KICKS',hp:88,shin:true,reach:1},
@@ -735,7 +735,7 @@ let F=null,atkId=0;
 class Fighter{constructor(id,side,cpu,alt){const c=CH[id];this.c=c;this.side=side;this.cpu=cpu;this.alt=alt;this.img=alt?c.alt:c.spr;this.H=c.H;
   this.x=side?180:76;this.y=0;this.vx=0;this.vy=0;this.face=side?-1:1;this.hp=this.mhp=(ARCH[c.id]&&ARCH[c.id].hp)||100;this.trail=this.mhp;this.state='idle';this.st=0;this.atk=null;this.ast=0;
   this.stun=0;this.crouch=false;this.inv=0;this.combo=0;this.comboT=0;this.spCD=0;this.spCD2=0;this.spCD3=0;this.meter=0;this.flash=0;this.hist=[];this.ghosts=[];this.lastA=-99;this.lastB=-99;this.ai={t:0,dur:0,plan:null};this.sp=null;this.hitDone=false}
-  get h(){if(this.state==='special'&&this.sp&&this.sp.kind==='slide'&&this.st>=8&&this.st<30)return this.H*.42;return this.crouch?this.H*(arch(this.c).crouchH||.7):this.H}
+  get h(){if(this.state==='special'&&this.sp&&this.sp.kind==='slide'&&this.st>=8&&this.st<30)return this.H*.36;return this.crouch?this.H*(arch(this.c).crouchH||.7):this.H}
   hurt(){const hw=(HBX[this.c.id]&&HBX[this.c.id].hw)||15;return{x1:this.x-hw,x2:this.x+hw,y1:this.y,y2:this.y+this.h}}}
 // hitboxes measured from each fighter's own sprites (tools/hitboxes.py): reach to the fist/foot + 4 px, and the height band the limb covers
 const HBX=(typeof ASSET_DATA!=='undefined'&&ASSET_DATA.hitboxes)||{};
@@ -1098,7 +1098,7 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
   else if(s.kind==='flash'){// Shutter Flash: lock a reticle on the target zone, then the flash hits whatever is inside it
     if(t===4){const d=(o.x-f.x)*f.face;s.lx=f.x+f.face*clamp(d>20?d:80,34,128);SFX.lock()}
     if(t===18){SFX.flash();F.camFlash=7;const hb={x1:s.lx-18,x2:s.lx+18,y1:4,y2:f.H*1.05};
-      tryHit(f,o,hb,{dmg:8,stun:22,bs:12,kb:2.2,lv:'mid',chip:1,heavy:true})}
+      tryHit(f,o,hb,{dmg:7,stun:22,bs:12,kb:2.2,lv:'mid',chip:1,heavy:true})}
     if(t>=38)endSpecial(f)}}
 function endSpecial(f){f.sp=null;f.state='idle';f.st=0;f.vx=0}
 function updateSpecial2(f,o){const s=f.sp,t=f.st;

@@ -1,16 +1,20 @@
 {
  "karl": {
+  "airkick": {
+   "take": "airkick__a",
+   "pk": 4
+  },
   "airpunch": {
    "take": "airpunch__b",
-   "pk": 3
+   "pk": 1
   },
   "cpunch": {
    "take": "cpunch__a",
    "pk": 4
   },
   "lowkick": {
-   "take": "lowkick__d",
-   "pk": 5
+   "take": "lowkick__a",
+   "pk": 4
   }
  },
  "ivan": {
@@ -330,6 +334,38 @@
   "lowkick": {
    "take": "lowkick__a",
    "pk": 4
+  }
+ },
+ "karl2": {
+  "airkick": {
+   "take": "airkick__a",
+   "pk": 4
+  },
+  "airpunch": {
+   "take": "airpunch__b",
+   "pk": 1
+  },
+  "cpunch": {
+   "take": "cpunch__a",
+   "pk": 4
+  },
+  "lowkick": {
+   "take": "lowkick__a",
+   "pk": 4
+  }
+ },
+ "karl_v1": {
+  "airpunch": {
+   "take": "airpunch__b",
+   "pk": 3
+  },
+  "cpunch": {
+   "take": "cpunch__a",
+   "pk": 4
+  },
+  "lowkick": {
+   "take": "lowkick__d",
+   "pk": 5
   }
  }
 }
