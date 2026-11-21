@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.31.1
+
+- **Estrella's outfit is covered.** Her generated sprite had a cropped top that showed her midriff in most moves. In the crouching punch, her top even turned into a white crop top. Every frame now has her black top down to the belt, as in her first design.
+  - `tools/pixellab/cover_midriff.py` does this. It finds the bare skin between her top and her gold belt, and repaints it in her top's black shades.
+  - Frames the detector couldn't read were fixed by hand: the crouching punch, kicks, low kick, the glowing High Note frames, the knockdown and two jump punches.
+  - It also covers her standing sprite, which the cutscenes use.
+- Removed a white smudge and a dark blot that sat behind her legs when she's knocked down.
+- No PixelLab generations used.
+
 ## 1.31.0
 
 - **New fighter: Estrella, "The Voice".** A singer from the Starlight Club who fights with punches and kicks, mic in hand, and uses her voice for her specials. She's the game's **area controller**: she owns space instead of chasing you.
