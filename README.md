@@ -273,7 +273,7 @@ On itch.io the game runs inside itch's page, so "Add to Home Screen" from the it
 
 ### Landscape (GBA style)
 
-Holding a phone or tablet sideways switches to a wide handheld (`html.land` in `src/template.html`): a 3:2 screen between the D-pad and the buttons. `?layout=wide` / `?layout=tall` force either layout. Story mode draws 360×240 in it; every other scene keeps 256×192, centred on a 288×192 canvas.
+An experimental wide handheld (`html.land` in `src/template.html`): a 3:2 screen between the D-pad and the buttons. Off by default (the game is portrait); `?layout=wide` turns it on. Story mode draws 360×240 in it; every other scene keeps 256×192, centred on a 288×192 canvas.
 
 ## Build
 

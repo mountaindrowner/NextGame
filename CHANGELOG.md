@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.45.0
+
+- **Portrait only, zoomed out about 10%.**
+  - **Fights:** shown at 284×213 instead of 256×192, so everything is about 10% smaller with more stage around it. The arena, the fighters' moves and the HUD are unchanged; the extra margin continues each stage as a mirror of its own edges, and dims with it during supers.
+  - **Story mode:** zoomed out another 10%, from 320×240 to 352×264. The floor sits a little lower to fit.
+  - **Menus and cutscenes:** unchanged.
+- **Fix:** with the wider Story view, a wave's camera stop could sit past the end of the level art, leaving enemies where you couldn't reach them. Stops now end at the level's edge.
+- **Landscape no longer switches on by itself** when the phone is turned. It's still there for experiments with `?layout=wide`.
+
 ## 1.44.1
 
 - **Landscape is now actually bigger.** In 1.44.0 the sideways picture was barely larger than upright: on an iPhone 13, 375×250 versus 332×249. Now:

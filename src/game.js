@@ -435,10 +435,10 @@ let scene=null;const fade={a:0,dir:0,cb:null};
 // WIDE (GBA-style landscape): the screen is 3:2. Story mode really is wider (360x240); every other scene keeps its
 // 256x192 picture, centred on a 288x192 canvas with dark side bars.
 let WIDE=false;
-function setView(w,h){const cw=WIDE&&w===256?288:w;if(W===w&&H===h&&cv.width===cw)return;W=w;H=h;OX=(w-256)/2;OY=(h-192)/2;cv.width=cw;cv.height=h;ctx.imageSmoothingEnabled=false;FY=h>192?180:140}
-function fitView(s=scene){const b=s===Brawl;setView(b?(WIDE?360:320):256,b?240:192)}
+function setView(w,h,cw=WIDE&&w===256?288:w,ch=h){if(W===w&&H===h&&cv.width===cw&&cv.height===ch)return;W=w;H=h;OX=(w-256)/2;OY=(h-192)/2;cv.width=cw;cv.height=ch;ctx.imageSmoothingEnabled=false;FY=h>192?Math.min(h-60,200):140}
+function fitView(s=scene){if(s===Brawl)return setView(WIDE?360:352,WIDE?240:264);if(s===Fight&&!WIDE)return setView(256,192,284,213);setView(256,192)}
 function wideWanted(){const q=new URLSearchParams(location.search).get('layout');if(q==='wide')return true;if(q==='tall')return false;
-  return innerWidth>innerHeight&&matchMedia('(pointer:coarse)').matches}// a phone or tablet held sideways
+  return false}// landscape is opt-in only (?layout=wide); the owner prefers the portrait handheld
 function applyLayout(){WIDE=wideWanted();document.documentElement.classList.toggle('land',WIDE);if(typeof scene!=='undefined'&&scene)fitView()}
 function go(s,...a){CEL.stop();fitView(s);scene=s;s.t=0;s.enter&&s.enter(...a);if(typeof updateVis==='function')try{updateVis()}catch(e){}}
 // ---------------- CELEBRATION (confetti + fireworks) ----------------
@@ -2799,9 +2799,9 @@ const Brawl={
     this.playerHits();this.phys(P)}
     this.P=this.ps[0];this.updAlly();this.hazards();if(this.ph==='continue'||this.ph==='over')return;
     // camera (forward only) and the wave lock
-    const lock=this.wave?this.wave.at:this.wi<L.waves.length?L.waves[this.wi].at:L.len-W;
+    const end=Math.max(0,L.len-W),lock=Math.min(end,this.wave?this.wave.at:this.wi<L.waves.length?L.waves[this.wi].at:end);// a wave's stop never runs past the end of the level
     {const xs=this.ps.filter(Q=>!Q.out).map(Q=>Q.x),hi=Math.max(...xs),lo=Math.min(...xs);this.cx=clamp(Math.max(this.cx,Math.min(hi-W*.44,lo-12)),0,lock)}
-    if(!this.wave&&this.wi<L.waves.length&&this.cx>=L.waves[this.wi].at-.5){this.wave=L.waves[this.wi];this.q=[...this.wave.foes];this.qT=0;this.goT=0}
+    if(!this.wave&&this.wi<L.waves.length&&this.cx>=Math.min(end,L.waves[this.wi].at)-.5){this.wave=L.waves[this.wi];this.q=[...this.wave.foes];this.qT=0;this.goT=0}
     for(const Q of this.ps)Q.x=clamp(Q.x,this.cx+12,Math.min(this.cx+W-12,L.len-10));
     if(this.wave){if(this.q.length&&--this.qT<=0&&this.foes.filter(e=>!e.dead&&!e.dazed).length<4){this.spawn(this.q.shift());this.qT=45}
       if(!this.q.length&&!this.foes.some(e=>!e.dead&&!e.dazed)){this.wave=null;if(this.ride)return void SFX.ok();this.wi++;this.goT=150;SFX.ok();if(this.wi>=L.waves.length)this.goT=400}}
@@ -3040,7 +3040,15 @@ function step(){pollInput();if(NET.lock&&!netStep()){CEL.update();return}frameNo
   if(scene.update)scene.update();scene.t++;if(NET.lock)netAfter()}
 function drawToast(){if(!TOAST)return;const a=Math.max(0,Math.min(1,TOAST.l/20,(170-TOAST.l)/10));ctx.globalAlpha=a;box(52,150,152,22,'rgba(30,20,0,.9)','#ffd23a');
   drawText('BADGE UNLOCKED',128,153,'#ffd23a',1,{align:'center',shadow:false});drawText(TOAST.s,128,162,'#fff',1,{align:'center',shadow:false});ctx.globalAlpha=1}
-function render(){ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;if(cv.width>W){ctx.fillStyle='#0b0a14';ctx.fillRect(0,0,cv.width,cv.height);ctx.translate((cv.width-W)/2,0)}scene.draw();drawToast();
+// a fight shown on a canvas bigger than its 256x192 world: the stage continues into the margin as a mirror of its own edges
+function fightMargins(){const S=CH[F.cfg.stage]&&CH[F.cfg.stage].stage;if(!S)return;const cw=cv.width,ch=cv.height,ox=(cw-W)/2,rm=cw-ox-W,bh=ch-H;
+  ctx.save();ctx.translate(ox,0);ctx.scale(-1,1);ctx.drawImage(S,0,0,ox,H,0,0,ox,H);ctx.restore();
+  ctx.save();ctx.translate(ox+W,0);ctx.scale(-1,1);ctx.drawImage(S,W-rm,0,rm,H,-rm,0,rm,H);ctx.restore();
+  ctx.save();ctx.translate(0,H*2);ctx.scale(1,-1);ctx.drawImage(cv,0,H-bh,cw,bh,0,H-bh,cw,bh);ctx.restore()}
+function marginShade(){if(scene!==Fight||!F||cv.width<=W)return;const a=F.cine?.6:F.superFlash>0?.55:0;if(!a)return;const cw=cv.width,ch=cv.height,ox=(cw-W)/2;
+  ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle=`rgba(0,0,16,${a})`;ctx.fillRect(0,0,ox,ch);ctx.fillRect(ox+W,0,cw-ox-W,ch);ctx.fillRect(ox,H,W,ch-H);ctx.restore()}
+function render(){ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;if(cv.width>W||cv.height>H){ctx.fillStyle='#0b0a14';ctx.fillRect(0,0,cv.width,cv.height);
+    if(scene===Fight&&F&&F.cfg){const ox=(cv.width-W)/2;ctx.save();ctx.translate(ox,0);ctx.drawImage(CH[F.cfg.stage].stage,0,0);ctx.restore();fightMargins()}ctx.translate((cv.width-W)/2,0)}scene.draw();marginShade();drawToast();
   if(NET.lock&&NET.stall>20){box(58,86,140,18,'rgba(10,10,30,.9)','#5ab4ff');drawText('WAITING FOR OPPONENT'+'...'.slice(0,(performance.now()/300|0)%4),128,92,'#fff',1,{align:'center',shadow:false})}if(fade.a>0){ctx.fillStyle=`rgba(0,0,0,${fade.a})`;ctx.fillRect(0,0,W,H)}}
 let last=performance.now(),acc=0;
 // the game runs at 54 ticks a second (10% slower than 60): a touch heavier, less frantic
