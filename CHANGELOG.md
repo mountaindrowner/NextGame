@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.33.1
+
+- **Agent Reyes wears green.** His cap, vest and collar are emerald green in every animation, his standing sprite, his portraits and his head icon. His aura colour (the select card, effect outlines, his move names) and his drone's stripe are green too.
+  - `tools/recolor_reyes.py` does this. It shifts only his saturated gear reds and keeps their shading. His skin, boots, the knuckle's fire and Eagle Rise's red-white-blue ribbon stay as they were.
+  - The portraits are rebuilt from the recoloured full-size art. Only the big red areas change there, so his lips and face shadows stay natural.
+- No PixelLab generations used.
+
 ## 1.33.0
 
 - **New fighter: Agent Reyes, "The Sentinel".** A patriotic agent of the Super Americas Border Regency (S.A.B.R.), made from the owner's art. He's the roster's **all-rounder**, and his kit is built from the classic all-rounder toolbox: a dashing punch, an anti-air uppercut, a zoning tool, and an air move.
