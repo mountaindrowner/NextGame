@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.49.0
+
+- **Standard PC fighting-game keys.**
+
+  | | Keys |
+  |---|---|
+  | Move | WASD (arrows also work) |
+  | Punch / Kick | U (top row) / J (bottom row), like Tekken and Street Fighter on PC |
+  | Special | I (or O) |
+  | Focus / Jump | K (or L) |
+  | Pause | Esc (backs out of menus) |
+  | Start / Select | Enter / Tab |
+
+  The old X/Z/C/V keys still work.
+- **Gamepad, standard layout in fights:** X punch, A kick, Y/RB/RT special, B/LB/LT focus. In menus, A is still OK and B back.
+- **Key guide in the PC layout:**
+  - **In fights and Story mode:** a faint overlay (20% opacity) in the bottom corners shows WASD and U/I/J/K in the button colours, and each key lights up while held. It hides for gamepad or touch players.
+  - **In menus:** the side panel lists the keys, and hints read "U: OK  J: BACK".
+- **Fix:** during a special's screen flash, a darker outline showed around the PC fight arena. Fixed.
+
 ## 1.48.0
 
 - **PC layout.** On a computer with a mouse and a wide window (or `?layout=pc`), the handheld shell goes away and the game fills the window at 16:9 (384×216), scaled by a whole number so pixels stay sharp. That's 5× on a 1080p screen and 3× in a 1280×720 window. Phones keep the handheld.

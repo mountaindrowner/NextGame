@@ -37,7 +37,8 @@ const FIRE=['#fffbc0','#ffe66a','#ffc93a','#ffa22a','#ff7a1e','#f0501c','#c8301a
 const ICE=['#ffffff','#d8f4ff','#a8e2ff','#7ac8ff','#4aa0ff','#3a74e8','#2a4ac0'];
 let TA=null;// text audit (tools/text_audit.js): records every text and box drawn in a frame
 function textW(s,sc=1){return String(s).length*6*sc-sc}
-function drawText(s,x,y,col='#fff',sc=1,o={}){
+function drawText(s,x,y,col='#fff',sc=1,o={}){if(PC&&!PADUSED&&typeof s==='string'&&s.indexOf(': ')>0)s=s.replace(/\bA: /g,'U: ').replace(/\bB: /g,'J: ');// PC keyboard: hints name the keys
+  
   s=String(s).toUpperCase();
   if(o.align==='center')x-=textW(s,sc)/2;else if(o.align==='right')x-=textW(s,sc);
   x=Math.round(x);y=Math.round(y);
@@ -60,8 +61,9 @@ const held2={},prev2={},pressed2={},latch2={},keyHeld2={};KEYS.forEach(k=>{held2
 let TWO=false;// (local 2 players was removed; online fills the player-2 input slots)
 function setTwo(v){if(TWO===v)return;TWO=v;for(const k of KEYS){keyHeld[k]=keyHeld2[k]=false}}
 function padState(g){const o={};if(!g)return o;const b=i=>!!(g.buttons[i]&&g.buttons[i].pressed),ax=g.axes||[];
-  o.left=b(14)||ax[0]<-.5;o.right=b(15)||ax[0]>.5;o.up=b(12)||ax[1]<-.5;o.down=b(13)||ax[1]>.5;o.a=b(0)||b(3)||b(5)||b(7);o.b=b(1)||b(3)||b(5)||b(7);o.jump=b(2)||b(4);o.start=b(9);o.select=b(8);return o}
-function pollInput(){const gp=navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean):[];
+  o.left=b(14)||ax[0]<-.5;o.right=b(15)||ax[0]>.5;o.up=b(12)||ax[1]<-.5;o.down=b(13)||ax[1]>.5;const fight=typeof scene!=='undefined'&&(scene===Fight||scene===Brawl),sp=b(3)||b(5)||b(7);
+  if(fight){o.a=b(2)||sp;o.b=b(0)||sp;o.jump=b(1)||b(4)||b(6)}else{o.a=b(0)||b(2);o.b=b(1);o.jump=b(4)}o.start=b(9);o.select=b(8);return o}
+function pollInput(){const gp=navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean):[];if(gp[0]&&gp[0].buttons.some(x=>x.pressed))PADUSED=true;
   const g1=padState(gp[0]),g2={};
   for(const k of KEYS){const h=!!(touchHeld[k]||keyHeld[k]||mouseHeld[k]||g1[k]);pressed[k]=(h&&!prev[k])||latch[k];latch[k]=false;held[k]=h;prev[k]=h;
     const h2=!!(keyHeld2[k]||g2[k]);pressed2[k]=(h2&&!prev2[k])||latch2[k];latch2[k]=false;held2[k]=h2;prev2[k]=h2}
@@ -95,12 +97,16 @@ let mDown=false;
 document.addEventListener('mousedown',e=>{mDown=true;unlockAudio();const o={};hitTest(e.clientX,e.clientY,o);applyPointer(mouseHeld,o)});
 document.addEventListener('mousemove',e=>{if(!mDown)return;const o={};hitTest(e.clientX,e.clientY,o);applyPointer(mouseHeld,o)});
 document.addEventListener('mouseup',()=>{mDown=false;applyPointer(mouseHeld,{})});
-const KM={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',KeyW:'up',KeyS:'down',KeyA:'left',KeyD:'right',KeyJ:'b',KeyK:'a',KeyZ:'b',KeyX:'a',KeyC:'sp',KeyL:'sp',KeyV:'jump',KeyI:'jump',Enter:'start',Space:'start',ShiftRight:'select',Backspace:'select'};
-function keyRoute(c){return KM[c]?[1,KM[c]]:null}
+// keyboard: the PC fighting-game standard. WASD moves; punches on the top row, kicks below (U punch, J kick, like Tekken and
+// Street Fighter's U/I/O + J/K/L); I (or O) special, K (or L) focus/jump. Arrows + X/Z/C/V still work.
+const KM={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',KeyW:'up',KeyS:'down',KeyA:'left',KeyD:'right',
+  KeyU:'a',KeyJ:'b',KeyI:'sp',KeyO:'sp',KeyK:'jump',KeyL:'jump',KeyX:'a',KeyZ:'b',KeyC:'sp',KeyV:'jump',
+  Enter:'start',Space:'start',Escape:'esc',ShiftRight:'select',Backspace:'select',Tab:'select'};
+function keyRoute(c){const k=KM[c];if(!k)return null;if(k==='esc')return[1,(typeof scene!=='undefined'&&(scene===Fight||scene===Brawl))?'start':'b'];return[1,k]}
 // SP (special) key = A+B in one press
-document.addEventListener('keydown',e=>{const r=keyRoute(e.code);if(!r)return;e.preventDefault();unlockAudio();TOUCHY=false;const[pl,k0]=r;
+document.addEventListener('keydown',e=>{const r=keyRoute(e.code);if(!r)return;e.preventDefault();unlockAudio();TOUCHY=false;PADUSED=false;const[pl,k0]=r;
   for(const k of k0==='sp'?['a','b']:[k0]){if(pl===1){if(!keyHeld[k])latch[k]=true;keyHeld[k]=true}else{if(!keyHeld2[k])latch2[k]=true;keyHeld2[k]=true}}updateVis()});
-document.addEventListener('keyup',e=>{const r=keyRoute(e.code);if(!r)return;for(const k of r[1]==='sp'?['a','b']:[r[1]]){if(r[0]===1)keyHeld[k]=false;else keyHeld2[k]=false}updateVis()});
+document.addEventListener('keyup',e=>{const r=keyRoute(e.code);if(!r)return;for(const k of r[1]==='sp'?['a','b']:e.code==='Escape'?['start','b']:[r[1]]){if(r[0]===1)keyHeld[k]=false;else keyHeld2[k]=false}updateVis()});
 document.addEventListener('contextmenu',e=>e.preventDefault());
 function updateVis(){const h=k=>touchHeld[k]||keyHeld[k]||mouseHeld[k];
   els.dpad.className='btn mode-'+stickMode()+(h('up')?' u':'')+(h('down')?' d':'')+(h('left')?' l':'')+(h('right')?' r':'')+(h('dl')||h('dr')?' dash':'');
@@ -434,7 +440,7 @@ let scene=null;const fade={a:0,dir:0,cb:null};
 // Story mode draws at 320x240 (same screen size, smaller pixels: a zoomed-out camera showing 25% more of the stage)
 // WIDE (GBA-style landscape): the screen is 3:2. Story mode really is wider (360x240); every other scene keeps its
 // 256x192 picture, centred on a 288x192 canvas with dark side bars.
-let WIDE=false,PC=false;
+let WIDE=false,PC=false,PADUSED=false;
 function setView(w,h,cw=WIDE&&w===256?288:w,ch=h){if(W===w&&H===h&&cv.width===cw&&cv.height===ch)return;W=w;H=h;OX=(w-256)/2;OY=(h-192)/2;cv.width=cw;cv.height=ch;ctx.imageSmoothingEnabled=false;FY=h>192?Math.min(h-60,200):140}
 function fitView(s=scene){if(PC){if(s===Brawl)return setView(384,216);return setView(256,192,384,216)}if(s===Brawl)return setView(WIDE?360:352,WIDE?240:264);if(s===Fight&&!WIDE)return setView(256,192,284,213);setView(256,192)}
 function wideWanted(){const q=new URLSearchParams(location.search).get('layout');if(q==='wide')return true;if(q==='tall')return false;
@@ -3076,17 +3082,26 @@ function fightMargins(){const S=CH[F.cfg.stage]&&CH[F.cfg.stage].stage;if(!S)ret
   if(ox>0){ctx.fillStyle=sh(0,0,ox,0,ox>20?.72:.4);ctx.fillRect(0,0,ox,ch);ctx.fillStyle=sh(cw,0,ox+W,0,rm>20?.72:.4);ctx.fillRect(ox+W,0,rm,ch)}
   if(bh>0){ctx.fillStyle=sh(0,ch,0,H,.45);ctx.fillRect(0,H,cw,bh)}}
 function marginShade(){if(scene!==Fight||!F||cv.width<=W)return;const a=F.cine?.6:F.superFlash>0?.55:0;if(!a)return;const cw=cv.width,ch=cv.height,ox=(cw-W)/2;
-  ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle=`rgba(0,0,16,${a})`;ctx.fillRect(0,0,ox,ch);ctx.fillRect(ox+W,0,cw-ox-W,ch);ctx.fillRect(ox,H,W,ch-H);ctx.restore()}
+  ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle=`rgba(0,0,16,${a})`;ctx.fillRect(0,0,ox-4,ch);ctx.fillRect(ox+W+4,0,cw-ox-W-4,ch);ctx.fillRect(ox-4,H+4,W+8,ch-H-4);ctx.restore()}// the fight's own dimming already reaches 4 px past its edges
 // PC frame around a 256x192 screen: night-indigo panels with the menu stripes, the logo on the left, the keys on the right
 function pcFrame(){const cw=cv.width,ch=cv.height,ox=(cw-W)/2,oy=(ch-H)/2;const g=ctx.createLinearGradient(0,0,0,ch);g.addColorStop(0,'#16142e');g.addColorStop(1,'#0c0a18');ctx.fillStyle=g;ctx.fillRect(0,0,cw,ch);
   ctx.fillStyle='rgba(255,255,255,.035)';for(let k=-ch;k<cw;k+=10){ctx.beginPath();ctx.moveTo(k,0);ctx.lineTo(k+4,0);ctx.lineTo(k+4+ch,ch);ctx.lineTo(k+ch,ch);ctx.fill()}
   ctx.fillStyle='#000';ctx.fillRect(ox-3,oy-3,W+6,H+6);ctx.fillStyle='#e8b030';ctx.fillRect(ox-2,oy-2,W+4,1);ctx.fillRect(ox-2,oy+H+1,W+4,1);ctx.fillRect(ox-2,oy-2,1,H+4);ctx.fillRect(ox+W+1,oy-2,1,H+4);
   const L=ox/2;drawText('BONFIRE',L,oy+10,'#fff',1,{align:'center',grad:FIRE,outline:'#300'});drawText('BASH',L,oy+20,'#fff',1,{align:'center',grad:FIRE,outline:'#300'});
   drawText('V'+(typeof GAME_VERSION!=='undefined'?GAME_VERSION:''),L,oy+H-10,'#556',1,{align:'center',shadow:false});
-  const R=ox+W+ox/2,K=[['KEYS',''],['MOVE','ARROWS'],['A','X / K'],['B','Z / J'],['SP','C / L'],['FOCUS','V / I'],['START','ENTER'],['SELECT','SHIFT']];
-  K.forEach(([a,b],i)=>{if(!b){drawText(a,R,oy+10,'#e8b030',1,{align:'center',shadow:false});return}const y=oy+14+i*22;drawText(a,R,y,BTNC[a]||'#ff9a6a',1,{align:'center',shadow:false});drawText(b,R,y+9,'#aab',1,{align:'center',shadow:false})})}
+  const R=ox+W+ox/2,K=[['KEYS',''],['MOVE','W A S D'],['PUNCH','U'],['KICK','J'],['SPECIAL','I'],['FOCUS','K'],['PAUSE','ESC'],['SELECT','TAB']];
+  K.forEach(([a,b],i)=>{if(!b){drawText(a,R,oy+10,'#e8b030',1,{align:'center',shadow:false});return}const y=oy+14+i*22;drawText(a,R,y,BTNC[{PUNCH:'A',KICK:'B',SPECIAL:'SP'}[a]||a]||'#ff9a6a',1,{align:'center',shadow:false});drawText(b,R,y+9,'#aab',1,{align:'center',shadow:false})})}
+// PC: a faint key guide in the bottom corners during fights and Story mode (20% opacity; a key lights up while it's held)
+function pcKeys(){if(!PC||PADUSED||TOUCHY||!(scene===Fight||scene===Brawl)||(F&&(F.paused||F.cine)))return;const cw=cv.width,ch=cv.height,sz=11,gap=2;
+  ctx.save();ctx.setTransform(1,0,0,1,0,0);
+  const cap=(x,y,t,col,on)=>{ctx.globalAlpha=on?.75:.2;ctx.fillStyle='#000';ctx.fillRect(x-1,y-1,sz+2,sz+2);ctx.fillStyle=on?col:'#2a2840';ctx.fillRect(x,y,sz,sz);ctx.fillStyle=col;ctx.fillRect(x,y,sz,1);
+    drawText(t,x+sz/2+1,y+2,on?'#000':col,1,{align:'center',shadow:false})};
+  const y0=ch-2*sz-gap-6,lx=8,rx=cw-8-2*sz-gap,s=sz+gap;
+  cap(lx+s,y0,'W','#d8d0e8',held.up);cap(lx,y0+s,'A','#d8d0e8',held.left);cap(lx+s,y0+s,'S','#d8d0e8',held.down);cap(lx+2*s,y0+s,'D','#d8d0e8',held.right);
+  const both=held.a&&held.b;cap(rx,y0,'U',BTNC.A,held.a&&!both);cap(rx+s,y0,'I',BTNC.SP,both);cap(rx,y0+s,'J',BTNC.B,held.b&&!both);cap(rx+s,y0+s,'K',BTNC.FOCUS,held.jump);
+  ctx.globalAlpha=1;ctx.restore()}
 function render(){ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;if(cv.width>W||cv.height>H){ctx.fillStyle='#0b0a14';ctx.fillRect(0,0,cv.width,cv.height);
-    if(scene===Fight&&F&&F.cfg){const ox=(cv.width-W)/2;ctx.save();ctx.translate(ox,0);ctx.drawImage(CH[F.cfg.stage].stage,0,0);ctx.restore();fightMargins()}else if(PC)pcFrame();ctx.translate((cv.width-W)/2,scene===Fight?0:(cv.height-H)/2)}scene.draw();marginShade();drawToast();
+    if(scene===Fight&&F&&F.cfg){const ox=(cv.width-W)/2;ctx.save();ctx.translate(ox,0);ctx.drawImage(CH[F.cfg.stage].stage,0,0);ctx.restore();fightMargins()}else if(PC)pcFrame();ctx.translate((cv.width-W)/2,scene===Fight?0:(cv.height-H)/2)}scene.draw();marginShade();pcKeys();drawToast();
   if(NET.lock&&NET.stall>20){box(58,86,140,18,'rgba(10,10,30,.9)','#5ab4ff');drawText('WAITING FOR OPPONENT'+'...'.slice(0,(performance.now()/300|0)%4),128,92,'#fff',1,{align:'center',shadow:false})}if(fade.a>0){ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle=`rgba(0,0,0,${fade.a})`;ctx.fillRect(0,0,cv.width,cv.height);ctx.restore()}}
 let last=performance.now(),acc=0;
 // the game runs at 54 ticks a second (10% slower than 60): a touch heavier, less frantic

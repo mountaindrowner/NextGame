@@ -6,13 +6,13 @@ A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with twelve figh
 
 Open `dist/index.html` in a browser. It is a single self-contained file (also ready to upload to itch.io as an HTML game).
 
-Controls: four face buttons, the same in every mode — **A** punch (`X`/`K`), **B** kick (`Z`/`J`), **SP** special (`C`/`L`), **JUMP** (`V`/`I`; in fights up jumps and this button is FOCUS; in Story up/down is depth). Arrows/WASD move, Enter = Start (pause shows each fighter's moves and combo). On touch screens the pad works differently by mode (Options > CONTROLS shows both diagrams):
+Controls: four face buttons, the same in every mode — **A** punch (`U`; also `X`), **B** kick (`J`; also `Z`), **SP** special (`I`/`O`; also `C`), **JUMP** (`K`/`L`; also `V`; in fights up jumps and this button is FOCUS; in Story up/down is depth). Arrows/WASD move, Enter = Start (pause shows each fighter's moves and combo). On touch screens the pad works differently by mode (Options > CONTROLS shows both diagrams):
 
 - **Fights:** a zoned stick, like mobile Street Fighter IV. Wide left/right bands walk (back blocks), pushing to the **far edge dashes** (no double-tap needed), up jumps, down crouches, down-back crouch-blocks. A knob follows the thumb, and the zones are labelled round the pad.
 - **Story mode (beat 'em up):** a plain 8-way stick, where up and down move in and out of the screen. No jump or dash zones; jump is the JUMP button.
 - **Menus:** an 8-way pad.
 
-`node tools/touch.js` checks the zones with real touch events. Gamepads work (A punch, B kick, Y/RB special, X/LB jump). A+B together, the **SP** button (on screen; `C`/`L` on a keyboard; Y/RB on a gamepad), or down→forward+A, fires the special move. SP is just A+B in one press, so down+SP, back+SP and forward+SP work too.
+`node tools/touch.js` checks the zones with real touch events. Gamepads work: in fights the standard layout (X punch, A kick, Y/RB/RT special, B/LB/LT focus or jump); in menus A is OK and B is back. A+B together, the **SP** button (on screen; `I`/`O` on a keyboard; Y/RB on a gamepad), or down→forward+A, fires the special move. SP is just A+B in one press, so down+SP, back+SP and forward+SP work too.
 
 ## Fighting system
 
@@ -21,8 +21,8 @@ Controls: four face buttons, the same in every mode — **A** punch (`X`/`K`), *
 - **Special cancel** — any connected normal except the sweep cancels into the special (A+B). A+B pressed together cancels the first button's normal straight into the special.
 - **Dash** — double-tap forward or back; the back-dash has brief invincibility.
 - **Super meter** — fills when you hit (+7, heavy +10), get hit (+5) or block; forward + A+B with a full bar fires your fighter's unique super (see Supers). The meter carries between rounds.
-- **Focus attack** — hold the FOCUS button (the JUMP button becomes FOCUS in fights; `V`/`I` on a keyboard, X/LB on a gamepad), then let go to strike. While charging it absorbs one hit at half damage. Held 18 frames (level 2) the strike crumples the opponent, who slowly falls: a free combo starter. At 42 frames (level 3) it fires by itself and can't be blocked. A dash (push to the stick's edge, or double-tap) cancels the charge, or the strike once it hits. **Focus cancel:** press FOCUS during a special to cancel it into a focus for half the super bar; then dash to make it safe, or keep charging.
-- **EX specials** — hold FOCUS and press SP (or press FOCUS right after SP; on a keyboard `V` + `C`) for an EX version of that special. It costs a third of the super bar (the bar has two marks), works even while the special is on cooldown, does 30% more damage with extra hit-stun (projectiles fly 20% faster), and shrugs off one hit at half damage in its first 20 frames. It glows cyan. Every fighter has an EX trial, and the CPU uses EX now and then, mostly to finish combos.
+- **Focus attack** — hold the FOCUS button (the JUMP button becomes FOCUS in fights; `K` on a keyboard, B/LB on a gamepad), then let go to strike. While charging it absorbs one hit at half damage. Held 18 frames (level 2) the strike crumples the opponent, who slowly falls: a free combo starter. At 42 frames (level 3) it fires by itself and can't be blocked. A dash (push to the stick's edge, or double-tap) cancels the charge, or the strike once it hits. **Focus cancel:** press FOCUS during a special to cancel it into a focus for half the super bar; then dash to make it safe, or keep charging.
+- **EX specials** — hold FOCUS and press SP (or press FOCUS right after SP; on a keyboard `K` + `I`) for an EX version of that special. It costs a third of the super bar (the bar has two marks), works even while the special is on cooldown, does 30% more damage with extra hit-stun (projectiles fly 20% faster), and shrugs off one hit at half damage in its first 20 frames. It glows cyan. Every fighter has an EX trial, and the CPU uses EX now and then, mostly to finish combos.
 - **Throws** — forward/back + B right next to a grounded opponent; press A or B during the grab to break it. Back throws switch sides. Keksan's Thai Clinch is an unblockable command grab.
 - **Counter hits** — hitting a move in its start-up does +20% damage and extra hit-stun.
 - **Juggles & scaling** — at most 2 extra hits on a falling opponent; damage scales down from the 3rd hit (85%, 75%, … 50%).
@@ -278,6 +278,7 @@ On a computer with a mouse and a wide window the handheld shell is dropped and t
 - Story mode draws natively at 384×216.
 - Fights keep the 256×192 arena and continue each stage into the margins, fading toward the edges.
 - Every other screen is 256×192 in a framed panel, with the logo on one side and the keys on the other.
+- Keyboard: the PC fighting-game standard. WASD (or arrows) moves, `U` punch, `J` kick, `I` special, `K` focus/jump, `Esc` pause (back in menus), `Enter` start, `Tab` select. Menu hints name the keys ("U: OK  J: BACK"). During fights and Story mode a faint key guide (20% opacity) sits in the bottom corners, and each key lights up while it's held.
 
 For itch.io, set the embed size to 16:9 (for example 960×540) and enable the fullscreen button in the game's settings (Edit game → Embed options); the game switches to the PC layout whenever its window is wide.
 
