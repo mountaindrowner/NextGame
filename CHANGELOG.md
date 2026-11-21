@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.32.0
+
+- **Estrella's Grand Finale is a full stage show now.** Same hits and timing, so balance is unchanged:
+  - **Lights down:** the stage goes dark and a spotlight drops on her, with glitter falling through it. A gold star spins up behind her.
+  - **The big note:** coloured stage beams sweep the arena while she holds the note, mic glowing. An equalizer runs the whole floor and jumps on every beat.
+  - **The rings:** each one is a thick glowing wave of sound in gold, pink, cyan or purple, with music notes riding it. Each has its own sung note, and notes stream off her mic between them.
+  - **The finish:** the last ring is white-gold, with a big chord and a flash. "BRAVO!" pops up, then fireworks, confetti and a cheering crowd, and she takes it in with her win pose.
+- **High Note:** a flash and gold burst at the mic as the note leaves. The note glows gold and pink, has two twinkles orbiting it, and leaves a sparkle trail.
+- **Encore:** the ring lands with a burst. Every pulse drops a spotlight on it, sings a note, and throws equalizer bars and music notes up out of the floor. The ring itself is bolder.
+- **Siren Scream:** glowing sound waves with a cyan and pink colour split, speed lines and a flare at the mic. The screen shakes on every hit, with cyan sparks where it lands.
+
 ## 1.31.1
 
 - **Estrella's outfit is covered.** Her generated sprite had a cropped top that showed her midriff in most moves. In the crouching punch, her top even turned into a white crop top. Every frame now has her black top down to the belt, as in her first design.

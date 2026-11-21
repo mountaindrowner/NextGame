@@ -51,7 +51,7 @@ Forward + A+B with a full meter. Each fighter's super is unique (`SUPERS` in `sr
 | Lawslie | Full Arrest | charging grab, three taser zaps, takedown; cuffed for 8 s |
 | Devanté | Fast Break | dribble drive, pop-up, alley-oop slam dunk |
 | Keksan | Eight Limbs | dash in, then fists, knees, elbows and shins (eight strikes), finished with a launching flying knee |
-| Estrella | Grand Finale | spotlight, then rings of sound roll out across the whole stage; the last one knocks down |
+| Estrella | Grand Finale | lights down and a spotlight; stage beams, a floor equalizer and five glowing rings of sound roll across the whole stage, each a sung note; the last knocks down, then fireworks and a cheering crowd |
 | Marcus | Stage Dive | homing leap that crashes down (overhead), then a five-note bass jam |
 
 ## Fighting styles
