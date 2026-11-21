@@ -44,7 +44,7 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Keksan | **Tiger Knee** — a leaping flying knee that clears low attacks and launches on a hit | **Thai Clinch** — a short-range command grab: three knees in the clinch, the last shoves them away. Third special (BK+SP): **Teep** — a long push kick that shoves them across the screen; near a wall they bounce off it into a juggle |
 | Estrella | **High Note** — a slow, bobbing music note that floats across and lingers; foes near it walk slower | **Encore** — a ring of sound out in front of her that pulses five times (hits low). Third special (BK+SP): **Siren Scream** — a short cone of sound, 3 hits; it shatters projectiles |
 | Reyes | **Frontier Knuckle** — a dashing, flaming straight right that knocks down | **Drone Strike** — launches his SABR drone; it hovers ahead of him and fires three aimed laser bolts. Third special (BK+SP): **Eagle Rise** — an invincible rising uppercut, two hits, the anti-air. Air special (A+B or SP in the air, once per jump): **Rotor Kicks** — he hangs in the air flutter-kicking, floating up a little, up to five hits |
-| Paezano | **Fastball** — a windup and a fast straight pitch; every 3rd pitch in a row is a flaming 98 MPH heater that knocks down (a flame over his cap means the next one is hot) | **Steal Home** — a feet-first slide: low, goes under projectiles and high attacks, knocks down. Third special (BK+SP): **Glove Snag** — the glove goes up; a projectile that reaches it is caught and fired straight back as a heater |
+| Paezano | **Fastball** — a windup and a fast straight pitch; every 3rd pitch in a row is a flaming 98 MPH heater that knocks down (a flame over his cap means the next one is hot) | **Steal Home** — a feet-first slide: low, goes under projectiles and high attacks, knocks down. Third special (back + A+B), **Home Run Swing**: he pulls a bat and swings it, knocking the opponent flying ("CRACK!", or "HOME RUN!" on a knockout); any projectile in the swing is batted back as a line drive, and his next pitch is a heater |
 | Marcus | **Bass Drop** — twin low shockwaves roll along the floor both ways across the stage (block crouching, or jump them) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen |
 
 ## Supers
@@ -82,7 +82,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Keksan | Striker | 88 | Muay Thai shin kicks: kicks, sweeps and the jumping knee hit 15% harder |
 | Estrella | Area control | 100 | her sound slows foes: anyone standing near her note or her Encore ring walks at 70% speed |
 | Reyes | All-rounder | 92 | squad leader: starts every round with a third of his super meter |
-| Paezano | Pitcher | 104 | high heat: every 3rd pitch in a row (or the first after a Glove Snag) is a 98 MPH heater |
+| Paezano | Pitcher | 104 | high heat: every 3rd pitch in a row (or the first after he bats a projectile back) is a 98 MPH heater |
 | Marcus | Long-range | 104 | slowest walk and dash, longest reach (×1.4, a sound blast off his bass) but normals start 2 frames slower; hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
 
 Reach is measured from each fighter's own sprite (`tools/hitboxes.py`); the archetype's `reach` multiplies it (Vizor 1.12, Estrella 1.05, Samson 1.05). Marcus uses the wider of his sound blast and his sprite.

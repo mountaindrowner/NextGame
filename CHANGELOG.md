@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.46.0
+
+- **Paezano's specials, made obvious.**
+  - **Home Run Swing** (back + A+B) replaces Glove Snag, which only did anything when a projectile was coming. He pulls a bat (drawn in pixels) and swings it with a white swoosh. A hit does 10 damage and knocks them flying, with a CRACK! callout, or HOME RUN! on a knockout. Any projectile in the swing is batted back at the thrower as a LINE DRIVE!, and his next pitch becomes a heater. The CPU swings at incoming projectiles and up close.
+  - **Fastball:** a bigger ball with a longer speed trail, and STRIKE! (or HEATER!) when it hits.
+  - **Voice:** his special-3 line is now "Batter up!".
+- **Tests:** `tools/traits.js` checks the swing both ways: batting Zeke's ball back, and knocking Samson down up close. Paezano still wins 52% of CPU matches.
+
 ## 1.45.1
 
 - **Mateo Paezano is now just PAEZANO:** his name on screen, his logo, the announcer's call, his story lines and his ending.

@@ -36,7 +36,7 @@ CAST = {
     "rex": ("am_adam", 1.0, {"sp1": "Bass drop!", "sp2": "Mic check!", "super": "Stage dive!", "win": "Thank you, good night!", "ko": "Encore... later..."}),
     "kai": ("am_liam", 1.05, {"sp1": "Bounce pass!", "sp2": "Ankles... broken!", "super": "Fast break!", "win": "That's game.", "ko": "That was a foul..."}),
     "keksan": ("am_liam+am_eric", 1.02, {"sp1": "Tiger knee!", "sp2": "Clinch!", "sp3": "Teep!", "super": "Eight limbs!", "win": "Respect the ring.", "ko": "My guard... dropped..."}),
-    "mateo": ("am_puck+am_echo", 1.0, {"sp1": "Fastball!", "sp2": "Safe!", "sp3": "Got it!", "heat": "Ninety-eight!", "super": "Strike three, you're out!", "win": "Ballgame. Thank you, Lord.", "ko": "Pulled... from the game..."}),
+    "mateo": ("am_puck+am_echo", 1.0, {"sp1": "Fastball!", "sp2": "Safe!", "sp3": "Batter up!", "heat": "Ninety-eight!", "super": "Strike three, you're out!", "win": "Ballgame. Thank you, Lord.", "ko": "Pulled... from the game..."}),
     "reyes": ("am_michael+am_adam", 0.98, {"sp1": "Frontier knuckle!", "sp2": "Drone, engage!", "sp3": "Eagle rise!", "air": "Rotor kicks!", "super": "Air support, now!", "win": "Area secure. Mission accomplished.", "ko": "Man down..."}),
     "estrella": ("af_bella", 1.02, {"sp1": "High note!", "sp2": "Encore!", "sp3": "Hear me!", "super": "Grand finale!", "win": "Thank you, Bonfire City!", "ko": "Losing... my voice..."}),
     "padre": ("bm_george", 0.9, {"sp1": "Holy tome!", "sp2": "Benediction!", "super": "Final sermon!", "win": "Go in peace, my son.", "ko": "Forgive me..."}),

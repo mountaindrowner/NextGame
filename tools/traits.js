@@ -139,16 +139,20 @@ const path = require('path');
       const kind = r.F.p1.sp && r.F.p1.sp.kind; let ymax = 0, kh = 0, landed = false;
       for (let i = 0; i < 160; i++) { r.step(1); ymax = Math.max(ymax, r.F.p1.y); if (r.F.p1.sp && r.F.p1.sp.kind === 'hover') kh = Math.max(kh, r.F.p1.sp.hits); landed = landed || (r.F.p1.y === 0 && r.F.p1.state !== 'special'); }
       check('REYES  Rotor Kicks (air, floats, hits)', kind === 'hover' && ymax > 45 && kh >= 4 && landed, `started ${kind}, floated to ${ymax | 0}px from 40, hits ${kh}, landed ${landed}`); }
-    { // PITCHER (Mateo): High Heat, Steal Home, Glove Snag
+    { // PITCHER (Paezano): High Heat, Steal Home, Home Run Swing
       let r = setup('mateo', 'padre', 60, 200); const heats = [];
       for (let n = 0; n < 3; n++) { r.F.p1.state = 'idle'; r.F.p1.sp = null; r.F.p1.spCD = 0; d.startSpecial(r.F.p1, r.F.p2, 1); let h = null; for (let i = 0; i < 40; i++) { r.step(1); const b = r.F.proj.find(p => p.kind === 'pitch'); if (b && h === null) h = !!b.heat; } heats.push(h); r.F.proj = []; r.step(20); }
       check('PITCHER  every 3rd pitch is a heater', heats.join() === 'false,false,true', `heaters: ${heats.join(', ')}`);
       r = setup('mateo', 'estrella', 60, 150); d.startSpecial(r.F.p2, r.F.p1, 1); r.step(22); d.startSpecial(r.F.p1, r.F.p2, 2); let under = false, knock = false;
       for (let i = 0; i < 50; i++) { r.step(1); if (r.F.p1.hp === r.F.p1.mhp && r.F.p1.x > 120) under = true; knock = knock || ['knock', 'down'].includes(r.F.p2.state); }
       check('MATEO  Steal Home (under projectiles, knockdown)', r.F.p1.hp === r.F.p1.mhp && knock, `slid under Estrella's note unhurt ${r.F.p1.hp === r.F.p1.mhp}, knocked down ${knock}`);
-      r = setup('mateo', 'zeke', 60, 190); d.startSpecial(r.F.p2, r.F.p1, 1); let caught = false, back = false;
-      for (let i = 0; i < 70; i++) { r.step(1); if (!caught && r.F.proj.some(p => p.kind && p.owner === r.F.p2 && Math.abs(p.x - r.F.p1.x) < 60) && r.F.p1.state !== 'special') d.startSpecial(r.F.p1, r.F.p2, 4); caught = caught || !!(r.F.p1.sp && r.F.p1.sp.caught); back = back || r.F.proj.some(p => p.kind === 'pitch' && p.heat && p.owner === r.F.p1); }
-      check('MATEO  Glove Snag (catch, fire back a heater)', caught && back && r.F.p1.hp === r.F.p1.mhp, `caught ${caught}, threw back a heater ${back}, unhurt ${r.F.p1.hp === r.F.p1.mhp}`); }
+      r = setup('mateo', 'zeke', 60, 190); d.startSpecial(r.F.p2, r.F.p1, 1); let swung = false, batted = false, z0 = r.F.p2.hp, zlo = z0;
+      for (let i = 0; i < 90; i++) { r.step(1); if (!swung && r.F.proj.some(p => p.kind && p.owner === r.F.p2 && Math.abs(p.x - r.F.p1.x) < 70) && r.F.p1.state !== 'special') { d.startSpecial(r.F.p1, r.F.p2, 4); swung = true; }
+        batted = batted || r.F.proj.some(p => p.batted && p.owner === r.F.p1); zlo = Math.min(zlo, r.F.p2.hp); }
+      check('MATEO  Home Run Swing (bats it back, heater next)', batted && zlo < z0 && r.F.p1.hp === r.F.p1.mhp && !!r.F.p1.heatNext, `batted back ${batted}, Zeke took ${(z0 - zlo).toFixed(1)}, unhurt ${r.F.p1.hp === r.F.p1.mhp}, next pitch a heater ${!!r.F.p1.heatNext}`);
+      r = setup('mateo', 'padre', 60, 122); d.startSpecial(r.F.p1, r.F.p2, 4); let flown = false; const p0 = r.F.p2.hp;
+      for (let i = 0; i < 40; i++) { r.step(1); flown = flown || ['knock', 'down'].includes(r.F.p2.state); }
+      check('MATEO  Home Run Swing (up close: knocks them flying)', flown && r.F.p2.hp < p0, `knocked down ${flown}, damage ${(p0 - r.F.p2.hp).toFixed(1)}`); }
     return out;
   });
   console.log(res.join('\n')); console.log('errors:', errs.length ? errs : 'none'); await br.close();

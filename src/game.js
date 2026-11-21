@@ -283,7 +283,7 @@ const CH={
     col:{skin:'#c88a5a',glove:'#2a2a3a',leg:'#5a6a2a',foot:'#7a4a2a',aura:'#a0b048'},sh:.72,hip:.5,
     quote:"AREA SECURE. NOBODY HURTS THIS CITY ON MY WATCH.",lose:'MAN DOWN... CALL IT IN...',stageName:'SUNSET OUTPOST'},
   mateo:{id:'mateo',name:'PAEZANO',nick:'THE CLOSER',style:'FASTBALL',country:'MOUNDWORKS',countryLabel:'TEAM',flag:'ball',ht:"6'2\" (188 CM)",wt:'205 LB (93 KG)',
-    speed:1.05,power:1.1,def:1,jump:1,stats:[3,4,3],special:'fastball',spName:'FASTBALL',special2:'slide',sp2Name:'STEAL HOME',special3:'snag',sp3Name:'GLOVE SNAG',tr:0,
+    speed:1.05,power:1.1,def:1,jump:1,stats:[3,4,3],special:'fastball',spName:'FASTBALL',special2:'slide',sp2Name:'STEAL HOME',special3:'bat',sp3Name:'HOME RUN SWING',tr:0,
     col:{skin:'#c88a5a',glove:'#c89040',leg:'#e8e8f4',foot:'#2a4ad0',aura:'#3a7aff'},sh:.72,hip:.5,
     quote:"THAT'S BALLGAME. SHAKE IT OFF, YOU'LL GET 'EM NEXT TIME.",lose:'PULLED... FROM THE GAME...',stageName:'MOUNDWORKS FIELD'},
 };
@@ -334,7 +334,7 @@ const TNAME={focus:'FOCUS',leap:'OVERHEAD',jab:'JAB',kick:'KICK',cjab:'LOW JAB',
 // bread-and-butter combos shown in the pause menu
 const BNB={karl:'JAB, JAB, KICK > SP',vizor:'JAB, KICK > SP',padre:'JAB, KICK > SP (OVERHEAD)',zeke:'JAB, KICK > SP',hecky:'LOW JAB, JAB, KICK > SP',lawslie:'JAB, KICK > SP (TASER)',rex:'JAB, KICK > DN+SP',kai:'JAB, KICK > SP',keksan:'JAB, KICK > SP (KNEE)',estrella:'JAB, KICK > BK+SP (SCREAM)',reyes:'JAB, KICK > SP (KNUCKLE)',mateo:'JAB, KICK > DN+SP (SLIDE)'};
 // cooldown (frames) per special; second specials are stronger tools with longer cooldowns
-const SPCD={fastball:60,slide:110,snag:100,knuckle:100,drone:300,eagle:105,hover:70,rush:75,shuriken:75,slam:110,spin:75,flash:110,tome:75,strike:75,split:120,takeover:100,powersuit:720,laser:130,taser:80,cuff:240,bassdrop:80,miccheck:150,bounce:80,crossover:200,knee:90,clinch:260,teep:150,note:80,encore:150,siren:120,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
+const SPCD={fastball:60,slide:110,snag:100,bat:95,knuckle:100,drone:300,eagle:105,hover:70,rush:75,shuriken:75,slam:110,spin:75,flash:110,tome:75,strike:75,split:120,takeover:100,powersuit:720,laser:130,taser:80,cuff:240,bassdrop:80,miccheck:150,bounce:80,crossover:200,knee:90,clinch:260,teep:150,note:80,encore:150,siren:120,step:80,counter:110,charge:120,rising:70,replay:480,bless:600};
 const IMG={};
 function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c}
 function silhouette(img,color){const c=mk(img.width,img.height),x=c.getContext('2d');x.drawImage(img,0,0);x.globalCompositeOperation='source-in';x.fillStyle=color;x.fillRect(0,0,c.width,c.height);return c}
@@ -1090,6 +1090,15 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
       if(q){q.life=0;s.caught=t;f.inv=12;SFX.cuff();F.hitstop=5;addText('CAUGHT!',f.x,GY-f.H-14,'#7ad8ff');sparks(q.x,GY-q.y,'#fff',8)}}
     if(s.caught&&t===s.caught+8)pitch(f,f.x+f.face*20,f.H*.62,{heat:true,tag:'sp3'});
     if(t>=(s.caught?s.caught+24:36))endSpecial(f)}
+  else if(s.kind==='bat'){// Home Run Swing: he pulls a bat and swings; it knocks the opponent flying and bats any projectile back
+    f.vx=t<9?f.face*.7:0;if(t===8)SFX.whooshH();
+    if(t>=9&&t<=15){const x1=f.face>0?f.x-6:f.x-64,x2=f.face>0?f.x+64:f.x+6;
+      for(const q of F.proj)if(q.owner!==f&&q.life>0&&!q.batted&&CATCHABLE(q)&&q.x>x1-6&&q.x<x2+6&&q.y<f.H*1.25){
+        q.owner=f;q.vx=-(q.vx||-f.face*4)*1.5;if(q.vy)q.vy=Math.abs(q.vy)*.4;q.batted=1;q.tag='sp3';q.id=null;q.life=Math.max(q.life,80);f.heatNext=1;F.hitstop=6;
+        sparks(q.x,GY-q.y,'#ffffff',12);SFX.block();addText('LINE DRIVE!',q.x,GY-q.y-16,'#ffe66a')}
+      if(!s.hits){const r=tryHit(f,o,{x1,x2,y1:f.y+f.H*.22,y2:f.y+f.H*.95},{dmg:10,stun:24,bs:12,kb:4.2,lv:'mid',knock:true,heavy:true,tag:'sp3'});
+        if(r){s.hits=1;if(r==='hit'){F.shake=Math.max(F.shake,7);addText(o.hp<=0?'HOME RUN!':'CRACK!',o.x,GY-o.H-14,'#ffe66a');SFX.bell&&SFX.bell()}}}}
+    if(t>=34)endSpecial(f)}
   else if(s.kind==='knuckle'){// Frontier Knuckle: a dashing, flaming straight right; knocks down on a hit
     if(t<6)f.vx=0;else if(t<22&&!s.hits){f.vx=f.face*6;if(t%2===0)f.ghosts.push({x:f.x,y:f.y,l:10});if(t===6)SFX.rush()}else f.vx*=.6;
     if(t>=8&&t<22&&!s.hits){const hb={x1:f.face>0?f.x:f.x-46,x2:f.face>0?f.x+46:f.x,y1:f.y+f.H*.35,y2:f.y+f.H*.85};
@@ -1333,7 +1342,7 @@ function updateProj(){for(const p of F.proj){if(p.dim==null){p.dim=(p.owner.sp&&
     else if(r&&p.kind==='quake'){p.life=0;if(r==='hit')sparks(p.x,GY-p.y-4,'#5ae0ff',8)}
     else if(r&&p.kind==='wave'){p.life=0;if(r==='hit')o.vx=Math.sign(p.vx)*5.2}
     else if(r&&p.kind==='prong'){p.life=0;if(r==='hit'){o.zap=46;SFX.zap()}}
-    else if(r&&p.kind==='pitch'){p.life=0;sparks(p.x,GY-p.y,p.heat?'#ff9a3a':'#ffffff',p.heat?14:8);
+    else if(r&&p.kind==='pitch'){p.life=0;sparks(p.x,GY-p.y,p.heat?'#ff9a3a':'#ffffff',p.heat?14:8);if(!p.call&&r==='hit')addText(p.heat?'HEATER!':'STRIKE!',o.x,GY-o.H-14,p.heat?'#ff9a3a':'#ffffff');
       if(p.call){const C=['STRIKE ONE!','STRIKE TWO!',"STRIKE THREE! YOU'RE OUT!"];addText(r==='block'?'FOUL BALL!':C[p.call-1],o.x,GY-o.H-14-(p.call-1)*6,r==='block'?'#ffffff':'#ffd23a');SFX.bell();if(p.call===3&&r==='hit'){F.shake=12;F.camFlash=6;F.hitstop=12;CEL.burst(20)}}
       else if(r==='hit'){SFX.thud();if(p.heat)F.shake=Math.max(F.shake,7)}}
     else if(r&&p.kind==='note'){p.life=0;sparks(p.x,GY-p.y,'#ffd23a',12);if(r==='hit')SFX.thud()}
@@ -1449,7 +1458,8 @@ function aiInput0(f,o){const inp={l:0,r:0,u:0,d:0,aP:0,bP:0,sp:0,sp2:0,sp3:0,sup
   // SUPER card in any range deck when it reaches
   if(supOK&&dist<(SUP_RANGE[f.c.id]||90)&&O.state!=='jump'&&O.state!=='hurt')C.push([.03+.12*L,SPC('sup'),'super']);
   // fighter cards that matter at every range
-  if(s3==='snag'&&rdy3&&F.proj.some(q=>q.owner!==f&&q.life>0&&CATCHABLE(q)&&Math.abs(q.x-f.x)<75&&Math.sign(f.x-q.x)===Math.sign(q.vx||0)))C.push([3+4*L,SPC('sp3'),'glove snag']);
+  if(s3==='bat'&&rdy3&&F.proj.some(q=>q.owner!==f&&q.life>0&&CATCHABLE(q)&&Math.abs(q.x-f.x)<80&&Math.sign(f.x-q.x)===Math.sign(q.vx||0)))C.push([3+4*L,SPC('sp3'),'bat it back']);
+  if(s3==='bat'&&rdy3&&dist<64)C.push([.12+.18*L,SPC('sp3'),'home run swing']);
   if(s2==='replay'&&rdy2&&f.rh&&f.rh.length>=90&&f.rh[f.rh.length-90].hp-f.hp>12)C.push([.5,SPC('sp2'),'instant replay']);
   if(s2==='bless'&&rdy2&&dist>115&&f.hp<f.mhp*.8)C.push([.4,SPC('sp2'),'benediction']);
   if(s2==='powersuit'&&rdy2&&dist>100)C.push([.2,SPC('sp2'),'power suit']);
@@ -1691,6 +1701,7 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
       if(s&&s.kind==='super'){if(!s.hits)return A.walk?P('walk',Math.floor(t/1.4)%n('walk')):null;
         if(s.hits>=99)return P('idle',0);if(s.hits>=6)return A.special?P('special',last('special')):null;
         const k=s.hits%2?'kick':'punch';return A[k]?P(k,akOf(f.c,k).pk):null}
+      if(s&&s.kind==='bat'&&A.punch){const pk=akOf(f.c,'punch').pk;return P('punch',kf(t,[[0,0],[9,Math.max(0,pk-1)],[11,pk],[18,pk],[34,last('punch')]]))}
       if(s&&(s.two||s.kind==='laser'||s.kind==='teep'||s.kind==='siren'||s.kind==='eagle'||s.kind==='hover'||s.kind==='snag')){const k=s.kind;
         if(k==='slide')return A.special2?P('special2',kf(t,[[0,0],[8,4],[10,5],[28,7],[40,8]])):null;
         if(k==='snag')return A.special3?P('special3',s.caught?kf(t-s.caught,[[0,5],[6,7],[16,8]]):kf(t,[[0,0],[4,3],[22,4],[36,5]])):null;
@@ -1855,11 +1866,18 @@ function drawBolt(p){const x=p.x,y=GY-p.y,l=Math.hypot(p.vx,p.vy)||1,ux=p.vx/l,u
   ctx.strokeStyle='#ff4a2a';ctx.lineWidth=2;ctx.stroke();ctx.strokeStyle='#fff0c0';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x-ux*6,y-uy*6);ctx.lineTo(x,y);ctx.stroke()}
 function drawPitch(p){const x=Math.round(p.x),y=Math.round(GY-p.y),d=Math.sign(p.vx);
   if(p.heat){for(let i=0;i<6;i++){ctx.fillStyle=i<2?'rgba(255,240,160,.9)':i<4?'rgba(255,150,40,.7)':'rgba(255,60,20,.45)';ctx.beginPath();ctx.arc(x-d*i*4,y+Math.sin(frameNo*.9+i)*1.2,Math.max(1,5-i*.6),0,Math.PI*2);ctx.fill()}}
-  else{ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(Math.min(x,x-d*14),y-1,14,1);ctx.fillRect(Math.min(x,x-d*9),y+1,9,1)}
-  ctx.fillStyle='#120e1e';ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
+  else{ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillRect(Math.min(x,x-d*22),y-2,22,1);ctx.fillRect(Math.min(x,x-d*30),y,30,1);ctx.fillRect(Math.min(x,x-d*16),y+2,16,1)}
+  ctx.fillStyle='#120e1e';ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#d8d8e8';ctx.fillRect(x-1,y+2,3,1);
   ctx.fillStyle='#e02a2a';const a=p.rot;ctx.fillRect(Math.round(x+Math.cos(a)*2)-1,Math.round(y+Math.sin(a)*2),1,1);ctx.fillRect(Math.round(x-Math.cos(a)*2),Math.round(y-Math.sin(a)*2),1,1)}
 // the pitcher's tells: a flame over his cap when the next pitch is a heater, the glove's catch flash
-function drawMateoFx(f){if((f.pitchN>=2||f.heatNext)&&!(f.state==='special'&&f.sp&&f.sp.kind==='super')){const x=Math.round(f.x),y=Math.round(GY-f.y-f.H-6),k=(frameNo>>2)&1;
+function drawBat(f){const s=f.sp;if(f.state!=='special'||!s||s.kind!=='bat')return;const t=f.st,fc=f.face;
+  const a0=-2.5,a1=.35,a2=1.15,ang=t<9?a0+(-.3)*(t/9):t<15?lerp(a0-.3,a1,(t-9)/6):lerp(a1,a2,Math.min(1,(t-15)/12));
+  const px=f.x+fc*7,py=GY-f.y-f.H*.6;ctx.save();ctx.translate(Math.round(px),Math.round(py));ctx.scale(fc,1);ctx.rotate(ang);
+  if(t>=9&&t<=17){ctx.globalAlpha=.55;ctx.strokeStyle='#ffffff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,30,-(ang-a0)*.9,0,true);ctx.stroke();ctx.globalAlpha=1}
+  ctx.fillStyle='#120e1e';ctx.fillRect(-2,-3,36,6);ctx.fillRect(-4,-3,3,6);
+  ctx.fillStyle='#6a3e1e';ctx.fillRect(-3,-2,2,4);ctx.fillRect(0,-1,12,2);ctx.fillStyle='#c8904a';ctx.fillRect(12,-2,8,4);ctx.fillRect(20,-2,13,5);ctx.fillRect(20,-3,13,1);
+  ctx.fillStyle='#f0c888';ctx.fillRect(13,-2,19,1);ctx.fillStyle='#8a5a2a';ctx.fillRect(20,2,13,1);ctx.restore()}
+function drawMateoFx(f){drawBat(f);if((f.pitchN>=2||f.heatNext)&&!(f.state==='special'&&f.sp&&f.sp.kind==='super')){const x=Math.round(f.x),y=Math.round(GY-f.y-f.H-6),k=(frameNo>>2)&1;
     ctx.fillStyle='#ff5a1a';ctx.fillRect(x-2,y-3-k,5,5+k);ctx.fillStyle='#ffd23a';ctx.fillRect(x-1,y-1-k,3,3+k);ctx.fillStyle='#fff8c0';ctx.fillRect(x,y,1,2)}
   const s=f.sp;if(f.state==='special'&&s&&s.kind==='snag'&&s.caught&&f.st-s.caught<8)twinkle(f.x+f.face*16,GY-f.y-f.H*.75,4,'#7ad8ff',1-(f.st-s.caught)/8)}
 function drawReyesFx(f){const s=f.sp,t=f.st,fc=f.face;
