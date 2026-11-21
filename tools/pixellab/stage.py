@@ -4,6 +4,7 @@ import base64, json, os, sys, urllib.request
 from pl import call, wait_job
 HERE = os.path.dirname(os.path.abspath(__file__))
 STAGES = {
+    "estrella": "16-bit arcade fighting game stage background, side view: a glamorous nightclub concert stage at night, a raised stage with a standing microphone and stage monitors in the background, a big glowing gold star sign and a shimmering curtain of blue and purple lights, spotlights sweeping through haze, a crowd of fans silhouetted at the edges holding up glowing phones, a polished dark wooden dance floor across the bottom quarter, detailed pixel art in the style of classic SNK fighting games, no fighters in the foreground",
     "keksan": "16-bit arcade fighting game stage background, side view: a gritty Muay Thai gym at night, a raised boxing ring with red and blue ropes in the background, red heavy bags hanging from chains, wooden walls with hand-painted tiger banners and faded fight posters, warm hanging lanterns and a string of bulbs, a small shrine shelf with flowers and candles, wooden plank floor across the bottom quarter, detailed pixel art in the style of classic SNK fighting games, no fighters in the foreground",
 }
 if __name__ == "__main__":
