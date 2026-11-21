@@ -1254,7 +1254,9 @@ function applyHit(att,def,d,cx,cy){const push=def.x>=att.x?1:-1,A=arch(def.c);
   sparks(cx,cy,att.ips?'#3ae8ff':'#ffe66a',d.heavy?14:8);F.hitFx.push({x:cx,y:cy,l:8,big:!!d.heavy,ips:!!att.ips});(d.heavy||dmg>=9?SFX.heavy:dmg>=5?SFX.hit:SFX.hitL)();
   if(!att.cpu&&navigator.vibrate)try{navigator.vibrate(d.heavy?40:18)}catch(e){}
   return'hit'}
-function updateF(f,o){f.st++;if(f.buff>0){f.buff--;if(frameNo%4===0)F.parts.push({x:f.x+rnd(-14,14),y:GY-f.y-rnd(4,f.H),vx:0,vy:-.6,l:16,c:RND()<.5?'#ffd23a':'#fff3a0',g:0})}if(f.spCD>0)f.spCD--;if(f.spCD2>0)f.spCD2--;if(f.spCD3>0)f.spCD3--;if(f.spCDA>0)f.spCDA--;if(f.cuffed>0)f.cuffed--;if(f.zap>0){f.zap--;if(f.zap%3===0)F.parts.push({x:f.x+rnd(-12,12),y:GY-f.y-rnd(8,f.H),vx:rnd(-1,1),vy:rnd(-1,1),l:8,c:RND()<.5?'#fff':'#7ad8ff',g:0})}if(f.throwInv>0)f.throwInv--;
+function updateF(f,o){if(f.state==='attack'&&f.atk&&f.atk.name==='focus'){const a=f.atk,lv=a.lvl||1,col=lv>=3?'#ff3a3a':lv===2?'#ffb03a':'#ffffff';if(f.st<a.s+a.a&&f.st%2===0)f.ghosts.push({x:f.x,y:f.y,l:10});
+    if(f.st===a.s){const fx=f.x+f.face*(a.reach*.7);sparks(fx,GY-f.y-f.H*.62,col,6+lv*4);if(lv>1){F.shake=Math.max(F.shake||0,lv*2)}for(let i=0;i<5;i++)F.parts.push({x:f.x+f.face*rnd(4,a.reach*.8),y:GY-f.y-f.H*rnd(.5,.7),vx:f.face*rnd(2,4),vy:0,l:8,c:col,g:0})}}
+  f.st++;if(f.buff>0){f.buff--;if(frameNo%4===0)F.parts.push({x:f.x+rnd(-14,14),y:GY-f.y-rnd(4,f.H),vx:0,vy:-.6,l:16,c:RND()<.5?'#ffd23a':'#fff3a0',g:0})}if(f.spCD>0)f.spCD--;if(f.spCD2>0)f.spCD2--;if(f.spCD3>0)f.spCD3--;if(f.spCDA>0)f.spCDA--;if(f.cuffed>0)f.cuffed--;if(f.zap>0){f.zap--;if(f.zap%3===0)F.parts.push({x:f.x+rnd(-12,12),y:GY-f.y-rnd(8,f.H),vx:rnd(-1,1),vy:rnd(-1,1),l:8,c:RND()<.5?'#fff':'#7ad8ff',g:0})}if(f.throwInv>0)f.throwInv--;
   if(!(f.state==='special'&&f.sp&&f.sp.kind==='replay')){(f.rh||(f.rh=[])).push({x:f.x,hp:f.hp});if(f.rh.length>100)f.rh.shift()}if(f.flash>0)f.flash--;if(f.inv>0)f.inv--;if(f.comboT>0&&--f.comboT===0)f.combo=0;
   f.trail=f.trail>f.hp?Math.max(f.hp,f.trail-0.4):f.hp;f.ghosts.forEach(g=>g.l--);f.ghosts=f.ghosts.filter(g=>g.l>0);
   switch(f.state){
@@ -1661,9 +1663,10 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
     case'jump':{const a=f.atk;if(a){const k=a.name==='jkick'?(A.airkick?'airkick':'kick'):(A.airpunch?'airpunch':'punch');if(A[k])return strike(k,a,f.ast)}
       if(!A.jump)return null;const j=akOf(f.c,'jump');return P('jump',f.vy>2?j.rise:f.vy>-1.5?j.apex:j.fall)}
     case'attack':{const a=f.atk;if(a.anim&&A[a.anim])return P(a.anim,kf(t,[[0,0],[a.s,a.pk],[a.s+a.a,a.pk],[a.s+a.a+a.r,last(a.anim)]]));
+      if(a.name==='focus'&&A.focus)return P('focus',t<a.s?4+(last('focus')-4)*t/a.s:last('focus'));
       const k={jab:'punch',kick:'kick',leap:A.airpunch?'airpunch':'punch',sweep:A.lowkick?'lowkick':'sweep',cjab:A.cpunch?'cpunch':null}[a.name];
       if(k&&A[k])return strike(k,a,t);if(a.crouch&&A.crouch)return{...P('crouch',last('crouch')),limbs:true};return null}
-    case'focus':return A.block?P('block',Math.min(last('block'),t/3)):null;
+    case'focus':if(A.focus)return P('focus',t<16?t/4:2+((t>>3)&1));return A.block?P('block',Math.min(last('block'),t/3)):null;
     case'hurt':if(f.crumple&&A.fall)return P('fall',Math.min(3,t/14));if(f.hurtK==='crouch'&&A.crouch)return P('crouch',last('crouch'));return A.hurt?P('hurt',Math.min(t/3,last('hurt'))):null;
     case'yield':if(A.kneel)return P('kneel',Math.min(t/4,last('kneel')));return A.hurt?P('hurt',last('hurt')):null;
     case'kneel':return A.kneel?P('kneel',Math.min(t/4,last('kneel'))):A.hurt?P('hurt',last('hurt')):null;

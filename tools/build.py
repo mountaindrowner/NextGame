@@ -33,6 +33,19 @@ def main():
     html = (ROOT / "src" / "template.html").read_text()
     game = (ROOT / "src" / "game.js").read_text()
     html = html.replace("/*ASSETS*/", assets_js, 1).replace("/*GAME*/", game, 1)
+    # home-screen icons (tools/make_icon.py): iPhone and the browser tab read them from the page; Android reads the manifest
+    br = ROOT / "branding"
+    if (br / "icon-180.png").exists():
+        import shutil
+        b64 = lambda n: "data:image/png;base64," + base64.b64encode((br / f"icon-{n}.png").read_bytes()).decode()
+        links = (f'<link rel="apple-touch-icon" href="{b64(180)}">\n<link rel="icon" type="image/png" href="{b64(32)}">\n'
+                 '<link rel="manifest" href="manifest.webmanifest">\n<meta name="apple-mobile-web-app-title" content="Bonfire Bash">\n')
+        html = html.replace("<title>", links + "<title>", 1)
+        OUT.parent.mkdir(exist_ok=True)
+        for n in (192, 512): shutil.copy(br / f"icon-{n}.png", OUT.parent / f"icon-{n}.png")
+        (OUT.parent / "manifest.webmanifest").write_text(json.dumps({"name": "Bonfire Bash", "short_name": "Bonfire Bash", "start_url": "index.html", "display": "fullscreen",
+            "orientation": "any", "background_color": "#1a1824", "theme_color": "#1a1824",
+            "icons": [{"src": f"icon-{n}.png", "sizes": f"{n}x{n}", "type": "image/png", "purpose": "any"} for n in (192, 512)]}, indent=1))
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(html)
     print(f"wrote {OUT.relative_to(ROOT)} v{version} ({OUT.stat().st_size/1024:.0f} KB, {len(imgs)} images, {len(data)} data files, {sum(1 for k in music if not k.startswith('voice_'))} songs, {sum(1 for k in music if k.startswith('voice_'))} voice clips)")

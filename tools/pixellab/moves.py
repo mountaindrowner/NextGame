@@ -17,6 +17,8 @@ COMMON = {
     "hurt":   {"mode": "v3", "frame_count": 4, "action_description": "recoiling backward in pain after being punched in the face, head snapping back"},
     "block":  {"mode": "v3", "frame_count": 4, "action_description": "raising both forearms in front of the face to block an attack, bracing"},
     "fall":   {"mode": "v3", "frame_count": 8, "action_description": "knocked off his feet by a heavy blow, falling backward and landing flat on his back lying on the ground"},
+    # FOCUS ATTACK: frames 0-3 = the charge (looped while the button is held), 4-7 = the release
+    "focus":  {"mode": "v3", "frame_count": 8, "action_description": "plants his feet wide and pulls his fist far back at the hip, coiling his whole body to gather power, then explodes forward with a huge lunging straight punch, arm fully extended"},
 }
 SPECIAL = {
     "karl":  {"special": "dashing forward fast throwing a rapid flurry of straight punches", "win": "victory pose: pumps one fist high in the air and smiles"},
