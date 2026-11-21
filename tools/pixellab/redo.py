@@ -23,6 +23,7 @@ PRESET = {
 # per-fighter wording (e.g. Samson holds a book under one arm), used as CHAR:ANIM:alt, takes e/f
 ALT = {
     ("keksan", "airkick"): ("jump", 5, 4, "in mid-air he whips a jumping Muay Thai roundhouse kick: the front leg swings forward fully extended at chest height striking with the shin, the other knee tucked, arms pulled in"),
+    ("padreteen2", "airkick"): ("jump", 3, 4, "strict side view profile facing right: he leaps up and kicks his front leg out perfectly straight and horizontal at chest height in a flying side kick, the sole of the sneaker leading far in front, the back knee tucked, the book under his left arm, long straight hair streaming behind"),
     ("kai", "airkick"): ("jump", 5, 4, "in mid-air he straightens his front leg completely and thrusts it forward horizontally in a flying side kick, the leg fully extended and straight at chest height with the sneaker sole leading, other knee tucked"),
     ("rex", "airkick"): ("jump", 5, 4, "in mid-air, the bass slung on his back, he straightens his front leg completely and thrusts it forward horizontally in a flying side kick, the leg fully extended and straight at chest height with the sneaker sole leading, other knee tucked"),
     ("lawslie", "airkick"): ("jump", 5, 4, "in mid-air she straightens her front leg completely and thrusts it forward horizontally in a flying side kick, the leg fully extended and straight at chest height with the boot sole leading, body leaning back, other knee tucked"),
@@ -35,6 +36,8 @@ ALT = {
 }
 # a second per-fighter wording (CHAR:ANIM:alt2, takes g/h)
 ALT2 = {
+    ("padreteen2", "airkick"): ("jump", 4, 4, "rising in mid-air, side view facing right, holding the book tight under his left arm, he snaps his front leg out perfectly straight forward in a flying side kick at chest height, sneaker sole leading, other knee tucked, long straight hair flying"),
+    ("padreteen2", "airpunch"): ("jump", 4, 4, "rising in mid-air, side view facing right, holding the book tight under his left arm, he throws a hard punch forward and down with his free right fist, the arm fully extended, legs tucked, long straight hair flying"),
     ("padreteen", "airkick"): ("jump", 4, 4, "rising in mid-air, side view facing right, holding the book tight under his left arm, he snaps his front leg out perfectly straight forward in a flying side kick at chest height, sneaker sole leading, other knee tucked, long hair flying"),
     ("padreteen", "airpunch"): ("jump", 4, 4, "rising in mid-air, side view facing right, holding the book tight under his left arm, he throws a hard punch forward and down with his free right fist, the arm fully extended, legs tucked, long hair flying"),
     ("keksan", "airkick"): ("jump", 5, 4, "in mid-air a Muay Thai flying knee: both feet off the ground, he drives his right knee forward and up hard at chest height, the left leg trailing straight back, both hands pulling down in front of him, body leaning into the knee"),

@@ -10,7 +10,8 @@ def ref(path, use=None):
 from make_skin import SKINS
 HERE = os.path.dirname(os.path.abspath(__file__)); A = os.path.join(HERE, "..", "..", "assets")
 POSE = {"zekeidol": "big confident grin, arms crossed over his chest, the teal bowling ball tucked under one arm",
-        "padreteen": "cocky half smile, arms crossed over his chest, the red holy book held under one arm"}
+        "padreteen": "cocky half smile, arms crossed over his chest, the red holy book held under one arm",
+        "padreteen2": "cocky half smile, long straight black hair parted in the middle falling past his shoulders, no bangs, arms crossed over his chest, the red holy book held under one arm"}
 k = sys.argv[1]; base, desc = SKINS[k]
 d = ("16-bit arcade fighting game character select portrait, waist-up bust facing the viewer at a slight angle, "
      + desc.split(":", 1)[1].split(" Crisp")[0] + " " + POSE[k] + ", detailed pixel art with strong black outlines, plain transparent background")

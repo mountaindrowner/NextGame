@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.30.0
+
+- **Teen Rocker Samson, version 2.** Long straight black hair parted in the middle, no bangs. The collar, gold-cross stole, band tee, ripped jeans, studded wristbands and holy book are unchanged.
+  - Every animation and every portrait (full, card, grid and head icon) is new, and the new portrait has him in the roster's crossed-arms pose.
+  - **His jump kick** is a proper airborne flying kick, and **his sweep** stays low with a swoosh.
+  - I patched two frames that had artifacts: a smear bar on one punch frame, and a stray mark on one idle frame.
+  - The old version with bangs is removed from the game.
+- **PixelLab:** 79 generations for version 2 (base sprite 15, then animations, retakes and portraits 64). 9,506 left; the $0.07 credit wasn't touched.
+
 ## 1.29.0
 
 - **Two new costumes:** on the select screen, press **SELECT** on Zeke or Samson to switch. Both keep their fighter's moves, stats and voice.
