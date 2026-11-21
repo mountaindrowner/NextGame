@@ -72,24 +72,28 @@ html,body{margin:0;height:100%;background:#1a1824;overflow:hidden;touch-action:n
 #dpad .zb{left:-6px;bottom:-9px;color:#a04a4a}
 #dpad.dash .zl,#dpad.dash .zr{color:#d0a020}
 @media (max-height:640px){#controls{min-height:190px}#dpad{top:10%}#abwrap{top:2%}}
-/* WIDE: a GBA-style landscape shell. The 3:2 screen sits in the middle, the D-pad on the left, the buttons on the right,
-   SELECT and START in the lower corners. On for a phone or tablet held sideways, or ?layout=wide. */
-html.land #gb{max-width:none;width:100%;flex-direction:row;align-items:center;justify-content:center;border-radius:28px;
-  padding:6px max(12px,env(safe-area-inset-right)) 6px max(12px,env(safe-area-inset-left));
+/* WIDE: a GBA-style landscape shell built to make the picture as big as possible: the screen takes nearly the full height
+   of the phone, and the D-pad and buttons sit in the narrow columns either side. On for a phone or tablet held
+   sideways, or ?layout=wide. */
+html.land #gb{max-width:none;width:100%;flex-direction:row;align-items:center;justify-content:center;border-radius:24px;
+  padding:3px max(8px,env(safe-area-inset-right)) 3px max(8px,env(safe-area-inset-left));
   background:radial-gradient(90% 120% at 50% 0%,#e6e1ec 0%,var(--shell) 45%,var(--shell2) 100%)}
-html.land #topline,html.land #speaker,html.land #hint{display:none}
-html.land #bezel{padding:5px 10px 9px;border-radius:12px 12px 30px 12px;z-index:1}
-html.land #stripe{margin-bottom:4px;font-size:7px}
-html.land #screen{width:min(calc((100dvh - 48px) * 3 / 2),calc(100vw - 2 * clamp(150px,25vw,230px)));aspect-ratio:3/2}
-html.land #brand{position:absolute;left:max(18px,env(safe-area-inset-left));top:10px;margin:0;font-size:15px}
-html.land #brand #ver{display:none}
+html.land #topline,html.land #speaker,html.land #hint,html.land #stripe,html.land #brand #ver{display:none}
+html.land #bezel{padding:4px;border-radius:8px 8px 18px 8px;z-index:1}
+html.land #screen{width:min(calc((100dvh - 14px) * 3 / 2),calc(100vw - 2 * clamp(124px,16vw,190px)));aspect-ratio:3/2}
+html.land #brand{position:absolute;left:max(14px,env(safe-area-inset-left));top:6px;margin:0;font-size:12px}
+html.land #brand small{font-size:7px;letter-spacing:1px;margin-left:3px;vertical-align:2px}
 html.land #controls{position:absolute;inset:0;min-height:0;pointer-events:none}
 html.land #controls .btn{pointer-events:auto}
-html.land #dpad{left:max(30px,calc(env(safe-area-inset-left) + 14px));top:50%;width:min(38dvh,150px);transform:translateY(-42%)}
-html.land #abwrap{right:max(10px,env(safe-area-inset-right));top:50%;width:min(44dvh,172px);transform:translateY(-48%)}
-html.land .pill{bottom:5%} html.land #bSel{left:max(22px,env(safe-area-inset-left))} html.land #bSta{left:auto;right:max(22px,env(safe-area-inset-right))}
-html.land #gb::before,html.land #gb::after{content:"";position:absolute;top:0;width:22%;height:14px;border-radius:14px 14px 4px 4px;background:linear-gradient(180deg,#b8b0c4,#a49cb2);box-shadow:inset 0 2px 0 #d8d2e0}
-html.land #gb::before{left:4%} html.land #gb::after{right:4%}
+html.land #dpad{left:max(16px,calc(env(safe-area-inset-left) + 8px));top:50%;width:min(31dvh,118px);transform:translateY(-46%)}
+html.land #abwrap{right:max(6px,env(safe-area-inset-right));top:50%;width:min(35dvh,140px);transform:translateY(-50%)}
+html.land .ab{width:35%}
+html.land #bA{right:0;top:32.5%} html.land #bB{left:0;top:32.5%} html.land #bSp{left:32.5%;top:0} html.land #bJ{left:32.5%;bottom:0}
+html.land .ab b{font-size:14px} html.land #bSp b{font-size:12px} html.land #bJ b{font-size:9px}
+html.land .ab i{font-size:7px;bottom:-11px}
+html.land .pill{bottom:3%;transform:rotate(-25deg) scale(.8)} html.land #bSel{left:max(10px,env(safe-area-inset-left))} html.land #bSta{left:auto;right:max(10px,env(safe-area-inset-right))}
+html.land #gb::before,html.land #gb::after{content:"";position:absolute;top:0;width:13%;height:9px;border-radius:10px 10px 3px 3px;background:linear-gradient(180deg,#b8b0c4,#a49cb2);box-shadow:inset 0 2px 0 #d8d2e0}
+html.land #gb::before{left:3%} html.land #gb::after{right:3%}
 </style>
 </head>
 <body>

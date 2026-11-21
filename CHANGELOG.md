@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.44.1
+
+- **Landscape is now actually bigger.** In 1.44.0 the sideways picture was barely larger than upright: on an iPhone 13, 375×250 versus 332×249. Now:
+  - **Screen:** it takes almost the whole height of the phone, with the power stripe and extra frame gone.
+  - **Controls:** the D-pad and buttons are a little smaller, in narrow columns either side.
+  - **Result:** the iPhone 13 shows 492×328 (about 32% bigger than upright), a Pixel 7 519×346, an iPad mini 696×464. Fighters scale with it, and no control covers the screen.
+
 ## 1.44.0
 
 - **Focus attack animation:** every fighter and costume (17 sprites, made with PixelLab) has its own focus move. They wind up and coil while you hold FOCUS, then throw a lunging punch on release. The release leaves afterimages and a burst in the charge colour, and shakes the screen at level 2 and 3.
