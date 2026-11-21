@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.44.0
+
+- **Focus attack animation:** every fighter and costume (17 sprites, made with PixelLab) has its own focus move. They wind up and coil while you hold FOCUS, then throw a lunging punch on release. The release leaves afterimages and a burst in the charge colour, and shakes the screen at level 2 and 3.
+- **Home-screen icon:** the game now has an iPhone home-screen icon, a browser-tab icon and an Android web-app manifest. `tools/make_icon.py` turns any picture into all of them; the default is Papa-Léguas over a pixel bonfire.
+- **GBA-style landscape:** hold a phone or tablet sideways (or add `?layout=wide` on a computer) for a wide handheld. The 3:2 screen sits in the middle, the D-pad is on the left, the buttons are on the right and SELECT/START are in the lower corners.
+  - **Story mode** uses the full width (360×240).
+  - **Fights and menus** keep their 4:3 picture, centred with thin side bars.
+
 ## 1.43.0
 
 - **Online co-op Story mode.** Online > HOST CO-OP STORY gives a code to send a friend; you each pick a fighter and play the host's story together.

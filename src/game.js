@@ -432,8 +432,15 @@ function stripes(t,c1,c2){ctx.fillStyle=c1;ctx.fillRect(0,0,W,H);ctx.fillStyle=c
 // ---------------- SCENES ----------------
 let scene=null;const fade={a:0,dir:0,cb:null};
 // Story mode draws at 320x240 (same screen size, smaller pixels: a zoomed-out camera showing 25% more of the stage)
-function setView(w,h){if(W===w&&H===h)return;W=w;H=h;OX=(w-256)/2;OY=(h-192)/2;cv.width=w;cv.height=h;ctx.imageSmoothingEnabled=false;FY=h>192?180:140}
-function go(s,...a){CEL.stop();setView(s===Brawl?320:256,s===Brawl?240:192);scene=s;s.t=0;s.enter&&s.enter(...a);if(typeof updateVis==='function')try{updateVis()}catch(e){}}
+// WIDE (GBA-style landscape): the screen is 3:2. Story mode really is wider (360x240); every other scene keeps its
+// 256x192 picture, centred on a 288x192 canvas with dark side bars.
+let WIDE=false;
+function setView(w,h){const cw=WIDE&&w===256?288:w;if(W===w&&H===h&&cv.width===cw)return;W=w;H=h;OX=(w-256)/2;OY=(h-192)/2;cv.width=cw;cv.height=h;ctx.imageSmoothingEnabled=false;FY=h>192?180:140}
+function fitView(s=scene){const b=s===Brawl;setView(b?(WIDE?360:320):256,b?240:192)}
+function wideWanted(){const q=new URLSearchParams(location.search).get('layout');if(q==='wide')return true;if(q==='tall')return false;
+  return innerWidth>innerHeight&&matchMedia('(pointer:coarse)').matches}// a phone or tablet held sideways
+function applyLayout(){WIDE=wideWanted();document.documentElement.classList.toggle('land',WIDE);if(typeof scene!=='undefined'&&scene)fitView()}
+function go(s,...a){CEL.stop();fitView(s);scene=s;s.t=0;s.enter&&s.enter(...a);if(typeof updateVis==='function')try{updateVis()}catch(e){}}
 // ---------------- CELEBRATION (confetti + fireworks) ----------------
 const CONF=['#ff4a5a','#ffd23a','#3ae8ff','#5ad86a','#ff8ad8','#ffffff','#9a7aff'];
 const CEL={parts:[],fw:[],on:false,t:0,k:1,
@@ -2538,7 +2545,7 @@ const StoryEnd={
       if((t>>4)&1&&t>this.stop+40)drawText('PRESS START',128,170,'#ffe66a',1,{align:'center',outline:'#000'})}}};
 
 const Brawl={
-  enter(){let L=LEVELS[RUN.level];if(RUN.duel){const D=RUN.duel;L={...L,len:Math.max(W,320),waves:[{at:0,foes:D.foes}],ride:null,crates:[],cans:[],hydrants:[],wet:null}}this.L=L;F=this;Object.assign(this,{cinema:false,superFlash:0,superBy:null,parts:[],texts:[],hitFx:[],proj:[],items:[],foes:[],cx:0,wi:0,wave:null,q:[],qT:0,goT:0,
+  enter(){let L=LEVELS[RUN.level];if(L.len<W)L={...L,len:W};if(RUN.duel){const D=RUN.duel;L={...L,len:Math.max(W,320),waves:[{at:0,foes:D.foes}],ride:null,crates:[],cans:[],hydrants:[],wet:null}}this.L=L;F=this;Object.assign(this,{cinema:false,superFlash:0,superBy:null,parts:[],texts:[],hitFx:[],proj:[],items:[],foes:[],cx:0,wi:0,wave:null,q:[],qT:0,goT:0,
       ph:'intro',pt:0,mercyOn:false,bossDown:null,camFlash:0,paused:false,psel:0,hitstop:0,shake:0,target:null,targetT:0,doneT:0,contN:9,supT:0,
       bcT:0,allyRun:null,ride:null,rf:0,hyd:(L.hydrants||[]).map(([x])=>({x,ph:'wait',t:200+rnd(0,120)})),stat:{f:0,dmg:0,maxC:0,spared:0,lost:0},res:null});RUN.allyQ=RUN.allyQ||[];
     const k=skinned(RUN.p1,0),P=this.P=new Fighter(k.skinKey||RUN.p1,0,!!RUN.bot,RUN.alt&&RUN.alt[0]);P.x=40;P.z=22;P.vz=0;P.meter=RUN.meter||0;P.inv=60;this.ps=[P];
@@ -3033,12 +3040,13 @@ function step(){pollInput();if(NET.lock&&!netStep()){CEL.update();return}frameNo
   if(scene.update)scene.update();scene.t++;if(NET.lock)netAfter()}
 function drawToast(){if(!TOAST)return;const a=Math.max(0,Math.min(1,TOAST.l/20,(170-TOAST.l)/10));ctx.globalAlpha=a;box(52,150,152,22,'rgba(30,20,0,.9)','#ffd23a');
   drawText('BADGE UNLOCKED',128,153,'#ffd23a',1,{align:'center',shadow:false});drawText(TOAST.s,128,162,'#fff',1,{align:'center',shadow:false});ctx.globalAlpha=1}
-function render(){ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;scene.draw();drawToast();
+function render(){ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;if(cv.width>W){ctx.fillStyle='#0b0a14';ctx.fillRect(0,0,cv.width,cv.height);ctx.translate((cv.width-W)/2,0)}scene.draw();drawToast();
   if(NET.lock&&NET.stall>20){box(58,86,140,18,'rgba(10,10,30,.9)','#5ab4ff');drawText('WAITING FOR OPPONENT'+'...'.slice(0,(performance.now()/300|0)%4),128,92,'#fff',1,{align:'center',shadow:false})}if(fade.a>0){ctx.fillStyle=`rgba(0,0,0,${fade.a})`;ctx.fillRect(0,0,W,H)}}
 let last=performance.now(),acc=0;
 // the game runs at 54 ticks a second (10% slower than 60): a touch heavier, less frantic
 const TICK=1000/54;
 function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=now;let n=0;while(acc>=TICK&&n<4){step();acc-=TICK;n++}if(n>=4)acc=0;const r=RNG;RNG=Math.random;render();RNG=r;musicTick()}
+applyLayout();addEventListener('resize',applyLayout);addEventListener('orientationchange',()=>setTimeout(applyLayout,120));
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
 window.__dbg={poll:()=>pollInput(),Controls,CMD,TCM,TRIALS,ATK,ARCH,SPCD,Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,ARCS,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};

@@ -265,6 +265,16 @@ Ivan "The Bear" (Sambo grappler) left the roster in v1.24.0 to make room for Kek
 
 **Free-plan limits.** Lobby check-ins count against the account's Workers Free limits: 100,000 requests a day, with Durable Object requests counted separately. Relayed matches count too, since every frame's input is a message. On the free plan, going over makes requests fail until the next day; it doesn't bill anything.
 
+### Home-screen icon
+
+`python3 tools/make_icon.py path/to/picture.png` turns any picture (square works best) into `branding/icon-512/192/180/32.png`. Without a picture it draws the default (Papa-Léguas over a pixel bonfire). `tools/build.py` embeds the iPhone and browser-tab icons in `dist/index.html` and writes `dist/manifest.webmanifest` plus `icon-192.png`/`icon-512.png` for Android; ship them in the zip next to `index.html`.
+
+On itch.io the game runs inside itch's page, so "Add to Home Screen" from the itch page uses itch's icon. Ours shows when the game is opened at its own address (itch's full-screen view, or anywhere the files are hosted directly).
+
+### Landscape (GBA style)
+
+Holding a phone or tablet sideways switches to a wide handheld (`html.land` in `src/template.html`): a 3:2 screen between the D-pad and the buttons. `?layout=wide` / `?layout=tall` force either layout. Story mode draws 360×240 in it; every other scene keeps 256×192, centred on a 288×192 canvas.
+
 ## Build
 
 ```
