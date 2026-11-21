@@ -52,7 +52,19 @@ const { chromium } = require('playwright'); const path = require('path');
       ['reyes', [['a', 'link'], ['a', 'link'], ['b', 'cancel'], ['a+b', 'cancel']], 'jab > jab > kick > SP (link)', 4]])
       if (!only || only === id) { const r = play(id, seq); check(`${id.padEnd(9)} ${n}`, r.combo >= want, `${r.combo} hits`); }
     // every trial can be cleared: play each one with real inputs (specials/super cancelled on contact, everything else linked)
-    const KEY = { jab: ['a'], kick: ['b'], cjab: ['a', 'down'], sweep: ['b', 'down'], leap: ['a', 'right'], sp1: ['a+b'], sp2: ['a+b', 'down'], sp3: ['a+b', 'left'], super: ['a+b', 'right'] };
+    // Tier 2: each fighter's command normal (back + A) and target combo (kick, then a button)
+    for (const id of only ? [only] : d.ORDER) { const C = d.CMD[id], T = d.TCM[id];
+      { const air = C.hy >= .75, q = setup(id, C.lv === 'low' ? 'BLOCK' : 'STAND', air ? 132 : 138); if (air) { q.F.p2.state = 'jump'; q.F.p2.y = 30; q.F.p2.vy = 0.5; }
+        let st = null, i = 0; q.step({ a: 1, left: 1, h: { left: 1 } }); const name = q.F.p1.atk && q.F.p1.atk.name;
+        for (; i < 40; i++) { q.step({ h: { left: 1 } }); st = st || (['hurt', 'knock', 'block'].includes(q.F.p2.state) ? q.F.p2.state : null); }
+        const want = C.launch || air ? 'knock' : 'hurt';
+        check(`${id.padEnd(9)} back+A ${C.nm}${C.lv === 'low' ? ' (beats a standing guard)' : air ? ' (anti-air)' : C.launch ? ' (launcher)' : ''}`, name === 'cmd' && st === want, `${name}, opponent ${st}`); }
+      { const r = play(id, [['a', 'link'], ['b', 'cancel'], [T.btn, 'cancel']]); const tcOk = r.combo >= 3 + (T.m.multi ? T.m.multi - 1 : 0);
+        let extra = ''; if (T.m.cuff) extra = r.F.p2.cuffed > 0 ? ', cuffed' : ', NOT cuffed'; if (T.m.knock || T.m.launch) extra = ['knock', 'down', 'rise'].includes(r.F.p2.state) || r.F.p2.state === 'idle' ? ', knocked down' : '';
+        check(`${id.padEnd(9)} jab > kick > ${T.btn.toUpperCase()}: ${T.m.nm}`, tcOk && !extra.includes('NOT'), `${r.combo} hits${extra}`); }
+      if (T.m.stun >= 30) { const r = play(id, [['a', 'link'], ['b', 'cancel'], [T.btn, 'cancel'], ['b', 'link']]); check(`${id.padEnd(9)} ${T.m.nm} links into kick`, r.combo >= 4, `${r.combo} hits`); }
+    }
+    const KEY = { cmd: ['a', 'left'], tc: null, jab: ['a'], kick: ['b'], cjab: ['a', 'down'], sweep: ['b', 'down'], leap: ['a', 'right'], sp1: ['a+b'], sp2: ['a+b', 'down'], sp3: ['a+b', 'left'], super: ['a+b', 'right'] };
     for (const id of only ? [only] : d.ORDER) d.TRIALS[id].forEach((seq, i) => {
       d.RUN = { mode: 'trials', p1: id, ladder: ['padre'], idx: 0, cont: 0 }; d.go(d.Fight, { p1: id, p2: 'padre', stage: 'padre' });
       const F = d.F, sc = d.scene, orig = d.Fight.__u || (d.Fight.__u = d.Fight.update), upd = orig.bind(sc); sc.update = () => {};
@@ -60,7 +72,7 @@ const { chromium } = require('playwright'); const path = require('path');
       const { held, pressed } = d.inp; const step = (o = {}) => { for (const k of K) { pressed[k] = !!o[k]; held[k] = !!(o.h && o.h[k]); } d.tick(); upd(); };
       for (let k = 0; k < 3; k++) step(); let cleared = false;
       let last = null;
-      for (const tag of seq) { const [btn, dir] = KEY[tag], chain = ['jab', 'cjab'].includes(last) && ['jab', 'cjab', 'kick', 'sweep'].includes(tag), sp = /^sp|super/.test(tag) || chain; let t = 0; last = tag;
+      for (const tag of seq) { const [btn, dir] = tag === 'tc' ? [d.TCM[id].btn] : KEY[tag], chain = (['jab', 'cjab'].includes(last) && ['jab', 'cjab', 'kick', 'sweep'].includes(tag)) || tag === 'tc', sp = /^sp|super/.test(tag) || chain; let t = 0; last = tag;
         if (sp) { while (!((F.p1.hitDone && F.hitstop === 0) || (F.p1.sp && F.p1.sp.conn != null) || free(F.p1)) && t++ < 80) step(); }
         else while (!free(F.p1) && t++ < 80) step();
         if (tag === 'super') { F.p1.meter = 100; for (let k = 0; k < 40 && !(F.p1.sp && F.p1.sp.kind === 'super'); k++) step({ a: 1, b: 1, right: 1, h: { right: 1 } }); cleared = cleared || !!F.trial.clear; continue; }// pressed until it comes out, like a player would

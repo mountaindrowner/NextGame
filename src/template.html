@@ -60,6 +60,15 @@ html,body{margin:0;height:100%;background:#1a1824;overflow:hidden;touch-action:n
 #hint{position:absolute;left:0;right:0;bottom:4px;text-align:center;color:#8f88a0;font-size:9px;letter-spacing:.5px}
 #speaker{position:absolute;right:6%;bottom:10%;display:flex;gap:7px;transform:rotate(-28deg)}
 #speaker i{display:block;width:6px;height:46px;border-radius:4px;background:#a79fb3;box-shadow:inset 1px 2px 2px rgba(0,0,0,.35)}
+/* the stick: in fights it shows its zones (up jumps, the far edges dash, back blocks) and a knob that follows the thumb */
+#dpad .knob{position:absolute;left:34%;top:34%;width:32%;height:32%;border-radius:50%;background:radial-gradient(circle at 38% 32%,#ff8a8a,#d02020 55%,#7a0e0e);box-shadow:0 3px 6px rgba(0,0,0,.4);opacity:0;transition:opacity .15s;pointer-events:none}
+#dpad.mode-fight .knob{opacity:.92}
+#dpad .zone{position:absolute;font-style:normal;font-size:7px;font-weight:900;letter-spacing:.5px;color:#6b6680;opacity:0;pointer-events:none}
+#dpad.mode-fight .zone{opacity:1}
+#dpad .zj{left:0;right:0;top:-11px;text-align:center}
+#dpad .zl{left:-18px;top:calc(50% - 4px)} #dpad .zr{right:-18px;top:calc(50% - 4px)}
+#dpad .zb{left:-6px;bottom:-9px;color:#a04a4a}
+#dpad.dash .zl,#dpad.dash .zr{color:#d0a020}
 @media (max-height:640px){#controls{min-height:190px}#dpad{top:10%}#abwrap{top:2%}}
 </style>
 </head>
@@ -74,7 +83,7 @@ html,body{margin:0;height:100%;background:#1a1824;overflow:hidden;touch-action:n
   </div>
   <div id="brand">DOJO BOY<small>ADVANCED</small><span id="ver"></span></div>
   <div id="controls">
-    <div id="dpad" class="btn"><div class="h"></div><div class="v"></div><div class="c"></div><i class="arr au"></i><i class="arr ad"></i><i class="arr al"></i><i class="arr ar"></i></div>
+    <div id="dpad" class="btn"><div class="h"></div><div class="v"></div><div class="c"></div><i class="arr au"></i><i class="arr ad"></i><i class="arr al"></i><i class="arr ar"></i><i class="zone zj">JUMP</i><i class="zone zl">DASH</i><i class="zone zr">DASH</i><i class="zone zb">BLOCK</i><i class="knob"></i></div>
     <div id="abwrap" class="btn"><div id="bSp" class="ab"><b>SP</b><i>SPECIAL</i></div><div id="bB" class="ab"><b>B</b><i>KICK</i></div><div id="bA" class="ab"><b>A</b><i>PUNCH</i></div><div id="bJ" class="ab"><b>JUMP</b></div></div>
     <div id="bSel" class="pill btn"><i></i><span>SELECT</span></div>
     <div id="bSta" class="pill btn"><i></i><span>START</span></div>

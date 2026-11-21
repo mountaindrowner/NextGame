@@ -6,7 +6,13 @@ A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with twelve figh
 
 Open `dist/index.html` in a browser. It is a single self-contained file (also ready to upload to itch.io as an HTML game).
 
-Controls: four face buttons, the same in every mode — **A** punch (`X`/`K`), **B** kick (`Z`/`J`), **SP** special (`C`/`L`), **JUMP** (`V`/`I`; up also jumps in fights; in Story up/down is depth). Arrows/WASD move, Enter = Start (pause shows each fighter's moves and combo). On touch screens use the on-screen pad. Gamepads work (A punch, B kick, Y/RB special, X/LB jump). A+B together, the **SP** button (on screen; `C`/`L` on a keyboard; Y/RB on a gamepad), or down→forward+A, fires the special move. SP is just A+B in one press, so down+SP, back+SP and forward+SP work too.
+Controls: four face buttons, the same in every mode — **A** punch (`X`/`K`), **B** kick (`Z`/`J`), **SP** special (`C`/`L`), **JUMP** (`V`/`I`; up also jumps in fights; in Story up/down is depth). Arrows/WASD move, Enter = Start (pause shows each fighter's moves and combo). On touch screens the pad works differently by mode (Options > CONTROLS shows both diagrams):
+
+- **Fights:** a zoned stick, like mobile Street Fighter IV. Wide left/right bands walk (back blocks), pushing to the **far edge dashes** (no double-tap needed), up jumps, down crouches, down-back crouch-blocks. A knob follows the thumb, and the zones are labelled round the pad.
+- **Story mode (beat 'em up):** a plain 8-way stick, where up and down move in and out of the screen. No jump or dash zones; jump is the JUMP button.
+- **Menus:** an 8-way pad.
+
+`node tools/touch.js` checks the zones with real touch events. Gamepads work (A punch, B kick, Y/RB special, X/LB jump). A+B together, the **SP** button (on screen; `C`/`L` on a keyboard; Y/RB on a gamepad), or down→forward+A, fires the special move. SP is just A+B in one press, so down+SP, back+SP and forward+SP work too.
 
 ## Fighting system
 
@@ -111,7 +117,24 @@ Hitting someone during their attack's startup is a **counter-hit**: +20% damage 
 | Reyes | 4 / +6 / -3 | 4 / +3 / -4 | 7 / +1 / -9 | 14 / +6 / -3 | jab is +6 |
 | Mateo | 5 / +5 / -3 | 4 / +3 / -4 | 8 / +6 / -9 | 14 / +6 / -3 | heavy kick is +6 and links into a jab |
 
-Trials mode teaches each fighter's tools: the basics, their bread-and-butter, an overhead link, their signature link (where they have one), and a super cancel. Every trial is cleared by `tools/links.js`.
+**Command normals and target combos (Tier 2).** Every fighter has a command normal on **back + A**, and a target combo: a kick that connects, then the button shown, which the normal chain rules don't allow. Both reuse the fighter's own animation frames (`CMD` and `TCM` in `src/game.js`).
+
+| Fighter | Back + A | What it's for | Kick, then | What it does |
+|---|---|---|---|---|
+| Papa-Léguas | Double Jab | two quick advancing jabs | A: Légua Finish | three-punch flurry, the last knocks down |
+| Keksan | Step Knee | launcher | B: Switch Kick | heavy second roundhouse, knocks down |
+| Vizor | Palm Shot | long poke (74 px) | A: Rec Flash | camera flash, +9: links into his kick |
+| Samson | Book Swat | anti-air | A: Sermon | overhead book smash, knocks down |
+| Zeke | Ball Lift | anti-air launcher | B: Gutter Sweep | low, knocks down |
+| Hecky Xavier | Short Upper | anti-air | A: Margin Call | glasses flash, +8: links into his kick |
+| Lawslie | Straight Arm | long poke that shoves them away | A: Cuff Snap | cuffed: no specials or super for 2.8 s |
+| Marcus | Bass Sweep | the longest low (72 px) | A: Feedback | blasts them across the screen |
+| Devanté | Low Drive | advancing low | B: Posterize | leaping dunk kick, launches |
+| Estrella | Stage Slam | low | A: High C | two-hit scream |
+| Reyes | Breach | advancing punch | A: Salute | rising strike, launches |
+| Mateo | Glove Swat | anti-air | A: Tag Out | glove tag, knocks down |
+
+Trials mode teaches each fighter's tools: the basics, their bread-and-butter, an overhead link, their signature link (where they have one), their command normal, their target combo, and a super cancel. Every trial is cleared by `tools/links.js`.
 
 Bread-and-butter combos (checked frame by frame by `tools/combos.js`):
 

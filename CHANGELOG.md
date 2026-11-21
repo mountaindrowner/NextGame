@@ -1,5 +1,38 @@
 # Changelog
 
+## 1.36.0
+
+**Deeper combos (Tier 2) and new touch controls.**
+
+- **A command normal for every fighter (back + A).** Each has its own job:
+  - **Anti-airs:** Samson's Book Swat, Hecky's Short Upper, Mateo's Glove Swat.
+  - **Launchers:** Keksan's Step Knee, Zeke's Ball Lift.
+  - **Long pokes:** Vizor's Palm Shot, and Lawslie's Straight Arm, which shoves them away.
+  - **Lows:** Marcus's Bass Sweep (the longest low), Devanté's advancing Low Drive, Estrella's Stage Slam.
+  - **Advancing attacks:** Papa-Léguas's Double Jab, Reyes's Breach.
+- **A target combo for every fighter:** a kick that connects, then a button the normal chain rules don't allow, ending in a unique finisher.
+  - Papa-Léguas's three-punch Légua Finish.
+  - Keksan's Switch Kick.
+  - Vizor's Rec Flash and Hecky's Margin Call, which are plus and link into a kick.
+  - Samson's overhead Sermon.
+  - Zeke's low Gutter Sweep.
+  - Lawslie's Cuff Snap: no specials or super for 2.8 seconds.
+  - Marcus's Feedback blast.
+  - Devanté's Posterize dunk kick.
+  - Estrella's two-hit High C.
+  - Reyes's Salute launcher.
+  - Mateo's Tag Out.
+- **The new moves cost nothing in art:** they reuse each fighter's own animation frames. Two picks were swapped after a visual check: Papa-Léguas uses his punch frames, and Mateo's Tag Out uses his throwing lunge.
+- **Trials:** a command-normal trial and a target-combo trial for every fighter (6–8 trials each). The pause menu lists both moves.
+- **The CPU uses the new moves:** command normals in close range, anti-air ones against jumps, and the target combo after a kick.
+- **Touch controls by mode:**
+  - **Fights:** a zoned stick like mobile Street Fighter IV. Wide left/right bands walk (back blocks), and pushing to the far edge dashes with no double-tap. Up jumps, down crouches, down-back crouch-blocks, and the touch area is bigger. A red knob follows the thumb, and the zones (JUMP, DASH, BLOCK) are labelled round the pad.
+  - **Story mode:** keeps a plain 8-way stick (up and down move in depth, no dash zone).
+  - **Menus:** stay 8-way.
+- **Options > CONTROLS:** a diagram of each scheme and its buttons.
+- **Balance:** the CPU round robin after the change has 11 of 12 fighters at 40–58%, the tightest spread yet. Devanté is at 50%. Hecky (75%) is still the pre-existing outlier.
+- **New test:** `tools/touch.js` checks the stick zones in every mode with real touch events, including that the edge dash makes the fighter dash. `tools/links.js` now also checks every command normal (lows beat a standing guard, anti-airs hit a jumper, launchers launch) and every target combo.
+
 ## 1.35.0
 
 **Deeper combos (Tier 1).** The same engine ideas that give Street Fighter III its combos, kept phone-friendly:

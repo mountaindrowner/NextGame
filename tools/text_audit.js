@@ -26,7 +26,7 @@ const path = require('path');
     d.go(d.Intro); for (let t = 40; t < 760; t += 15) { d.Intro.t = t - 1; d.Intro.update(); d.Intro.t = t; check('intro@' + t); }
     d.go(d.Title); for (let k = 0; k < 9; k++) { d.Title.duo(k); d.Title.pt = 20; check('title-duo' + k); }
     d.Title.ph = 'menu'; for (let k = 0; k < d.Title.items.length; k++) { d.Title.sel = k; check('main-menu-' + d.Title.items[k]); } d.Title.ph = 'press';
-    d.go(d.Options); check('options'); d.go(d.Records); check('records');
+    d.go(d.Options); check('options'); d.go(d.Controls); check('controls'); d.Controls.pg = 1; check('controls-story'); d.go(d.Records); check('records');
     for (const mode of ['arcade', 'vs', 'story', 'training']) { d.go(d.Select, mode); d.Select.slide = 0; for (let i = 0; i < O.length; i++) { d.Select.cur = i; d.Select.t = 200; d.Select.det = 0; check(`select-${mode}-${O[i]}`); d.Select.det = 1; d.Select.dt = 8; check(`select-card-${mode}-${O[i]}`); d.Select.det = 0; } }
     for (let i = 0; i < O.length; i++) { const a = O[i], b = O[(i + 1) % O.length];
       d.RUN = { mode: 'arcade', p1: a, ladder: [b], idx: 0, cont: 0 }; d.go(d.VS); d.VS.t = 120; check(`vs-${a}-${b}`);
