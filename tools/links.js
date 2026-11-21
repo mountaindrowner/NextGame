@@ -73,12 +73,28 @@ const { chromium } = require('playwright'); const path = require('path');
         check(`${id.padEnd(9)} level-2 focus crumples, then they fall`, crumple && down, `crumpled ${crumple}, fell ${down}`); }
       { const q = setup(id, 'STAND', 140); hold(q, 8); q.step({ right: 1, dr: 1, h: { right: 1 } }); let dashed = false; for (let i = 0; i < 4; i++) { q.step({ h: { right: 1 } }); dashed = dashed || q.F.p1.state === 'dash'; }
         check(`${id.padEnd(9)} dash cancels the focus`, dashed, dashed ? 'dashed' : q.F.p1.state); }
-      { const q = setup(id, 'STAND', 140); q.F.p1.meter = 100; d.startSpecial(q.F.p1, q.F.p2, 1); for (let i = 0; i < 3; i++) q.step(); const fly = q.F.p1.y > 0 || (q.F.p1.sp && q.F.p1.sp.fly); q.step({ jump: 1, h: { jump: 1 } }); for (let i = 0; i < 14 && q.F.p1.state !== 'focus'; i++) q.step({ h: { jump: 1 } });
+      { const q = setup(id, 'STAND', 140); q.F.p1.meter = 100; d.startSpecial(q.F.p1, q.F.p2, 1); for (let i = 0; i < 30 && q.F.p1.st < 8 && q.F.p1.sp && q.F.p1.sp.conn == null; i++) q.step();/* past the EX window (FOCUS in the first frames upgrades to EX instead) */ const fly = q.F.p1.y > 0 || (q.F.p1.sp && q.F.p1.sp.fly); q.step({ jump: 1, h: { jump: 1 } }); for (let i = 0; i < 14 && q.F.p1.state !== 'focus'; i++) q.step({ h: { jump: 1 } });
         check(`${id.padEnd(9)} focus cancel (half the bar)`, fly || (q.F.p1.state === 'focus' && q.F.p1.meter === 50), fly ? 'airborne special: not cancellable' : `${q.F.p1.state}, meter ${q.F.p1.meter}`); }
       { const q = setup(id, 'BLOCK', 140); q.F.p1.x = 192; q.F.p2.x = 229; hold(q, 48); let st = null; for (let i = 0; i < 20; i++) { q.step(); st = st || (['hurt', 'block'].includes(q.F.p2.state) ? q.F.p2.state : null); }
         check(`${id.padEnd(9)} level-3 focus is unblockable`, st === 'hurt', `opponent ${st}`); }
     }
-    const KEY = { focus: ['jump'], cmd: ['a', 'left'], tc: null, jab: ['a'], kick: ['b'], cjab: ['a', 'down'], sweep: ['b', 'down'], leap: ['a', 'right'], sp1: ['a+b'], sp2: ['a+b', 'down'], sp3: ['a+b', 'left'], super: ['a+b', 'right'] };
+    // EX SPECIALS (Tier 3): hold FOCUS + SP, or FOCUS right after SP. A third of the bar, works on cooldown, harder hits, one hit of armor.
+    // (training mode: the dummy stands still; p1's meter refills only while idle, so the cost is read once the move is out)
+    const runFree = (q, n, f) => { for (let i = 0; i < n; i++) { q.step(); f && f(); } };
+    for (const id of only ? [only] : d.ORDER) {
+      const exDmg = ex => { const q = setup(id, 'STAND', 138), F = q.F; let lo = F.p2.hp, m = null; const h0 = F.p2.hp;
+        d.startSpecial(F.p1, F.p2, 1, ex); m = F.p1.meter; runFree(q, 140, () => { lo = Math.min(lo, F.p2.hp); }); return { dmg: h0 - lo, meter: m }; };
+      const rh = d.ARCH[id].rhythm; d.ARCH[id].rhythm = false;/* Marcus's on-beat bonus would make the two runs differ */ const a = exDmg(false), b = exDmg(true); d.ARCH[id].rhythm = rh;
+      check(`${id.padEnd(9)} EX special: costs a third, hits harder`, a.meter - b.meter === 34 && (b.dmg > a.dmg * 1.15 || (a.dmg === 0 && b.dmg === 0)), `normal ${a.dmg.toFixed(1)} dmg, EX ${b.dmg.toFixed(1)} dmg, meter ${a.meter} vs ${b.meter}`);
+      { const q = setup(id, 'STAND', 140), F = q.F; F.p1.spCD = 200; q.step({ jump: 1, h: { jump: 1 } }); q.step({ h: { jump: 1 } }); const m0 = F.p1.meter; q.step({ a: 1, b: 1, h: { jump: 1 } });
+        const ok = F.p1.state === 'special' && F.p1.sp && F.p1.sp.ex; check(`${id.padEnd(9)} hold FOCUS + SP: EX even on cooldown`, ok && m0 - F.p1.meter === 34, `${F.p1.state}${F.p1.sp && F.p1.sp.ex ? ' EX' : ''}, paid ${m0 - F.p1.meter}`); }
+      { const q = setup(id, 'STAND', 140), F = q.F; q.step({ a: 1, b: 1 }); const m0 = F.p1.meter, s0 = F.p1.sp; q.step({ jump: 1, h: { jump: 1 } }); for (let i = 0; i < 16 && !(s0 && s0.ex); i++) q.step();
+        check(`${id.padEnd(9)} SP, then FOCUS: upgrades to EX`, !!(s0 && s0.ex) && m0 - F.p1.meter === 34 && F.p1.state === 'special', `${F.p1.state}${s0 && s0.ex ? ' EX' : ''}, paid ${m0 - F.p1.meter}`); }
+      { const q = setup(id, 'STAND', 136), F = q.F; d.startSpecial(F.p1, F.p2, 1, true); const s0 = F.p1.sp; F.superFlash = 0; d.startAtk(F.p2, 'jab'); F.p2.state = 'attack'; F.p2.st = 0; const h0 = F.p1.hp;
+        let armored = false; const inv = F.p1.inv > 0; for (let i = 0; i < 12; i++) { q.step(); armored = armored || (s0.exArm === 0); }
+        check(`${id.padEnd(9)} EX armor absorbs a hit`, inv ? (F.p1.hp === h0 || armored) : armored && F.p1.hp > h0 - 4, inv ? `invincible start (${s0.kind}), took ${(h0 - F.p1.hp).toFixed(1)}` : armored ? `took ${(h0 - F.p1.hp).toFixed(1)}` : `no hit reached him (${s0.kind} moves him out of range)`); }
+    }
+    const KEY = { focus: ['jump'], cmd: ['a', 'left'], tc: null, jab: ['a'], kick: ['b'], cjab: ['a', 'down'], sweep: ['b', 'down'], leap: ['a', 'right'], ex: ['a+b+jump'], sp1: ['a+b'], sp2: ['a+b', 'down'], sp3: ['a+b', 'left'], super: ['a+b', 'right'] };
     for (const id of only ? [only] : d.ORDER) d.TRIALS[id].forEach((seq, i) => {
       d.RUN = { mode: 'trials', p1: id, ladder: ['padre'], idx: 0, cont: 0 }; d.go(d.Fight, { p1: id, p2: 'padre', stage: 'padre' });
       const F = d.F, sc = d.scene, orig = d.Fight.__u || (d.Fight.__u = d.Fight.update), upd = orig.bind(sc); sc.update = () => {};
@@ -86,7 +102,7 @@ const { chromium } = require('playwright'); const path = require('path');
       const { held, pressed } = d.inp; const step = (o = {}) => { for (const k of K) { pressed[k] = !!o[k]; held[k] = !!(o.h && o.h[k]); } d.tick(); upd(); };
       for (let k = 0; k < 3; k++) step(); let cleared = false;
       let last = null;
-      for (const tag of seq) { const [btn, dir] = tag === 'tc' ? [d.TCM[id].btn] : KEY[tag], chain = (['jab', 'cjab'].includes(last) && ['jab', 'cjab', 'kick', 'sweep'].includes(tag)) || tag === 'tc', sp = /^sp|super/.test(tag) || chain; let t = 0; last = tag;
+      for (const tag of seq) { const [btn, dir] = tag === 'tc' ? [d.TCM[id].btn] : KEY[tag], chain = (['jab', 'cjab'].includes(last) && ['jab', 'cjab', 'kick', 'sweep'].includes(tag)) || tag === 'tc', sp = /^sp|super|^ex/.test(tag) || chain; let t = 0; last = tag;
         if (sp) { while (!((F.p1.hitDone && F.hitstop === 0) || (F.p1.sp && F.p1.sp.conn != null) || free(F.p1)) && t++ < 80) step(); }
         else while (!free(F.p1) && t++ < 80) step();
         if (tag === 'focus') { step({ jump: 1, h: { jump: 1 } }); for (let k = 0; k < 23; k++) step({ h: { jump: 1 } }); step(); last = tag; continue; }

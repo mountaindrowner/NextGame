@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.39.0
+
+- **EX specials** (combo depth, Tier 3). Hold FOCUS and press SP, or press FOCUS just after SP, for an EX version of any special.
+  - **Cost:** a third of the super bar. The bar now has marks at each third.
+  - **Works on cooldown:** EX ignores the special's cooldown, so it's the way to use a special twice in a row.
+  - **Stronger:** 30% more damage, extra hit-stun (easier links after it), faster projectiles, and one hit of armor in its first 20 frames.
+  - **Looks:** a cyan glow and trail, and an EX! callout.
+  - **Everywhere else:** a new EX trial for every fighter (jab, kick, EX); the pause menu and Options > CONTROLS list it; the CPU uses it, mostly to cash out combos.
+- **Reach is real now.** Each fighter's archetype reach used to be overridden by the hitboxes measured from the sprites. Now it scales them. Vizor's LONG REACH trait finally works (his normals hit 12% past his fist).
+- **Hecky balance.** He won 70–80% of CPU matches. The cause was mostly his CPU parry, which fired on about 1 in 4 hits on Hard.
+  - **CPU parry:** half as often, and never during blockstun. A player's parry (tap forward) is unchanged.
+  - **Hostile Takeover:** cooldown 70 → 100 frames, invincibility 9 → 6 frames, and the CPU uses it less as an anti-air.
+  - **Stats:** dash 1.2 → 1.1, health 98 → 92.
+  - **Result:** all 12 fighters win 40–66% in the CPU round robin (spread 24 points).
+
 ## 1.38.0
 
 - **Owner-picked heights.** Mateo 95; Papa-Léguas and Marcus 94; Keksan 93; Samson, Devanté and Ivan 91; Zeke, Hecky, Estrella and Reyes 88; Vizor 86; Lawslie back to 78.
