@@ -87,6 +87,7 @@ Bosses are picked at random from the roster (never your own fighter), so every r
   - After 7, 6 or 5 hits in a row (by phase), he bursts free. That can't happen again for about 5 seconds.
   - Pinned at a screen edge with you close, he vaults over you to the middle.
 - **The Shadow** fades into purple smoke when it's beaten.
+- **Secret fighter:** clearing Story mode unlocks Vex for every other mode (Arcade, Versus, Training, Trials, Online). He stays out of Story mode.
 
 ## Enemies (PixelLab characters, side view, same style as the roster)
 

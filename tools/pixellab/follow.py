@@ -17,10 +17,15 @@ FOLLOW = {
 }
 # frame index overrides per character, e.g. which jump frame is the apex
 SRC_FRAME = {}
+# per-character wording (cane fighter)
+ACTION = {("vex", "lowkick"): "from a low crouch, sweeps the black walking cane low along the floor at ankle height in a wide fast arc, staying crouched",
+          ("vex", "cpunch"): "from a low crouch, jabs the tip of the black walking cane straight forward at waist height, then pulls it back, staying crouched",
+          ("vex", "airpunch"): "in mid-air with knees tucked, swings the black walking cane down hard in a diving overhead strike"}
 
 
 def body(name, anim):
     src, idx, n, action = FOLLOW[anim]
+    action = ACTION.get((name, anim), action)
     b = {"mode": "v3", "frame_count": n, "action_description": action, "keep_first_frame": True}
     if src:
         d = os.path.join(HERE, "raw", name, src)

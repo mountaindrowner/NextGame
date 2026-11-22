@@ -1,6 +1,6 @@
 # Bonfire Bash
 
-A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with twelve fighters — Papa-Léguas, Keksan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie, Marcus, Devanté, Estrella, Reyes and Paezano — playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up with launchers, allies, hazards and stage ranks, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with twelve fighters — Papa-Léguas, Keksan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie, Marcus, Devanté, Estrella, Reyes and Paezano — plus Vex, a secret fighter unlocked by clearing Story mode, playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up with launchers, allies, hazards and stage ranks, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
@@ -45,6 +45,7 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 | Estrella | **High Note** — a slow, bobbing music note that floats across and lingers; foes near it walk slower | **Encore** — a ring of sound out in front of her that pulses five times (hits low). Third special (BK+SP): **Siren Scream** — a short cone of sound, 3 hits; it shatters projectiles |
 | Reyes | **Frontier Knuckle** — a dashing, flaming straight right that knocks down | **Drone Strike** — launches his SABR drone; it hovers ahead of him and fires three aimed laser bolts. Third special (BK+SP): **Eagle Rise** — an invincible rising uppercut, two hits, the anti-air. Air special (A+B or SP in the air, once per jump): **Rotor Kicks** — he hangs in the air flutter-kicking, floating up a little, up to five hits |
 | Paezano | **Fastball** — a windup and a fast straight pitch; every 3rd pitch in a row is a flaming 98 MPH heater that knocks down (a flame over his cap means the next one is hot) | **Steal Home** — a feet-first slide: low, goes under projectiles and high attacks, knocks down. Third special (back + A+B), **Home Run Swing**: he pulls a bat and swings it, knocking the opponent flying ("CRACK!", or "HOME RUN!" on a knockout); any projectile in the swing is batted back as a line drive, and his next pitch is a heater |
+| Vex (secret: clear Story mode) | **Cane Shockwave** — a cane slam; a purple shockwave rolls along the floor (low) | **Every Man Has a Price** — tosses gold coins; a hit stuns the opponent for a long time (they stare at the money). Third special (back + A+B), **Vanish**: disappears in purple smoke and steps out behind the opponent |
 | Marcus | **Bass Drop** — twin low shockwaves roll along the floor both ways across the stage (block crouching, or jump them) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen |
 
 ## Supers
@@ -65,6 +66,7 @@ Forward + A+B with a full meter. Each fighter's super is unique (`SUPERS` in `sr
 | Reyes | Air Support | dashing knuckle; on a hit his drone squadron flies in and strafes them, then Eagle Rise launches them ("MISSION COMPLETE!") |
 | Paezano | Strikeout | three pitches with the umpire's call ("STRIKE ONE!", "STRIKE TWO!"), then a blazing heater: "STRIKE THREE! YOU'RE OUT!"; a blocked pitch is a foul ball |
 | Marcus | Stage Dive | homing leap that crashes down (overhead), then a five-note bass jam |
+| Vex | The City Is Mine | vanishes and steps out behind you (blockable cross-up), four cane strikes from both sides, then a shockwave slam |
 
 ## Fighting styles
 
@@ -83,6 +85,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Estrella | Area control | 100 | her sound slows foes: anyone standing near her note or her Encore ring walks at 70% speed |
 | Reyes | All-rounder | 92 | squad leader: starts every round with a third of his super meter |
 | Paezano | Pitcher | 104 | high heat: every 3rd pitch in a row (or the first after he bats a projectile back) is a 98 MPH heater |
+| Vex | The Boss | 110 | long cane reach; slow but hard to pin down (Vanish, and the cross-up super) |
 | Marcus | Long-range | 104 | slowest walk and dash, longest reach (×1.4, a sound blast off his bass) but normals start 2 frames slower; hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
 
 Reach is measured from each fighter's own sprite (`tools/hitboxes.py`); the archetype's `reach` multiplies it (Vizor 1.12, Estrella 1.05, Samson 1.05). Marcus uses the wider of his sound blast and his sprite.

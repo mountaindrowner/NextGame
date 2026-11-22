@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.52.0
+
+- **Secret fighter: Vex.** Clear Story mode and Vex joins the select screen for Arcade, Versus, Training, Trials and Online ("SECRET FIGHTER UNLOCKED: VEX"). He isn't in Story mode, where he's the villain.
+  - **The Boss:** fights with a cane (Bartitsu). Slow, with long reach and 110 health.
+  - **SP: Cane Shockwave.** He slams his cane down and a purple shockwave rolls along the floor; it hits low.
+  - **DN+SP: Every Man Has a Price.** He tosses a fistful of gold coins; whoever they hit stops to stare at the money, a long stun with little damage.
+  - **BK+SP: Vanish.** He snaps his fingers, disappears in purple smoke and steps out behind the opponent.
+  - **Super: The City Is Mine.** He vanishes and reappears behind you; that first strike can be blocked. Then come four cane strikes from alternating sides and a shockwave slam.
+  - **Also:** a command normal (Cane Hook), a target combo (Cane Sweep), 8 combo trials, his own penthouse stage, portrait, voice and arcade ending.
+  - 47% win rate against the whole roster in the CPU round robin.
+  - New PixelLab art: 12 animations (kick, crouch, jump, block, focus, coin toss, vanish, win, low cane, crouching jab, air strike and flying kick), plus the portrait and the stage.
+- **New Story object art (PixelLab):** trash cans (they lie on their side when they roll), crates, wet-floor signs, pizza, roast chicken and cash, all drawn at their real size next to the fighters.
+
 ## 1.51.1
 
 - **New fire hydrant art** in Stage 1: a detailed PixelLab sprite at its real size next to the fighters (it was a small hand-drawn box). The spray and its warning come from the new nozzle height.

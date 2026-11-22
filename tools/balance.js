@@ -11,7 +11,7 @@ const N = +(process.argv[2] || 6), DIFF = +(process.argv[3] ?? 2), ONLY = proces
   await p.waitForFunction(() => window.__dbg && window.__dbg.CH.karl.spr, null, { timeout: 15000 });
   await p.evaluate(() => { const d = window.__dbg; d.SET.sound = false; d.SET.voice = false; d.SET.music = false; });
   if (TWEAK) await p.evaluate(TWEAK);
-  const ids = await p.evaluate(() => window.__dbg.ORDER);
+  const ids = await p.evaluate(o => [...window.__dbg.ORDER, ...(o && !window.__dbg.ORDER.includes(o) ? [o] : [])], ONLY);
   const W = {}, G = {}, M = {}, stat = {};
   for (const a of ids) { W[a] = 0; G[a] = 0; M[a] = {}; stat[a] = { dmg: 0, rounds: 0, kos: 0, frames: 0, sp: 0 }; for (const b of ids) M[a][b] = [0, 0]; }
   for (let i = 0; i < ids.length; i++) for (let j = i + 1; j < ids.length; j++) for (let side = 0; side < 2; side++) {
