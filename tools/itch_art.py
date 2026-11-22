@@ -109,7 +109,7 @@ def main():
     b = stage("karl", W, H, 0.45)
     draw_text(b, "BONFIRE BASH", W // 2, 26, 4, grad=FIRE, outline="#3a0808", center=True)
     bar(b, 63, 200, (208, 48, 26, 255))
-    draw_text(b, "12 FIGHTERS - 25 POWERS - 1 CHAMPION", W // 2, 70, 1, col="#ffe66a", center=True)
+    draw_text(b, "12 FIGHTERS + 1 SECRET - STORY - ONLINE", W // 2, 70, 1, col="#ffe66a", center=True)
     place(b, "karl", 52, H - 6, anim="punch", frame=4)
     place(b, "keksan", 436, H - 6, anim="kick", frame=5, flip=True)
     b.resize((W * 2, H * 2), Image.NEAREST).convert("RGB").save(OUT / "banner-960x240.png")
