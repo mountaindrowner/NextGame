@@ -20,10 +20,26 @@ const path = require('path');
     { const { F, step } = setup('karl', 'padre'); const a = F.p2, def = F.p1; a.state = 'idle'; const B = [];
       for (let i = 0; i < 4; i++) { a.atk = { name: 'jab', id: 9000 + i }; a.state = 'attack'; d.applyHit(a, def, { dmg: 2, stun: 30, bs: 5, kb: 0, lv: 'mid' }, def.x, 100); B.push(!!def.burstOK); }
       R.ipsAt = B; R.def = def.state; }
+    // tighter: a special landing a 3rd time in one combo is a loop
+    { const { F } = setup('karl', 'padre'); const a = F.p2, def = F.p1; const B = [];
+      for (let i = 0; i < 3; i++) { a.state = 'special'; a.sp = { kind: 'rush', id: 9100 + i, dim: 1 }; d.applyHit(a, def, { dmg: 2, stun: 30, bs: 5, kb: 0, lv: 'mid' }, def.x, 100); B.push(!!def.burstOK); }
+      R.spLoop = B; }
+    // stale pokes: the same normal landing on its own again and again does less each time
+    { const { F, step } = setup('karl', 'padre'); const a = F.p1, def = F.p2; const D = [];
+      for (let i = 0; i < 4; i++) { def.state = 'idle'; def.stun = 0; def.hp = def.mhp; a.state = 'attack'; a.atk = { name: 'kick', id: 9200 + i }; a.combo = 0;
+        d.applyHit(a, def, { dmg: 8, stun: 20, bs: 5, kb: 0, lv: 'mid' }, def.x, 100); D.push(+(def.mhp - def.hp).toFixed(2)); step(30); }
+      R.stale = D; }
+    // repeated special: less damage and a longer cooldown each time
+    { const { F, step } = setup('vizor', 'padre'); const f = F.p1; const C = [], M = [];
+      for (let i = 0; i < 3; i++) { f.state = 'idle'; f.spCD = 0; d.startSpecial(f, F.p2, 1); C.push(f.spCD); M.push(f.sp.dim); step(60); }
+      R.spCD = C; R.spDim = M; }
     return R;
   });
   C('HITSTOP grows with damage', r.jab.hs < r.kick.hs && r.kick.hs <= r.heavy, `jab ${r.jab.hs}, kick ${r.kick.hs}, iron charge ${r.heavy} frames`);
   C('HURT reactions by hit height', r.jab.k === 'high' && r.kick.k === 'mid' && r.sweep.k === 'low' && r.cjab.k === 'crouch', `jab ${r.jab.k}, kick ${r.kick.k}, low jab ${r.sweep.k}, vs crouching ${r.cjab.k}`);
+  C('special LOOP on 3rd repeat', r.spLoop.join() === 'false,false,true', `burst after special hits 1-3: ${r.spLoop.join(', ')}`);
+  C('STALE pokes lose damage', r.stale[1] < r.stale[0] && r.stale[2] < r.stale[1] && r.stale[3] >= r.stale[0] * .59, `same kick on its own: ${r.stale.join(' > ')}`);
+  C('repeated special: dim + longer cooldown', r.spDim[2] < r.spDim[1] && r.spDim[1] < 1 && r.spCD[2] > r.spCD[1] && r.spCD[1] > r.spCD[0], `damage x${r.spDim.join(', x')}, cooldown ${r.spCD.join(' > ')}`);
   C('LOOP detected on 4th repeat', r.ipsAt.join() === 'false,false,false,true', `burst available after hits 1-4: ${r.ipsAt.join(', ')}`);
   // burst with a real key press, then SP key = A+B, through the real game loop
   const live = async (fn) => p.evaluate(fn);

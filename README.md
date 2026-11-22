@@ -30,7 +30,11 @@ Controls: four face buttons, the same in every mode — **A** punch (`U`; also `
 
 ## Powers
 
-Every fighter has two specials, and no two work alike. Special 1: **A+B** (or down, forward + A). Special 2: **down + A+B** (or down, back + B). The segmented bar under each health bar shows every special's cooldown (one segment per special). Using the same special again within 5 seconds does 15% less damage each time (down to 55%).
+Every fighter has two specials, and no two work alike. Special 1: **A+B** (or down, forward + A). Special 2: **down + A+B** (or down, back + B). The segmented bar under each health bar shows every special's cooldown (one segment per special). Spam protection:
+- **Repeated specials:** the same special again within 8 seconds does 15% less damage each time (down to 50%), and its cooldown gets 20% longer each time (up to +80%).
+- **Stale pokes:** the same normal landing on its own (not in a combo) again within 4 seconds does 10% less each time (down to 60%); a grey "STALE" shows from the third.
+- **Loops:** if the same normal lands a 4th time in one combo, the same special a 3rd time, or a combo reaches 10 hits, the sparks turn blue and the defender can press A or B to **BURST** out.
+- **Whiffs:** a normal that hits nothing recovers 3 frames slower.
 
 | Fighter | Special 1 | Special 2 |
 |---|---|---|

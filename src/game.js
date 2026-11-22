@@ -876,9 +876,9 @@ function startThrow(f,o,back){f.state='throwing';f.st=0;f.vx=0;f.atk=null;f.crou
 function techThrow(a,d){a.thr=null;a.grabbed=null;for(const f of[a,d]){f.state='block';f.st=0;f.stun=14;f.vx=-f.face*3.2;f.rot=0;f.y=0;f.throwInv=30}
   addText('THROW BREAK!',(a.x+d.x)/2,GY-a.H-12,'#7ad8ff');sparks((a.x+d.x)/2,GY-a.H*.6,'#ffffff',10);SFX.block();F.hitstop=6;if(!d.cpu)badge('tech')}
 function startSpecial(f,o,which=1,ex=false){if(which===3)return startSuper(f,o);const kind=which===4?f.c.special3:which===2?f.c.special2:f.c.special,name=which===4?f.c.sp3Name:which===2?f.c.sp2Name:f.c.spName;
-  const R=(f.rep||(f.rep={}))[kind]||{n:-1,t:-999};R.n=frameNo-R.t<300?R.n+1:0;R.t=frameNo;f.rep[kind]=R;
-  f.state='special';f.st=0;f.vx=0;f.crouch=false;f.atk=null;f.sp={kind,two:which===2,hits:0,last:-99,id:++atkId,dim:Math.max(.55,1-.15*R.n)};
-  if(which===4)f.spCD3=SPCD[kind]||120;else if(which===2)f.spCD2=SPCD[kind]||90;else f.spCD=SPCD[kind]||75;
+  const R=(f.rep||(f.rep={}))[kind]||{n:-1,t:-999};R.n=frameNo-R.t<432?R.n+1:0;R.t=frameNo;f.rep[kind]=R;const cdK=1+.2*Math.min(R.n,4);// DIMINISHING RETURNS: the same special again within 8 s
+  f.state='special';f.st=0;f.vx=0;f.crouch=false;f.atk=null;f.sp={kind,two:which===2,hits:0,last:-99,id:++atkId,dim:Math.max(.5,1-.15*R.n)};
+  if(which===4)f.spCD3=Math.round((SPCD[kind]||120)*cdK);else if(which===2)f.spCD2=Math.round((SPCD[kind]||90)*cdK);else f.spCD=Math.round((SPCD[kind]||75)*cdK);
   if(kind==='strike')f.spCD2=Math.max(f.spCD2||0,40);if(kind==='split')f.spCD=Math.max(f.spCD||0,40);// Zeke: no instant low -> overhead switch
   F.superFlash=10;F.superBy=f;SFX.special();addText(name+'!',f.x,GY-f.H-14,f.c.col.aura);
   if(kind==='step')f.inv=20;if(kind==='eagle')f.inv=8;if(kind==='knee')f.inv=6;if(kind==='rising')f.inv=7;if(kind==='takeover')f.inv=6;if(kind==='powersuit')f.inv=16;if(kind==='replay'){f.inv=24;f.sp.path=(f.rh||[]).slice(-90).reverse();SFX.rewind()}
@@ -1300,8 +1300,11 @@ function applyHit(att,def,d,cx,cy){const push=def.x>=att.x?1:-1,A=arch(def.c);
   if(!inCombo){att.cseq={};att.ips=false}
   {const key=d.tag||(att.state==='special'&&att.sp?(att.sp.two?'sp2':'sp1'):att.atk?att.atk.name:'?'),iid=d.tid||(att.sp&&att.sp.id)||(att.atk&&att.atk.id);
     if(key!=='super'){const m=att.cseq||(att.cseq={}),q=m[key]||(m[key]={n:0,id:null});if(q.id!==iid){q.n++;q.id=iid}
-      if(q.n>=4&&!att.ips){att.ips=true;def.burstOK=true;addText('LOOP! PRESS A/B: BURST',def.x,GY-def.H-24,'#3ae8ff')}}}att.comboT=60;if(att.combo>=2)addCombo(att);
+      if((q.n>=(/^sp/.test(key)?3:4)||att.combo>=10)&&!att.ips){att.ips=true;def.burstOK=true;addText('LOOP! PRESS A/B: BURST',def.x,GY-def.H-24,'#3ae8ff')}}}att.comboT=60;if(att.combo>=2)addCombo(att);
   dmg*=d.minScale?Math.max(d.minScale,SCALE[Math.min(SCALE.length-1,att.combo-1)]):SCALE[Math.min(SCALE.length-1,att.combo-1)];
+  // STALE POKES: the same normal landing on its own (not in a combo) again within 4 s does 10% less each time, down to 60%
+  if(!inCombo&&d.tag!=='super'&&att.state!=='special'&&att.atk&&att.atk.name){const S=att.stale||(att.stale={}),q=S[att.atk.name]||(S[att.atk.name]={n:-1,t:-999});
+    q.n=frameNo-q.t<216?q.n+1:0;q.t=frameNo;if(q.n>0){dmg*=Math.max(.6,1-.1*q.n);if(q.n>=2)addText('STALE',def.x,GY-def.H-2,'#9a9ab0')}}
   if(!att.cpu&&F.p1){const r=rc(att.c.id);if(att.combo>r.combo){r.combo=att.combo;saveRec()}if(att.combo>=5)badge('combo5')}
   if(F.trial&&att===F.p1)trialHit(att,exHit?'ex':d.tag||(att.state==='special'&&att.sp?(att.sp.two?'sp2':'sp1'):att.atk?att.atk.name:'?'),d.tid||(att.sp&&att.sp.id)||(att.atk&&att.atk.id));
   // counter hit: tagging an opponent during their attack's start-up

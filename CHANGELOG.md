@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.53.0
+
+- **Tighter spam protection in fights:**
+  - **Repeated specials:** the same special again within 8 seconds (was 5) does 15% less damage each time, now down to 50% (was 55%). Its cooldown also grows 20% each time, up to +80%, so fireball spam slows down. Example: Vizor's Shutter Flash goes 110 → 132 → 154 frames.
+  - **Stale pokes (new):** the same normal landing on its own, outside a combo, again within 4 seconds does 10% less each time, down to 60%. A grey "STALE" shows from the third. Combos are unaffected; they already scale down.
+  - **Stricter loop detection:** the same special landing a 3rd time in one combo (normals: still the 4th), or any combo reaching 10 hits, lets the defender BURST out.
+- **Balance check:** the CPU round robin at Hard has every fighter between 39% and 59%.
+- **Tests:** `tools/feel.js` checks all three rules.
+
 ## 1.52.0
 
 - **Secret fighter: Vex.** Clear Story mode and Vex joins the select screen for Arcade, Versus, Training, Trials and Online ("SECRET FIGHTER UNLOCKED: VEX"). He isn't in Story mode, where he's the villain.
