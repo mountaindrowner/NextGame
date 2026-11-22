@@ -201,7 +201,10 @@ def manual_mask(f, boxes):
 def run(debug=None):
     meta = json.loads((A / "meta.json").read_text())["anims"]
     sheets = []
+    only = [x for x in __import__("os").environ.get("ONLY", "").split(",") if x]  # ONLY=punch2,kick2: just these new strips
     for k, m in meta.items():
+        if only and k not in only:
+            continue
         strip = Image.open(A / f"{k}.png").convert("RGBA"); w, h, n = m["w"], m["h"], m["n"]
         for i in range(n):
             f = strip.crop((i * w, 0, i * w + w, h))
@@ -224,7 +227,7 @@ def run(debug=None):
                 strip.paste(f, (i * w, 0))
         if not debug:
             strip.save(A / f"{k}.png")
-    if not debug:  # the standing still (cutscenes, silhouettes), made by spr.py
+    if not debug and not only:  # the standing still (cutscenes, silhouettes), made by spr.py
         still = A.parent.parent / "estrella_spr.png"
         f = Image.open(still).convert("RGBA"); paint(f, frame_mask(f)[0]); f.save(still)
     if debug:

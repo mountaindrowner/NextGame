@@ -85,10 +85,45 @@ SPECIAL = {
 }
 
 
+# COMBO STRINGS: each hit of a chain has its own animation. punch2 = the 2nd punch (a cross), punch3 = the 3rd (a hook or uppercut
+# finisher), kick2 = a kick that ends a chain, kick3 = a rising kick (Story mode's launcher, or a 2nd kick in a chain).
+_END = ", then returns to a fighting stance"
+COMBO = {
+    "karl": {"punch2": "karate reverse punch: drives the rear fist straight forward at chest height with a sharp twist of the hips", "punch3": "karate rising uppercut: dips low and drives the lead fist straight up to chin height",
+             "kick2": "karate roundhouse kick: pivots and swings the rear leg around high, striking with the top of the foot at head height", "kick3": "karate front snap kick that rises high, the foot snapping straight up above head height"},
+    "keksan": {"punch2": "Muay Thai straight right cross, the rear fist driving forward at head height", "punch3": "Muay Thai upward elbow strike: steps in and drives the point of the elbow up through head height",
+               "kick2": "Muay Thai switch kick: switches feet and slams the shin into the body at waist height", "kick3": "Muay Thai straight knee: grabs forward with both hands and drives the knee straight up to chest height"},
+    "vizor": {"punch2": "a fast straight right cross with the rear fist at head height", "punch3": "a tight left hook swinging around to the side of the head",
+              "kick2": "a sharp side kick to the body, the heel leading at waist height", "kick3": "a rising crescent kick sweeping the leg up and over at head height"},
+    "padre": {"punch2": "a heavy boxing straight right cross at head height", "punch3": "a big boxing uppercut, dipping low and driving the fist up to chin height",
+              "kick2": "a strong front push kick to the stomach, the sole of the foot leading", "kick3": "a rising knee strike, driving the knee straight up to chest height"},
+    "zeke": {"punch2": "a looping overhand right punch at head height", "punch3": "a wide swinging uppercut from the hip like a bowling follow-through, the fist rising up high",
+             "kick2": "a low roundhouse kick to the thigh", "kick3": "a rising front kick, the foot snapping straight up above head height"},
+    "hecky": {"punch2": "a crisp boxing straight right cross, white suit jacket flaring", "punch3": "a sharp boxing uppercut, dipping low and driving the fist up to the chin, tie flying",
+              "kick2": "a stylish spinning hook kick, the heel whipping around at head height", "kick3": "a rising front kick, the polished shoe snapping straight up above head height"},
+    "lawslie": {"punch2": "a palm-heel strike, the rear palm driving straight forward at chin height", "punch3": "a forearm smash swinging across at head height",
+                "kick2": "a police front push kick to the stomach", "kick3": "a rising knee strike, grabbing forward and driving the knee up to chest height"},
+    "rex": {"punch2": "a straight right cross at head height, the bass guitar still strapped on in front of him", "punch3": "a swinging uppercut driving the fist up to chin height, the bass guitar still strapped on in front of him",
+            "kick2": "a stomping front kick to the stomach, the bass guitar still strapped on in front of him", "kick3": "a rising front kick, the foot snapping up above head height, the bass guitar still strapped on in front of him"},
+    "kai": {"punch2": "a quick straight right cross at head height, the basketball held in the other hand", "punch3": "a leaping uppercut, springing up off the toes and driving the fist up high, the basketball held in the other hand",
+            "kick2": "a sharp roundhouse kick to the body, the basketball held in the other hand", "kick3": "a high rising front kick, the sneaker snapping up above head height, the basketball held in the other hand"},
+    "estrella": {"punch2": "a left backfist strike at head height with her free left hand, the black microphone held in her right hand near her chest", "punch3": "a rising left uppercut with her free left fist, the black microphone held in her right hand, long hair flying",
+                 "kick2": "a spinning heel kick at head height, the black microphone held in her right hand, long hair whipping around", "kick3": "a rising front kick, the foot snapping up above head height, the black microphone held in her right hand"},
+    "reyes": {"punch2": "a hard straight right cross with the gloved fist at head height", "punch3": "a driving left uppercut with the gloved fist up to chin height",
+              "kick2": "a tactical front kick to the stomach, the combat boot leading", "kick3": "a rising knee strike, driving the knee straight up to chest height"},
+    "mateo": {"punch2": "a straight right cross with the throwing hand at head height, the baseball glove on the other hand", "punch3": "a swinging uppercut with the bare right fist rising up to the chin, the baseball glove on the other hand",
+              "kick2": "a roundhouse kick to the body, cleats leading", "kick3": "a rising front kick, the cleat snapping up above head height"},
+    "vex": {"punch2": "a backhand swing of the black walking cane at head height, sweeping it back across", "punch3": "an overhead chop: raises the black walking cane high and brings it straight down in front of him",
+            "kick2": "a hard stomp kick with the heel of his polished shoe at knee height, the black walking cane in his right hand", "kick3": "a rising knee strike to the chest, the black walking cane held in his right hand"},
+}
+
+
 def spec(name):
     s = dict(COMMON)
     for k, v in SPECIAL[name].items():
         s[k] = {"mode": "v3", "frame_count": 8, "action_description": v}
+    for k, v in COMBO.get(name, {}).items():
+        s[k] = {"mode": "v3", "frame_count": 8, "action_description": v + _END}
     return s
 
 
