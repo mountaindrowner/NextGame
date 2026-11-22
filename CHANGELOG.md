@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.54.0
+
+- **Combo strings have their own animations (Papa-Léguas first).** Each hit of a chain now plays a different move, with the same timing and damage as before:
+  - **Fights:** jab, then a karate reverse punch (cross), then a lunging finisher. Kicks in a chain become a spinning roundhouse, then a rising front kick.
+  - **Story mode:** A, A gives the cross. A, A, A ends on the finisher, A, A, B on the roundhouse, and the A, A, JUMP launcher is the rising kick.
+  - The other fighters get theirs next (their art is waiting on PixelLab). Until then they keep their single punch and kick.
+- **Hecky's Laser Glare is slower and less spammable:**
+  - **Startup:** 18 frames (was 9), with his eyes glinting red the whole time, so you can crouch or jump it.
+  - **Recovery:** 3 frames longer, so a miss can be punished.
+  - **Cooldown:** 240 frames (was 130), about 4.4 seconds, before the repeat penalty.
+
 ## 1.53.0
 
 - **Tighter spam protection in fights:**
