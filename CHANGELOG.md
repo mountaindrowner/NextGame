@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.59.1
+
+- **Devanté's last gaps are filled** with the best of his PixelLab takes:
+  - **Finisher:** lifts the ball overhead and smashes it forward.
+  - **Rising kick:** a kick while he dribbles.
+  - **Forward throw:** a two-handed chest shove.
+  - **Back throw:** a pivot with the ball held out.
+- Every fighter now has the full combo string (cross, finisher, chain kick, rising kick) and throw animations.
+
 ## 1.59.0
 
 - **Throws have real animations.** Each fighter grabs, pulls in and heaves the opponent over:
