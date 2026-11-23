@@ -24,7 +24,7 @@ function saveRec(){try{localStorage.setItem('worlddojo_rec',JSON.stringify(REC))
 function rc(id){return REC.ch[id]||(REC.ch[id]={w:0,l:0,clear:0,combo:0})}
 const BADGES=[['first','FIRST VICTORY','WIN A MATCH'],['perfect','FLAWLESS','WIN A ROUND UNTOUCHED'],['combo5','COMBO ARTIST','LAND A 5-HIT COMBO'],
   ['super','SUPER FINISH','KO WITH A SUPER'],['throw','HANDS ON','LAND A THROW'],['tech','SLIPPERY','BREAK A THROW'],['clear','CHAMPION','CLEAR ARCADE'],
-  ['hard','IRON WILL','CLEAR ARCADE ON HARD'],['trials','STUDENT','CLEAR A FIGHTER\'S TRIALS'],['allclear','WORLD CHAMPION','CLEAR ARCADE WITH EVERYONE'],['story','REDEEMED','CLEAR STORY MODE']];
+  ['hard','IRON WILL','CLEAR ARCADE ON HARD'],['trials','STUDENT','ONE FIGHTER\'S TRIALS'],['allclear','WORLD CHAMPION','ARCADE WITH EVERYONE'],['story','REDEEMED','CLEAR STORY MODE']];
 let TOAST=null;
 function badge(k){if(REC.badges[k])return;REC.badges[k]=1;saveRec();const b=BADGES.find(x=>x[0]===k);if(b)TOAST={s:b[1],l:170};try{SFX.ok()}catch(e){}}
 
@@ -1677,7 +1677,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     const g=ctx.createLinearGradient(0,0,0,40);g.addColorStop(0,'rgba(0,0,0,.55)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(-4,-4,W+8,44);
     if(this.superFlash>0){ctx.fillStyle='rgba(0,0,20,.55)';ctx.fillRect(-4,-4,W+8,H+8)}
     for(const f of[this.p1,this.p2])if(arch(f.c).rhythm&&f.y<=0){const m=frameNo%BEAT;if(m<8){ctx.globalAlpha=(1-m/8)*.7;ctx.strokeStyle=f.c.col.aura;ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(f.x,GY+1,18+m*2,3+m*.4,0,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}}
-    for(const f of[this.p1,this.p2]){const s=Math.max(.35,1-f.y/110);ctx.fillStyle='rgba(0,0,0,.32)';ctx.beginPath();ctx.ellipse(f.x,GY+1,22*s,3.5*s,0,0,Math.PI*2);ctx.fill()}
+    for(const f of[this.p1,this.p2]){if(f.shadow&&f.koF&&frameNo-f.koF>=90)continue;const s=Math.max(.35,1-f.y/110);ctx.fillStyle=f.shadow&&f.koF?`rgba(0,0,0,${.32*Math.max(0,1-(frameNo-f.koF-30)/60)})`:'rgba(0,0,0,.32)';ctx.beginPath();ctx.ellipse(f.x,GY+1,22*s,3.5*s,0,0,Math.PI*2);ctx.fill()}
     const order=(this.p2.state==='attack'||this.p2.state==='special'||this.p2.state==='slamming')?[this.p1,this.p2]:[this.p2,this.p1];
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='super'&&f.c.id==='estrella')drawFinaleBack(f);
     order.forEach(drawFighter);
@@ -2285,17 +2285,20 @@ const OnlineSelect={enter(){this.R=rosterFor('online');this.cur=Math.min(this.cu
       if(i===this.cur&&((t>>3)&1||this.done)){ctx.strokeStyle='#ff3a3a';ctx.lineWidth=2;ctx.strokeRect(x-2,y-2,S+4,S+4)}});
     drawText((me.skin2&&CH[me.skin2]?'SELECT: COSTUME  ':'')+(this.done?'B: CHANGE':'A: READY  B: LEAVE'),128,182,'#9ad',1,{align:'center',shadow:false})}};
 // ---------------- RECORDS ----------------
-const Records={enter(){playMusic('select')},
-  update(){if(pressed.b||pressed.a||pressed.start){SFX.back();go(Title);Title.ph='menu';Title.sel=Title.items.indexOf('RECORDS')}},
+const Records={enter(){playMusic('select');this.pg=0},
+  update(){if(pressed.left||pressed.right){this.pg^=1;SFX.move();return}if(pressed.b||pressed.a||pressed.start){SFX.back();go(Title);Title.ph='menu';Title.sel=Title.items.indexOf('RECORDS')}},
+  // two pages: every fighter's record (readable rows), then the badges with what each one asks for
   draw(){stripes(this.t,'#120f30','#191540');drawText('RECORDS',128,6,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});
-    const RH=Math.min(11,Math.floor(84/ORDER.length));box(8,24,240,ORDER.length*RH+13);['FIGHTER','W-L','BEST','TRIALS'].forEach((h,i)=>drawText(h,[30,128,170,214][i],27,'#99a',1,{align:i?'center':'left',shadow:false}));
-    ORDER.forEach((id,i)=>{const r=rc(id),y=36+i*RH,c=CH[id];ctx.imageSmoothingEnabled=true;ctx.drawImage(c.head,12,y-1,10,10);ctx.imageSmoothingEnabled=false;
-      drawText(c.name,27,y+1,'#fff',1,{shadow:false});if(r.clear)drawText('*',100,y+1,'#ffd23a',1,{shadow:false});
-      drawText(`${r.w}-${r.l}`,128,y+1,'#fff',1,{align:'center',shadow:false});drawText(r.combo?r.combo+(r.combo>1?' HITS':' HIT'):'-',170,y+1,'#fff',1,{align:'center',shadow:false});
-      const tr=REC.trials[id]||0;drawText(`${tr}/${TRIALS[id].length}`,214,y+1,tr>=TRIALS[id].length?'#7aff8a':'#fff',1,{align:'center',shadow:false})});
-    const got=BADGES.filter(b=>REC.badges[b[0]]).length;drawText(`BADGES ${got}/${BADGES.length}`,128,40+ORDER.length*RH,'#ffe66a',1,{align:'center'});
-    BADGES.forEach((b,i)=>{const on=REC.badges[b[0]],x=i%2?132:10,y=49+ORDER.length*RH+Math.floor(i/2)*8;drawText((on?'# ':'- ')+b[1],x,y,on?'#ffd23a':'#55607a',1,{shadow:false})});
-    drawText('* = ARCADE CLEARED: NEW COLOR    B: BACK',128,184,'#8a86a8',1,{align:'center',shadow:false})}};
+    const got=BADGES.filter(b=>REC.badges[b[0]]).length;
+    if(!this.pg){const RO=rosterFor('records'),RH=11;box(8,24,240,RO.length*RH+13);['FIGHTER','W-L','BEST','TRIALS'].forEach((h,i)=>drawText(h,[30,128,170,214][i],27,'#99a',1,{align:i?'center':'left',shadow:false}));
+      RO.forEach((id,i)=>{const r=rc(id),y=36+i*RH,c=CH[id];ctx.imageSmoothingEnabled=true;ctx.drawImage(c.head,12,y-1,10,10);ctx.imageSmoothingEnabled=false;
+        drawText(c.name,27,y+1,'#fff',1,{shadow:false});if(r.clear)drawText('*',100,y+1,'#ffd23a',1,{shadow:false});
+        drawText(`${r.w}-${r.l}`,128,y+1,'#fff',1,{align:'center',shadow:false});drawText(r.combo?r.combo+(r.combo>1?' HITS':' HIT'):'-',170,y+1,'#fff',1,{align:'center',shadow:false});
+        const tr=REC.trials[id]||0;drawText(`${tr}/${TRIALS[id].length}`,214,y+1,tr>=TRIALS[id].length?'#7aff8a':'#fff',1,{align:'center',shadow:false})});
+      drawText(`*CLEARED  L/R: BADGES  B: BACK`,128,184,'#8a86a8',1,{align:'center',shadow:false})}
+    else{box(8,24,240,BADGES.length*13+9);BADGES.forEach((b,i)=>{const on=REC.badges[b[0]],y=30+i*13;
+        drawText((on?'# ':'- ')+b[1],14,y,on?'#ffd23a':'#8a90a8',1,{shadow:false});drawText(b[2]||'',120,y,on?'#fff':'#6a7090',1,{shadow:false})});
+      drawText(`BADGES ${got}/${BADGES.length}  L/R: FIGHTERS  B: BACK`,128,184,'#8a86a8',1,{align:'center',shadow:false})}}};
 const Continue={enter(){this.n=9;stopMusic()},
   update(){if(this.t%60===0&&this.t>0){this.n--;if(this.n<0){goFade(()=>go(GameOver));return}SFX.tick()}
     if(pressed.start||pressed.a){SFX.start();RUN.cont++;goFade(()=>startFight())}if(pressed.b&&this.t>10){this.t+=(60-this.t%60)-1}},
@@ -3103,7 +3106,7 @@ const Brawl={
     this.drawMood(cx);
     // everyone on the floor, back to front
     const ents=[...this.ps.filter(q=>!q.out),...this.foes,...this.items,...(this.allyRun?[this.allyRun]:[])].sort((a,b)=>a.z-b.z);
-    for(const e of ents){const s=Math.max(.35,1-(e.y||0)/110);ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(Math.round(e.x-cx),FY+e.z+1,(e.kind&&ITEMDRAW[e.kind]?9:18)*s,3*s,0,0,Math.PI*2);ctx.fill();
+    for(const e of ents){if(e.shadow&&e.koF&&frameNo-e.koF>=90)continue;const s=Math.max(.35,1-(e.y||0)/110);ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(Math.round(e.x-cx),FY+e.z+1,(e.kind&&ITEMDRAW[e.kind]?9:18)*s,3*s,0,0,Math.PI*2);ctx.fill();
       // lined up: your hits reach this enemy's depth (a yellow ring under him)
       if(!this.ps.includes(e)&&!e.ally&&FOES[e.kind]&&!e.dead&&!e.ko&&!['leave','yield','down'].includes(e.state)&&Math.abs(e.z-P.z)<=14&&Math.abs(e.x-P.x)<80){ctx.strokeStyle='rgba(255,230,106,.75)';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(Math.round(e.x-cx),FY+e.z+1,16*s,3*s,0,0,Math.PI*2);ctx.stroke()}}
     for(const e of ents){if(ITEMDRAW[e.kind]){if(e.kind!=='crate'&&e.l<120&&(frameNo&4))continue;ITEMDRAW[e.kind](Math.round(e.x-cx),FY+e.z,e);continue}

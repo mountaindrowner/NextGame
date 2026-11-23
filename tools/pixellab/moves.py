@@ -147,6 +147,22 @@ RETRY = {
 }
 
 
+# third takes: say exactly where the striking limb ends up, and pin the prop down
+_HOLD = ", the fist clearly extended far in front of him at the end of the strike"
+RETRY2 = {
+    "vizor": {"punch2c": "plants his feet and throws a hard straight right cross, the right arm snapping fully out at head height" + _HOLD,
+              "kick3c": "a high front kick, the leg rising straight up in front of him with the sneaker above head height, no glowing effects"},
+    "lawslie": {"kick2c": "a side kick: lifts the knee and thrusts the boot straight out at waist height, the leg fully extended in front of her, both fists up in guard"},
+    "rex": {"punch3c": "takes his right hand off the bass guitar and swings a big rising uppercut, the right fist driving up high above his head, the bass hanging on its strap in front of him"},
+    "kai": {"punch3c": "holds the basketball still against his left hip with his left hand, never dribbling or passing it; bends his knees and drives a big rising uppercut with the right fist straight up above his head",
+            "kick3c": "holds the basketball still against his left hip with his left hand, never dribbling or passing it; snaps a high front kick, the sneaker rising straight up above his head"},
+    "reyes": {"punch2c": "steps forward and throws a long straight right cross, the gloved right fist fully extended far in front of him at head height",
+              "punch3c": "bends his knees, then drives a big rising uppercut, the gloved right fist rising straight up above his head"},
+    "mateo": {"punch3c": "his right hand is an empty closed fist, no baseball anywhere; dips and drives a big rising uppercut with the right fist straight up above his head, the baseball glove staying on his left hand",
+              "kick2c": "a roundhouse kick: pivots and swings the right leg around at waist height, the cleat leading, the leg fully extended, both hands up in guard; no throwing and no baseball"},
+}
+
+
 def spec(name):
     s = dict(COMMON)
     for k, v in SPECIAL[name].items():
@@ -154,6 +170,8 @@ def spec(name):
     for k, v in COMBO.get(name, {}).items():
         s[k] = {"mode": "v3", "frame_count": 8, "action_description": v + _END}
     for k, v in RETRY.get(name, {}).items():
+        s[k] = {"mode": "v3", "frame_count": 8, "action_description": v + _END}
+    for k, v in RETRY2.get(name, {}).items():
         s[k] = {"mode": "v3", "frame_count": 8, "action_description": v + _END}
     return s
 
