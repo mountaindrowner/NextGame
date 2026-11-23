@@ -99,3 +99,15 @@ Generating the art (`tools/pixellab/standard.py`):
 - **Uppercuts:** use PixelLab's built-in `uppercut` motion, 1 generation per take.
 - **Sweeps:** start from the fighter's crouch frame.
 - **Kai:** his ball kept turning moves into dribbles. His kick finisher uses the built-in `high kick` motion, and his jump punch starts from a jump frame with the ball erased (`raw/kai/jump_noball`).
+
+## Later: frame data standard (to do)
+
+Every move already has startup, active and recovery frames (`ATK` in `src/game.js`, with per-fighter overrides in `FDATA`). `node tools/framedata.js` measures each move's advantage on hit and on block. What's still missing is a standard for them, the way this guide sets one for how moves look:
+
+- **Ranges per move type.** For example, every jab starts up in about 4 frames, and every sweep is slow and unsafe on block. Fighters may differ only within a range, and only on purpose (a rushdown fighter is faster, a heavy fighter is slower).
+- **Art that matches the timing:**
+  - The wind-up plays during startup.
+  - The fully extended frame shows during the active frames.
+  - The return to guard plays during recovery.
+  - Today the new uppercuts squeeze their dip-and-rise into the jab's 4 startup frames.
+- **Advantage rules:** which moves are plus or minus on block, which links work, and a check that flags any fighter that falls outside the ranges.
