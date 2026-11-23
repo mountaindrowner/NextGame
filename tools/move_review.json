@@ -1,0 +1,656 @@
+{
+ "estrella": {
+  "airkick": {
+   "hash": "d09fe71ced8f",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "77fd419cb55c",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "62494d7f495a",
+   "ok": true
+  },
+  "kick": {
+   "hash": "16700bb2d2a0",
+   "ok": true
+  },
+  "kick2": {
+   "hash": "0121d756eae6",
+   "ok": true
+  },
+  "kick3": {
+   "hash": "f17d8f264c72",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "7e60772528c6",
+   "ok": true
+  },
+  "punch": {
+   "hash": "c2db5cb82f13",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "9db21807003c",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "13307c311996",
+   "ok": true
+  }
+ },
+ "hecky": {
+  "airkick": {
+   "hash": "abafdae45155",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "89710fec6b80",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "d77ae3a51595",
+   "ok": true
+  },
+  "kick": {
+   "hash": "7aaad67a5a72",
+   "ok": true
+  },
+  "kick2": {
+   "hash": "45365162bb61",
+   "ok": true
+  },
+  "kick3": {
+   "hash": "231a7b357de5",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "11a3c552c21a",
+   "ok": true
+  },
+  "punch": {
+   "hash": "68e81c4ea376",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "e5cec4336c40",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "28facb16f09f",
+   "ok": true
+  }
+ },
+ "heckyfox": {
+  "airkick": {
+   "hash": "4104ae991bad",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "6e0f2d104d63",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "ae4a0c7acccc",
+   "ok": true
+  },
+  "kick": {
+   "hash": "527357f7a35c",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "4acc4c4b8e57",
+   "ok": true
+  },
+  "punch": {
+   "hash": "af91a813b8ce",
+   "ok": true
+  }
+ },
+ "kai": {
+  "airkick": {
+   "hash": "388d57c5498d",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "b17ed857ee93",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "bbafc6ba5346",
+   "ok": true
+  },
+  "kick": {
+   "hash": "2f0db9a0bbdf",
+   "ok": true
+  },
+  "kick2": {
+   "hash": "066a0d15c610",
+   "ok": true
+  },
+  "kick3": {
+   "hash": "85615018c775",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "954eccf417f5",
+   "ok": true
+  },
+  "punch": {
+   "hash": "90260c494be1",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "8acd808dc8ae",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "5d40eb310aa5",
+   "ok": true
+  }
+ },
+ "karl": {
+  "airkick": {
+   "hash": "03e5a45c0f78",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "5b0e21408009",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "88dfbeb7d756",
+   "ok": true
+  },
+  "kick": {
+   "hash": "bf2fa2018634",
+   "ok": true
+  },
+  "kick2": {
+   "hash": "f7f93e5d2270",
+   "ok": true
+  },
+  "kick3": {
+   "hash": "80f4b16b03d8",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "d8024396d29c",
+   "ok": true
+  },
+  "punch": {
+   "hash": "674e8c6e471b",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "f9cd8a5b77fe",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "09f2d0c67e2e",
+   "ok": true
+  }
+ },
+ "karl2": {
+  "airkick": {
+   "hash": "c4be4e890d29",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "8e1b60412527",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "493cfcf873d8",
+   "ok": true
+  },
+  "kick": {
+   "hash": "c94de1bae91f",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "b1019e286dd7",
+   "ok": true
+  },
+  "punch": {
+   "hash": "f8cd0bb16cc1",
+   "ok": true
+  }
+ },
+ "keksan": {
+  "airkick": {
+   "hash": "2ec4b8af0e8b",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "0025899d727b",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "4c9ef2357e36",
+   "ok": true
+  },
+  "kick": {
+   "hash": "43de2901e53c",
+   "ok": true
+  },
+  "kick2": {
+   "hash": "250fef527ccc",
+   "ok": true
+  },
+  "kick3": {
+   "hash": "83a70935316d",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "1c23ee5ffd1a",
+   "ok": true
+  },
+  "punch": {
+   "hash": "0298123d1bdd",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "ab40a5cdef29",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "868f21861da6",
+   "ok": true
+  }
+ },
+ "lawslie": {
+  "airkick": {
+   "hash": "df2e96680778",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "d816a520f8d0",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "b7e4ffa5994f",
+   "ok": true
+  },
+  "kick": {
+   "hash": "182a953b3ad5",
+   "ok": true
+  },
+  "kick2": {
+   "hash": "bd6fc82a01f8",
+   "ok": true
+  },
+  "kick3": {
+   "hash": "2d729bb93f7c",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "a67e1472190e",
+   "ok": true
+  },
+  "punch": {
+   "hash": "51c025aa8e55",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "cc6562803ef5",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "e1f297484064",
+   "ok": true
+  }
+ },
+ "mateo": {
+  "airkick": {
+   "hash": "63314cf7fa4c",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "14a0da422d80",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "5d09c0a8ea61",
+   "ok": true
+  },
+  "kick": {
+   "hash": "4215dc3fbd31",
+   "ok": true
+  },
+  "kick2": {
+   "hash": "88a602843009",
+   "ok": true
+  },
+  "kick3": {
+   "hash": "e40e75e5850d",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "050f9710e81f",
+   "ok": true
+  },
+  "punch": {
+   "hash": "b1d2ff685740",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "8d29309150a3",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "51108aaf30f3",
+   "ok": true
+  }
+ },
+ "padre": {
+  "airkick": {
+   "hash": "bb4aef569968",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "6ed6bfa1b444",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "8cd97ef11633",
+   "ok": true
+  },
+  "kick": {
+   "hash": "120dadb7697a",
+   "ok": true
+  },
+  "kick2": {
+   "hash": "fd8df9dc6978",
+   "ok": true
+  },
+  "kick3": {
+   "hash": "36b268f2148e",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "83dc67b0752f",
+   "ok": true
+  },
+  "punch": {
+   "hash": "9dc5dcd34a59",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "b1fb50ed83b1",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "92c3625f7ff1",
+   "ok": true
+  }
+ },
+ "padreteen2": {
+  "airkick": {
+   "hash": "e939909b61f9",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "cba728fe66ae",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "6bd67d5f5614",
+   "ok": true
+  },
+  "kick": {
+   "hash": "0385a6d79e75",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "14abd1a6b94b",
+   "ok": true
+  },
+  "punch": {
+   "hash": "ca890fc5a5e0",
+   "ok": true
+  }
+ },
+ "rex": {
+  "airkick": {
+   "hash": "04d5e9757acd",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "943706116d90",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "0f68d32694c8",
+   "ok": true
+  },
+  "kick": {
+   "hash": "2d33d25f4d27",
+   "ok": true
+  },
+  "kick2": {
+   "hash": "3e3e61797c81",
+   "ok": true
+  },
+  "kick3": {
+   "hash": "3036741ec686",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "3fb0ea63202d",
+   "ok": true
+  },
+  "punch": {
+   "hash": "ab919d760a45",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "9f6d1adfe3a2",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "062ccadaddfa",
+   "ok": true
+  }
+ },
+ "reyes": {
+  "airkick": {
+   "hash": "64db164cccf8",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "dadb5bacce74",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "683a3311e2f4",
+   "ok": true
+  },
+  "kick": {
+   "hash": "5e7a9b737915",
+   "ok": true
+  },
+  "kick2": {
+   "hash": "4b833db8bfc8",
+   "ok": true
+  },
+  "kick3": {
+   "hash": "96a01a78bb2b",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "1c3fe8e5de24",
+   "ok": true
+  },
+  "punch": {
+   "hash": "f8a1758ac00f",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "bff9f0d915f0",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "e4ab48bd07f0",
+   "ok": true
+  }
+ },
+ "vex": {
+  "airkick": {
+   "hash": "2434e4af77c0",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "76c78f9354a6",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "7b8653ee5c66",
+   "ok": true
+  },
+  "kick": {
+   "hash": "3fe7b3d2eae1",
+   "note": "knee lift with the cane (Vex kept as is)",
+   "ok": false
+  },
+  "kick2": {
+   "hash": "a60bfa464e85",
+   "note": "knee lift with the cane (Vex kept as is)",
+   "ok": false
+  },
+  "kick3": {
+   "hash": "6cd96379b746",
+   "note": "cane step, no kick (Vex kept as is)",
+   "ok": false
+  },
+  "lowkick": {
+   "hash": "b368fe265d5f",
+   "ok": true
+  },
+  "punch": {
+   "hash": "846f7037dbb7",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "c3f3cf90c8ca",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "cf144047a17b",
+   "note": "cane jab, no uppercut (Vex kept as is)",
+   "ok": false
+  }
+ },
+ "vizor": {
+  "airkick": {
+   "hash": "0e1ddc2fa582",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "5d440a3d3ebf",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "27956f676910",
+   "ok": true
+  },
+  "kick": {
+   "hash": "75d1be12d0e2",
+   "ok": true
+  },
+  "kick2": {
+   "hash": "c250a67ac190",
+   "ok": true
+  },
+  "kick3": {
+   "hash": "7344ad8bf91a",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "e9458f33a030",
+   "ok": true
+  },
+  "punch": {
+   "hash": "4ef13fc4ed50",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "1feac433a0d5",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "be0283945fa6",
+   "ok": true
+  }
+ },
+ "zeke": {
+  "airkick": {
+   "hash": "5facc3949b15",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "5de85a70a93a",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "8985fab66a3f",
+   "ok": true
+  },
+  "kick": {
+   "hash": "56d56eb17981",
+   "ok": true
+  },
+  "kick2": {
+   "hash": "3c723426e0df",
+   "ok": true
+  },
+  "kick3": {
+   "hash": "45ab4fab683b",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "ebd77406297d",
+   "ok": true
+  },
+  "punch": {
+   "hash": "65e1f202afe8",
+   "ok": true
+  },
+  "punch2": {
+   "hash": "e1055ecf5480",
+   "ok": true
+  },
+  "punch3": {
+   "hash": "7ccf62c3d139",
+   "ok": true
+  }
+ },
+ "zekeidol": {
+  "airkick": {
+   "hash": "ab3fded0c4aa",
+   "ok": true
+  },
+  "airpunch": {
+   "hash": "ea3df3df34f5",
+   "ok": true
+  },
+  "cpunch": {
+   "hash": "fefe604536c9",
+   "ok": true
+  },
+  "kick": {
+   "hash": "e8d3008abf0a",
+   "ok": true
+  },
+  "lowkick": {
+   "hash": "9097f59e22e5",
+   "ok": true
+  },
+  "punch": {
+   "hash": "18bbb27ef579",
+   "ok": true
+  }
+ }
+}

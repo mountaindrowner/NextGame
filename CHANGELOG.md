@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.62.0
+
+- **Every fighter now meets the move style guide**, except Vex, who keeps his cane style by choice. New PixelLab art (about 100 generations):
+  - **Uppercut finishers** (third punch of a chain) for Karl, Vizor, Zeke, Lawslie, Estrella, Reyes and Kai. They were straight punches; they now dip and rise into a real uppercut.
+  - **Low sweeps** for Lawslie, Marcus, Kai, fox Hecky and teen Samson. They were waist-high swooshes; they now kick along the floor at ankle height.
+  - **Second kicks:**
+    - Samson gets a side kick to the body, replacing the three-legged one removed in 1.60.1.
+    - Marcus kicks instead of swinging the bass.
+    - Estrella gets a real side kick, replacing a knee lift.
+  - **Kick finishers:**
+    - Zeke gets a chest-high front kick.
+    - Keksan gets a clear Muay Thai knee.
+    - Kai gets a high kick, replacing a dribble step.
+  - **Jump attacks:**
+    - Marcus throws a real jump punch.
+    - Kai's jump punch is a diving ball slam, replacing a dribble.
+    - Estrella's jump kick is a straight flying kick.
+- **The checker now remembers what was checked by eye** (`tools/move_review.json`). `tools/move_standard.py` reports OK, MISS (a known gap) or NEW (changed since it was checked).
+- **New generator, `tools/pixellab/standard.py`,** makes two takes of any move using the methods that worked.
+- Hit frames and hitboxes updated for the new art. Balance check after the changes: every fighter wins 41–56% (a 15-point spread), and no move does more than 32% of a fighter's damage.
+
 ## 1.61.0
 
 - **Move style guide** (`docs/MOVE_STYLE_GUIDE.md`). Every basic attack now has a standard: how high it hits, the body position, how it's blocked, and which frame is the hit. A low kick should look like a low kick on every fighter, and a high kick like a high kick. Fighters keep their own style and props.

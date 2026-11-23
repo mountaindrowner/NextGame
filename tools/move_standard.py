@@ -9,7 +9,10 @@ fraction of the fighter's standing height (floor = 0, top of the head = 1):
   pk      whether the game's hit frame (meta pk) is the strike frame
 and prints PASS / FAIL per rule. The numbers are hints: a bent knee or a shifted stance can fool them, so also look
 at the comparison sheets (--sheets=DIR writes one image per move with every fighter side by side).
-usage: move_standard.py [fighter ...] [--json] [--sheets=DIR]"""
+Each strip someone has checked by eye is recorded in tools/move_review.json (with a hash of the strip), so the tool
+only asks for a new look when a strip changes.
+usage: move_standard.py [fighter ...] [--json] [--sheets=DIR]
+       move_standard.py --record [fighter ...] [--miss=fighter:anim:why ...]   (after reviewing the sheets)"""
 import json, sys, pathlib
 import numpy as np
 from PIL import Image
@@ -176,6 +179,29 @@ def sheet(anim, out, fids):
     sh.save(out)
 
 
+REVIEW = ROOT / "tools" / "move_review.json"  # strips a person checked by eye against the guide: fighter -> anim -> record
+
+
+def strip_hash(fid, anim):
+    import hashlib
+    f = A / fid / f"{anim}.png"
+    if not f.exists(): return None
+    m = json.loads((A / fid / "meta.json").read_text())["anims"].get(anim, {})
+    return hashlib.sha1(f.read_bytes() + json.dumps(m, sort_keys=True).encode()).hexdigest()[:12]
+
+
+def record(fids, verdicts):
+    """mark the current strips as reviewed. verdicts: {(fid, anim): "note"} for moves that still miss the standard"""
+    rv = json.loads(REVIEW.read_text()) if REVIEW.exists() else {}
+    for fid in fids:
+        for anim in STD:
+            h = strip_hash(fid, anim)
+            if not h: continue
+            note = verdicts.get((fid, anim))
+            rv.setdefault(fid, {})[anim] = {"hash": h, "ok": note is None, **({"note": note} if note else {})}
+    REVIEW.write_text(json.dumps(rv, indent=1, sort_keys=True))
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     sd = next((a.split("=", 1)[1] for a in sys.argv[1:] if a.startswith("--sheets=")), None)
@@ -183,6 +209,10 @@ def main():
         pathlib.Path(sd).mkdir(parents=True, exist_ok=True)
         for anim in STD: sheet(anim, f"{sd}/{anim}.png", args or FIGHTERS)
         print("sheets written to", sd); return
+    if "--record" in sys.argv:  # after looking at the sheets: --record [fighter ...] [--miss=fid:anim:note ...]
+        miss = {tuple(a.split("=", 1)[1].split(":", 2)[:2]): a.split(":", 2)[2] for a in sys.argv[1:] if a.startswith("--miss=")}
+        record(args or FIGHTERS, miss); print("recorded", REVIEW); return
+    rv = json.loads(REVIEW.read_text()) if REVIEW.exists() else {}
     res = {}
     total = bad = 0
     for fid in args or FIGHTERS:
@@ -192,8 +222,12 @@ def main():
         for anim, v in r.items():
             if v.get("missing"): continue
             total += 1
-            st = "PASS" if not v["fails"] else "FAIL"
-            bad += st == "FAIL"
+            r = rv.get(fid, {}).get(anim)
+            if r and r["hash"] == strip_hash(fid, anim):  # checked by eye; the numbers are only hints
+                st = "OK  " if r["ok"] else "MISS"; v["fails"] = [] if r["ok"] else ["reviewed: " + r.get("note", "misses the standard")]
+            else:
+                st = "NEW " if not v["fails"] else "NEW?"; v["fails"] = ["not reviewed yet, check the sheet"] + v["fails"]
+            bad += st != "OK  "
             if "--json" not in sys.argv:
                 f2 = lambda x: "  -- " if x is None else f"{x:5.2f}"
                 print(f"{st} {fid:10s} {anim:8s} strike {f2(v.get('strike'))} reach {f2(v.get('reach'))} top {f2(v.get('top'))} "
@@ -201,7 +235,7 @@ def main():
     if "--json" in sys.argv:
         print(json.dumps(res, indent=1))
     else:
-        print(f"\n{total - bad}/{total} pass")
+        print(f"\n{total - bad}/{total} meet the standard (OK = checked by eye; MISS = known gap; NEW = changed since the last review, check its sheet)")
 
 
 if __name__ == "__main__":

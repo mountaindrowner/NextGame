@@ -67,30 +67,35 @@ A chain is the same button pressed again right after a hit. Each hit in the chai
 - Generate the **low sweep** from the fighter's crouch frame ("from a low crouch, kicks the front leg forward low along the ground…"). Don't use the `swoop kick` motion: it draws a swoosh at waist height.
 - After packing, run `tools/move_standard.py` and `tools/anim_audit.py`, then look at the strip.
 
-## Audit (1.61.0)
+## Audit (1.62.0)
 
-Every fighter's hit frame for every move was checked by eye, side by side. Recreate the comparison sheets with `python3 tools/move_standard.py --sheets=DIR`.
+Every fighter's hit frame for every move was checked by eye, side by side. The checked strips are recorded in `tools/move_review.json`. `python3 tools/move_standard.py` reports **OK** for checked strips, **MISS** for known gaps, and **NEW** for anything changed since it was checked. Recreate the comparison sheets with `--sheets=DIR`.
 
-✓ meets the standard · **F** fixed in 1.61.0 using art we already had · ✗ needs new art
+✓ meets the standard · **F** fixed in 1.61.0 from art we already had · **N** new art in 1.62.0 · ✗ known gap
 
 | Fighter | punch | punch2 | punch3 (uppercut) | kick (high) | kick2 (body) | kick3 (rising) | cpunch | lowkick (sweep) | airpunch | airkick |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Karl | ✓ | ✓ | ✗ straight punch | ✓ | ✓ | **F** hit frame | ✓ | **F** low sweep | ✓ | ✓ |
-| Keksan | ✓ | ✓ | ✓ elbow | ✓ | ✓ | ✗ knee too small | ✓ | ✓ | ✓ | **F** flying knee |
-| Vizor | ✓ | ✓ | ✗ straight punch | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Samson | ✓ | ✓ | ✓ | ✓ | ✗ removed (3 legs) | ✓ knee | ✓ | **F** low kick | ✓ | ✓ |
-| Zeke | ✓ | ✓ | ✗ straight punch | ✓ | ✓ | ✗ waist height | ✓ | **F** low kick | ✓ | ✓ |
-| Hecky | ✓ | ✓ | **F** uppercut | ✓ | ✓ | ✓ | ✓ | **F** low kick | ✓ | ✓ |
-| Lawslie | ✓ | ✓ | ✗ straight punch | ✓ | ✓ | ✓ knee | ✓ | ✗ waist-high swoosh | ✓ | ✓ |
-| Marcus | ✓ | ✓ | ✓ | ✓ | ✗ bass swing, no kick | ✓ | ✓ | ✗ waist-high | ✗ no punch | ✓ |
-| Kai | ✓ | ✓ | ✗ ball, no punch | ✓ | ✓ | ✗ dribble step | ✓ | ✗ waist-high swoosh | ✗ dribble, no punch | ✓ |
-| Estrella | ✓ | ✓ | ✗ straight punch | ✓ | ✗ knee lift | ✓ | ✓ | ✓ | ✓ | ✗ legs tucked |
-| Reyes | ✓ | ✓ | ✗ no uppercut | ✓ | ✓ | ✓ knee | ✓ | ✓ | ✓ | **F** hit frame |
-| Mateo | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | **F** low kick | ✓ | ✓ |
+| Karl | ✓ | ✓ | **N** | ✓ | ✓ | **F** | ✓ | **F** | ✓ | ✓ |
+| Keksan | ✓ | ✓ | ✓ elbow | ✓ | ✓ | **N** knee | ✓ | ✓ | ✓ | **F** knee |
+| Vizor | ✓ | ✓ | **N** | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Samson | ✓ | ✓ | ✓ | ✓ | **N** side kick | ✓ knee | ✓ | **F** | ✓ | ✓ |
+| Zeke | ✓ | ✓ | **N** | ✓ | ✓ | **N** | ✓ | **F** | ✓ | ✓ |
+| Hecky | ✓ | ✓ | **F** | ✓ | ✓ | ✓ | ✓ | **F** | ✓ | ✓ |
+| Lawslie | ✓ | ✓ | **N** | ✓ | ✓ | ✓ knee | ✓ | **N** | ✓ | ✓ |
+| Marcus | ✓ | ✓ | ✓ | ✓ | **N** | ✓ | ✓ | **N** | **N** | ✓ |
+| Kai | ✓ | ✓ | **N** | ✓ | ✓ | **N** | ✓ | **N** | **N** ball slam | ✓ |
+| Estrella | ✓ | ✓ | **N** | ✓ | **N** | ✓ | ✓ | ✓ | ✓ | **N** |
+| Reyes | ✓ | ✓ | **N** | ✓ | ✓ | ✓ knee | ✓ | ✓ | ✓ | **F** |
+| Mateo | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | **F** | ✓ | ✓ |
 | Vex | ✓ cane | ✓ cane | ✗ cane jab | ✗ knee lift | ✗ knee lift | ✗ cane step | ✓ cane | ✓ cane sweep | ✓ | ✓ |
-| Karl (gi) | ✓ | — | — | ✓ | — | — | ✓ | **F** low sweep | ✓ | ✓ |
-| Zeke (idol) | ✓ | — | — | ✓ | — | — | ✓ | **F** low kick | ✓ | ✓ |
-| Hecky (fox) | ✓ | — | — | ✓ | — | — | ✓ | ✗ waist-high swoosh | ✓ | ✓ |
-| Samson (teen) | ✓ | — | — | ✓ | — | — | ✓ | ✗ waist-high | ✓ | ✓ |
+| Karl (gi) | ✓ | — | — | ✓ | — | — | ✓ | **F** | ✓ | ✓ |
+| Zeke (idol) | ✓ | — | — | ✓ | — | — | ✓ | **F** | ✓ | ✓ |
+| Hecky (fox) | ✓ | — | — | ✓ | — | — | ✓ | **N** | ✓ | ✓ |
+| Samson (teen) | ✓ | — | — | ✓ | — | — | ✓ | **N** | ✓ | ✓ |
 
-Costumes (—) use the base fighter's combo art.
+Costumes (—) use the base fighter's combo art. Vex keeps his old-man cane style by the owner's choice. His four gaps can be redone later with `tools/pixellab/standard.py vex ...`.
+
+Generating the art (`tools/pixellab/standard.py`):
+- **Uppercuts:** use PixelLab's built-in `uppercut` motion, 1 generation per take.
+- **Sweeps:** start from the fighter's crouch frame.
+- **Kai:** his ball kept turning moves into dribbles. His kick finisher uses the built-in `high kick` motion, and his jump punch starts from a jump frame with the ball erased (`raw/kai/jump_noball`).

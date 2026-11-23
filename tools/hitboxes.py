@@ -16,8 +16,8 @@ A = ROOT / "assets" / "fighters"
 MARGIN, TIPBAND = 6, 14  # px added around the limb; how far back from the tip counts as "the limb"
 # per-fighter bands where a move is not the usual limb (Keksan's jump attack is a knee, not a foot)
 BAND_FOR = {("keksan", "jkick"): (.3, .7)}
-# the strike frame, where the widest-reaching frame isn't the strike (Reyes's tuck reaches further than his kick)
-FRAME_FOR = {("reyes", "jkick"): 4, ("keksan", "jkick"): 3}
+# the strike frame, where the widest-reaching frame isn't the strike (Reyes's tuck, Kai's dribbled ball)
+FRAME_FOR = {("reyes", "jkick"): 4, ("keksan", "jkick"): 3, ("kai", "jpunch"): 2}
 # a knee sits close to the body; give it a fair reach
 MIN_REACH = {("keksan", "jkick"): 40}
 BAND = {"jab": (.45, 1), "kick": (.3, .95), "cjab": (.25, .8), "sweep": (0, .42), "jpunch": (0, 1.2), "jkick": (0, 1.2)}
