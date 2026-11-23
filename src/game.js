@@ -778,6 +778,8 @@ const TCM={
 // damage, hit-stun, block-stun). Advantage on hit = stun - a - r - 1 (see tools/framedata.js); a move links into
 // another when its advantage on hit is at least the next move's startup + 1 (checked by tools/links.js).
 let F=null,atkId=0;
+// balance stats (off unless a test turns them on): per fighter, damage and hits by move, specials used, blocks, stale and loop hits
+let STAT=null;const statOf=f=>STAT&&(STAT[f.c.id]||(STAT[f.c.id]={moves:{},uses:{},blocked:0,stale:0,loops:0,hits:0,dmg:0}));
 class Fighter{constructor(id,side,cpu,alt){const c=CH[id];this.c=c;this.side=side;this.cpu=cpu;this.alt=alt;this.img=alt?c.alt:c.spr;this.H=c.H;
   this.x=side?180:76;this.y=0;this.vx=0;this.vy=0;this.face=side?-1:1;this.hp=this.mhp=(ARCH[c.id]&&ARCH[c.id].hp)||100;this.trail=this.mhp;this.state='idle';this.st=0;this.atk=null;this.ast=0;
   this.stun=0;this.crouch=false;this.inv=0;this.combo=0;this.comboT=0;this.spCD=0;this.spCD2=0;this.spCD3=0;this.meter=0;this.flash=0;this.hist=[];this.ghosts=[];this.lastA=-99;this.lastB=-99;this.ai={t:0,dur:0,plan:null};this.sp=null;this.hitDone=false}
@@ -884,6 +886,7 @@ function techThrow(a,d){a.thr=null;a.grabbed=null;for(const f of[a,d]){f.state='
   addText('THROW BREAK!',(a.x+d.x)/2,GY-a.H-12,'#7ad8ff');sparks((a.x+d.x)/2,GY-a.H*.6,'#ffffff',10);SFX.block();F.hitstop=6;if(!d.cpu)badge('tech')}
 function startSpecial(f,o,which=1,ex=false){if(which===3)return startSuper(f,o);const kind=which===4?f.c.special3:which===2?f.c.special2:f.c.special,name=which===4?f.c.sp3Name:which===2?f.c.sp2Name:f.c.spName;
   const R=(f.rep||(f.rep={}))[kind]||{n:-1,t:-999};R.n=frameNo-R.t<432?R.n+1:0;R.t=frameNo;f.rep[kind]=R;const cdK=1+.2*Math.min(R.n,4);// DIMINISHING RETURNS: the same special again within 8 s
+  if(STAT){const S=statOf(f);S.uses[kind]=(S.uses[kind]||0)+1}
   f.state='special';f.st=0;f.vx=0;f.crouch=false;f.atk=null;f.sp={kind,two:which===2,hits:0,last:-99,id:++atkId,dim:Math.max(.5,1-.15*R.n)};
   if(which===4)f.spCD3=Math.round((SPCD[kind]||120)*cdK);else if(which===2)f.spCD2=Math.round((SPCD[kind]||90)*cdK);else f.spCD=Math.round((SPCD[kind]||75)*cdK);
   if(kind==='strike')f.spCD2=Math.max(f.spCD2||0,40);if(kind==='split')f.spCD=Math.max(f.spCD||0,40);// Zeke: no instant low -> overhead switch
@@ -1300,6 +1303,7 @@ function updateSpecial2(f,o){const s=f.sp,t=f.st;
 function updateSlam(f,o){const S=f.slam||{T:30,dmg:17,back:true,h:64},t=f.st,T=S.T;
   if(t<=T){const p=t/T,th=Math.PI*p;if(S.back){o.x=f.x+f.face*30*Math.cos(th);o.rot=-f.face*Math.PI*p*1.2}else{o.x=f.x+f.face*(30+44*p);o.rot=f.face*Math.PI*p}o.y=Math.sin(th)*S.h}
   if(t===T){o.y=0;o.rot=0;const dmg=S.dmg*f.c.power/o.c.def*(S.kind==='grab'&&f.sp&&f.sp.dim||1);if(F.trial&&f===F.p1)trialHit(f,S.kind==='throw'?'throw':'sp1',f.sp?f.sp.id:f.thrId);if(S.kind==='throw'&&!f.cpu)badge('throw');
+    if(STAT){const St=statOf(f),k=S.kind==='throw'?'throw':(f.sp&&f.sp.kind)||'grab',m=St.moves[k]||(St.moves[k]={dmg:0,hits:0});m.dmg+=Math.min(dmg,o.hp);m.hits++;St.hits++;St.dmg+=Math.min(dmg,o.hp)}
     f.meter=Math.min(100,f.meter+12);o.meter=Math.min(100,o.meter+6);o.hp=Math.max(F.training?1:0,o.hp-dmg);F.shake=9;F.hitstop=12;SFX.slam();dust(o.x,10);sparks(o.x,GY-6,'#fff',14);
     o.x=clamp(o.x,XMIN,XMAX);if(S.back)f.face=-f.face;f.combo=1;o.flash=6;if(o.hp<=0){o.state='ko';o.st=0;F.onKO(f,o)}else{o.state='down';o.st=0}}
   if(t>=T+18){f.state='idle';f.st=0;f.sp=null;f.grabbed=null;f.slam=null}}
@@ -1331,7 +1335,7 @@ function applyHit(att,def,d,cx,cy){const push=def.x>=att.x?1:-1,A=arch(def.c);
   const canBlock=!d.unblockable&&def.holdBack&&def.y<=0&&['idle','walk','crouch','block'].includes(def.state)&&(d.lv==='low'?def.crouch:d.lv==='high'?!def.crouch:true);
   const dim=d.tag==='super'?1:d.dim!=null?d.dim:(att.state==='special'&&att.sp&&att.sp.dim)||1;
   if(d.tag!=='super'){att.meter=Math.min(100,att.meter+(canBlock?3:d.heavy?10:7));def.meter=Math.min(100,def.meter+(canBlock?2:5))}
-  if(canBlock){def.state='block';def.st=0;def.stun=d.bs;def.vx=push*Math.max(1.5,d.kb);if(A.enforcer)def.meter=Math.min(100,def.meter+6);else def.hp=Math.max(1,def.hp-(d.chip||0));F.hitstop=4;SFX.block();sparks(cx,cy,'#7ac8ff',6);
+  if(canBlock){if(STAT)statOf(att).blocked++;def.state='block';def.st=0;def.stun=d.bs;def.vx=push*Math.max(1.5,d.kb);if(A.enforcer)def.meter=Math.min(100,def.meter+6);else def.hp=Math.max(1,def.hp-(d.chip||0));F.hitstop=4;SFX.block();sparks(cx,cy,'#7ac8ff',6);
     if((def.x<=XMIN+1&&push<0)||(def.x>=XMAX-1&&push>0))att.vx=-push*1.6;return'block'}
   let dmg=d.dmg*att.c.power/def.c.def*(att.buff>0?1.25:1)*dim*(att.shadow?1.15:1)*(arch(att.c).shin&&!d.tag&&att.state!=='special'&&att.atk&&['kick','sweep','jkick'].includes(att.atk.name)?1.15:1);if(att.cpu)dmg*=[0.75,0.95,1.1][SET.diff];
   if(arch(att.c).rhythm&&onBeat()){dmg*=1.25;if(!F.texts.some(x=>x.s==='ON BEAT!'&&x.l>34))addText('ON BEAT!',def.x,GY-def.y-def.H-20,'#ff4a6a')}
@@ -1342,17 +1346,18 @@ function applyHit(att,def,d,cx,cy){const push=def.x>=att.x?1:-1,A=arch(def.c);
   if(!inCombo){att.cseq={};att.ips=false}
   {const key=d.tag||(att.state==='special'&&att.sp?(att.sp.two?'sp2':'sp1'):att.atk?att.atk.name:'?'),iid=d.tid||(att.sp&&att.sp.id)||(att.atk&&att.atk.id);
     if(key!=='super'){const m=att.cseq||(att.cseq={}),q=m[key]||(m[key]={n:0,id:null});if(q.id!==iid){q.n++;q.id=iid}
-      if((q.n>=(/^sp/.test(key)?3:4)||att.combo>=10)&&!att.ips){att.ips=true;def.burstOK=true;addText('LOOP! PRESS A/B: BURST',def.x,GY-def.H-24,'#3ae8ff')}}}att.comboT=60;if(att.combo>=2)addCombo(att);
+      if((q.n>=(/^sp/.test(key)?3:4)||att.combo>=10)&&!att.ips){att.ips=true;def.burstOK=true;if(STAT)statOf(att).loops++;addText('LOOP! PRESS A/B: BURST',def.x,GY-def.H-24,'#3ae8ff')}}}att.comboT=60;if(att.combo>=2)addCombo(att);
   dmg*=d.minScale?Math.max(d.minScale,SCALE[Math.min(SCALE.length-1,att.combo-1)]):SCALE[Math.min(SCALE.length-1,att.combo-1)];
   // STALE POKES: the same normal landing on its own (not in a combo) again within 4 s does 10% less each time, down to 60%
   if(!inCombo&&d.tag!=='super'&&att.state!=='special'&&att.atk&&att.atk.name){const S=att.stale||(att.stale={}),q=S[att.atk.name]||(S[att.atk.name]={n:-1,t:-999});
-    q.n=frameNo-q.t<216?q.n+1:0;q.t=frameNo;if(q.n>0){dmg*=Math.max(.6,1-.1*q.n);if(q.n>=2)addText('STALE',def.x,GY-def.H-2,'#9a9ab0')}}
+    q.n=frameNo-q.t<216?q.n+1:0;q.t=frameNo;if(q.n>0){if(STAT)statOf(att).stale++;dmg*=Math.max(.6,1-.1*q.n);if(q.n>=2)addText('STALE',def.x,GY-def.H-2,'#9a9ab0')}}
   if(!att.cpu&&F.p1){const r=rc(att.c.id);if(att.combo>r.combo){r.combo=att.combo;saveRec()}if(att.combo>=5)badge('combo5')}
   if(F.trial&&att===F.p1)trialHit(att,exHit?'ex':d.tag||(att.state==='special'&&att.sp?(att.sp.two?'sp2':'sp1'):att.atk?att.atk.name:'?'),d.tid||(att.sp&&att.sp.id)||(att.atk&&att.atk.id));
   // counter hit: tagging an opponent during their attack's start-up
   const counter=!inCombo&&((def.state==='attack'&&phaseOf(def)==='start')||(def.state==='special'&&def.st<8));
   if(counter){dmg*=1.2;d={...d,stun:(d.stun||0)+8,...(arch(att.c).heavy&&att.atk&&(att.atk.name==='kick'||att.atk.name==='sweep')?{knock:true,heavy:true}:{})};addText('COUNTER!',def.x,GY-def.H-10,'#ff5a5a');SFX.block()}
   if(def.state==='knock'||def.y>0)def.jug=(def.jug||0)+1;
+  if(STAT){const S=statOf(att),k=d.tag==='super'?'super':att.state==='special'&&att.sp?att.sp.kind:att.state==='slamming'?'throw':att.atk?att.atk.name:d.tag||'other',m=S.moves[k]||(S.moves[k]={dmg:0,hits:0});m.dmg+=Math.min(dmg,def.hp);m.hits++;S.hits++;S.dmg+=Math.min(dmg,def.hp)}
   def.hp=Math.max(0,def.hp-dmg);def.atk=null;def.sp=null;def.flash=4;def.crouch=d.lv==='low'?false:def.crouch&&def.state==='crouch';
   if(F.training){if(att===F.p1){if(att.combo===1)F.tDmg=0;F.tDmg+=dmg;F.tHits=att.combo;F.tBest=Math.max(F.tBest,att.combo)}def.hp=Math.max(1,def.hp)}
   if(def.hp<=0){def.state='knock';def.st=0;def.ko=true;def.vy=4.2;def.vx=push*2.6;def.y=Math.max(def.y,1);F.onKO(att,def)}
@@ -3356,5 +3361,5 @@ function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=
 applyLayout();addEventListener('resize',applyLayout);addEventListener('orientationchange',()=>setTimeout(applyLayout,120));
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
-window.__dbg={pose:f=>pose(f),poll:()=>pollInput(),Controls,CMD,TCM,TRIALS,ATK,ARCH,SPCD,Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,ARCS,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
+window.__dbg={setStat:v=>{STAT=v},getStat:()=>STAT,pose:f=>pose(f),poll:()=>pollInput(),Controls,CMD,TCM,TRIALS,ATK,ARCH,SPCD,Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,ARCS,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
 
