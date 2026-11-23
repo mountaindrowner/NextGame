@@ -319,7 +319,7 @@ const ARCH={
   kai:{type:'HIGH FLYER',trait:'DOUBLE JUMP, BIG HOPS',hp:110,dj:true,reach:1},
   estrella:{type:'AREA CONTROL',trait:'HER SOUND SLOWS FOES',hp:100,sound:true,reach:1.05},
   mateo:{type:'PITCHER',trait:'3RD PITCH IS A HEATER',hp:104,heat:true,reach:1},
-  vex:{type:'THE BOSS',trait:'CANE REACH, NEVER CORNERED',hp:110,reach:1.1,dash:.85},
+  vex:{type:'THE BOSS',trait:'CANE REACH, NEVER CORNERED',hp:114,reach:1.1,dash:.85},
   reyes:{type:'ALL-ROUNDER',trait:'STARTS WITH 1/3 SUPER',hp:92,leader:true,reach:1},
   keksan:{type:'STRIKER',trait:'SHIN KICKS: HARDER KICKS',hp:88,shin:true,reach:1},
   rex:{type:'LONG-RANGE',trait:'HUGE REACH, BEAT = +DMG',hp:104,rhythm:true,amp:true,reach:1.4,slow:2,dash:.7}};
@@ -1307,7 +1307,7 @@ function updateSlam(f,o){const S=f.slam||{T:30,dmg:17,back:true,h:64},t=f.st,T=S
     f.meter=Math.min(100,f.meter+12);o.meter=Math.min(100,o.meter+6);o.hp=Math.max(F.training?1:0,o.hp-dmg);F.shake=9;F.hitstop=12;SFX.slam();dust(o.x,10);sparks(o.x,GY-6,'#fff',14);
     o.x=clamp(o.x,XMIN,XMAX);if(S.back)f.face=-f.face;f.combo=1;o.flash=6;if(o.hp<=0){o.state='ko';o.st=0;F.onKO(f,o)}else{o.state='down';o.st=0}}
   if(t>=T+18){f.state='idle';f.st=0;f.sp=null;f.grabbed=null;f.slam=null}}
-const JUGGLE=2,SCALE=[1,1,.85,.75,.65,.55,.5];
+const JUGGLE=2,SCALE=[1,1,.8,.7,.6,.5,.4,.3,.2,.1];// combo damage scaling per hit, as in Street Fighter 6
 function tryHit(att,def,hb,d){if(SHOWBOX)(F.dbg||(F.dbg=[])).push({...hb,f:frameNo});if(def.inv>0||['down','ko','rise','grabbed'].includes(def.state)||F.phase!=='play')return false;
   if(def.state==='knock'&&(def.jug||0)>=JUGGLE)return false;if(!overlap(hb,def.hurt()))return false;
   const cx=(Math.max(hb.x1,def.x-15)+Math.min(hb.x2,def.x+15))/2,cy=GY-(Math.max(hb.y1,def.y)+Math.min(hb.y2,def.y+def.h))/2;return applyHit(att,def,d,cx,cy)}

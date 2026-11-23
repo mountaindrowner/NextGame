@@ -25,7 +25,7 @@ Controls: four face buttons, the same in every mode — **A** punch (`U`; also `
 - **EX specials** — hold FOCUS and press SP (or press FOCUS right after SP; on a keyboard `K` + `I`) for an EX version of that special. It costs a third of the super bar (the bar has two marks), works even while the special is on cooldown, does 30% more damage with extra hit-stun (projectiles fly 20% faster), and shrugs off one hit at half damage in its first 20 frames. It glows cyan. Every fighter has an EX trial, and the CPU uses EX now and then, mostly to finish combos.
 - **Throws** — forward/back + B right next to a grounded opponent; press A or B during the grab to break it. Back throws switch sides. Keksan's Thai Clinch is an unblockable command grab.
 - **Counter hits** — hitting a move in its start-up does +20% damage and extra hit-stun.
-- **Juggles & scaling** — at most 2 extra hits on a falling opponent; damage scales down from the 3rd hit (85%, 75%, … 50%).
+- **Juggles & scaling** — at most 2 extra hits on a falling opponent; damage scales down from the 3rd hit like Street Fighter 6 (80%, 70%, 60% … down to 10%; supers keep at least 70%).
 - Keksan's Thai Clinch is a command grab: it can't grab an opponent in hit-stun, but it can grab out of a blocked string.
 
 ## Powers
@@ -89,7 +89,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Estrella | Area control | 100 | her sound slows foes: anyone standing near her note or her Encore ring walks at 70% speed |
 | Reyes | All-rounder | 92 | squad leader: starts every round with a third of his super meter |
 | Paezano | Pitcher | 104 | high heat: every 3rd pitch in a row (or the first after he bats a projectile back) is a 98 MPH heater |
-| Vex | The Boss | 110 | long cane reach; slow but hard to pin down (Vanish, and the cross-up super) |
+| Vex | The Boss | 114 | long cane reach; slow but hard to pin down (Vanish, and the cross-up super) |
 | Marcus | Long-range | 104 | slowest walk and dash, longest reach (×1.4, a sound blast off his bass) but normals start 2 frames slower; hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
 
 Reach is measured from each fighter's own sprite (`tools/hitboxes.py`); the archetype's `reach` multiplies it (Vizor 1.12, Estrella 1.05, Samson 1.05). Marcus uses the wider of his sound blast and his sprite.

@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.60.0
+
+- **Full balance and spam audit** (new tool `tools/spam_balance.js`). CPU vs CPU at Hard, every matchup from both sides, 240 rounds per fighter, all 13 fighters including Vex. It tracks damage by move, specials used, blocks, stale-poke hits and loops.
+
+  | Measure | Fighting-game norm | Before | After |
+  |---|---|---|---|
+  | Win rates | 40-60%, spread up to about 20 points | 42-56% (14 points) | 43-57% (14 points) |
+  | Most damage from one move | under about 40% | 31% (Marcus's long kick) | 32% |
+  | Stale-poke hits | rare | 1-7% of hits | 1-7% |
+  | Loops caught | rare | 0.06 per round at most | 0.13 at most |
+
+- **Combo damage scaling now matches Street Fighter 6:**
+  - Hits 1 and 2 do full damage, then 80%, 70%, 60%, 50%, 40%, 30%, 20%, down to 10% (was 85% … with a 50% floor).
+  - Short combos lose about 5%, and long ones much more.
+  - Supers keep at least 70%.
+- **Vex:** health goes from 110 to 114. He was the weakest at 42%; he's now 56%.
+- The full report is saved to `release/spam-balance.txt`.
+
 ## 1.59.4
 
 - **Fix:** with the white-gi Papa-Léguas costume, Sky Légua drew as a stick figure, and so did Zeke's idol costume's Ball Return. Costumes without the new BACK + SP art now use their own closest frames (the flying kick, the bowling throw).
