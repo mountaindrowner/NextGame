@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.61.0
+
+- **Move style guide** (`docs/MOVE_STYLE_GUIDE.md`). Every basic attack now has a standard: how high it hits, the body position, how it's blocked, and which frame is the hit. A low kick should look like a low kick on every fighter, and a high kick like a high kick. Fighters keep their own style and props.
+- **New checker, `tools/move_standard.py`:**
+  - Measures every fighter's attacks against the guide.
+  - `--sheets=DIR` draws each move for all fighters side by side, with height guide lines.
+  - The guide includes an audit table for all 13 fighters and 4 costumes.
+- **Fixed with art we already had (no new generations):**
+  - **Low sweeps now kick low** for Karl, Samson, Zeke, Hecky, Mateo, karate-gi Karl and idol Zeke. Their old sweeps were swooshes at waist height. Sweep reach now matches across fighters (37–48), because the swoosh effect no longer counts as reach.
+  - **Hecky's third punch is a real rising uppercut.** It was a straight punch.
+  - **Keksan's jump kick is a flying knee.** It was a tucked ball with no strike.
+  - **Reyes's jump kick hit on a tucked frame.** It now hits on the extended kick.
+  - **Karl's kick finisher** now hits on the head-height frame, one frame earlier.
+- Balance check after the changes: every fighter wins 41–57%, and no move does more than 30% of a fighter's damage.
+
 ## 1.60.1
 
 - **Samson's second chain kick removed.** It was drawn with three legs. His chain kick now uses his normal kick.

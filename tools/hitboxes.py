@@ -16,6 +16,8 @@ A = ROOT / "assets" / "fighters"
 MARGIN, TIPBAND = 6, 14  # px added around the limb; how far back from the tip counts as "the limb"
 # per-fighter bands where a move is not the usual limb (Keksan's jump attack is a knee, not a foot)
 BAND_FOR = {("keksan", "jkick"): (.3, .7)}
+# the strike frame, where the widest-reaching frame isn't the strike (Reyes's tuck reaches further than his kick)
+FRAME_FOR = {("reyes", "jkick"): 4, ("keksan", "jkick"): 3}
 # a knee sits close to the body; give it a fair reach
 MIN_REACH = {("keksan", "jkick"): 40}
 BAND = {"jab": (.45, 1), "kick": (.3, .95), "cjab": (.25, .8), "sweep": (0, .42), "jpunch": (0, 1.2), "jkick": (0, 1.2)}
@@ -55,6 +57,9 @@ def main():
                 if not sub.any(): continue
                 tip = np.where(sub.any(0))[0].max() - mm["ax"]
                 if best is None or tip > best[0]: best = (tip, i, rows[0])
+            if (fid, mv) in FRAME_FOR:
+                i = FRAME_FOR[(fid, mv)]; g = fr[i]; rows = [r for r in range(g.shape[0]) if lo * H <= mm["ay"] - r <= hi * H]
+                best = (np.where(g[rows[0]:rows[-1] + 1].any(0))[0].max() - mm["ax"], i, rows[0])
             tip, i, r0 = best
             sub = fr[i][r0:r0 + len([r for r in range(fr[i].shape[0]) if lo * H <= mm["ay"] - r <= hi * H])]
             c0 = int(mm["ax"] + tip - TIPBAND); rr = np.where(sub[:, max(0, c0):].any(1))[0] + r0
