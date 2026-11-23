@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.59.4
+
+- **Fix:** with the white-gi Papa-Léguas costume, Sky Légua drew as a stick figure, and so did Zeke's idol costume's Ball Return. Costumes without the new BACK + SP art now use their own closest frames (the flying kick, the bowling throw).
+- **New test:** `tools/anim_coverage.js` checks that every fighter and costume animates every special and super.
+
 ## 1.59.3
 
 - **Dedicated animations for two more specials:**

@@ -1823,6 +1823,8 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
         if(k==='blockparty'){const j=akOf(f.c,'jump');if(t>=8&&t<20&&A.swat)return P('swat',kf(t,[[8,0],[12,2],[16,4],[20,last('swat')]]));if(t>=8&&t<20&&A.airpunch)return P('airpunch',akOf(f.c,'airpunch').pk);return A.jump?P('jump',t<3?j.prep:t<8?j.rise:t<30?j.fall:j.land):null}// leap, swat (his air punch), come down
         if(k==='amen'&&A.special3)return P('special3',s.ph?kf(t-s.t0,[[0,3],[16,6],[20,8],[36,8]]):kf(t,[[0,0],[6,3],[30,3],[42,0]]));// reach, lift overhead, slam
         if(k==='amen'){if(s.ph)return A.special?P('special',kf(t-s.t0,[[0,0],[16,5],[20,8],[36,8]])):null;const pk=akOf(f.c,'punch').pk;return A.punch?P('punch',kf(t,[[0,0],[6,pk],[30,pk],[42,last('punch')]])):null}// reach out, then lift and slam (his book-smash strip)
+        if(SP3NEW.includes(k)&&!A.special3){const alt={skylegua:'airkick',ballreturn:'special',headbang:'special',baton:'lowkick',tripod:'crouch'}[k];// a costume without the new strip: its closest own frames
+          if(alt&&A[alt])return P(alt,kf(t,[[0,0],[10,Math.round(last(alt)*.6)],[24,last(alt)],[40,last(alt)]]))}
         if(SP3NEW.includes(k)&&A.special3){const n3=last('special3');return P('special3',kf(t,k==='tripod'?[[0,0],[12,8],[22,8],[30,n3]]:[[0,0],[6,Math.round(n3*.45)],[12,Math.round(n3*.75)],[24,n3],[40,n3]]))}
         if(k==='bribe')return A.special2?P('special2',kf(t,[[0,0],[8,3],[12,5],[24,8],[32,8]])):null;
         if(k==='vanish')return A.special3?P('special3',t<16?kf(t,[[0,0],[6,4],[10,6]]):kf(t,[[16,6],[22,8],[28,8]])):null;
