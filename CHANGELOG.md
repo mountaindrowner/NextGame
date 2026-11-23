@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.60.1
+
+- **Samson's second chain kick removed.** It was drawn with three legs. His chain kick now uses his normal kick.
+- **Extra-limb check in `tools/anim_audit.py`.** It counts leg-thick shapes row by row and flags frames that show more legs than the idle pose. A run over every combo, throw, special and sweep animation flagged 23 frames. All 23 were effects (coins, rings, dust, light) or crouching poses, not extra limbs.
+
 ## 1.60.0
 
 - **Full balance and spam audit** (new tool `tools/spam_balance.js`). CPU vs CPU at Hard, every matchup from both sides, 240 rounds per fighter, all 13 fighters including Vex. It tracks damage by move, specials used, blocks, stale-poke hits and loops.

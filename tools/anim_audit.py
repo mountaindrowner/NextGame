@@ -43,6 +43,23 @@ def islands(fr):
     sizes.sort(reverse=True); return [s for s in sizes[1:] if s >= 6]
 
 
+def leg_rows(fr, H, lo=.08, hi=.45, minw=3, gap=2):
+    """for each row of the lower body (feet to hips), how many separate leg-thick shapes cross it"""
+    al = fr[..., 3] > 0; Hc = al.shape[0]; ground = Hc - 4; out = []
+    for y in range(int(ground - H * hi), int(ground - H * lo)):
+        row = al[y]; runs = 0; x = 0; W = len(row)
+        while x < W:
+            if row[x]:
+                s0 = x
+                while x < W and row[x]: x += 1
+                if x - s0 >= minw: runs += 1
+            else:
+                g0 = x
+                while x < W and not row[x]: x += 1
+        out.append(runs)
+    return out
+
+
 def iou(a, b):
     a, b = a[..., 3] > 0, b[..., 3] > 0; return (a & b).sum() / max(1, (a | b).sum())
 
@@ -58,6 +75,10 @@ for k in FIGHTERS:
             if d > .55: issues.append(f"f{i} off-model ({d:.2f})")
             isl = islands(f)
             if isl: issues.append(f"f{i} {len(isl)} loose piece(s) {isl[:3]}")
+        H = meta["idle"]["h"]; base = max(leg_rows(idle, H))
+        for i, f in enumerate(fr):  # extra limbs: more leg shapes than the standing pose, across several rows
+            lr = leg_rows(f, H); extra = sum(1 for r in lr if r > max(2, base))
+            if extra >= 4: issues.append(f"f{i} extra limb? ({extra} rows with {max(lr)} legs)")
         s0, s1 = iou(fr[0], idle), iou(fr[-1], idle)
         if s0 < .55: issues.append(f"starts away from guard ({s0:.2f})")
         if s1 < .45: issues.append(f"ends away from guard ({s1:.2f})")
