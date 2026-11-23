@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.59.2
+
+- **Real animations for two BACK+SP moves:**
+  - **Samson's Amen Slam:** he grabs, lifts the opponent overhead and slams them down. It used to borrow his punch and book-smash frames.
+  - **Lawslie's Baton Sweep:** she swings a real nightstick low and level. It used to be a crouch with a stick drawn in by the game.
+- Devanté's new Block Party take only did a step-in punch, so he keeps his leap and air-punch version.
+
 ## 1.59.1
 
 - **Devanté's last gaps are filled** with the best of his PixelLab takes:

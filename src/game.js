@@ -1689,7 +1689,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='tome'&&f.st>=14&&f.st<28)drawRing(f.x+f.face*44,f.st-14,'#ffd23a',13);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='super')drawSuperFx(f);
     for(const f of[this.p1,this.p2])if(f.c.id==='reyes'&&f.state==='special'&&f.sp)drawReyesFx(f);
-    for(const f of[this.p1,this.p2]){if(f.state==='special'&&f.sp&&f.sp.kind==='baton')drawBaton(f);if(f.c.id==='mateo')drawMateoFx(f);if(f.bribeT&&frameNo-f.bribeT<50)drawBribe(f)}
+    for(const f of[this.p1,this.p2]){if(f.state==='special'&&f.sp&&f.sp.kind==='baton'&&!(f.c.anim&&f.c.anim.special3))drawBaton(f);if(f.c.id==='mateo')drawMateoFx(f);if(f.bribeT&&frameNo-f.bribeT<50)drawBribe(f)}
     for(const f of[this.p1,this.p2])if(f.cuffed>0)drawCuffs(f);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='flash'&&f.sp.lx!=null&&f.st<24)drawReticle(f);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='laser')drawLaser(f);
@@ -1821,6 +1821,7 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
       if(s&&s.kind==='bat'&&A.punch){const pk=akOf(f.c,'punch').pk;return P('punch',kf(t,[[0,0],[9,Math.max(0,pk-1)],[11,pk],[18,pk],[34,last('punch')]]))}
       if(s&&(s.two||s.kind==='laser'||s.kind==='teep'||s.kind==='siren'||s.kind==='eagle'||s.kind==='hover'||s.kind==='snag'||s.kind==='vanish'||SP3NEW.includes(s.kind))){const k=s.kind;
         if(k==='blockparty'){const j=akOf(f.c,'jump');if(t>=8&&t<20&&A.airpunch)return P('airpunch',akOf(f.c,'airpunch').pk);return A.jump?P('jump',t<3?j.prep:t<8?j.rise:t<30?j.fall:j.land):null}// leap, swat (his air punch), come down
+        if(k==='amen'&&A.special3)return P('special3',s.ph?kf(t-s.t0,[[0,3],[16,6],[20,8],[36,8]]):kf(t,[[0,0],[6,3],[30,3],[42,0]]));// reach, lift overhead, slam
         if(k==='amen'){if(s.ph)return A.special?P('special',kf(t-s.t0,[[0,0],[16,5],[20,8],[36,8]])):null;const pk=akOf(f.c,'punch').pk;return A.punch?P('punch',kf(t,[[0,0],[6,pk],[30,pk],[42,last('punch')]])):null}// reach out, then lift and slam (his book-smash strip)
         if(SP3NEW.includes(k)&&A.special3){const n3=last('special3');return P('special3',kf(t,k==='tripod'?[[0,0],[12,8],[22,8],[30,n3]]:[[0,0],[6,Math.round(n3*.45)],[12,Math.round(n3*.75)],[24,n3],[40,n3]]))}
         if(k==='bribe')return A.special2?P('special2',kf(t,[[0,0],[8,3],[12,5],[24,8],[32,8]])):null;
