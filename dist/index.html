@@ -3483,7 +3483,7 @@ function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=
 applyLayout();addEventListener('resize',applyLayout);addEventListener('orientationchange',()=>setTimeout(applyLayout,120));
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
-window.__dbg={poll:()=>pollInput(),Controls,CMD,TCM,TRIALS,ATK,ARCH,SPCD,Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,ARCS,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
+window.__dbg={pose:f=>pose(f),poll:()=>pollInput(),Controls,CMD,TCM,TRIALS,ATK,ARCH,SPCD,Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,ARCS,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
 
 
 </script>
