@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.56.0
+
+- **Every fighter now has three specials: SP, DOWN + SP and BACK + SP.** Seven get a new BACK + SP:
+
+  | Fighter | New move | What it does |
+  |---|---|---|
+  | Papa-Léguas | Sky Légua | rising flying kick, invincible on the way up, 2 hits; his anti-air |
+  | Vizor | Tripod Trap | sets a camera on the floor; it flashes (stun, can't be blocked) when the opponent steps near; one at a time |
+  | Samson | Amen Slam | command grab: lifts and slams with his book; goes through blocking |
+  | Zeke | Ball Return | upward bowling-ball swing; anti-air that launches |
+  | Lawslie | Baton Sweep | an extending nightstick swept low and long; knocks down |
+  | Marcus | Headbanger | rising bass swing; anti-air |
+  | Devanté | Block Party | leaps and swats; a jumping opponent gets REJECTED! (more damage, knocked down) |
+
+  Each has a voice line, a CPU that knows when to use it, and a test (`tools/sp3.js`).
+- **More combo-string animations:**
+  - **New:** Samson (uppercut, front kick, jumping knee), Hecky (punch, roundhouse, high kick), Marcus (punch with the bass on its strap, bass smash), Devanté (punch and kick with the ball tucked away), Paezano (cross, high kick), Zeke (spinning kick), Estrella (straight punch) and Reyes (front kick).
+  - **Fixed glitches:**
+    - Paezano's cross had two off-model frames where his glove vanished and the arm popped out.
+    - Vizor's hook turned him around to punch backwards.
+    - Vex's backhand had a garbled frame with a stray arrow.
+    - A floating speck appeared in Estrella's spin kick.
+    - Several moves ended away from the guard; they now end in guard so chains connect.
+  - **Dropped:** moves that didn't read as attacks, such as Vizor's magic-swirl kick and Paezano's ball-holding "uppercut". Those slots use the fighter's normal punch or kick.
+  - New tools: `tools/anim_audit.py` (finds off-model frames, loose pieces and starts or ends away from guard) and `tools/anim_edit.py` (trims, reorders and cleans strips).
+- **Balance:**
+  - Devanté's health goes from 104 to 110, because the new anti-airs hit his jump game hard.
+  - In the CPU round robin at Hard, every fighter is between 39% and 61%.
+
 ## 1.55.0
 
 - **Combo-string animations for 9 more fighters.** Each hit of a chain plays its own move, with the same timing and damage:

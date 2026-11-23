@@ -313,7 +313,7 @@ const ARCH={
   zeke:{type:'HIGH/LOW ZONER',trait:'BLOCKED BALL: RELOAD',hp:100,spare:true,reach:1},
   hecky:{type:'TECH RUSHDOWN',trait:'PARRY: TAP FWD ON HIT',hp:92,parry:true,reach:1,dash:1.1},
   lawslie:{type:'ENFORCER',trait:'NO CHIP, BLOCK = METER',hp:100,enforcer:true,reach:1},
-  kai:{type:'HIGH FLYER',trait:'DOUBLE JUMP, BIG HOPS',hp:104,dj:true,reach:1},
+  kai:{type:'HIGH FLYER',trait:'DOUBLE JUMP, BIG HOPS',hp:110,dj:true,reach:1},
   estrella:{type:'AREA CONTROL',trait:'HER SOUND SLOWS FOES',hp:100,sound:true,reach:1.05},
   mateo:{type:'PITCHER',trait:'3RD PITCH IS A HEATER',hp:104,heat:true,reach:1},
   vex:{type:'THE BOSS',trait:'CANE REACH, NEVER CORNERED',hp:110,reach:1.1,dash:.85},
@@ -886,7 +886,7 @@ function startSpecial(f,o,which=1,ex=false){if(which===3)return startSuper(f,o);
   if(kind==='strike')f.spCD2=Math.max(f.spCD2||0,40);if(kind==='split')f.spCD=Math.max(f.spCD||0,40);// Zeke: no instant low -> overhead switch
   F.superFlash=10;F.superBy=f;SFX.special();addText(name+'!',f.x,GY-f.H-14,f.c.col.aura);
   if(kind==='step')f.inv=20;if(kind==='eagle')f.inv=8;if(kind==='knee')f.inv=6;if(kind==='rising')f.inv=7;if(kind==='takeover')f.inv=6;if(kind==='powersuit')f.inv=16;if(kind==='replay'){f.inv=24;f.sp.path=(f.rh||[]).slice(-90).reverse();SFX.rewind()}
-  if(kind==='charge')f.sp.armor=1;if(kind==='skylegua'||kind==='ballreturn'||kind==='headbang')f.inv=Math.max(f.inv,8);if(kind==='vanish')f.inv=16;
+  if(kind==='charge')f.sp.armor=1;if(kind==='skylegua'||kind==='ballreturn'||kind==='headbang'||kind==='blockparty')f.inv=Math.max(f.inv,8);if(kind==='vanish')f.inv=16;
   fighterVoice(f,which===4?'sp3':which===2?'sp2':'sp1');if(ex)exify(f)}
 const EXC=34;// EX special cost (the meter runs 0-100, so a third of the bar)
 function exify(f){const s=f.sp;f.meter-=EXC;s.ex=1;s.dim*=1.3;s.exArm=1;F.superFlash=Math.max(F.superFlash,6);F.superBy=f;F.camFlash=Math.max(F.camFlash||0,1);SFX.superS();
@@ -1812,7 +1812,9 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
       if(s&&s.kind==='bat'&&A.batswing)return P('batswing',kf(t,[[0,3],[8,6],[10,7],[20,8],[34,8]]));// PixelLab swing: draw, cock, contact, follow-through
       if(s&&s.kind==='bat'&&A.punch){const pk=akOf(f.c,'punch').pk;return P('punch',kf(t,[[0,0],[9,Math.max(0,pk-1)],[11,pk],[18,pk],[34,last('punch')]]))}
       if(s&&(s.two||s.kind==='laser'||s.kind==='teep'||s.kind==='siren'||s.kind==='eagle'||s.kind==='hover'||s.kind==='snag'||s.kind==='vanish'||SP3NEW.includes(s.kind))){const k=s.kind;
-        if(SP3NEW.includes(k)&&A.special3){const n3=last('special3');return P('special3',kf(t,k==='amen'&&s.ph?[[0,4],[16,6],[20,n3],[36,n3]]:k==='tripod'?[[0,0],[12,n3-2],[30,n3]]:[[0,0],[6,Math.round(n3*.45)],[12,Math.round(n3*.75)],[24,n3],[40,n3]]))}
+        if(k==='blockparty'){const j=akOf(f.c,'jump');if(t>=8&&t<20&&A.airpunch)return P('airpunch',akOf(f.c,'airpunch').pk);return A.jump?P('jump',t<3?j.prep:t<8?j.rise:t<30?j.fall:j.land):null}// leap, swat (his air punch), come down
+        if(k==='amen'){if(s.ph)return A.special?P('special',kf(t-s.t0,[[0,0],[16,5],[20,8],[36,8]])):null;const pk=akOf(f.c,'punch').pk;return A.punch?P('punch',kf(t,[[0,0],[6,pk],[30,pk],[42,last('punch')]])):null}// reach out, then lift and slam (his book-smash strip)
+        if(SP3NEW.includes(k)&&A.special3){const n3=last('special3');return P('special3',kf(t,k==='tripod'?[[0,0],[12,8],[22,8],[30,n3]]:[[0,0],[6,Math.round(n3*.45)],[12,Math.round(n3*.75)],[24,n3],[40,n3]]))}
         if(k==='bribe')return A.special2?P('special2',kf(t,[[0,0],[8,3],[12,5],[24,8],[32,8]])):null;
         if(k==='vanish')return A.special3?P('special3',t<16?kf(t,[[0,0],[6,4],[10,6]]):kf(t,[[16,6],[22,8],[28,8]])):null;
         if(k==='slide')return A.special2?P('special2',kf(t,[[0,0],[8,4],[10,5],[28,7],[40,8]])):null;

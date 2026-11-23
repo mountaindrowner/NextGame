@@ -84,7 +84,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Zeke | High/low zoner | 100 | Spare: a blocked Strike Ball recharges his special to nearly ready |
 | Hecky Xavier | Tech rushdown | 92 | parry: tap forward just as a hit lands (no damage, +meter); fast dash |
 | Lawslie | Enforcer | 100 | no chip damage when blocking, and blocking builds meter; the smallest fighter (78 px, see Fighter sizes) |
-| Devanté | High flyer | 104 | double jump, higher jump, quick feet |
+| Devanté | High flyer | 110 | double jump, higher jump, quick feet |
 | Keksan | Striker | 88 | Muay Thai shin kicks: kicks, sweeps and the jumping knee hit 15% harder |
 | Estrella | Area control | 100 | her sound slows foes: anyone standing near her note or her Encore ring walks at 70% speed |
 | Reyes | All-rounder | 92 | squad leader: starts every round with a third of his super meter |
