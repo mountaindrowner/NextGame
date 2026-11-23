@@ -1771,6 +1771,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
 const AK={punch:{pk:4},kick:{pk:4},sweep:{pk:4},lowkick:{pk:3},cpunch:{pk:2},airkick:{pk:2},airpunch:{pk:2},jump:{prep:2,rise:3,apex:5,fall:6,land:7},fall:{air:4},
   special:{caneslam:[[0,0],[10,5],[12,6],[24,8],[34,8]],fastball:[[0,0],[6,3],[12,6],[14,7],[22,8],[30,8]],knuckle:[[0,0],[6,5],[8,6],[22,7],[34,8]],note:[[0,0],[10,5],[20,7],[28,8]],knee:[[0,0],[5,3],[9,6],[22,6],[32,8]],rush:[[0,0],[7,3]],shuriken:[[0,0],[9,6],[18,8]],slam:[[0,0],[10,8]],spin:[[0,0],[40,99]],flash:[[0,0],[17,3],[18,4],[26,7],[36,8]],tome:[[0,0],[13,6],[14,7],[22,7],[34,8]],taser:[[0,0],[7,5],[8,6],[14,7],[30,8]],strike:[[0,0],[10,7],[28,8]],takeover:[[0,0],[5,2],[7,3],[11,4],[30,7]],bassdrop:[[0,0],[9,4],[10,5],[13,6],[22,7],[34,8]],throwB:[[0,0],[10,5],[12,7],[26,8]],bounce:[[0,0],[9,4],[11,6],[28,8]],charge:[[0,0],[24,5],[27,6],[30,7],[60,7],[78,8]]}};
 // the strike frame shown while a move is active = the frame its hitbox was measured on (fully extended)
+const KNEE3=['keksan','padre','lawslie','reyes','vex'];
 const SP3NEW=['skylegua','tripod','amen','ballreturn','baton','headbang','blockparty'];
 const HB_ANIM={punch:'jab',kick:'kick',cpunch:'cjab',lowkick:'sweep',airpunch:'jpunch',airkick:'jkick'};
 function akOf(c,k){const o=(c.ak&&c.ak[k])||AK[k],m=c.anim&&c.anim[k],h=HB_ANIM[k]&&HBX[c.id]&&HBX[c.id].moves[HB_ANIM[k]];
@@ -1799,7 +1800,7 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
     case'grabbed':return A.hurt?P('hurt',last('hurt')):null;
     case'leave':return f.st<60||!A.walk?P('idle',0):P('walk',Math.floor(frameNo/6)%n('walk'));
     case'throwing':{const an=f.thBack&&A.throwb?'throwb':A.throwf?'throwf':null;// THROWS: reach and grab, hold (Story: knees while holding), then the heave
-      if(f.knees&&t<9&&A.kick3)return P('kick3',akOf(f.c,'kick3').pk);
+      if(f.knees&&t<9&&A.kick3&&KNEE3.includes(f.c.id))return P('kick3',akOf(f.c,'kick3').pk);// Story knees while holding: only where the rising kick is a knee
       if(an)return P(an,f.thr?kf(t,[[0,2],[15,3]]):kf(t,[[0,0],[4,2],[24,1]]));if(!A.punch)return null;const pk=akOf(f.c,'punch').pk;return P('punch',f.thr?pk:Math.min(t/1.4,last('punch')))}
     case'tossing':{{const an=f.tdir!=null&&f.tdir!==f.face&&A.throwb?'throwb':A.throwf?'throwf':null;if(an)return P(an,kf(t,[[0,3],[9,5],[18,7],[26,last(an)]]))}
       if(t<9&&A.punch)return P('punch',Math.min(last('punch'),akOf(f.c,'punch').pk));const a=A.kick?'kick':'punch';return P(a,Math.min(last(a),(t-9)/2.2))}

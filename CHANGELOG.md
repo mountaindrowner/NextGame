@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.59.0
+
+- **Throws have real animations.** Each fighter grabs, pulls in and heaves the opponent over:
+  - **Forward throws** for 12 fighters.
+  - **Back throws** for 10, with a pivot that ends facing the new direction.
+  - Marcus's back throw swings the bass, and Samson's swings his book.
+- **Story mode:** grabs use the same art. The knees while holding use a real knee where the fighter has one (Keksan, Samson, Lawslie, Reyes, Vex).
+- **Gaps:**
+  - Devanté's takes passed the basketball instead of throwing, so he keeps the old throw frames.
+  - Reyes's and Paezano's back throws went off-model, so they use their forward-throw animation.
+- **Cleanup:** stray objects PixelLab drew in were erased (a glowing ball, a white blob, floating cuffs), and every throw ends back in guard.
+
 ## 1.58.0
 
 - **Story mode: bosses teach their BACK + SP.** Each beaten rival now teaches a Story version of their third special. Ivan, who has none, still teaches his Bear Slam.
