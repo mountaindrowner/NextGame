@@ -170,6 +170,9 @@ const SFX={
   rewind:()=>{T('sawtooth',1400,.5,.09,180);T('square',900,.45,.05,120,.05);N(.5,.12,4000,800,'bandpass')},
   bless:()=>{[523,659,784,1047,1319].forEach((f,i)=>T('sine',f,.9,.09,null,i*.07));T('triangle',262,1.2,.12)},
   cheer:()=>{N(1.6,.22,900,2400,'bandpass');N(1.2,.12,2000,3500,'bandpass',.2);for(let i=0;i<10;i++)N(.035,.18,5000,2500,'highpass',.1+Math.random()*1.2)},
+  tomeUp:()=>{N(.35,.32,400,2600,'bandpass');[392,494,587].forEach((f,i)=>T('sine',f,.45,.05,f*1.5,i*.04))},// Holy Tome wind-up: an airy rise, a soft choir swell
+  tome:()=>{N(.07,.7,3200,900,'bandpass');N(.45,.85,1300,45);T('sine',92,.5,.95,34);T('square',140,.12,.25,60);// the book lands: thud, wood clap...
+    [784,988,1175,1568].forEach((f,i)=>T('triangle',f,1.1,.075,null,.05+i*.05));T('sine',2093,.8,.045,null,.22);N(.8,.08,4000,9000,'highpass',.1)},// ...then a golden bell chord rings out
   bell:()=>{T('triangle',1318,.5,.2);T('triangle',1975,.5,.1,null,.02)},
   sing:i=>{const f=[523,659,784,988,1175][i%5];T('sine',f,.6,.14);T('triangle',f*2,.45,.05,null,.02);T('sine',f*1.5,.5,.05,null,.05);N(.25,.07,3000,6000,'bandpass')},
   finale:()=>{[523,659,784,1047,1319,1568].forEach((f,i)=>T('sine',f,1.7,.1,null,i*.04));T('triangle',262,1.9,.16);T('sawtooth',131,.9,.06,262);N(1,.25,400,7000,'bandpass')},
@@ -1083,7 +1086,7 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
       const r=tryHit(f,o,hb,{dmg:fin?7:4,stun:20,bs:10,kb:fin?3:1,lv:'mid',chip:1,knock:fin,heavy:fin});if(r){s.hits++;s.last=t;if(r==='block')s.hits=3}}
     if(t%6===0&&t<32)SFX.whoosh();if(t>=42){f.y=0;endSpecial(f)}}
   else if(s.kind==='tome'){// Holy Tome: overhead book smash — crouch-blocking doesn't stop it
-    if(t===6)SFX.whooshH();
+    if(t===6)SFX.tomeUp();if(t===14)SFX.tome();
     if(t>=14&&t<18&&!s.hits){const hb={x1:f.face>0?f.x:f.x-84,x2:f.face>0?f.x+84:f.x,y1:f.y,y2:f.y+f.H*1.1};// the slam's shockwave reaches well out in front
       const r=tryHit(f,o,hb,{dmg:12,stun:22,bs:12,kb:4.8,lv:'high',chip:2,heavy:true});if(r){s.hits=1;F.shake=Math.max(F.shake,4);
         const cx=f.x+f.face*40;for(let i=0;i<14;i++)F.parts.push({x:cx+rnd(-6,6),y:GY-rnd(0,8),vx:rnd(-2.2,2.2),vy:rnd(-3,-1),l:rnd(14,24)|0,c:RND()<.5?'#ffd23a':'#fff3a0',g:.12})}}

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.57.1
+
+- **Holy Tome has its own sound:** an airy rise with a soft choir swell as Samson raises the book, then a heavy thud, a wooden clap and a golden bell chord as it lands.
+
 ## 1.57.0
 
 - **Samson's Holy Tome (SP) reaches much further:**
