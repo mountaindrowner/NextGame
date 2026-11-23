@@ -1084,8 +1084,8 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
     if(t%6===0&&t<32)SFX.whoosh();if(t>=42){f.y=0;endSpecial(f)}}
   else if(s.kind==='tome'){// Holy Tome: overhead book smash — crouch-blocking doesn't stop it
     if(t===6)SFX.whooshH();
-    if(t>=14&&t<18&&!s.hits){const hb={x1:f.face>0?f.x:f.x-56,x2:f.face>0?f.x+56:f.x,y1:f.y,y2:f.y+f.H*1.1};
-      const r=tryHit(f,o,hb,{dmg:12,stun:22,bs:12,kb:2.2,lv:'high',chip:2,heavy:true});if(r){s.hits=1;F.shake=Math.max(F.shake,4);
+    if(t>=14&&t<18&&!s.hits){const hb={x1:f.face>0?f.x:f.x-84,x2:f.face>0?f.x+84:f.x,y1:f.y,y2:f.y+f.H*1.1};// the slam's shockwave reaches well out in front
+      const r=tryHit(f,o,hb,{dmg:12,stun:22,bs:12,kb:4.8,lv:'high',chip:2,heavy:true});if(r){s.hits=1;F.shake=Math.max(F.shake,4);
         const cx=f.x+f.face*40;for(let i=0;i<14;i++)F.parts.push({x:cx+rnd(-6,6),y:GY-rnd(0,8),vx:rnd(-2.2,2.2),vy:rnd(-3,-1),l:rnd(14,24)|0,c:RND()<.5?'#ffd23a':'#fff3a0',g:.12})}}
     if(t===14&&!s.hits){F.shake=Math.max(F.shake,2);dust(f.x+f.face*40,6)}
     if(t>=34)endSpecial(f)}
@@ -1101,7 +1101,7 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
     if(t===3)SFX.lock();if(t===18)SFX.laser();// a long, visible charge (eyes glinting), then the beams
     if(t>=18&&t<36){s.ey=f.y+f.H*.86;s.end=f.face>0?W+8:-8;
       if(s.hits<3&&t-s.last>=5){const hb={x1:f.face>0?f.x+8:-8,x2:f.face>0?W+8:f.x-8,y1:s.ey-5,y2:s.ey+5},fin=s.hits===2;
-        const r=tryHit(f,o,hb,{dmg:fin?6:5,stun:18,bs:10,kb:fin?2.6:1.2,lv:'mid',chip:1,tag:'sp3',...(fin?{knock:true,heavy:true}:{})});if(r){s.hits++;s.last=t;s.end=o.x;if(r==='block')s.hits=3}}
+        const r=tryHit(f,o,hb,{dmg:fin?4:3,stun:18,bs:10,kb:fin?2.6:1.2,lv:'mid',chip:1,tag:'sp3',...(fin?{knock:true,heavy:true}:{})});if(r){s.hits++;s.last=t;s.end=o.x;if(r==='block')s.hits=3}}
       if(Math.abs(o.x-f.x)>0&&o.y+o.h>s.ey-5&&o.y<s.ey+5&&!['down','ko'].includes(o.state))s.end=o.x}
     if(t>=46)endSpecial(f)}
   else if(s.kind==='taser'){// Taser: short-range prongs; a hit stuns for a long time (free follow-up)
@@ -1683,6 +1683,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     order.forEach(drawFighter);
     for(const p of this.proj)p.kind==='tripod'?drawTripod(p):p.kind==='coins'?drawCoins(p):p.kind==='pitch'?drawPitch(p):p.kind==='drone'?drawDrone(p):p.kind==='bolt'?drawBolt(p):p.kind==='note'?drawNote(p):p.kind==='zone'?drawZone(p):p.kind==='prong'?drawProng(p):p.kind==='wave'?drawWave(p):p.kind==='quake'?drawQuake(p):p.kind==='bball'?drawBBall(p):p.kind?drawBall(p):drawStar(p);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='bassdrop'&&f.st>=10&&f.st<24)drawRing(f.x,f.st-10,f.c.col.aura,14);
+    for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='tome'&&f.st>=14&&f.st<28)drawRing(f.x+f.face*44,f.st-14,'#ffd23a',13);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='super')drawSuperFx(f);
     for(const f of[this.p1,this.p2])if(f.c.id==='reyes'&&f.state==='special'&&f.sp)drawReyesFx(f);
     for(const f of[this.p1,this.p2]){if(f.state==='special'&&f.sp&&f.sp.kind==='baton')drawBaton(f);if(f.c.id==='mateo')drawMateoFx(f);if(f.bribeT&&frameNo-f.bribeT<50)drawBribe(f)}
