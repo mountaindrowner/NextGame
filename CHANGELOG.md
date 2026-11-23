@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.57.0
+
+- **Samson's Holy Tome (SP) reaches much further:**
+  - The slam's shockwave now hits 84 px in front of him (was 56).
+  - Pushback is more than double.
+  - A golden ring spreads from where the book lands.
+- **Hecky's Laser Glare does about 40% less damage:** 8.7 for all three hits (was about 15), on top of 1.54's slower charge. The CPU round robin now has Hecky at 50% (was 57%) and Samson at 48% (was 41%).
+- **9 more combo moves:**
+  - Vizor's cross and high kick.
+  - Lawslie's side kick.
+  - Marcus's uppercut.
+  - Reyes's cross and uppercut.
+  - Paezano's uppercut and front kick.
+  - Every fighter now has all four except Devanté, whose finisher and rising kick still use his normal punch and kick.
+- **Vex's low cane sweep redone:** he stays crouched and faces forward (he used to turn his back), and it now hits properly low.
+- **Records** is two pages (LEFT/RIGHT):
+  - Every fighter's record in readable rows (13 rows had squeezed the names into each other), with Vex listed once unlocked.
+  - The badges with what each one asks for.
+- **A defeated Shadow** no longer leaves its floor shadow behind after it dissolves.
+
 ## 1.56.0
 
 - **Every fighter now has three specials: SP, DOWN + SP and BACK + SP.** Seven get a new BACK + SP:
