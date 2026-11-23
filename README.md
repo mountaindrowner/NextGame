@@ -30,7 +30,7 @@ Controls: four face buttons, the same in every mode — **A** punch (`U`; also `
 
 ## Powers
 
-Every fighter has two specials, and no two work alike. Special 1: **A+B** (or down, forward + A). Special 2: **down + A+B** (or down, back + B). The segmented bar under each health bar shows every special's cooldown (one segment per special). Spam protection:
+Every fighter has three specials (SP, DOWN + SP, BACK + SP), and no two work alike. Special 1: **A+B** (or down, forward + A). Special 2: **down + A+B** (or down, back + B). The segmented bar under each health bar shows every special's cooldown (one segment per special). Spam protection:
 - **Repeated specials:** the same special again within 8 seconds does 15% less damage each time (down to 50%), and its cooldown gets 20% longer each time (up to +80%).
 - **Stale pokes:** the same normal landing on its own (not in a combo) again within 4 seconds does 10% less each time (down to 60%); a grey "STALE" shows from the third.
 - **Loops:** if the same normal lands a 4th time in one combo, the same special a 3rd time, or a combo reaches 10 hits, the sparks turn blue and the defender can press A or B to **BURST** out.
@@ -38,19 +38,19 @@ Every fighter has two specials, and no two work alike. Special 1: **A+B** (or do
 
 | Fighter | Special 1 | Special 2 |
 |---|---|---|
-| Papa-Léguas | **Légua Rush** — dashing 3-hit punch flurry | **Légua Step** — invincible blur that goes through the opponent to their back |
-| Vizor | **Shutter Flash** — reticle lock-on at range, then a flash (reactable) | **Instant Replay** — rewinds his position and up to 15 recent damage |
-| Samson | **Holy Tome** — overhead book smash (must be blocked standing) | **Benediction** — kneels and heals; any hit interrupts it |
-| Zeke | **Strike Ball** — bowling ball rolled along the floor (low, knocks down) | **Split Shot** — lobbed ball that drops from above (overhead) |
+| Papa-Léguas | **Légua Rush** — dashing 3-hit punch flurry | **Légua Step** — invincible blur that goes through the opponent to their back Third special (back + A+B): **Sky Légua** — a rising flying kick, invincible on the way up; two hits, the anti-air. |
+| Vizor | **Shutter Flash** — reticle lock-on at range, then a flash (reactable) | **Instant Replay** — rewinds his position and up to 15 recent damage Third special (back + A+B): **Tripod Trap** — sets a camera on the floor ahead; it flashes (a stun that can't be blocked) when the opponent steps near. One at a time. |
+| Samson | **Holy Tome** — overhead book smash (must be blocked standing) | **Benediction** — kneels and heals; any hit interrupts it Third special (back + A+B): **Amen Slam** — a command grab: lifts and slams; goes through blocking, long recovery if it whiffs. |
+| Zeke | **Strike Ball** — bowling ball rolled along the floor (low, knocks down) | **Split Shot** — lobbed ball that drops from above (overhead) Third special (back + A+B): **Ball Return** — swings the bowling ball up overhead; the anti-air, it launches. |
 | Hecky Xavier | **Hostile Takeover** — dashing uppercut, invincible on start-up, that launches for a juggle | **Power Suit** — 7-second power-up (+25% damage, faster). Plus a third special, **Laser Glare** (back + A+B): eye beams across the screen at head height, 3 hits |
-| Lawslie | **Taser** — short-range prongs, a hit stuns 3× longer | **Cuff 'Em** — grab through blocks; cuffed opponents can't use specials or super for 5 s |
-| Devanté | **Bounce Pass** — a bouncing basketball; on a hit it comes back and a catch recharges it | **Ankle Breaker** — crossover dribble through the opponent; crossing them leaves them stumbling |
+| Lawslie | **Taser** — short-range prongs, a hit stuns 3× longer | **Cuff 'Em** — grab through blocks; cuffed opponents can't use specials or super for 5 s Third special (back + A+B): **Baton Sweep** — an extending nightstick swept low and long; knocks down. |
+| Devanté | **Bounce Pass** — a bouncing basketball; on a hit it comes back and a catch recharges it | **Ankle Breaker** — crossover dribble through the opponent; crossing them leaves them stumbling Third special (back + A+B): **Block Party** — leaps and swats; a jumping opponent gets REJECTED! (more damage, knocked down). |
 | Keksan | **Tiger Knee** — a leaping flying knee that clears low attacks and launches on a hit | **Thai Clinch** — a short-range command grab: three knees in the clinch, the last shoves them away. Third special (BK+SP): **Teep** — a long push kick that shoves them across the screen; near a wall they bounce off it into a juggle |
 | Estrella | **High Note** — a slow, bobbing music note that floats across and lingers; foes near it walk slower | **Encore** — a ring of sound out in front of her that pulses five times (hits low). Third special (BK+SP): **Siren Scream** — a short cone of sound, 3 hits; it shatters projectiles |
 | Reyes | **Frontier Knuckle** — a dashing, flaming straight right that knocks down | **Drone Strike** — launches his SABR drone; it hovers ahead of him and fires three aimed laser bolts. Third special (BK+SP): **Eagle Rise** — an invincible rising uppercut, two hits, the anti-air. Air special (A+B or SP in the air, once per jump): **Rotor Kicks** — he hangs in the air flutter-kicking, floating up a little, up to five hits |
 | Paezano | **Fastball** — a windup and a fast straight pitch; every 3rd pitch in a row is a flaming 98 MPH heater that knocks down (a flame over his cap means the next one is hot) | **Steal Home** — a feet-first slide: low, goes under projectiles and high attacks, knocks down. Third special (back + A+B), **Home Run Swing**: he pulls a bat and swings it, knocking the opponent flying ("CRACK!", or "HOME RUN!" on a knockout); any projectile in the swing is batted back as a line drive, and his next pitch is a heater |
 | Vex (secret: clear Story mode) | **Cane Shockwave** — a cane slam; a purple shockwave rolls along the floor (low) | **Every Man Has a Price** — tosses gold coins; a hit stuns the opponent for a long time (they stare at the money). Third special (back + A+B), **Vanish**: disappears in purple smoke and steps out behind the opponent |
-| Marcus | **Bass Drop** — twin low shockwaves roll along the floor both ways across the stage (block crouching, or jump them) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen |
+| Marcus | **Bass Drop** — twin low shockwaves roll along the floor both ways across the stage (block crouching, or jump them) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen Third special (back + A+B): **Headbanger** — a rising bass swing; the anti-air. |
 
 ## Supers
 
