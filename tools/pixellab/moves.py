@@ -163,6 +163,18 @@ RETRY2 = {
 }
 
 
+# THROWS: the game moves the opponent, so the thrower's hands stay empty (no second person in the frames)
+_TF = "forward throw, hands empty: reaches forward and grabs with both hands at chest height, pulls in close, then heaves both arms up and over to the front as if hurling something heavy forward, ending in a fighting stance"
+_TB = "back throw, hands empty: reaches forward and grabs with both hands at chest height, then pivots his whole body around and swings both arms over his shoulder to throw something heavy behind him, ending facing forward in a fighting stance"
+PROP = {"estrella": "the black microphone held in her right hand the whole time", "vex": "the black walking cane hooked over his left forearm the whole time",
+        "kai": "the basketball tucked tight under his left arm the whole time, never dribbling", "rex": "the bass guitar hanging on its strap in front of him the whole time",
+        "mateo": "the baseball glove on his left hand, no baseball anywhere"}
+THROWS = {k: {"throwf": _TF + (", " + PROP[k] if k in PROP else ""), "throwb": _TB + (", " + PROP[k] if k in PROP else "")}
+          for k in ["karl", "keksan", "vizor", "padre", "zeke", "hecky", "lawslie", "rex", "kai", "estrella", "reyes", "mateo", "vex"]}
+for _k in ("estrella", "lawslie"):
+    THROWS[_k] = {a: v.replace(" his ", " her ").replace("his whole", "her whole") for a, v in THROWS[_k].items()}
+
+
 def spec(name):
     s = dict(COMMON)
     for k, v in SPECIAL[name].items():
@@ -173,6 +185,8 @@ def spec(name):
         s[k] = {"mode": "v3", "frame_count": 8, "action_description": v + _END}
     for k, v in RETRY2.get(name, {}).items():
         s[k] = {"mode": "v3", "frame_count": 8, "action_description": v + _END}
+    for k, v in THROWS.get(name, {}).items():
+        s[k] = {"mode": "v3", "frame_count": 8, "action_description": v}
     return s
 
 

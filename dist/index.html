@@ -1930,8 +1930,11 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
     case'taunt':return A.taunt?P('taunt',(t/6)%n('taunt')):P('idle',(frameNo/7)%n('idle'));
     case'grabbed':return A.hurt?P('hurt',last('hurt')):null;
     case'leave':return f.st<60||!A.walk?P('idle',0):P('walk',Math.floor(frameNo/6)%n('walk'));
-    case'throwing':{if(!A.punch)return null;const pk=akOf(f.c,'punch').pk;return P('punch',f.thr?pk:Math.min(t/1.4,last('punch')))}
-    case'tossing':{if(t<9&&A.punch)return P('punch',Math.min(last('punch'),akOf(f.c,'punch').pk));const a=A.kick?'kick':'punch';return P(a,Math.min(last(a),(t-9)/2.2))}
+    case'throwing':{const an=f.thBack&&A.throwb?'throwb':A.throwf?'throwf':null;// THROWS: reach and grab, hold (Story: knees while holding), then the heave
+      if(f.knees&&t<9&&A.kick3)return P('kick3',akOf(f.c,'kick3').pk);
+      if(an)return P(an,f.thr?kf(t,[[0,2],[15,3]]):kf(t,[[0,0],[4,2],[24,1]]));if(!A.punch)return null;const pk=akOf(f.c,'punch').pk;return P('punch',f.thr?pk:Math.min(t/1.4,last('punch')))}
+    case'tossing':{{const an=f.tdir!=null&&f.tdir!==f.face&&A.throwb?'throwb':A.throwf?'throwf':null;if(an)return P(an,kf(t,[[0,3],[9,5],[18,7],[26,last(an)]]))}
+      if(t<9&&A.punch)return P('punch',Math.min(last('punch'),akOf(f.c,'punch').pk));const a=A.kick?'kick':'punch';return P(a,Math.min(last(a),(t-9)/2.2))}
     case'block':return A.block?P('block',Math.min(t,last('block'))):null;
     case'knock':{const fa=akOf(f.c,'fall');if(fa.hurtAir&&A.hurt)return P('hurt',last('hurt'));return A.fall?P('fall',Math.min(t/4,fa.air)):null}
     case'down':case'ko':return A.fall?P('fall',Math.min(akOf(f.c,'fall').air+(f.state==='ko'?t:t)/3,last('fall'))):null;
@@ -1978,7 +1981,8 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
       if(!A.special||!s)return null;
       if(s.kind==='rush'&&t>=7)return P('special',t<26?5+Math.floor((t-7)/3)%4:t<31?last('special'):3);// flurry loops the punch frames
       const L=last('special');return P('special',kf(t,(akOf(f.c,'special')[s.kind]||[[0,0],[36,99]]).map(([a,b])=>[a,Math.min(b,L)])))}
-    case'slamming':if(f.slam&&f.slam.kind==='throw')return A.punch?P('punch',kf(t,[[0,akOf(f.c,'punch').pk],[22,last('punch')]])):null;
+    case'slamming':if(f.slam&&f.slam.kind==='throw'){const an=f.slam.back&&A.throwb?'throwb':A.throwf?'throwf':null;if(an)return P(an,kf(t,[[0,3],[11,5],[22,7],[40,last(an)]]))}
+      if(f.slam&&f.slam.kind==='throw')return A.punch?P('punch',kf(t,[[0,akOf(f.c,'punch').pk],[22,last('punch')]])):null;
       return A.throw?P('throw',kf(t,[[0,0],[30,last('throw')]])):A.win?P('win',kf(t,[[0,0],[30,last('win')]])):null;}
   return null}
 function blitA(img,x,y,fc,ax,ay,rot,pivotC,ox,oy,ph,sc=1){ctx.save();ctx.translate(Math.round(x+ox),Math.round(GY-y+oy));
