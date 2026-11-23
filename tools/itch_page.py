@@ -13,19 +13,19 @@ OUT.mkdir(parents=True, exist_ok=True)
 RED = (208, 48, 26, 255)
 GOLD = "#ffe66a"
 
-ROSTER = [  # id, name, style, special 1, special 2
-    ("karl", "PAPA-LÉGUAS", "KARATE", "LÉGUA RUSH", "LÉGUA STEP"),
-    ("vizor", "VIZOR", "TECH BRAWLER", "SHUTTER FLASH", "INSTANT REPLAY"),
-    ("padre", "SAMSON", "SACRED BOXING", "HOLY TOME", "BENEDICTION"),
-    ("zeke", "ZEKE", "BOWLING BRAWLER", "STRIKE BALL", "SPLIT SHOT"),
-    ("hecky", "HECKY XAVIER", "DAPPER BOXING", "HOSTILE TAKEOVER", "POWER SUIT"),
-    ("lawslie", "LAWSLIE", "POLICE DEFENSE", "TASER", "CUFF 'EM"),
-    ("rex", "MARCUS", "BASS BRAWLER", "BASS DROP", "MIC CHECK"),
-    ("kai", "DEVANTÉ", "STREETBALL", "BOUNCE PASS", "ANKLE BREAKER"),
-    ("keksan", "KEKSAN", "MUAY THAI", "TIGER KNEE", "THAI CLINCH"),
-    ("estrella", "ESTRELLA", "SHOWSTOPPER", "HIGH NOTE", "ENCORE"),
-    ("reyes", "REYES", "SABR COMBAT", "FRONTIER KNUCKLE", "DRONE STRIKE"),
-    ("mateo", "PAEZANO", "FASTBALL", "FASTBALL", "STEAL HOME"),
+ROSTER = [  # id, name, style, special 1, special 2, special 3
+    ("karl", "PAPA-LÉGUAS", "KARATE", "LÉGUA RUSH", "LÉGUA STEP", "SKY LÉGUA"),
+    ("keksan", "KEKSAN", "MUAY THAI", "TIGER KNEE", "THAI CLINCH", "TEEP"),
+    ("vizor", "VIZOR", "TECH BRAWLER", "SHUTTER FLASH", "INSTANT REPLAY", "TRIPOD TRAP"),
+    ("padre", "SAMSON", "SACRED BOXING", "HOLY TOME", "BENEDICTION", "AMEN SLAM"),
+    ("zeke", "ZEKE", "BOWLING BRAWLER", "STRIKE BALL", "SPLIT SHOT", "BALL RETURN"),
+    ("hecky", "HECKY XAVIER", "DAPPER BOXING", "HOSTILE TAKEOVER", "POWER SUIT", "LASER GLARE"),
+    ("lawslie", "LAWSLIE", "POLICE DEFENSE", "TASER", "CUFF 'EM", "BATON SWEEP"),
+    ("rex", "MARCUS", "BASS BRAWLER", "BASS DROP", "MIC CHECK", "HEADBANGER"),
+    ("kai", "DEVANTÉ", "STREETBALL", "BOUNCE PASS", "ANKLE BREAKER", "BLOCK PARTY"),
+    ("estrella", "ESTRELLA", "SHOWSTOPPER", "HIGH NOTE", "ENCORE", "SIREN SCREAM"),
+    ("reyes", "REYES", "SABR COMBAT", "FRONTIER KNUCKLE", "DRONE STRIKE", "EAGLE RISE"),
+    ("mateo", "PAEZANO", "FASTBALL", "FASTBALL", "STEAL HOME", "HOME RUN SWING"),
 ]
 
 
@@ -96,12 +96,12 @@ def title(text, name):  # 960x72 section titles (480x36 x2)
 
 
 def roster():  # 960x? roster card, 3 x 2 fighter cards (drawn at 1x, scaled x2)
-    CW, CH, G = 152, 150, 6
-    items = ROSTER + [("vex", "???", "SECRET FIGHTER", "CLEAR STORY MODE", "TO UNLOCK")]
+    CW, CH, G = 152, 160, 6
+    items = ROSTER + [("vex", "???", "SECRET FIGHTER", "CLEAR STORY MODE", "TO UNLOCK", "")]
     rows = -(-len(items) // 3)
     W, H = CW * 3 + G * 4, CH * rows + G * (rows + 1)
     im = Image.new("RGBA", (W, H), (14, 11, 34, 255))
-    for i, (id_, name, style, s1, s2) in enumerate(items):
+    for i, (id_, name, style, s1, s2, s3) in enumerate(items):
         last = len(items) - (rows - 1) * 3 if i >= (rows - 1) * 3 else 3
         x0, y0 = G + (i % 3) * (CW + G) + (3 - last) * (CW + G) // 2, G + (i // 3) * (CH + G)
         card = panel(CW, CH)
@@ -125,6 +125,7 @@ def roster():  # 960x? roster card, 3 x 2 fighter cards (drawn at 1x, scaled x2)
         draw_text(card, style, 6, 111, 1, col="#bbbbdd")
         draw_text(card, s1 if secret else "SP     " + s1, 6, 124, 1, col="#e0a0ff" if secret else "#ff9a6a")
         draw_text(card, s2 if secret else "DN+SP  " + s2, 6, 135, 1, col="#e0a0ff" if secret else "#7ad8ff")
+        if not secret: draw_text(card, "BK+SP  " + s3, 6, 146, 1, col="#ff7a8a")
         frame(card)
         im.alpha_composite(card, (x0, y0))
     save(im, "roster.png", 2)

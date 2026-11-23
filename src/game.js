@@ -1760,9 +1760,9 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     const s2=Math.max(1,Math.round(sc*k));drawText(s,128,84-s2*3.5,'#fff',s2,{align:'center',grad,outline:'#200',ow:1})},
   drawPause(){ctx.fillStyle='rgba(0,0,10,.75)';ctx.fillRect(0,0,W,H);drawText('PAUSE',128,4,'#fff',2,{align:'center',grad:FIRE,outline:'#300'});drawText('V'+VER,252,184,'#667',1,{align:'right',shadow:false});
     const c=this.p1.c;
-    const m=[['PUNCH / KICK','A / B (DOWN: LOW)'],['OVERHEAD','FWD + A (BLOCK STANDING)'],...(CMD[c.id]?[[CMD[c.id].nm,'BACK + A']]:[]),...(TCM[c.id]?[[TCM[c.id].m.nm,'KICK, THEN '+TCM[c.id].btn.toUpperCase()]]:[]),['BLOCK / DASH','HOLD BACK / TAP TWICE'],[c.spName,'SP'],...(c.sp2Name?[[c.sp2Name,'DOWN+SP']]:[]),...(c.sp3Name?[[c.sp3Name,'BACK+SP']]:[]),[SUPER_NAME[c.id],'FWD+SP, FULL BAR'],['SUPER CANCEL','SP HITS > FWD+SP'],['FOCUS','HOLD JUMP, LET GO'],['EX SPECIAL','FOCUS+SP, 1/3 BAR'],...(arch(c).type?[[arch(c).type,arch(c).trait]]:[]),['COMBO',BNB[c.id]||'']];
-    const bh=18+m.length*9;box(12,22,232,bh);drawText('MOVES - '+c.name,128,26,'#ffe66a',1,{align:'center'});this.pmy=22+bh+6;
-    m.forEach(([k,v],i)=>{const y=38+i*9,cm=k==='COMBO';drawText(k,18,y,cm?'#ffe66a':'#ff9a6a',1,{shadow:false});drawText(v,238,y,cm?'#ffe66a':'#fff',1,{align:'right',shadow:false})});
+    const m=[['PUNCH / KICK','A / B (DOWN: LOW)'],['OVERHEAD','FWD + A (BLOCK STANDING)'],...(CMD[c.id]?[[CMD[c.id].nm,'BACK + A']]:[]),...(TCM[c.id]?[[TCM[c.id].m.nm,'KICK, THEN '+TCM[c.id].btn.toUpperCase()]]:[]),['BLOCK / DASH','HOLD BACK / TAP TWICE'],[c.spName,'SP'],...(c.sp2Name?[[c.sp2Name,'DOWN+SP']]:[]),...(c.sp3Name?[[c.sp3Name,'BACK+SP']]:[]),...(c.airName?[[c.airName,'SP IN THE AIR']]:[]),[SUPER_NAME[c.id],'FWD+SP, FULL BAR'],['SUPER CANCEL','SP HITS > FWD+SP'],['FOCUS','HOLD JUMP, LET GO'],['EX SPECIAL','FOCUS+SP, 1/3 BAR'],...(arch(c).type?[[arch(c).type,arch(c).trait]]:[]),['COMBO',BNB[c.id]||'']];
+    const LH=m.length>14?8:9,bh=18+m.length*LH;box(12,22,232,bh);drawText('MOVES - '+c.name,128,26,'#ffe66a',1,{align:'center'});this.pmy=22+bh+6;
+    m.forEach(([k,v],i)=>{const y=38+i*LH,cm=k==='COMBO';drawText(k,18,y,cm?'#ffe66a':'#ff9a6a',1,{shadow:false});drawText(v,238,y,cm?'#ffe66a':'#fff',1,{align:'right',shadow:false})});
     ['RESUME','QUIT TO TITLE','HITBOXES: '+(SHOWBOX?'ON':'OFF')].forEach((s,i)=>drawText((this.psel===i?'> ':'  ')+s,128,this.pmy+i*11,this.psel===i?'#ffe66a':'#99a',1,{align:'center'}))}};
 
 // ---- frame-animated fighters ----
@@ -2363,8 +2363,13 @@ const ABIL={karl:{type:'dash',dmg:12,knock:1},keksan:{type:'dash',dmg:12,launch:
   zeke:{type:'proj',pk:'roll',spd:3.6,py:6,pierce:3,knock:1,dmg:12},hecky:{type:'dash',dmg:11,launch:1,short:1},lawslie:{type:'stun',r:72,dmg:8},
   rex:{type:'wave',dmg:10},kai:{type:'proj',pk:'ball',spd:3.8,py:30,pierce:1,knock:1,dmg:10,bounce:1},estrella:{type:'proj',pk:'note',spd:1.3,py:44,life:170,pierce:6,dmg:6,multi:1},
   reyes:{type:'dash',dmg:13,knock:1},mateo:{type:'proj',pk:'pitch',spd:6.2,py:44,knock:1,dmg:12},ivan:{type:'slam',r:66,dmg:16}};
-const abilName=id=>(CH[id]&&CH[id].spName)||id.toUpperCase(),ABIL_IN=['SP','DN+SP','BK+SP'];
-function learnAbil(id){if(!RUN||!id||!ABIL[id])return;RUN.abil=RUN.abil||[];if(RUN.abil.includes(id)||RUN.abil.length>=3)return;RUN.abil.push(id);RUN.newAbil=RUN.abil.length-1}
+// bosses teach the Story version of their BACK+SP (Ivan, who has none, teaches his Bear Slam)
+const ABIL3={karl:{type:'rise',dmg:12},keksan:{type:'push',r:62,dmg:10},vizor:{type:'stun',r:120,dmg:6},padre:{type:'slam',r:52,dmg:16},
+  zeke:{type:'rise',dmg:11},hecky:{type:'beam',dmg:7},lawslie:{type:'push',r:86,dmg:9},rex:{type:'rise',dmg:11},kai:{type:'rise',dmg:11},
+  estrella:{type:'push',r:92,dmg:7},reyes:{type:'rise',dmg:13},mateo:{type:'push',r:52,dmg:13,far:1}};
+const abilOf=id=>ABIL3[id]||ABIL[id];
+const abilName=id=>(CH[id]&&(ABIL3[id]?CH[id].sp3Name:CH[id].spName))||id.toUpperCase(),ABIL_IN=['SP','DN+SP','BK+SP'];
+function learnAbil(id){if(!RUN||!id||!abilOf(id))return;RUN.abil=RUN.abil||[];if(RUN.abil.includes(id)||RUN.abil.length>=3)return;RUN.abil.push(id);RUN.newAbil=RUN.abil.length-1}
 const FALLBACK_FOE={goon:'karl',slinger:'vizor',bruiser:'padre',chain:'zeke',kicker:'lawslie',vex:'hecky'};// used until a foe's own sprites exist
 const LEVELS=[
   {name:'BONFIRE STREETS',bg:'story_lvl1',bgY:-38,floor:{kind:'slabs',c1:'#3c3650',c2:'#1c1828',line:'#2a2438',edge:'#8a82a0'},alt:'vizor',song:'vizor',len:768,crates:[[236,8],[476,28]],cans:[[420,40]],hydrants:[[330],[600]],ride:{kind:'train',name:'METRO LINE 1',waves:[['goon','blade','goon'],['shield','chain','goon','slinger']]},
@@ -2788,21 +2793,29 @@ const Brawl={
   breaker(P){if(P.meter>=50)P.meter-=50;else{const c=Math.min(8,Math.max(0,P.hp-1));P.hp-=c;P.grey=(P.grey||0)+c}
     P.state='special';P.st=0;P.vx=P.vz=0;P.y=0;P.atk=null;P.stun=0;P.thr=null;P.sp={kind:'desp',hits:0,id:++atkId,two:false};P.inv=40;F.camFlash=Math.max(F.camFlash||0,3);
     SFX.burst?SFX.burst():SFX.special();this.addT('BREAKER!',P.x,P.z,'#7ad8ff')},
-  useAbil(P,slot){const id=RUN.abil[slot],A=ABIL[id];P.abCD=P.abCD||[0,0,0];if(P.abCD[slot]>0)return;P.abCD[slot]=A.type==='proj'?70:90;
+  useAbil(P,slot){const id=RUN.abil[slot],A=abilOf(id);P.abCD=P.abCD||[0,0,0];if(P.abCD[slot]>0)return;P.abCD[slot]=A.type==='proj'?70:90;
     P.state='special';P.st=0;P.vx=P.vz=0;P.y=0;P.atk=null;P.sp={kind:'ab',ab:id,hits:{},id:++atkId};SFX.special();fighterVoice(P,'sp1');this.addT(abilName(id)+'!',P.x,P.z,CH[id].col.aura)},
-  updAbil(P){const s=P.sp,A=ABIL[s.ab],t=P.st,f=P.face,col=CH[s.ab].col.aura,end=n=>{if(t>=n){P.state='idle';P.st=0;P.sp=null;P.vx=0}};
+  updAbil(P){const s=P.sp,A=abilOf(s.ab),t=P.st,f=P.face,col=CH[s.ab].col.aura,end=n=>{if(t>=n){P.state='idle';P.st=0;P.sp=null;P.vx=0}};
     const hitAll=(test,dmg,knock,o={})=>{for(const e of this.foes)if(!e.dead&&!e.ko&&!s.hits[e.uid]&&e.y<60&&test(e)){s.hits[e.uid]=1;e.inv=0;this.hitFoe(e,dmg,knock,Math.sign(e.x-P.x)||f,null,o)}};
     if(A.type==='proj'){if(t===10){this.pproj.push({kind:A.pk,x:P.x+f*18,z:P.z,y:A.py,vx:f*A.spd,owner:P,col,life:A.life||130,hit:{},pierce:A.pierce||0,knock:!!A.knock,dmg:A.dmg,bounce:A.bounce,multi:A.multi,t:0});SFX.whooshH()}end(24)}
     else if(A.type==='dash'){const T=A.short?14:20;if(t>=6&&t<T){P.vx=f*(A.short?4.4:5.4);P.inv=Math.max(P.inv,2);if(t%2===0)P.ghosts.push({x:P.x,y:P.y,l:12});
         hitAll(e=>Math.abs(e.x-(P.x+f*16))<26&&Math.abs(e.z-P.z)<14,A.dmg,A.knock||A.launch,{launch:!!A.launch})}else P.vx*=.7;end(30)}
     else if(A.type==='slam'){if(t===12){this.shake=8;SFX.slam();for(let k=0;k<14;k++)this.dust(P.x+rnd(-A.r,A.r),P.z,1);this.ring={x:P.x,z:P.z,r:A.r,l:14,col};hitAll(e=>Math.abs(e.x-P.x)<A.r&&Math.abs(e.z-P.z)<16,A.dmg,true)}end(28)}
     else if(A.type==='wave'){if(t===10){for(const d of[1,-1])this.pproj.push({kind:'wave',x:P.x+d*16,z:P.z,y:0,vx:d*3.4,owner:P,col,life:70,hit:{},pierce:9,knock:true,dmg:A.dmg,t:0});SFX.bass&&SFX.bass();this.shake=5}end(26)}
+    else if(A.type==='rise'){// a leaping anti-air: up into the air, launching whoever it meets
+      if(t===4){P.vy=4.4;P.y=1;SFX.whooshH()}if(t>=4&&t<16&&t%2===0)P.ghosts.push({x:P.x,y:P.y,l:10});
+      if(t>=6&&t<16)hitAll(e=>Math.abs(e.x-(P.x+f*18))<28&&Math.abs(e.z-P.z)<14,A.dmg,true,{launch:true});end(34)}
+    else if(A.type==='push'){// a big shove: everyone in front within reach goes flying (Home Run Swing sends them further)
+      if(t===10){SFX.whooshH();this.shake=4;const before=new Set(Object.keys(s.hits));hitAll(e=>(e.x-P.x)*f>-6&&(e.x-P.x)*f<A.r&&Math.abs(e.z-P.z)<16,A.dmg,true);
+        for(const e of this.foes)if(s.hits[e.uid]&&!before.has(String(e.uid))&&e.state==='knock')e.vx=f*(A.far?7.5:5.5)}end(28)}
+    else if(A.type==='beam'){// a straight beam at head height across the whole screen
+      if(t===12){SFX.laser&&SFX.laser();this.beam={x:P.x+f*10,z:P.z,h:P.H*.86,dir:f,l:12};hitAll(e=>(e.x-P.x)*f>0&&Math.abs(e.z-P.z)<10,A.dmg,false)}end(30)}
     else if(A.type==='stun'){if(t===10){F.camFlash=Math.max(F.camFlash||0,A.r>100?6:2);SFX.zap&&SFX.zap();hitAll(e=>(e.x-P.x)*f>-6&&(e.x-P.x)*f<A.r&&Math.abs(e.z-P.z)<18,A.dmg,false);
         for(const e of this.foes)if(s.hits[e.uid]&&e.state==='hurt')e.stun=70}end(24)}},
   updPProj(){for(const p of this.pproj){p.t++;p.x+=p.vx;p.life--;if(p.bounce)p.y=8+Math.abs(Math.sin(p.t/7))*26;if(p.multi&&p.t%30===0)p.hit={};
       for(const e of this.foes)if(!e.dead&&!e.ko&&!p.hit[e.uid]&&Math.abs(e.x-p.x)<14&&Math.abs(e.z-p.z)<14&&e.y<60){p.hit[e.uid]=1;e.inv=0;this.P=p.owner;if(this.hitFoe(e,p.dmg,p.knock,Math.sign(p.vx)||1)){this.spark(p.x,p.z,p.y,p.col,8);if(--p.pierce<0)p.life=0}}
       if(p.kind==='wave'&&p.t%3===0)this.dust(p.x,p.z,1)}
-    this.P=this.ps[0];this.pproj=this.pproj.filter(p=>p.life>0&&p.x>this.cx-30&&p.x<this.cx+W+30);if(this.ring&&--this.ring.l<=0)this.ring=null},
+    this.P=this.ps[0];this.pproj=this.pproj.filter(p=>p.life>0&&p.x>this.cx-30&&p.x<this.cx+W+30);if(this.ring&&--this.ring.l<=0)this.ring=null;if(this.beam&&--this.beam.l<=0)this.beam=null},
   backAtk(){const P=this.P;P.face=-P.face;this.atk(P,'kick',true);P.atk={...P.atk,s:4,dmg:9,back:true};P.chainN=2;SFX.whooshH()},
   callAlly(){const P=this.P,m=RUN.allyQ.shift(),C=foeData(m.kind),f=new Fighter('karl',1,true,false),dir=P.face;
     Object.assign(f,{c:C,img:C.spr,H:C.H*(m.vari?m.vari.sc:1),kind:m.kind,name:m.name,hue:m.hue,sat:m.sat,whiten:m.whiten,alt:m.alt,vari:m.vari,uid:++atkId,face:dir,state:'walk',vx:dir*4.4,vz:0,z:P.z,
@@ -3149,6 +3162,8 @@ const Brawl={
       if(p.kind==='note'){ctx.fillStyle='#120e1e';ctx.fillRect(x-3,y-1,6,5);ctx.fillRect(x+1,y-10,3,10);ctx.fillStyle=p.col;ctx.fillRect(x-2,y,4,3);ctx.fillRect(x+2,y-9,1,9);ctx.fillRect(x+2,y-9,4,2);continue}
       ctx.fillStyle='rgba(255,255,255,.4)';ctx.fillRect(Math.min(x,x-d*18),y,18,1);const r=p.kind==='roll'?5:4;ctx.fillStyle='#120e1e';ctx.beginPath();ctx.arc(x,y,r+1,0,Math.PI*2);ctx.fill();
       ctx.fillStyle=p.kind==='roll'?'#3a3850':p.kind==='ball'?'#e07a2a':p.kind==='pitch'?'#fff':p.col;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.fillStyle='rgba(255,255,255,.6)';ctx.fillRect(x-2,y-2,2,1)}
+    if(this.beam){const B=this.beam,x0=Math.round(B.x-cx),y=Math.round(FY+B.z-B.h),x1=B.dir>0?W:0;ctx.globalAlpha=Math.min(1,B.l/6);ctx.fillStyle='rgba(255,40,60,.35)';ctx.fillRect(Math.min(x0,x1),y-4,Math.abs(x1-x0),9);
+      ctx.fillStyle='#ff2a3a';ctx.fillRect(Math.min(x0,x1),y-2,Math.abs(x1-x0),5);ctx.fillStyle='#ffd0d0';ctx.fillRect(Math.min(x0,x1),y,Math.abs(x1-x0),1);ctx.globalAlpha=1}
     if(this.ring){const R=this.ring,k=1-R.l/14;ctx.globalAlpha=R.l/14;ctx.strokeStyle=R.col;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(R.x-cx,FY+R.z,R.r*k+6,(R.r*k+6)*.3,0,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}
     // desperation shockwave
     if(P.state==='special'&&P.sp&&!P.sp.sup&&P.st>=8&&P.st<20){const k=P.st-8,R=14+k*4;ctx.globalAlpha=1-k/12;ctx.strokeStyle=P.c.col.aura;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(P.x-cx,FY+P.z-P.H*.4,R,R*.7,0,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}

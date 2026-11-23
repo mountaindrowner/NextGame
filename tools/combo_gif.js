@@ -4,6 +4,7 @@ const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs');
 const CLIPS = [
   { p1: 'karl', p2: 'keksan', stage: 'karl', seq: [['a'], ['a'], ['b'], ['a', 'b']] },
+  { p1: 'keksan', p2: 'zeke', stage: 'keksan', seq: [['a'], ['a'], ['a'], ['b']] },
   { p1: 'vizor', p2: 'zeke', stage: 'vizor', seq: [['a'], ['b'], ['a', 'b']] },
 ];
 (async () => {

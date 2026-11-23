@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.58.0
+
+- **Story mode: bosses teach their BACK + SP.** Each beaten rival now teaches a Story version of their third special. Ivan, who has none, still teaches his Bear Slam.
+  - **Leaping anti-airs that launch:** Sky Légua, Ball Return, Headbanger, Block Party, Eagle Rise.
+  - **Shoves:** Teep, Baton Sweep and Siren Scream. Paezano's Home Run Swing sends a henchman across the screen.
+  - **Laser Glare** is a beam across the whole screen.
+  - **Tripod Trap** stuns with a flash.
+  - **Amen Slam** is a ground slam.
+- **Pause move list:** Reyes's air special (Rotor Kicks, SP in the air) is listed now. Long lists use slightly tighter rows so they still fit.
+- **Tests:** `tools/story_mech.js` checks the new learned moves (rise, beam, push, the Home Run Swing) and the Bear Slam.
+
 ## 1.57.1
 
 - **Holy Tome has its own sound:** an airy rise with a soft choir swell as Samson raises the book, then a heavy thud, a wooden clap and a golden bell chord as it lands.

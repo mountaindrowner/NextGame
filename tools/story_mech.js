@@ -41,12 +41,16 @@ const path = require('path');
     // 5b. SP is its own button: A+B together is just a punch, and with no learned move SP does nothing
     { const q = stage(); d.RUN.abil = []; q.step({ a: 1, b: 1 }); const ab = q.P.state + (q.P.atk ? ':' + q.P.atk.name : ''); q.P.state = 'idle'; q.P.atk = null; run(q, 30); q.step({ sp: 1 }); const none = q.P.state;
       C('A+B is not a special; no move until learned', !ab.startsWith('special') && none !== 'special', `A+B -> ${ab}, SP with nothing learned -> ${none}`); }
-    // 5c. learned moves: beat a boss, get his move on SP (Mateo's pitch here), DOWN+SP (Ivan's slam)
-    { const q = stage(1), e = q.foe('goon', 220); e.hp = e.mhp = 100; d.RUN.abil = []; d.RUN.level = 0; d.RUN.ladder = ['mateo']; d.go(d.Result, 0, { p1: 'karl', p2: 'mateo', stage: 'mateo' }); d.Result.win = true;
-      d.Result.next(); const learned = (d.RUN.abil || []).slice(); const q2 = stage(1); d.RUN.abil = ['mateo', 'ivan']; const f = q2.foe('goon', 220); f.hp = f.mhp = 100; f.wait = 999;
-      q2.step({ sp: 1 }); let hit = false; for (let i = 0; i < 70; i++) { if (f.state === 'walk' || f.state === 'idle') { f.x = 220; f.z = 18; } q2.step(); hit = hit || f.hp < 100; }
+    // 5c. learned moves: beat a boss, get the Story version of his BACK+SP on SP (Paezano's Home Run Swing), DOWN+SP (Ivan's Bear Slam)
+    { const q = stage(1); d.RUN.abil = []; d.RUN.level = 0; d.RUN.ladder = ['mateo']; d.go(d.Result, 0, { p1: 'karl', p2: 'mateo', stage: 'mateo' }); d.Result.win = true;
+      d.Result.next(); const learned = (d.RUN.abil || []).slice(); const q2 = stage(1); d.RUN.abil = ['mateo', 'ivan']; const f = q2.foe('goon', q2.P.x + 36); f.hp = f.mhp = 100; f.wait = 999; const x0 = f.x;
+      q2.step({ sp: 1 }); let hit = false, far = 0; for (let i = 0; i < 40; i++) { q2.step(); hit = hit || f.hp < 100; far = Math.max(far, f.x - x0) }
       const g = q2.foe('goon', q2.P.x + 40); g.hp = g.mhp = 100; q2.P.state = 'idle'; q2.P.abCD = [0, 0, 0]; q2.step({ sp: 1, down: 1, h: { down: 1 } }); let slam = false; for (let i = 0; i < 30; i++) { q2.step(); slam = slam || g.hp < 100; }
-      C('learned moves: beat a boss, SP pitch, DN+SP slam', learned[0] === 'mateo' && hit && slam, `learned [${learned}], SP pitch hit ${hit}, DN+SP slam hit ${slam}`); }
+      C('learned moves: Home Run Swing, Bear Slam', learned[0] === 'mateo' && hit && far > 40 && slam, `learned [${learned}], SP swing hit ${hit} (sent ${Math.round(far)} px), DN+SP slam hit ${slam}`); }
+    // 5c2. the other new Story move kinds: a leaping anti-air (Sky Légua), a beam (Laser Glare), a shove (Teep)
+    { const r = []; for (const [id, x, kind] of [['karl', 30, 'rise'], ['hecky', 150, 'beam'], ['keksan', 40, 'push']]) { const q = stage(1); d.RUN.abil = [id]; const e = q.foe('goon', q.P.x + x); e.hp = e.mhp = 100; e.wait = 999;
+        q.step({ sp: 1 }); let hit = false; for (let i = 0; i < 40; i++) { q.step(); hit = hit || e.hp < 100 } r.push(kind + (hit ? ' hit' : ' MISS')) }
+      C('learned moves: rise, beam, push', r.every(x => x.endsWith(' hit')), r.join(', ')); }
     // 6. telegraph: committed enemy attacks show "!" first
     { const q = stage(), e = q.foe('bruiser', 180); e.state = 'special'; e.st = 0; e.sp = { kind: 'charge', id: 1 }; const w = q.B.windup(e); C('telegraph (! before charges)', w === true, `windup ${w}`); }
     // 7. RIOT: front hits are blocked, a jump kick gets over, and two blocks earn a bash
