@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.55.0
+
+- **Combo-string animations for 9 more fighters.** Each hit of a chain plays its own move, with the same timing and damage:
+  - **Keksan:** cross, rising elbow, switch kick, knee.
+  - **Vex:** cane backhand, cane thrust, heel stomp, knee.
+  - **Zeke:** cross, finisher, rising kick.
+  - **Lawslie:** palm strike, forearm, knee.
+  - **Estrella:** punch, spin kick, high kick.
+  - **Vizor:** hook, side kick, crescent kick.
+  - **Reyes:** cross, knee.
+  - **Samson and Hecky:** cross.
+  - **Marcus:** rising kick.
+- Story mode uses them the same way: A, A, A and A, A, B, plus the A, A, JUMP launcher.
+- **Not yet:** PixelLab's takes for Devanté and Paezano got their basketball and baseball in the way (dribbling and pitching instead of hitting). A few other moves were too faint to use. Those slots keep the fighter's normal punch or kick for now.
+
 ## 1.54.0
 
 - **Combo strings have their own animations (Papa-Léguas first).** Each hit of a chain now plays a different move, with the same timing and damage as before:
