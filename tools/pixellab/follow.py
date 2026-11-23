@@ -7,6 +7,7 @@ from moves import CHARS, have, submit, HERE
 # anim -> (source anim, source frame, frames, action)
 FOLLOW = {
     "lowkickc": ("crouch", -1, 6, "stays low in a deep crouch and sweeps the black walking cane forward along the floor at ankle height, the cane fully extended in front of him, facing forward the whole time, never turning his back"),
+    "swat":     ("jump", 5, 6, "in mid-air at the top of a jump, the basketball tucked under his left arm, swings his right arm up and then swats the right hand forward and down hard like blocking a shot, staying in the air"),
     "lowkick":  ("crouch", -1, 6, "from a low crouch, kicks the front leg straight forward low along the ground in a fast leg sweep, then pulls it back, staying crouched"),
     "cpunch":   ("crouch", -1, 4, "from a low crouch, throws a quick straight punch forward at waist height, then pulls back, staying crouched"),
     "airkick":  ("jump", 5, 4, "in mid-air with knees tucked, extends the front leg straight forward in a flying side kick"),

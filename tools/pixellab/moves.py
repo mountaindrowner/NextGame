@@ -183,6 +183,13 @@ SP3B = {
 }
 
 
+# dedicated art for moves that were built from other frames
+DEDICATED = {
+    "karl": {"step2": "dashes forward extremely fast in a low crouched sprint, body leaning far forward, both arms swept back behind him, white gi flapping, a blur of speed, then stops in a fighting stance"},
+    "vizor": {"replay2": "taps a glowing button on his wrist gadget with the other hand, a cyan rewind glow and digital static flicker around his whole body like a paused video, then returns to a fighting stance"},
+}
+
+
 def spec(name):
     s = dict(COMMON)
     for k, v in SPECIAL[name].items():
@@ -196,6 +203,8 @@ def spec(name):
     for k, v in THROWS.get(name, {}).items():
         s[k] = {"mode": "v3", "frame_count": 8, "action_description": v}
     for k, v in SP3B.get(name, {}).items():
+        s[k] = {"mode": "v3", "frame_count": 8, "action_description": v}
+    for k, v in DEDICATED.get(name, {}).items():
         s[k] = {"mode": "v3", "frame_count": 8, "action_description": v}
     return s
 

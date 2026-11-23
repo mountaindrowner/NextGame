@@ -1820,7 +1820,7 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
       if(s&&s.kind==='bat'&&A.batswing)return P('batswing',kf(t,[[0,3],[8,6],[10,7],[20,8],[34,8]]));// PixelLab swing: draw, cock, contact, follow-through
       if(s&&s.kind==='bat'&&A.punch){const pk=akOf(f.c,'punch').pk;return P('punch',kf(t,[[0,0],[9,Math.max(0,pk-1)],[11,pk],[18,pk],[34,last('punch')]]))}
       if(s&&(s.two||s.kind==='laser'||s.kind==='teep'||s.kind==='siren'||s.kind==='eagle'||s.kind==='hover'||s.kind==='snag'||s.kind==='vanish'||SP3NEW.includes(s.kind))){const k=s.kind;
-        if(k==='blockparty'){const j=akOf(f.c,'jump');if(t>=8&&t<20&&A.airpunch)return P('airpunch',akOf(f.c,'airpunch').pk);return A.jump?P('jump',t<3?j.prep:t<8?j.rise:t<30?j.fall:j.land):null}// leap, swat (his air punch), come down
+        if(k==='blockparty'){const j=akOf(f.c,'jump');if(t>=8&&t<20&&A.swat)return P('swat',kf(t,[[8,0],[12,2],[16,4],[20,last('swat')]]));if(t>=8&&t<20&&A.airpunch)return P('airpunch',akOf(f.c,'airpunch').pk);return A.jump?P('jump',t<3?j.prep:t<8?j.rise:t<30?j.fall:j.land):null}// leap, swat (his air punch), come down
         if(k==='amen'&&A.special3)return P('special3',s.ph?kf(t-s.t0,[[0,3],[16,6],[20,8],[36,8]]):kf(t,[[0,0],[6,3],[30,3],[42,0]]));// reach, lift overhead, slam
         if(k==='amen'){if(s.ph)return A.special?P('special',kf(t-s.t0,[[0,0],[16,5],[20,8],[36,8]])):null;const pk=akOf(f.c,'punch').pk;return A.punch?P('punch',kf(t,[[0,0],[6,pk],[30,pk],[42,last('punch')]])):null}// reach out, then lift and slam (his book-smash strip)
         if(SP3NEW.includes(k)&&A.special3){const n3=last('special3');return P('special3',kf(t,k==='tripod'?[[0,0],[12,8],[22,8],[30,n3]]:[[0,0],[6,Math.round(n3*.45)],[12,Math.round(n3*.75)],[24,n3],[40,n3]]))}
@@ -1834,10 +1834,12 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
         if(k==='siren')return A.special3?P('special3',kf(t,[[0,0],[5,4],[28,6],[38,8]])):null;
         if(k==='encore')return A.special2?P('special2',kf(t,[[0,0],[12,5],[30,8]])):null;
         if(k==='teep')return A.special3?P('special3',kf(t,[[0,0],[6,3],[8,4],[18,6],[30,8]])):null;
+        if(k==='step'&&A.step2)return P('step2',kf(t,[[0,0],[4,2],[17,Math.min(6,last('step2'))],[24,last('step2')]]));// dedicated sprint, else the crouch-and-walk blur
         if(k==='step'){if(!A.walk)return null;return t<4?(A.crouch?P('crouch',2):P('idle',0)):P('walk',Math.floor(t/1.5)%n('walk'))}
         if(k==='counter'){if(s.trig==null)return A.block?P('block',Math.min(t,last('block'))):null;const kk=t-s.trig;return A.kick?P('kick',kf(kk,[[0,1],[7,4],[16,5],[24,7]])):null}
         if(k==='charge')return A.special?P('special',t<8?t/8*5:t<30?7+((t>>2)&1):8):null;
         if(k==='rising'){const a=A.airkick?'airkick':'kick';return A[a]?P(a,kf(t,[[0,0],[4,2],[14,last(a)],[26,last(a)]])):null}
+        if(k==='replay'&&A.replay2)return P('replay2',Math.floor(t/3)%n('replay2'));// the rewind glitch loops while he rewinds
         if(k==='replay')return P('idle',last('idle')-(Math.floor(t/1.5)%n('idle')));
         if(k==='cuff')return A.special2?P('special2',kf(t,[[0,0],[4,2],[12,5],[34,last('special2')]])):null;
         if(k==='laser'){const a=A.special3?'special3':A.special2?'special2':null;return a?P(a,a==='special3'?kf(t,[[0,0],[16,5],[18,6],[22,7],[35,8],[46,4]]):kf(t,[[0,0],[12,Math.min(5,last(a))],[34,last(a)]])):null}
