@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.59.3
+
+- **Dedicated animations for two more specials:**
+  - **Papa-Léguas's Légua Step:** a low sprint breaking into speed lines. It used to be his crouch and walk frames blurred together.
+  - **Vizor's Instant Replay:** a cyan rewind glitch while he rewinds. It used to be his idle played backwards.
+- Every special now has its own art except Devanté's Block Party. Three PixelLab takes never produced a clear swat, so it stays as his jump and air punch.
+
 ## 1.59.2
 
 - **Real animations for two BACK+SP moves:**
