@@ -175,6 +175,14 @@ for _k in ("estrella", "lawslie"):
     THROWS[_k] = {a: v.replace(" his ", " her ").replace("his whole", "her whole") for a, v in THROWS[_k].items()}
 
 
+# second takes for BACK+SP moves that borrowed other art
+SP3B = {
+    "padre": {"sp3b": "command grab with empty hands, nothing in his arms: lunges forward and clutches with both hands, then raises both arms high overhead as if lifting something heavy, then slams both arms down hard to the floor in front of him, ending in a fighting stance"},
+    "kai": {"sp3b": "the basketball tucked tight under his left arm the whole time, never dribbling or passing: leaps high straight up with the right arm raised, swats the right hand forward and down hard like blocking a shot, then lands in a fighting stance"},
+    "lawslie": {"sp3b": "crouches low and swings a short black police nightstick in one hand like a club in a wide flat sweep along the floor at ankle height, never pointing it like a gun, then stands back up in a fighting stance"},
+}
+
+
 def spec(name):
     s = dict(COMMON)
     for k, v in SPECIAL[name].items():
@@ -186,6 +194,8 @@ def spec(name):
     for k, v in RETRY2.get(name, {}).items():
         s[k] = {"mode": "v3", "frame_count": 8, "action_description": v + _END}
     for k, v in THROWS.get(name, {}).items():
+        s[k] = {"mode": "v3", "frame_count": 8, "action_description": v}
+    for k, v in SP3B.get(name, {}).items():
         s[k] = {"mode": "v3", "frame_count": 8, "action_description": v}
     return s
 
