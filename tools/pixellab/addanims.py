@@ -17,7 +17,8 @@ def add(name, anims):
     base = Image.open(os.path.join(src, "east.png")).convert("RGBA"); bx0, by0, bx1, by1 = base.getbbox()
     K0, K1 = pack.SCALE.get(name, 1), meta.get("scale", 1)
     for a in anims:
-        files = sorted(glob.glob(os.path.join(src, a, "*.png")))
+        raw, a = a.split(":") if ":" in a else (a, a)  # raw take dir : packed name (e.g. punch2b:punch2)
+        files = sorted(glob.glob(os.path.join(src, raw, "*.png")))
         if not files:
             print(f"  {name}/{a}: no raw frames"); continue
         frames = [Image.open(f).convert("RGBA") for f in files]

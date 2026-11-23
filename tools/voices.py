@@ -27,20 +27,20 @@ ANN = {
 }
 # fighter -> (voice, speed, {line: text})
 CAST = {
-    "karl": ("am_puck", 1.05, {"sp1": "Lay-gwah rush!", "sp2": "Lay-gwah step!", "super": "Meel Lay-gwahs!", "win": "Too slow!", "ko": "I ran out of road..."}),
+    "karl": ("am_puck", 1.05, {"sp3": "Sky lay-gwah!", "sp1": "Lay-gwah rush!", "sp2": "Lay-gwah step!", "super": "Meel Lay-gwahs!", "win": "Too slow!", "ko": "I ran out of road..."}),
     "ivan": ("am_onyx", 0.9, {"sp1": "Bear slam!", "sp2": "Iron charge!", "super": "Siberian storm!", "win": "Say hello to the floor.", "ko": "Next time... bigger bear."}),
-    "vizor": ("am_eric", 1.0, {"sp1": "Shutter flash!", "sp2": "Instant replay!", "super": "Full exposure!", "win": "Smile. You're on camera.", "ko": "Signal... lost."}),
-    "zeke": ("am_michael", 1.0, {"sp1": "Strike ball!", "sp2": "Split shot!", "super": "Perfect game!", "win": "That's a strike, baby!", "ko": "Gutter ball..."}),
+    "vizor": ("am_eric", 1.0, {"sp3": "Smile!", "sp1": "Shutter flash!", "sp2": "Instant replay!", "super": "Full exposure!", "win": "Smile. You're on camera.", "ko": "Signal... lost."}),
+    "zeke": ("am_michael", 1.0, {"sp3": "Ball return!", "sp1": "Strike ball!", "sp2": "Split shot!", "super": "Perfect game!", "win": "That's a strike, baby!", "ko": "Gutter ball..."}),
     "hecky": ("am_echo", 1.0, {"sp1": "Hostile takeover!", "sp2": "Power suit.", "sp3": "Laser glare!", "super": "Golden parachute!", "win": "Don't take it personally.", "ko": "Call my lawyer..."}),
-    "lawslie": ("af_heart", 1.08, {"sp1": "Taser!", "sp2": "Cuff 'em! You're under arrest!", "super": "Full arrest!", "win": "You have the right to remain silent.", "ko": "Officer down..."}),
-    "rex": ("am_adam", 1.0, {"sp1": "Bass drop!", "sp2": "Mic check!", "super": "Stage dive!", "win": "Thank you, good night!", "ko": "Encore... later..."}),
-    "kai": ("am_liam", 1.05, {"sp1": "Bounce pass!", "sp2": "Ankles... broken!", "super": "Fast break!", "win": "That's game.", "ko": "That was a foul..."}),
+    "lawslie": ("af_heart", 1.08, {"sp3": "Down you go!", "sp1": "Taser!", "sp2": "Cuff 'em! You're under arrest!", "super": "Full arrest!", "win": "You have the right to remain silent.", "ko": "Officer down..."}),
+    "rex": ("am_adam", 1.0, {"sp3": "Headbanger!", "sp1": "Bass drop!", "sp2": "Mic check!", "super": "Stage dive!", "win": "Thank you, good night!", "ko": "Encore... later..."}),
+    "kai": ("am_liam", 1.05, {"sp3": "Rejected!", "sp1": "Bounce pass!", "sp2": "Ankles... broken!", "super": "Fast break!", "win": "That's game.", "ko": "That was a foul..."}),
     "keksan": ("am_liam+am_eric", 1.02, {"sp1": "Tiger knee!", "sp2": "Clinch!", "sp3": "Teep!", "super": "Eight limbs!", "win": "Respect the ring.", "ko": "My guard... dropped..."}),
     "vex": ("bm_george+am_onyx", 0.92, {"sp1": "Kneel.", "sp2": "Name your price.", "sp3": "Over here.", "super": "This city is mine!", "win": "Every man has a price. Yours was cheap.", "ko": "Bought... out..."}),
     "mateo": ("am_puck+am_echo", 1.0, {"sp1": "Fastball!", "sp2": "Safe!", "sp3": "Batter up!", "heat": "Ninety-eight!", "super": "Strike three, you're out!", "win": "Ballgame. Thank you, Lord.", "ko": "Pulled... from the game..."}),
     "reyes": ("am_michael+am_adam", 0.98, {"sp1": "Frontier knuckle!", "sp2": "Drone, engage!", "sp3": "Eagle rise!", "air": "Rotor kicks!", "super": "Air support, now!", "win": "Area secure. Mission accomplished.", "ko": "Man down..."}),
     "estrella": ("af_bella", 1.02, {"sp1": "High note!", "sp2": "Encore!", "sp3": "Hear me!", "super": "Grand finale!", "win": "Thank you, Bonfire City!", "ko": "Losing... my voice..."}),
-    "padre": ("bm_george", 0.9, {"sp1": "Holy tome!", "sp2": "Benediction!", "super": "Final sermon!", "win": "Go in peace, my son.", "ko": "Forgive me..."}),
+    "padre": ("bm_george", 0.9, {"sp3": "Amen!", "sp1": "Holy tome!", "sp2": "Benediction!", "super": "Final sermon!", "win": "Go in peace, my son.", "ko": "Forgive me..."}),
 }
 TRIM = "silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse"
 FX_ANN = TRIM + ",asetrate=24000*0.93,aresample=24000,acompressor=threshold=-20dB:ratio=4:attack=5:release=80,aecho=0.8:0.55:60|120:0.22|0.1,volume=2.2,alimiter"

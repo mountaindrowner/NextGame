@@ -25,14 +25,14 @@ SPECIAL = {
     "karl2": {"special": "dashing forward fast throwing a rapid flurry of straight karate punches, glasses glinting, white gi flapping", "win": "victory pose: pumps one fist high in the air and smiles, pushing his glasses up with the other hand"},
     "akira": {"special": "throwing a ninja shuriken forward with a fast sidearm flick of the hand", "win": "victory pose: stands calmly with arms crossed, ponytail blowing"},
     "ivan":  {"special": "lunges forward and grabs with both arms, then lifts and throws overhead in a suplex slam", "win": "victory pose: flexes both biceps and roars"},
-    "vizor": {"special": "thrusts one open hand forward with fingers spread, aiming like a camera, a glowing cyan targeting frame flashes in front of his palm", "win": "victory celebration: lifts the camera from his belt, snaps a photo with a bright flash, then pumps his fist in the air"},
-    "padre": {"special": "raises the big holy book high overhead with both hands and smashes it down hard in front of him, a flash of golden light on impact", "special2": "kneels down on one knee and prays, holding the holy book to his chest, a soft golden light glowing around him", "win": "victory celebration: holds the holy book high in the air with one hand and raises his other fist, glowing golden light"},
-    "zeke": {"special": "bowling throw: swings the bowling ball back and then forward low, releasing it to roll along the floor, finishing in a low bowler's follow-through pose", "special2": "lobs the bowling ball high into the air with a big two-handed underhand toss, watching it fly", "win": "victory celebration: pumps his fist like he just bowled a strike, grinning, then holds the bowling ball up proudly"},
+    "vizor": {"special3": "kneels down on one knee and sets a small camera on a tripod on the floor in front of him, then stands back up", "special": "thrusts one open hand forward with fingers spread, aiming like a camera, a glowing cyan targeting frame flashes in front of his palm", "win": "victory celebration: lifts the camera from his belt, snaps a photo with a bright flash, then pumps his fist in the air"},
+    "padre": {"special3": "command grab: lunges forward with both arms, then lifts an opponent high overhead and slams them down to the ground in front of him", "special": "raises the big holy book high overhead with both hands and smashes it down hard in front of him, a flash of golden light on impact", "special2": "kneels down on one knee and prays, holding the holy book to his chest, a soft golden light glowing around him", "win": "victory celebration: holds the holy book high in the air with one hand and raises his other fist, glowing golden light"},
+    "zeke": {"special3": "swings the bowling ball up from low behind him in a big rising arc, all the way up over his head, an upward bowling swing", "special": "bowling throw: swings the bowling ball back and then forward low, releasing it to roll along the floor, finishing in a low bowler's follow-through pose", "special2": "lobs the bowling ball high into the air with a big two-handed underhand toss, watching it fly", "win": "victory celebration: pumps his fist like he just bowled a strike, grinning, then holds the bowling ball up proudly"},
     "hecky": {"special": "rising uppercut: dips low then springs upward driving one fist straight up over his head, white suit jacket flaring", "special2": "straightens his tie and pushes up his glasses with a smug smirk while a golden shine sparkles around him, powering up", "special3": "leans his head forward and stares intensely ahead, his eyes and glasses glowing bright red as he fires a laser beam from his eyes straight forward, hands at his sides in fists", "win": "victory pose: pushes up his glasses and adjusts his tie with a smug smirk"},
     "heckyfox": {"special": "rising uppercut: dips low then springs upward driving one fist straight up over his head, white suit jacket flaring", "special2": "straightens his tie and pushes up his glasses with a smug smirk while a golden shine sparkles around him, powering up", "special3": "leans his head forward and stares intensely ahead, his eyes and glasses glowing bright red as he fires a laser beam from his eyes straight forward, hands at his sides in fists", "win": "victory pose: pushes up his glasses and adjusts his tie with a smug smirk"},
-    "lawslie": {"special": "pulls a taser from her belt and fires it straight forward with one arm extended, electric blue sparks crackling at the taser", "special2": "lunges forward and grabs with both hands, then snaps a pair of silver handcuffs shut in front of her", "win": "victory pose: spins silver handcuffs around one finger and smiles confidently"},
-    "rex": {"special": "raises the bass guitar and slams a hard power note, swinging the bass down toward the ground with a shockwave of sound around his feet", "special2": "leans forward and shouts loudly into his headset microphone, one hand cupped near the mic, a ring of sound blasting forward", "win": "victory pose: plays a fast bass solo then raises the bass high over his head with one hand, crown shining"},
-    "kai": {"special": "throws a hard two-handed bounce pass forward: steps in and snaps the basketball from his chest down and forward so it bounces on the floor ahead of him, arms extending forward",
+    "lawslie": {"special3": "crouches low and swings a long black police baton in a wide sweep along the floor at ankle height, the baton fully extended", "special": "pulls a taser from her belt and fires it straight forward with one arm extended, electric blue sparks crackling at the taser", "special2": "lunges forward and grabs with both hands, then snaps a pair of silver handcuffs shut in front of her", "win": "victory pose: spins silver handcuffs around one finger and smiles confidently"},
+    "rex": {"special3": "swings the bass guitar up from low to high in a big rising arc over his head, like a headbanging guitar swing", "special": "raises the bass guitar and slams a hard power note, swinging the bass down toward the ground with a shockwave of sound around his feet", "special2": "leans forward and shouts loudly into his headset microphone, one hand cupped near the mic, a ring of sound blasting forward", "win": "victory pose: plays a fast bass solo then raises the bass high over his head with one hand, crown shining"},
+    "kai": {"special3": "leaps high straight up and swats one hand forward and down in the air like blocking a basketball shot, the basketball tucked under his other arm, then lands", "special": "throws a hard two-handed bounce pass forward: steps in and snaps the basketball from his chest down and forward so it bounces on the floor ahead of him, arms extending forward",
             "special2": "a quick low crossover dribble: bounces the basketball fast from one hand to the other between his legs while lunging forward low, shoulders dipping",
             "win": "victory pose: spins the basketball on one fingertip above his head and smirks"},
     "keksan": {"kick": "Muay Thai roundhouse kick: pivots on the standing foot and swings the rear leg around high, striking with the shin at head height, the same-side arm swinging down for power, then returns to guard",
@@ -89,7 +89,7 @@ SPECIAL = {
 # finisher), kick2 = a kick that ends a chain, kick3 = a rising kick (Story mode's launcher, or a 2nd kick in a chain).
 _END = ", then returns to a fighting stance"
 COMBO = {
-    "karl": {"punch2": "karate reverse punch: drives the rear fist straight forward at chest height with a sharp twist of the hips", "punch3": "karate rising uppercut: dips low and drives the lead fist straight up to chin height",
+    "karl": {"special3": "rising flying kick: springs up off the ground and drives one leg up and forward in a high flying side kick, rising into the air, white gi flapping, then lands", "punch2": "karate reverse punch: drives the rear fist straight forward at chest height with a sharp twist of the hips", "punch3": "karate rising uppercut: dips low and drives the lead fist straight up to chin height",
              "kick2": "karate roundhouse kick: pivots and swings the rear leg around high, striking with the top of the foot at head height", "kick3": "karate front snap kick that rises high, the foot snapping straight up above head height"},
     "keksan": {"punch2": "Muay Thai straight right cross, the rear fist driving forward at head height", "punch3": "Muay Thai upward elbow strike: steps in and drives the point of the elbow up through head height",
                "kick2": "Muay Thai switch kick: switches feet and slams the shin into the body at waist height", "kick3": "Muay Thai straight knee: grabs forward with both hands and drives the knee straight up to chest height"},
@@ -118,11 +118,42 @@ COMBO = {
 }
 
 
+# second takes for combo moves whose first take didn't read (props got in the way, or too little motion): <move>b -> packed as <move>
+_BIG = ", a big clear committed strike with the whole body behind it"
+RETRY = {
+    "vizor": {"punch2b": "steps in and throws a long straight right cross, the rear arm fully extended at head height" + _BIG},
+    "padre": {"punch3b": "crouches low and explodes upward with a huge uppercut, the fist rising high above his head" + _BIG,
+              "kick2b": "a powerful front push kick, lifting the knee high and thrusting the sole of the foot straight forward at stomach height, the leg fully extended" + _BIG,
+              "kick3b": "a jumping knee strike, springing up and driving one knee high and forward to chest height" + _BIG},
+    "zeke": {"kick2b": "a heavy roundhouse kick: pivots and swings the rear leg around, the shin striking at waist height, the leg fully extended" + _BIG},
+    "hecky": {"punch3b": "a big boxing uppercut: dips low and drives the fist straight up above his head, white suit jacket flaring" + _BIG,
+              "kick2b": "a high roundhouse kick at head height, the polished shoe swinging around, the leg fully extended, white suit jacket flaring" + _BIG,
+              "kick3b": "a high front kick, snapping the polished shoe straight up above his head, the leg fully extended" + _BIG},
+    "lawslie": {"kick2b": "a strong front push kick, thrusting the boot straight forward at stomach height, the leg fully extended" + _BIG},
+    "rex": {"punch2b": "lets the bass guitar hang from its strap and throws a straight right punch, the arm fully extended at head height" + _BIG,
+            "punch3b": "lets the bass guitar hang from its strap and throws a big rising uppercut, the fist driving up above his head" + _BIG,
+            "kick2b": "a heavy roundhouse kick at waist height, the bass guitar swinging on its strap, the leg fully extended" + _BIG},
+    "kai": {"punch2b": "keeps the basketball tucked under his left arm (no dribbling) and throws a straight right punch, the arm fully extended at head height" + _BIG,
+            "punch3b": "keeps the basketball tucked under his left arm (no dribbling) and leaps into a rising uppercut, the right fist driving up above his head" + _BIG,
+            "kick2b": "keeps the basketball tucked under his left arm (no dribbling) and throws a roundhouse kick at waist height, the leg fully extended" + _BIG,
+            "kick3b": "keeps the basketball tucked under his left arm (no dribbling) and snaps a high front kick, the sneaker rising straight up above his head" + _BIG},
+    "estrella": {"punch2b": "throws a long straight punch with her free left fist, the arm fully extended at head height, the black microphone held in her right hand" + _BIG},
+    "reyes": {"punch3b": "crouches and drives a huge rising uppercut with the gloved fist, rising above his head" + _BIG,
+              "kick2b": "a strong roundhouse kick at waist height, the combat boot swinging around, the leg fully extended" + _BIG},
+    "mateo": {"punch2b": "no ball in his hand: throws a straight right punch with his bare fist, the arm fully extended at head height, the baseball glove staying on his left hand" + _BIG,
+              "punch3b": "no ball in his hand: dips and drives a rising uppercut with his bare right fist up above his head, the glove staying on his left hand" + _BIG,
+              "kick2b": "no throwing: a roundhouse kick at waist height, the cleat swinging around, the leg fully extended" + _BIG,
+              "kick3b": "no throwing: a high front kick, the cleat snapping straight up above his head, the leg fully extended" + _BIG},
+}
+
+
 def spec(name):
     s = dict(COMMON)
     for k, v in SPECIAL[name].items():
         s[k] = {"mode": "v3", "frame_count": 8, "action_description": v}
     for k, v in COMBO.get(name, {}).items():
+        s[k] = {"mode": "v3", "frame_count": 8, "action_description": v + _END}
+    for k, v in RETRY.get(name, {}).items():
         s[k] = {"mode": "v3", "frame_count": 8, "action_description": v + _END}
     return s
 
