@@ -246,6 +246,11 @@ def crt(src, name, label, step=1):
         if i % step: continue
         c = bz.copy(); c.alpha_composite(fr.convert("RGBA"), (pad, top)); frames.append(c.convert("RGB"))
         durs.append(fr.info.get("duration", 60) * step)
+    # start on an ordinary frame (not a white super flash), so the still preview itch shows isn't blank
+    import statistics
+    lum = [statistics.mean(f.convert("L").crop((pad, top, pad + fw, top + fh)).resize((32, 24)).getdata()) for f in frames]
+    med = statistics.median(lum); k = min(range(len(frames)), key=lambda i: abs(lum[i] - med) + (999 if lum[i] > med * 1.3 else 0))
+    frames, durs = frames[k:] + frames[:k], durs[k:] + durs[:k]
     frames[0].save(OUT / name, save_all=True, append_images=frames[1:], duration=durs, loop=0, optimize=True)
     print("wrote", name, W, "x", H, len(frames), "frames", round((OUT / name).stat().st_size / 1e6, 1), "MB")
 
@@ -320,7 +325,7 @@ def movelist():
     W = 480; H = 30 + len(rows) * 15 + 8
     im = Image.new("RGBA", (W, H), (10, 8, 22, 255)); d = ImageDraw.Draw(im)
     d.rectangle([2, 2, W - 3, H - 3], outline=rgb("#ffd23a")); d.rectangle([5, 5, W - 6, H - 6], outline=(70, 56, 130, 255))
-    draw_text(im, "HOW TO PLAY - EVERY FIGHTER", 26, 12, 2, grad=FIRE, outline="#200404")
+    draw_text(im, "INSTRUCTIONS - EVERY FIGHTER", 26, 12, 2, grad=FIRE, outline="#200404")
     for i, (keys, name, note) in enumerate(rows):
         y = 32 + i * 15; x = 14
         if i % 2: d.rectangle([8, y - 2, W - 9, y + 12], fill=(20, 16, 40, 255))
