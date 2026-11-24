@@ -106,6 +106,10 @@ def pack(name):
 
 
 if __name__ == "__main__":
-    for n in sys.argv[1:] or sorted(os.listdir(RAW)):
+    # shipped fighters carry hand fixes a repack would undo: they are skipped unless --rebuild (add moves with addanims.py)
+    rebuild = "--rebuild" in sys.argv
+    for n in [a for a in sys.argv[1:] if a != "--rebuild"] or sorted(os.listdir(RAW)):
+        if os.path.exists(os.path.join(OUT, n, "meta.json")) and not rebuild:
+            print(f"{n}: already ships, skipped (its strips have hand fixes; use addanims.py for new moves, or --rebuild to start over)"); continue
         print(n)
         pack(n)

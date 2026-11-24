@@ -2,6 +2,16 @@
 
 ## 1.64.1
 
+- **Tools: a shipped fighter is no longer rebuilt from raw PixelLab frames by accident.**
+  - A full repack would have undone hand fixes on 16 fighters and costumes: combo strings, throws, third specials, trimmed frames and hit frames.
+  - `sizes.py` now only rescales a fighter that already ships. `pack.py` skips one. Both take `--rebuild` to start over on purpose. New moves still go in with `addanims.py`.
+  - This week's take choices are recorded in `picks.json`.
+- **itch page kit:**
+  - Mike-Fila added to the fighter-select grid and the marquee.
+  - The cabinet cover now shows him in Mascot Mode headbutting Vex.
+  - The combo and super GIFs are re-recorded with the current art and combo timing.
+  - `combo_gif.js` and `super_gif.js` no longer film the badge pop-up.
+
 - **Fix: Mike-Fila's target combo (Double Shift) drew as a stick figure in Mascot Mode.** In the cow suit, his chain hits now use the suit's own punch and kick. `tools/mike.js` checks that every move has art in the suit.
 
 ## 1.64.0

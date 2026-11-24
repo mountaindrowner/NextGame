@@ -186,7 +186,7 @@ def cover():
     hud(im, 5, 0, logos=False)
     draw_text(im, "BONFIRE", W // 2, 34, 5, grad=FIRE, outline="#3a0808", center=True)
     draw_text(im, "BASH", W // 2, 74, 6, grad=FIRE, outline="#3a0808", center=True)
-    draw_text(im, "12 FIGHTERS - STORY - ONLINE", W // 2, 122, 1, col=GOLD, center=True)
+    draw_text(im, "13 FIGHTERS - STORY - ONLINE", W // 2, 122, 1, col=GOLD, center=True)
     place(im, "karl", 120, H - 8, anim="punch", frame=4)
     place(im, "keksan", 196, H - 8, anim="kick", frame=4, flip=True)
     spark(im, 158, H - 62, 12)
@@ -260,13 +260,14 @@ ROSTER = [("karl", "KARATE", "LÉGUA RUSH", "LÉGUA STEP", "SKY LÉGUA"), ("keks
           ("zeke", "BOWLING", "STRIKE BALL", "SPLIT SHOT", "BALL RETURN"), ("hecky", "DAPPER BOXING", "HOSTILE TAKEOVER", "POWER SUIT", "LASER GLARE"),
           ("lawslie", "POLICE DEFENSE", "TASER", "CUFF EM", "BATON SWEEP"), ("rex", "BASS BRAWLER", "BASS DROP", "MIC CHECK", "HEADBANGER"),
           ("kai", "STREETBALL", "BOUNCE PASS", "ANKLE BREAKER", "BLOCK PARTY"), ("estrella", "SHOWSTOPPER", "HIGH NOTE", "ENCORE", "SIREN SCREAM"),
-          ("reyes", "SABR COMBAT", "FRONTIER KNUCKLE", "DRONE STRIKE", "EAGLE RISE"), ("mateo", "FASTBALL", "FASTBALL", "STEAL HOME", "HOME RUN SWING")]
+          ("reyes", "SABR COMBAT", "FRONTIER KNUCKLE", "DRONE STRIKE", "EAGLE RISE"), ("mateo", "FASTBALL", "FASTBALL", "STEAL HOME", "HOME RUN SWING"),
+          ("mike", "FAST FOOD FU", "ORDER UP", "COMBO MEAL", "LEMONADE SPLASH")]
 SPC = ["#ffd23a", "#ff9a2a", "#ff5a3a"]
 
 
 def select():
     cw, ch, cols = 120, 152, 4
-    W = cw * cols; H = 18 + ch * 3 + 66
+    rows = (len(ROSTER) + 1 + cols - 1) // cols; W = cw * cols; H = 18 + ch * rows + 4
     im = Image.new("RGBA", (W, H), INNER + (255,)); d = ImageDraw.Draw(im)
     x = 8
     for c, t in zip(SPC, ["SP", "DOWN+SP", "BACK+SP"]):
@@ -286,16 +287,16 @@ def select():
             cd.rectangle([0, 0, cw - 5, ch - 5], outline=RED); cd.rectangle([1, 1, cw - 6, ch - 6], outline=RED)
             cd.rectangle([0, 0, 15, 10], fill=RED); draw_text(card, "1P", 2, 2, 1)
         im.alpha_composite(card, (cx + 2, cy + 2))
-    # the secret slot
-    y = 18 + ch * 3 + 4
-    d.rectangle([2, y, W - 3, H - 4], fill=(10, 6, 20, 255), outline=(70, 56, 130, 255))
+    # the secret slot: the rest of the last row
+    n = len(ROSTER); x0, y = (n % cols) * cw + 2, 18 + (n // cols) * ch + 2; x1, y1 = W - 3, y + ch - 5
+    d.rectangle([x0, y, x1, y1], fill=(10, 6, 20, 255), outline=(70, 56, 130, 255))
     f, ax, ay = fighter("vex", "idle", 0)
     sil = Image.new("RGBA", f.size, (0, 0, 0, 0)); sil.paste((60, 30, 100, 255), mask=f.split()[3])
-    sil = sil.resize((sil.width * 3 // 5, sil.height * 3 // 5), Image.NEAREST)
-    im.alpha_composite(sil, (28, H - 6 - sil.height))
-    draw_text(im, "?", 104, y + 14, 4, grad=FIRE, outline="#200404")
-    draw_text(im, "SECRET FIGHTER", 140, y + 14, 2, grad=FIRE, outline="#200404")
-    draw_text(im, "BEAT STORY MODE TO UNLOCK", 140, y + 36, 1, col=GOLD)
+    im.alpha_composite(sil, (x0 + 14, y1 - 4 - sil.height))
+    tx = x0 + 30 + sil.width
+    draw_text(im, "?", tx, y + 44, 4, grad=FIRE, outline="#200404")
+    draw_text(im, "SECRET", tx + 30, y + 40, 2, grad=FIRE, outline="#200404"); draw_text(im, "FIGHTER", tx + 30, y + 58, 2, grad=FIRE, outline="#200404")
+    draw_text(im, "BEAT STORY MODE", tx, y + 86, 1, col=GOLD); draw_text(im, "TO UNLOCK", tx, y + 96, 1, col=GOLD)
     save(im, "select-your-fighter.png", 2)
 
 
@@ -516,8 +517,8 @@ def cab_marquee():
     glow(im, W // 2, 70, 190, (255, 120, 50), .45)
     skyline(im, H, 20, 60, (40, 8, 20, 255), .1, 8)
     draw_text(im, "BONFIRE BASH", W // 2, 50, 5, grad=FIRE, outline="#2a0404", center=True)
-    draw_text(im, "1 OR 2 PLAYERS - 12 FIGHTERS - STORY MODE", W // 2, 96, 1, col="#fff6d0", outline="#5a1004", center=True)
-    for x, id_ in ((58, "keksan"), (26, "karl")):
+    draw_text(im, "1 OR 2 PLAYERS - 13 FIGHTERS - STORY MODE", W // 2, 96, 1, col="#fff6d0", outline="#5a1004", center=True)
+    for x, id_ in ((58, "mike"), (26, "karl")):
         place(im, id_, x, H - 2, anim="idle")
     for x, id_ in ((W - 58, "reyes"), (W - 26, "vex")):
         place(im, id_, x, H - 2, anim="idle", flip=True)
@@ -561,10 +562,10 @@ def cab_cover():
     im = room(W, H)
 
     def scr(s, w, h):  # the game running on the screen: a clash in the street under the HUD
-        st = street(w, h, 330, 1.05); s.alpha_composite(st)
-        hud(s, 3, 0, logos=False)
-        place(s, "karl", w // 2 - 22, h - 4, anim="punch", frame=4); place(s, "keksan", w // 2 + 30, h - 4, anim="kick", frame=4, flip=True)
-        spark(s, w // 2 + 6, h - 56, 9)
+        st = street(w, h, 330, .62); s.alpha_composite(st)
+        hud(s, 3, 0, left="mike", logos=False)
+        place(s, "mikecow", w // 2 - 16, h - 4, anim="special", frame=8); place(s, "vex", w // 2 + 40, h - 4, anim="hurt", frame=2, flip=True)
+        spark(s, w // 2 + 18, h - 50, 10); draw_text(s, "MASCOT MODE!", w // 2, 32, 2, grad=FIRE, outline="#200404", center=True)
     cabinet(im, W // 2, 8, 250, scr)
     save(im, "cover-cabinet-630x500.png", 2)
 

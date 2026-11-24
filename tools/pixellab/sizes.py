@@ -1,6 +1,7 @@
 """Fighter sizes: pack each fighter at native size, run the post-pack fixes (Estrella's covered top, Reyes's olive gear),
 then shrink to the standing height in sizes.json (never enlarged), sprite strips and the standing still alike.
-usage: python3 sizes.py equal|adjusted [fighter ...]      lineup: python3 sizes.py lineup OUT.png"""
+usage: python3 sizes.py equal|adjusted [fighter ...] [--rebuild]      lineup: python3 sizes.py lineup OUT.png
+A fighter that already ships is only rescaled, never rebuilt from the raw frames, unless --rebuild (see the note at the bottom)."""
 import contextlib, glob, io, json, os, runpy, subprocess, sys
 from PIL import Image, ImageDraw
 import pack
@@ -51,15 +52,39 @@ def lineup(out):
     dr.line([(0, G), (W, G)], fill=(200, 200, 200)); im.resize((im.width * 2, im.height * 2), Image.NEAREST).save(out)
 
 
+def shipped_scale(k):
+    return json.load(open(os.path.join(A, "fighters", k, "meta.json"))).get("scale", 1)
+
+
+def native_h(k):
+    """the fighter's standing height at native size, from the shipped strips (their height / the scale they ship at)"""
+    return idle_height(k) / shipped_scale(k)
+
+
 if __name__ == "__main__":
-    mode, names = sys.argv[1], sys.argv[2:]
+    # A fighter that already ships is never rebuilt from the raw frames unless you pass --rebuild: its strips carry hand
+    # fixes (picked takes, trimmed frames, hit frames, cleaned pixels) that a repack would undo. Without --rebuild a
+    # shipped fighter is only rescaled from its current size to the target height. New fighters are packed as usual.
+    rebuild = "--rebuild" in sys.argv; argv = [a for a in sys.argv[1:] if a != "--rebuild"]
+    mode, names = argv[0], argv[1:]
     if mode == "lineup":
         lineup(names[0]); sys.exit()
     for k in names or ROSTER:
-        native(k); h = idle_height(k)
+        shipped = os.path.exists(os.path.join(A, "fighters", k, "meta.json")) and not rebuild
         if mode == "equal": t = CFG["equal"] if k not in CFG["skins"] else None
         else: t = CFG["adjusted"].get(k)
         base = CFG["skins"].get(k)
+        if shipped:  # rescale only: target scale (from native) / the scale it ships at
+            h0 = native_h(k)
+            if t is None and base:
+                bh = CFG["equal"] if mode == "equal" else CFG["adjusted"][base]; want = min(1, bh / native_h(base))
+            else:
+                want = t / h0 if k in CFG.get("upscale", []) else min(1, t / h0)
+            have = shipped_scale(k); K = want / have
+            if abs(K - 1) > .002: resize(k, K); json_fix = json.load(open(os.path.join(A, "fighters", k, "meta.json"))); json_fix["scale"] = round(want, 4); json.dump(json_fix, open(os.path.join(A, "fighters", k, "meta.json"), "w"), indent=1)
+            print(f"{k:11s} shipped: kept, {'rescaled' if abs(K - 1) > .002 else 'already at'} {idle_height(k):3d} px (x{want:.3f} of native)")
+            continue
+        native(k); h = idle_height(k)
         if t is None and base:  # a costume: its base fighter's scale
             bh = CFG["equal"] if mode == "equal" else CFG["adjusted"][base]
             braw = max(Image.open(f).convert("RGBA").getbbox()[3] - Image.open(f).convert("RGBA").getbbox()[1] for f in glob.glob(os.path.join(HERE, "raw", base, "idle", "*.png")))

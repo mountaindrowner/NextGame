@@ -6,6 +6,7 @@ const CLIPS = [
   { p1: 'karl', p2: 'keksan', stage: 'karl', seq: [['a'], ['a'], ['b'], ['a', 'b']] },
   { p1: 'keksan', p2: 'zeke', stage: 'keksan', seq: [['a'], ['a'], ['a'], ['b']] },
   { p1: 'vizor', p2: 'zeke', stage: 'vizor', seq: [['a'], ['b'], ['a', 'b']] },
+  { p1: 'mike', p2: 'hecky', stage: 'mike', seq: [['a'], ['a'], ['a']] },
 ];
 (async () => {
   const out = process.argv[2]; fs.mkdirSync(out, { recursive: true });
@@ -24,7 +25,7 @@ const CLIPS = [
       const K = ['up', 'down', 'left', 'right', 'a', 'b', 'start', 'select', 'tap'];
       let fc = 0;
       const frame = async (o = {}) => { for (const k of K) { pressed[k] = !!o[k]; held[k] = !!(o.h && o.h[k]); } d.tick(); upd(); d.scene.t++;
-        if (fc++ % 2 === 0) { await new Promise(r => requestAnimationFrame(r)); shots.push(document.getElementById('screen').toDataURL()); } };
+        if (fc++ % 2 === 0) { d.clearToast(); await new Promise(r => requestAnimationFrame(r)); shots.push(document.getElementById('screen').toDataURL()); } };
       for (let i = 0; i < 10; i++) await frame();
       let before = null;
       for (let i = 0; i < clip.seq.length; i++) {

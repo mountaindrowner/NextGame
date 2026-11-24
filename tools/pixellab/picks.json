@@ -9,8 +9,16 @@
    "pk": 4
   },
   "lowkick": {
-   "take": "lowkick__d",
+   "take": "lowkick__b",
    "pk": 5
+  },
+  "kick3": {
+   "take": "kick3",
+   "pk": 5
+  },
+  "punch3": {
+   "take": "punch3__s1",
+   "pk": 6
   }
  },
  "ivan": {
@@ -48,6 +56,10 @@
   "lowkick": {
    "take": "lowkick__b",
    "pk": 4
+  },
+  "punch3": {
+   "take": "punch3__s1",
+   "pk": 5
   }
  },
  "padre": {
@@ -63,8 +75,12 @@
    "take": "hurt__a"
   },
   "lowkick": {
-   "take": "lowkick__d",
-   "pk": 5
+   "take": "lowkick__b",
+   "pk": 4
+  },
+  "kick2": {
+   "take": "kick2__s1",
+   "pk": 6
   }
  },
  "zeke": {
@@ -83,6 +99,14 @@
   "airkick": {
    "take": "airkick__e",
    "pk": 4
+  },
+  "punch3": {
+   "take": "punch3__s1",
+   "pk": 5
+  },
+  "kick3": {
+   "take": "kick3__s2",
+   "pk": 6
   }
  },
  "hecky": {
@@ -94,8 +118,8 @@
    "pk": 4
   },
   "lowkick": {
-   "take": "lowkick__d",
-   "pk": 5
+   "take": "lowkick__a",
+   "pk": 4
   },
   "airpunch": {
    "take": "airpunch__a",
@@ -104,6 +128,10 @@
   "airkick": {
    "take": "airkick__a",
    "pk": 4
+  },
+  "punch3": {
+   "take": "special__c",
+   "pk": 6
   }
  },
  "heckyfox": {
@@ -115,7 +143,7 @@
    "pk": 5
   },
   "lowkick": {
-   "take": "lowkick__d",
+   "take": "lowkick__s1",
    "pk": 5
   },
   "airpunch": {
@@ -136,8 +164,8 @@
    "pk": 4
   },
   "lowkick": {
-   "take": "lowkick__d",
-   "pk": 4
+   "take": "lowkick__s2",
+   "pk": 5
   },
   "airpunch": {
    "take": "airpunch__b",
@@ -146,6 +174,10 @@
   "airkick": {
    "take": "airkick__f",
    "pk": 4
+  },
+  "punch3": {
+   "take": "punch3__s1",
+   "pk": 5
   }
  },
  "rex": {
@@ -154,8 +186,8 @@
    "pk": 3
   },
   "airpunch": {
-   "take": "airpunch__b",
-   "pk": 4
+   "take": "airpunch__s2",
+   "pk": 3
   },
   "cpunch": {
    "take": "cpunch__b",
@@ -165,8 +197,12 @@
    "take": "hurt__b"
   },
   "lowkick": {
-   "take": "lowkick__d",
-   "pk": 3
+   "take": "lowkick__s1",
+   "pk": 4
+  },
+  "kick2": {
+   "take": "kick2__s1",
+   "pk": 6
   }
  },
  "kai": {
@@ -175,8 +211,8 @@
    "pk": 3
   },
   "airpunch": {
-   "take": "airpunch__a",
-   "pk": 3
+   "take": "airpunch__s3",
+   "pk": 2
   },
   "cpunch": {
    "take": "cpunch__a",
@@ -186,14 +222,22 @@
    "take": "hurt__b"
   },
   "lowkick": {
-   "take": "lowkick__d",
+   "take": "lowkick__s1",
+   "pk": 4
+  },
+  "punch3": {
+   "take": "punch3__s1",
+   "pk": 5
+  },
+  "kick3": {
+   "take": "kick3__s4",
    "pk": 3
   }
  },
  "keksan": {
   "airkick": {
-   "take": "airkick__g",
-   "pk": 3
+   "take": "airkick__k",
+   "pk": 1
   },
   "airpunch": {
    "take": "airpunch__a",
@@ -210,6 +254,10 @@
   "special3": {
    "take": "special3__t",
    "pk": 4
+  },
+  "kick3": {
+   "take": "kick3__s1",
+   "pk": 5
   }
  },
  "zekeidol": {
@@ -262,8 +310,8 @@
    "pk": 4
   },
   "lowkick": {
-   "take": "lowkick__d",
-   "pk": 4
+   "take": "lowkick__s3",
+   "pk": 5
   },
   "punch": {
    "take": "punch__x"
@@ -274,7 +322,7 @@
  },
  "estrella": {
   "airkick": {
-   "take": "airkick__e",
+   "take": "airkick__s3",
    "pk": 2
   },
   "airpunch": {
@@ -291,6 +339,14 @@
   },
   "fall": {
    "take": "fall__c"
+  },
+  "punch3": {
+   "take": "punch3__s1",
+   "pk": 5
+  },
+  "kick2": {
+   "take": "kick2__s2",
+   "pk": 6
   }
  },
  "reyes": {
@@ -312,6 +368,10 @@
   },
   "hover": {
    "take": "hover__f"
+  },
+  "punch3": {
+   "take": "punch3__s2",
+   "pk": 5
   }
  },
  "mateo": {
@@ -346,7 +406,7 @@
    "pk": 4
   },
   "lowkick": {
-   "take": "lowkick__a",
+   "take": "lowkick__b",
    "pk": 4
   }
  },
