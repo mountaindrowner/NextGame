@@ -320,7 +320,7 @@ def movelist():
     W = 480; H = 30 + len(rows) * 15 + 8
     im = Image.new("RGBA", (W, H), (10, 8, 22, 255)); d = ImageDraw.Draw(im)
     d.rectangle([2, 2, W - 3, H - 3], outline=rgb("#ffd23a")); d.rectangle([5, 5, W - 6, H - 6], outline=(70, 56, 130, 255))
-    draw_text(im, "COMMAND LIST - EVERY FIGHTER", 14, 12, 2, grad=FIRE, outline="#200404")
+    draw_text(im, "HOW TO PLAY - EVERY FIGHTER", 26, 12, 2, grad=FIRE, outline="#200404")
     for i, (keys, name, note) in enumerate(rows):
         y = 32 + i * 15; x = 14
         if i % 2: d.rectangle([8, y - 2, W - 9, y + 12], fill=(20, 16, 40, 255))
@@ -414,6 +414,224 @@ def scores():
     print("wrote high-scores.gif", W * 2, "x", H * 2)
 
 
+
+# ================================================================ the arcade cabinet edition
+# On an itch page the header sits on top, the game runs right under it and the description follows, so the page
+# is one cabinet: the header is the lit marquee, the game is the screen, the first description image is the
+# control panel and the page ends on the coin door. The background draws the cabinet body around the column.
+BODY, BODY2, TRIM = (20, 13, 34, 255), (30, 20, 50, 255), rgb("#ff7a1e")
+
+
+def tmold(im, x0, y0, x1, y1, col=TRIM):
+    """the glowing T-molding edge of the cabinet"""
+    d = ImageDraw.Draw(im); d.rectangle([x0, y0, x1, y1], outline=col)
+    d.rectangle([x0 + 1, y0 + 1, x1 - 1, y1 - 1], outline=tuple(v // 2 for v in col[:3]) + (255,))
+
+
+def room(W, H):
+    """a dark arcade at night: neon on the back wall, other cabinets glowing at the edges, carpet"""
+    im = vgrad(W, H, [(0, (8, 5, 20)), (.6, (18, 10, 36)), (1, PAGE_BG)]); d = ImageDraw.Draw(im); rnd = random.Random(5)
+    for y, c in ((40, (255, 60, 160)), (46, (60, 200, 255))):
+        d.line([(0, y), (W, y)], fill=c + (255,)); glow(im, W // 2, y, W // 2, tuple(v // 3 for v in c), .25)
+    for x0, sc in ((-30, (255, 90, 170)), (W - 50, (80, 210, 255))):  # neighbouring cabinets
+        d.rectangle([x0, 120, x0 + 80, H - 60], fill=(12, 8, 24, 255)); d.rectangle([x0 + 8, 170, x0 + 72, 230], fill=sc + (255,))
+        glow(im, x0 + 40, 200, 60, sc, .35); d.rectangle([x0 + 8, 170, x0 + 72, 230], outline=(0, 0, 0, 255))
+        d.rectangle([x0, 120, x0 + 80, 150], fill=(40, 20, 60, 255))
+    for _ in range(300):  # arcade carpet specks
+        x, y = rnd.randrange(W), rnd.randrange(H - 70, H); c = rgb(rnd.choice(["#ff6a6a", "#6ab4ff", "#ffd23a", "#6ae08a"])); d.point((x, y), fill=tuple(v * 2 // 5 for v in c[:3]) + (255,))
+    return im
+
+
+def cab_background():
+    W, H = 640, 720  # x3 = 1920x2160. The column covers x 160-480; itch's top bar ~ y 0-14; header 14-121
+    im = room(W, H); d = ImageDraw.Draw(im)
+    L, R = 92, 548
+    # marquee housing (the header image sits in its middle) and the lit marquee ends either side of it
+    d.rectangle([L - 6, 4, R + 6, 130], fill=BODY)
+    for x0, x1 in ((L, 160), (480, R)):
+        m = vgrad(x1 - x0, 108, [(0, (255, 210, 120)), (.5, (255, 120, 40)), (1, (150, 30, 20))]); im.alpha_composite(m, (x0, 14))
+        rays = Image.new("RGBA", (x1 - x0, 108)); rd = ImageDraw.Draw(rays)
+        for k in range(-30, x1 - x0, 6): rd.line([(k, 0), (k + 20, 107)], fill=(255, 240, 200, 70))  # sunburst, kept inside the panel
+        im.alpha_composite(rays, (x0, 14))
+    glow(im, W // 2, 68, 330, (255, 140, 60), .35)
+    tmold(im, L - 6, 4, R + 6, 130)
+    for x in (L + 4, R - 30): d.rectangle([x, 124, x + 26, 128], fill=(8, 4, 14, 255))  # speaker grilles
+    # screen bezel: printed bezel art either side of the game
+    d.rectangle([L, 130, R, 372], fill=BODY2)
+    for id_, x, flip in (("karl", 128, False), ("vex", 512, True)):
+        por = asset(f"{id_}_por.png"); por = por.transpose(Image.FLIP_LEFT_RIGHT) if flip else por
+        por = ImageEnhance.Brightness(por).enhance(.85); im.alpha_composite(por, (x - por.width // 2, 150))
+        lg = asset(f"{id_}_logo.png"); im.alpha_composite(lg, (x - lg.width // 2 + (8 if flip else -8), 300))
+        draw_text(im, "1P" if not flip else "2P", x + (14 if flip else -14), 338, 2, grad=FIRE, outline="#200404", center=True)
+    tmold(im, L - 6, 130, R + 6, 372)
+    # control panel: flares out wider, a stick and four buttons per player in the margins
+    d.polygon([(L - 6, 372), (R + 6, 372), (R + 34, 420), (L - 34, 420)], fill=(48, 30, 80, 255))
+    d.polygon([(L - 34, 420), (R + 34, 420), (R + 34, 440), (L - 34, 440)], fill=(26, 16, 44, 255))
+    d.line([(L - 6, 372), (L - 34, 420)], fill=TRIM); d.line([(R + 6, 372), (R + 34, 420)], fill=TRIM); d.line([(L - 34, 420), (R + 34, 420)], fill=TRIM)
+    for side, x in ((0, 92), (1, 548)):
+        sx = x - 28 if side == 0 else x - 30
+        d.ellipse([sx - 7, 393, sx + 7, 401], fill=(10, 6, 16, 255)); d.line([(sx, 397), (sx, 384)], fill=(200, 200, 210, 255), width=2)
+        d.ellipse([sx - 5, 378, sx + 5, 388], fill=rgb("#ff3a3a")); d.point((sx - 2, 381), fill=(255, 200, 200, 255))
+        for j, b in enumerate(["A", "B", "SP", "FOCUS"]):
+            bx = sx + 18 + j * 11 if side == 0 else sx - 18 - (3 - j) * 11 - 22 + 22
+            if side == 1: bx = sx + 16 + j * 11
+            if 160 <= bx <= 480: continue
+            d.ellipse([bx - 4, 392 - (j % 2) * 4, bx + 4, 400 - (j % 2) * 4], fill=rgb(BTN[b]), outline=(10, 6, 16, 255))
+    # lower body with the coin door's lit slots
+    d.rectangle([L, 440, R, 680], fill=BODY); tmold(im, L - 6, 440, R + 6, 680)
+    for x in (L + 22, R - 40):
+        d.rectangle([x, 470, x + 18, 500], fill=(60, 60, 70, 255), outline=(120, 120, 130, 255))
+        d.rectangle([x + 6, 476, x + 12, 494], fill=(255, 40, 30, 255)); glow(im, x + 9, 485, 26, (255, 40, 30), .6)
+        draw_text(im, "25", x + 9, 504, 1, col="#d0d0e0", center=True)
+    for x0, x1 in ((L, 160), (480, R)):  # flame side art licking up the lower cabinet
+        fl = Image.new("RGBA", (x1 - x0, 130)); fd = ImageDraw.Draw(fl); rnd = random.Random(x0)
+        for layer, c in enumerate(FIRE[6:1:-1]):
+            for fx in range(-6, x1 - x0 + 6, 9):
+                hgt = rnd.randint(50, 120) - layer * 16
+                fd.polygon([(fx - 7 + layer, 130), (fx + 2, 130 - hgt), (fx + 11 - layer, 130)], fill=rgb(c))
+        im.alpha_composite(fl, (x0, 508))
+        draw_text(im, "INSERT COIN", (x0 + x1) // 2, 450, 1, col=GOLD, outline="#200404", center=True)
+    for i, c in enumerate(["#ff6a6a", "#6ab4ff"]):  # kick-plate stripes
+        d.rectangle([L, 640 + i * 6, R, 642 + i * 6], fill=rgb(c))
+    sh = Image.new("RGBA", (R - L + 80, 16)); ImageDraw.Draw(sh).ellipse((0, 0, R - L + 79, 15), fill=(0, 0, 0, 140)); im.alpha_composite(sh, (L - 40, 676))
+    d.rectangle([L - 6, 680, R + 6, 683], fill=(8, 4, 14, 255))
+    save(im, "background-cabinet-1920x2160.png", 3)
+
+
+def cab_marquee():
+    W, H = 480, 160  # the header: a backlit marquee
+    im = vgrad(W, H, [(0, (110, 30, 30)), (.45, (60, 14, 40)), (1, (20, 6, 26))]); d = ImageDraw.Draw(im)
+    import math
+    rays = Image.new("RGBA", (W, H)); rd = ImageDraw.Draw(rays)
+    for a in range(0, 360, 12):  # sunburst from behind the logo, blended on its own layer
+        r = 600; x1, y1 = W // 2 + r * math.cos(math.radians(a)), 78 + r * math.sin(math.radians(a))
+        x2, y2 = W // 2 + r * math.cos(math.radians(a + 5)), 78 + r * math.sin(math.radians(a + 5))
+        rd.polygon([(W // 2, 78), (x1, y1), (x2, y2)], fill=(255, 150, 80, 46))
+    im.alpha_composite(rays)
+    glow(im, W // 2, 70, 190, (255, 120, 50), .45)
+    skyline(im, H, 20, 60, (40, 8, 20, 255), .1, 8)
+    draw_text(im, "BONFIRE BASH", W // 2, 50, 5, grad=FIRE, outline="#2a0404", center=True)
+    draw_text(im, "1 OR 2 PLAYERS - 12 FIGHTERS - STORY MODE", W // 2, 96, 1, col="#fff6d0", outline="#5a1004", center=True)
+    for x, id_ in ((58, "keksan"), (26, "karl")):
+        place(im, id_, x, H - 2, anim="idle")
+    for x, id_ in ((W - 58, "reyes"), (W - 26, "vex")):
+        place(im, id_, x, H - 2, anim="idle", flip=True)
+    for x in range(0, W, 2):  # light leaking along the top edge, the marquee tube
+        d.point((x, 0), fill=(255, 255, 230, 255)); d.point((x, 1), fill=(255, 230, 160, 200))
+    d.rectangle([0, 0, W - 1, H - 1], outline=(40, 10, 16, 255))
+    save(im, "header-marquee-960x320.png", 2)
+
+
+def cabinet(im, cx, top, w, screen_fill):
+    """a front-view cabinet: marquee, screen, control panel, coin door. screen_fill(img, w, h) paints the screen"""
+    d = ImageDraw.Draw(im); L, R = cx - w // 2, cx + w // 2; mh = 34
+    d.rectangle([L, top, R, im.height], fill=BODY)
+    m = vgrad(w - 8, mh - 6, [(0, (255, 210, 120)), (.5, (240, 110, 40)), (1, (120, 20, 20))]); im.alpha_composite(m, (L + 4, top + 3))
+    glow(im, cx, top + 16, w, (255, 140, 60), .2)
+    draw_text(im, "BONFIRE BASH", cx, top + 10, 3 if w >= 230 else 2, grad=FIRE, outline="#2a0404", center=True)
+    tmold(im, L, top, R, top + mh)
+    sw, sh = w - 30, int((w - 30) * .62); sx, sy = L + 15, top + mh + 10
+    d.rectangle([L, top + mh, R, sy + sh + 12], fill=BODY2); tmold(im, L, top + mh, R, sy + sh + 12)
+    scr = Image.new("RGBA", (sw, sh), (0, 0, 0, 255)); screen_fill(scr, sw, sh)
+    for y in range(0, sh, 3): ImageDraw.Draw(scr).line([(0, y), (sw, y)], fill=(0, 0, 0, 22))
+    d.rectangle([sx - 3, sy - 3, sx + sw + 2, sy + sh + 2], fill=(0, 0, 0, 255)); im.alpha_composite(scr, (sx, sy))
+    py = sy + sh + 12
+    d.polygon([(L, py), (R, py), (R + 14, py + 24), (L - 14, py + 24)], fill=(48, 30, 80, 255)); d.line([(L - 14, py + 24), (R + 14, py + 24)], fill=TRIM)
+    d.line([(L, py), (L - 14, py + 24)], fill=TRIM); d.line([(R, py), (R + 14, py + 24)], fill=TRIM)
+    for side in (0, 1):
+        bx = L + 18 if side == 0 else cx + 18
+        d.ellipse([bx - 4, py + 12, bx + 4, py + 17], fill=(10, 6, 16, 255)); d.line([(bx, py + 14), (bx, py + 6)], fill=(200, 200, 210, 255), width=2)
+        d.ellipse([bx - 3, py + 2, bx + 3, py + 8], fill=rgb("#ff3a3a"))
+        for j, b in enumerate(["A", "B", "SP", "FOCUS"]):
+            x = bx + 14 + j * 9; d.ellipse([x - 3, py + 10 - (j % 2) * 3, x + 3, py + 16 - (j % 2) * 3], fill=rgb(BTN[b]))
+    d.rectangle([L - 14, py + 24, R + 14, py + 30], fill=(26, 16, 44, 255))
+    ky = py + 30; d.rectangle([L, ky, R, im.height], fill=BODY); tmold(im, L, ky, R, im.height + 2)
+    for x in (cx - 26, cx + 12):
+        d.rectangle([x, ky + 12, x + 14, ky + 34], fill=(60, 60, 70, 255), outline=(120, 120, 130, 255))
+        d.rectangle([x + 5, ky + 16, x + 9, ky + 30], fill=(255, 40, 30, 255)); glow(im, x + 7, ky + 23, 16, (255, 40, 30), .6)
+
+
+def cab_cover():
+    W, H = 315, 250
+    im = room(W, H)
+
+    def scr(s, w, h):  # the game running on the screen: a clash in the street under the HUD
+        st = street(w, h, 330, 1.05); s.alpha_composite(st)
+        hud(s, 3, 0, logos=False)
+        place(s, "karl", w // 2 - 22, h - 4, anim="punch", frame=4); place(s, "keksan", w // 2 + 30, h - 4, anim="kick", frame=4, flip=True)
+        spark(s, w // 2 + 6, h - 56, 9)
+    cabinet(im, W // 2, 8, 250, scr)
+    save(im, "cover-cabinet-630x500.png", 2)
+
+
+def control_panel():
+    """the first thing under the game: the cabinet's control panel, which is the how-to-play"""
+    W, H = 480, 176
+    im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    d.polygon([(10, 0), (W - 10, 0), (W - 1, 120), (0, 120)], fill=(48, 30, 80, 255))
+    pan = vgrad(W - 20, 118, [(0, (62, 40, 100)), (1, (40, 26, 70))]); m = Image.new("L", (W, 120), 0)
+    ImageDraw.Draw(m).polygon([(10, 0), (W - 10, 0), (W - 1, 120), (0, 120)], fill=255)
+    full = Image.new("RGBA", (W, 120)); full.paste(pan.resize((W, 120)), (0, 0)); im.paste(full, (0, 0), m)
+    d.line([(10, 0), (0, 120)], fill=TRIM, width=2); d.line([(W - 10, 0), (W - 1, 120)], fill=TRIM, width=2); d.line([(0, 120), (W, 120)], fill=TRIM, width=2)
+    d.rectangle([0, 121, W - 1, 134], fill=(26, 16, 44, 255))
+    for side, ox in ((0, 30), (1, 262)):
+        draw_text(im, "1P" if side == 0 else "2P", ox + 4, 8, 2, grad=FIRE, outline="#200404")
+        sx, sy = ox + 28, 70
+        d.ellipse([sx - 14, sy + 6, sx + 14, sy + 18], fill=(10, 6, 16, 255)); d.line([(sx, sy + 12), (sx, sy - 10)], fill=(210, 210, 220, 255), width=3)
+        d.ellipse([sx - 10, sy - 24, sx + 10, sy - 4], fill=rgb("#ff3a3a")); d.ellipse([sx - 6, sy - 20, sx - 1, sy - 15], fill=(255, 190, 190, 255))
+        draw_text(im, "MOVE", sx, sy + 24, 1, col="#ffffff", center=True); draw_text(im, "WASD / ARROWS" if side == 0 else "D-PAD / STICK", sx, sy + 34, 1, col="#b8b0e0", center=True)
+        for j, (b, lab, key) in enumerate([("A", "PUNCH", "U / X"), ("B", "KICK", "J / A"), ("SP", "SPECIAL", "I / Y"), ("FOCUS", "FOCUS", "K / B")]):
+            bx, by = ox + 68 + j * 42, 48 - (j % 2) * 8
+            d.ellipse([bx - 11, by + 2, bx + 11, by + 22], fill=(10, 6, 16, 255))
+            d.ellipse([bx - 11, by - 2, bx + 11, by + 18], fill=rgb(BTN[b])); d.ellipse([bx - 7, by + 1, bx + 3, by + 7], fill=tuple(min(255, v + 60) for v in rgb(BTN[b])[:3]) + (255,))
+            draw_text(im, lab, bx, by + 28, 1, col=BTN[b], outline="#100818", center=True); draw_text(im, key, bx, by + 38, 1, col="#b8b0e0", center=True)
+    for j, t in enumerate(["1P", "2P"]):  # start buttons in the middle
+        x = 214 + j * 20; d.rounded_rectangle([x, 10, x + 16, 20], 3, fill=(230, 230, 240, 255)); draw_text(im, t, x + 8, 12, 1, col="#202030", outline="#e6e6f0", center=True)
+    draw_text(im, "START", 232, 24, 1, col="#b8b0e0", center=True)
+    # the instruction strip along the front edge
+    d.rectangle([0, 138, W - 1, H - 1], fill=(10, 8, 22, 255), outline=(70, 56, 130, 255))
+    draw_text(im, "KEYBOARD: KEY / GAMEPAD: BUTTON     ESC PAUSE", W // 2, 146, 1, col=GOLD, center=True)
+    draw_text(im, "PHONE: ON-SCREEN PAD AND BUTTONS, TURN IT UPRIGHT", W // 2, 160, 1, col="#b8b0e0", center=True)
+    up(im, 2).save(OUT / "control-panel.png"); print("wrote control-panel.png", W * 2, H * 2)
+
+
+def coin_door():
+    W, H = 480, 168
+    frames = []
+    for blink in (0, 1):
+        im = Image.new("RGBA", (W, H), BODY); d = ImageDraw.Draw(im)
+        tmold(im, 0, 0, W - 1, H - 1)
+        d.rounded_rectangle([140, 10, 340, 158], 6, fill=(70, 70, 82, 255), outline=(140, 140, 155, 255))
+        d.rounded_rectangle([146, 16, 334, 152], 4, outline=(100, 100, 112, 255))
+        for k, x in enumerate((170, 262)):
+            d.rectangle([x, 26, x + 48, 70], fill=(40, 40, 48, 255), outline=(150, 150, 165, 255))
+            on = blink == k or blink == 0
+            d.rectangle([x + 20, 32, x + 28, 64], fill=(255, 40, 30, 255) if on else (90, 20, 20, 255))
+            if on: glow(im, x + 24, 48, 34, (255, 40, 30), .55)
+            draw_text(im, "25", x + 24, 76, 1, col="#e0e0ea", center=True)
+        d.ellipse([234, 30, 246, 42], fill=(30, 30, 36, 255), outline=(160, 160, 170, 255)); d.line([(240, 33), (240, 39)], fill=(160, 160, 170, 255))
+        d.rectangle([162, 92, 318, 142], fill=(236, 228, 200, 255), outline=(120, 100, 70, 255))  # the credits sticker
+        draw_text(im, "CREDITS", 240, 96, 1, col="#7a1a10", outline="#ece4c8", center=True)
+        draw_text(im, "FIGHTER ART: PIXELLAB", 240, 108, 1, col="#2a2030", outline="#ece4c8", center=True)
+        draw_text(im, "BUILT WITH CLAUDE", 240, 118, 1, col="#2a2030", outline="#ece4c8", center=True)
+        draw_text(im, "NEXT CHAMPION: YOU", 240, 130, 1, col="#7a1a10", outline="#ece4c8", center=True)
+        if blink == 0:
+            draw_text(im, "INSERT", 70, 54, 2, grad=FIRE, outline="#200404", center=True); draw_text(im, "COIN", 70, 74, 2, grad=FIRE, outline="#200404", center=True)
+            draw_text(im, "PLAY IT", 410, 54, 2, grad=FIRE, outline="#200404", center=True); draw_text(im, "ABOVE ^", 410, 74, 2, grad=FIRE, outline="#200404", center=True)
+        frames.append(up(im, 2).convert("RGB"))
+    frames[0].save(OUT / "coin-door.gif", save_all=True, append_images=frames[1:], duration=[700, 450], loop=0, optimize=True)
+    print("wrote coin-door.gif", W * 2, H * 2)
+
+
+def instruction_card():
+    """the printed card under the cabinet glass: the command list, with screws"""
+    movelist()
+    im = Image.open(OUT / "move-list.png").convert("RGBA"); d = ImageDraw.Draw(im)
+    for x, y in ((20, 20), (im.width - 21, 20), (20, im.height - 21), (im.width - 21, im.height - 21)):
+        d.ellipse([x - 5, y - 5, x + 5, y + 5], fill=(150, 150, 165, 255), outline=(60, 60, 70, 255)); d.line([(x - 3, y), (x + 3, y)], fill=(60, 60, 70, 255), width=2)
+    im.convert("RGB").save(OUT / "instruction-card.png"); print("wrote instruction-card.png")
+
+
 if __name__ == "__main__":
     src = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else None
     background(); header(); cover()
@@ -424,6 +642,8 @@ if __name__ == "__main__":
     round_banner("round-5", "FINAL ROUND", "SELECT MODE", .15)
     round_banner("round-6", "GAME OVER", "HIGH SCORES", 0)
     wanted(); select(); movelist(); controls(); modes(); scores()
+    cab_background(); cab_marquee(); cab_cover(); control_panel(); coin_door(); instruction_card()
+    round_banner("round-4", "FINAL ROUND", "SELECT MODE", .15)
     if src:
         crt(src / "09-combos.gif", "crt-combos.gif", "NOW PLAYING: COMBOS")
         crt(src / "03-vex-entrance.gif", "crt-story.gif", "STORY MODE: VEX TOWER")
