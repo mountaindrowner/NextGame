@@ -1,6 +1,6 @@
 """Generate moves that miss the move style guide (docs/MOVE_STYLE_GUIDE.md), two takes each: <anim>__s1, <anim>__s2.
 Pick the better take with tools/move_standard.py and pack it with  addanims.py NAME <anim>__s1:<anim>.
-usage: PL_BUDGET=<generations> [TAKES=2] python3 standard.py NAME anim [anim ...]   (TAKES=2: a second pair, __s3/__s4)
+usage: PL_BUDGET=<generations> [TAKES=1|2|retry] python3 standard.py NAME anim [anim ...]   (TAKES=1: one take __s1; 2: a second pair __s3/__s4; retry: __s5)
 
 How each kind of move is made (what worked before, see the guide):
   punch3   PixelLab's built-in "uppercut" motion (written uppercut descriptions came out as straight punches)
@@ -21,6 +21,8 @@ KIND = {
     "airpunch": ("jump", 5, 4, "in mid-air with knees tucked, throws a strong straight punch forward and down with the free fist, the arm fully extended"),
     "airkick":  ("jump", 5, 4, "in mid-air, a flying side kick: the front leg shoots out fully straight forward at chest height, the other leg tucked under, body leaning back"),
     "kick2":    (None, 0, 8, "a side kick to the body: lifts the front knee, then thrusts the foot straight out at waist height, the leg fully extended in front, both fists up in guard" + _B + _END),
+    "dashf":    (None, 0, 6, "a fast forward dash: pushes off the back foot and surges forward in a low burst, body leaning forward, both fists up guarding, the back leg trailing behind, then plants the front foot back into a fighting stance, facing right the whole time"),
+    "dashb":    (None, 0, 6, "a quick back dash: hops backward off the front foot, leaning back slightly with both fists up guarding the face, both feet just off the ground, then lands back in a fighting stance, still facing right the whole time while moving backward"),
     "kick3":    (None, 0, 8, "a high front kick: the front leg snaps straight up in front of him, the foot rising above head height" + _B + _END),
 }
 # per-fighter wording
@@ -33,9 +35,11 @@ TEMPLATE = {("kai", "kick3"): "high kick"}
 START = {("kai", "airpunch"): ("jump_noball", 0)}
 ACTION.update({
     ("estrella", "airkick"): "at the top of her jump she kicks: the right leg snaps out perfectly straight and horizontal in front of her at chest height, the boot sole leading far ahead, the left knee tucked up under her, both fists up",
+    ("padre", "dashb"): "a quick backpedal hop away from an opponent on his right: he keeps facing right toward them the whole time, his chest and face toward the right, leans his upper body back with both fists up guarding, pushes off the front foot and hops backward to the left, then lands in a fighting stance; he never turns around and never shows his back",
+    ("vex", "dashb"): "a quick backpedal step away from an opponent on his right: the old man keeps facing right toward them the whole time, leans back with his chin up, his cane held in front of him, and skips backward to the left on light feet, then settles back into his stance; he never turns around and never runs forward",
     ("padreteen2", "lowkick"): "drops into a very deep crouch with one hand touching the floor and sweeps the front leg straight out along the floor at ankle height, the sneaker skimming the ground far in front, staying low",
 })
-SEEDS = (("s1", 1101), ("s2", 2202)) if os.environ.get("TAKES") != "2" else (("s3", 3303), ("s4", 4404))
+SEEDS = {"1": (("s1", 1101),), "2": (("s3", 3303), ("s4", 4404)), "retry": (("s5", 5505),)}.get(os.environ.get("TAKES", ""), (("s1", 1101), ("s2", 2202)))
 
 
 def body(name, anim, seed):

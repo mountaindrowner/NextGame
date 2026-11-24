@@ -19,6 +19,14 @@
   "punch3": {
    "take": "punch3__s1",
    "pk": 6
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s1",
+   "pk": null
   }
  },
  "ivan": {
@@ -60,6 +68,14 @@
   "punch3": {
    "take": "punch3__s1",
    "pk": 5
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s1",
+   "pk": null
   }
  },
  "padre": {
@@ -81,6 +97,14 @@
   "kick2": {
    "take": "kick2__s1",
    "pk": 6
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s5",
+   "pk": null
   }
  },
  "zeke": {
@@ -107,6 +131,14 @@
   "kick3": {
    "take": "kick3__s2",
    "pk": 6
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s1",
+   "pk": null
   }
  },
  "hecky": {
@@ -132,6 +164,14 @@
   "punch3": {
    "take": "special__c",
    "pk": 6
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s1",
+   "pk": null
   }
  },
  "heckyfox": {
@@ -178,6 +218,14 @@
   "punch3": {
    "take": "punch3__s1",
    "pk": 5
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s1",
+   "pk": null
   }
  },
  "rex": {
@@ -203,6 +251,14 @@
   "kick2": {
    "take": "kick2__s1",
    "pk": 6
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s1",
+   "pk": null
   }
  },
  "kai": {
@@ -232,6 +288,14 @@
   "kick3": {
    "take": "kick3__s4",
    "pk": 3
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s1",
+   "pk": null
   }
  },
  "keksan": {
@@ -258,6 +322,14 @@
   "kick3": {
    "take": "kick3__s1",
    "pk": 5
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s5",
+   "pk": null
   }
  },
  "zekeidol": {
@@ -347,6 +419,14 @@
   "kick2": {
    "take": "kick2__s2",
    "pk": 6
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s1",
+   "pk": null
   }
  },
  "reyes": {
@@ -372,6 +452,14 @@
   "punch3": {
    "take": "punch3__s2",
    "pk": 5
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s1",
+   "pk": null
   }
  },
  "mateo": {
@@ -390,6 +478,14 @@
   "lowkick": {
    "take": "lowkick__a",
    "pk": 4
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s1",
+   "pk": null
   }
  },
  "karl2": {
@@ -426,6 +522,14 @@
   "airkick": {
    "take": "airkick__s1",
    "pk": 4
+  },
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s1",
+   "pk": null
   }
  },
  "mikecow": {
@@ -440,6 +544,16 @@
   "airkick": {
    "take": "airkick__s1",
    "pk": 4
+  }
+ },
+ "vex": {
+  "dashf": {
+   "take": "dashf__s1",
+   "pk": null
+  },
+  "dashb": {
+   "take": "dashb__s5",
+   "pk": null
   }
  }
 }

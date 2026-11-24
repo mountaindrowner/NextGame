@@ -886,7 +886,10 @@ const inSound=f=>F.proj.some(p=>p.owner!==f&&(p.kind==='note'||p.kind==='zone')&
 // FOCUS: hold to charge (absorbs one hit), let go to strike; level 2 (18 frames) crumples, level 3 (42, auto) is unblockable
 const FOCUS={lv2:18,lv3:42};
 function startFocus(f){f.state='focus';f.st=0;f.vx=0;f.atk=null;f.sp=null;f.fArm=0;f.crouch=false;SFX.focus()}
-function doDash(f,dash){setS(f,'dash');f.st=0;f.dashDir=dash;f.vx=f.face*dash*(dash>0?4.6:4.0)*Math.min(1.15,f.c.speed)*(arch(f.c).dash||1);f.crouch=false;if(dash<0)f.inv=7;SFX.whoosh();dust(f.x,3)}
+// DASHES, as in Street Fighter: a committed burst you can't act out of. Forward: about 58 px in 18 frames. Back: about 49 px in
+// 20 frames, invincible for the first 8. Each fighter has a forward and a back dash animation (dashf / dashb).
+const DASH={f:{v:6.8,n:18},b:{v:5.6,n:20,inv:8}};
+function doDash(f,dash){const D=dash>0?DASH.f:DASH.b;setS(f,'dash');f.st=0;f.dashDir=dash;f.vx=f.face*dash*D.v*Math.max(.85,Math.min(1.25,Math.min(1.15,f.c.speed)*(arch(f.c).dash||1)));/* slow dashers still cover real ground */f.crouch=false;if(D.inv)f.inv=D.inv;SFX.whoosh();dust(f.x,3)}
 // COMBO STRINGS: each hit of a chain has its own animation (cross, hook/uppercut finisher, chain kicks), same timing as the jab/kick
 // the last hit of a string: harder, a big shove that ends the combo (it can still be cancelled into a special or super)
 function finisher(f){const a=f.atk;if(!a)return;a.fin=1;a.dmg+=1;a.kb=Math.max(a.kb||2,4.6);a.heavy=true;a.r+=3;f.lastFin=1}
@@ -1433,7 +1436,7 @@ function updateF(f,o){if(f.state==='attack'&&f.atk&&f.atk.name==='focus'){const 
     case'prejump':if(f.st>=3){f.state='jump';f.st=0;f.vy=5.4*f.c.jump;f.vx=f.jdir*f.face*1.8*f.c.speed;SFX.jump()}break;
     case'jump':if(f.atk){f.ast++;if(phaseOf(f)==='active'&&!f.hitDone){const a=f.atk,cy=f.y+f.H*a.hy;if(tryHit(f,o,{x1:f.face>0?f.x:f.x-a.reach,x2:f.face>0?f.x+a.reach:f.x,y1:a.y1!=null?f.y+a.y1:cy-a.hh/2,y2:a.y1!=null?f.y+a.y2:cy+a.hh/2},{...a,heavy:false}))f.hitDone=true}}break;
     case'land':f.vx=0;if(f.st>=5)setS(f,'idle');break;
-    case'dash':f.vx*=0.88;if(f.st>=(f.dashDir>0?13:15)){f.vx=0;setS(f,'idle')}break;
+    case'dash':f.vx*=0.9;if(f.st%4===0&&f.st<12)dust(f.x-f.face*f.dashDir*8,1);if(f.st>=(f.dashDir>0?DASH.f.n:DASH.b.n)){f.vx=0;setS(f,'idle')}break;
     case'attack':{const a=f.atk,ph=phaseOf(f);if(ph==='active'&&!f.hitDone){const h=f.H*(a.crouch?.7:1),cy=f.y+h*a.hy;
         const last=a.multi&&f.mh===a.multi-1,r=tryHit(f,o,{x1:f.face>0?f.x:f.x-a.reach,x2:f.face>0?f.x+a.reach:f.x,y1:a.y1!=null?f.y+a.y1:cy-a.hh/2,y2:a.y1!=null?f.y+a.y2:cy+a.hh/2},a.lastKnock&&last?{...a,knock:true,heavy:true,kb:3}:a);
         if(r==='hit'&&a.crumple&&o.y<=0&&o.state==='hurt'){o.stun=Math.max(o.stun,52);o.crumple=1;addText(a.lvl===3?'UNBLOCKABLE CRUMPLE!':'CRUMPLE!',o.x,GY-o.H-14,'#ffb03a');F.hitstop=Math.max(F.hitstop,10)}
@@ -1848,7 +1851,9 @@ function pose(f){const A=f.c.anim,t=f.st,fc=f.face;if(!A)return null;const n=k=>
   switch(f.state){
     case'idle':return P('idle',((frameNo+f.side*17)/7)%n('idle'));
     case'walk':{if(!A.walk)return P('idle',0);const fwd=Math.sign(f.vx)===fc,i=Math.floor(frameNo/5)%n('walk');return P('walk',fwd?i:last('walk')-i)}
-    case'dash':{if(!A.walk)return P('idle',0);const i=Math.floor(t/1.6)%n('walk');return P('walk',f.dashDir>0?i:last('walk')-i)}
+    case'dash':{const k=f.dashDir>0?'dashf':'dashb';if(A[k]){const L=last(k),N=f.dashDir>0?DASH.f.n:DASH.b.n,E=f.dashDir>0?L-1:L;// a forward dash stops short of its last frame (often a lunge that reads like a punch)
+        return P(k,kf(t,[[0,0],[3,Math.min(1,E)],[N-5,Math.max(1,E-1)],[N,E]]))}
+      if(!A.walk)return P('idle',0);const i=Math.floor(t/1.6)%n('walk');return P('walk',f.dashDir>0?i:last('walk')-i)}
     case'crouch':return A.crouch?P('crouch',Math.min(t/2,last('crouch'))):null;
     case'prejump':return A.jump?P('jump',akOf(f.c,'jump').prep):null;
     case'land':return A.jump?P('jump',akOf(f.c,'jump').land):null;
@@ -3439,5 +3444,5 @@ function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=
 applyLayout();addEventListener('resize',applyLayout);addEventListener('orientationchange',()=>setTimeout(applyLayout,120));
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
-window.__dbg={startSuper,MASCOT_T,setStat:v=>{STAT=v},getStat:()=>STAT,pose:f=>pose(f),poll:()=>pollInput(),Controls,CMD,TCM,TRIALS,ATK,ARCH,SPCD,Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,ARCS,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
+window.__dbg={startSuper,MASCOT_T,doDash,setStat:v=>{STAT=v},getStat:()=>STAT,pose:f=>pose(f),poll:()=>pollInput(),Controls,CMD,TCM,TRIALS,ATK,ARCH,SPCD,Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,ARCS,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
 

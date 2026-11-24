@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.65.0
+
+- **Real dashes, with their own animation, for every fighter.**
+  - **Forward dash:** a low burst forward, body leaning in, guard up. It covers about 58 px in 18 frames, roughly a fighter's width. The old dash was a short walk-cycle scurry.
+  - **Back dash:** a hop back, facing the opponent, guard up. It covers about 49 px in 20 frames and is invincible for the first 8.
+  - Speed still matters:
+    - Papa-Léguas (FAST DASH) and Hecky go farthest, about 62 px.
+    - Marcus and Vex (slow dashers) go shortest, about 43 px. Before this, their dashes were barely a step.
+  - New art for all 14 fighters (Mike-Fila and Vex included), made with PixelLab.
+    - Samson's back dash turned him around at first, and Vex's lunged forward. Both were redone so they backpedal while facing the opponent.
+  - The costumes (Papa-Léguas's gi, Zeke's idol outfit, Hecky's fox, Samson's teen look) and Mike's Mascot Mode keep the old scurry for now.
+- **Test:** `tools/dash.js` checks that each fighter plays both animations, plus their distance, length and invincibility.
+
 ## 1.64.1
 
 - **Tools: a shipped fighter is no longer rebuilt from raw PixelLab frames by accident.**
