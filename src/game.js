@@ -379,7 +379,7 @@ function loadAssets(){return Promise.all(Object.entries(ASSETS).map(([k,src])=>n
   for(const id of ORDER){const c=CH[id],k=c.skin2;if(!k)continue;const an=sliceAnims(k);if(!an)continue;
     const s2={...c,skinKey:k,anim:an.A,H:an.H};for(const n of['por','porm','pors','head','spr'])if(IMG[k+'_'+n])s2[n==='spr'?'spr':n]=IMG[k+'_'+n];
     s2.white=silhouette(s2.spr,'#ffffff');s2.blue=silhouette(s2.spr,'#5aa8ff');s2.auraS=silhouette(s2.spr,c.col.aura);s2.alt=altVersion(s2.spr);s2.porDark=silhouette(s2.porm,'#0a0a18');CH[k]=s2}
-  {const c=CH.mike,an=c&&sliceAnims('mikecow');if(an){const A2=an.A;for(const[k,v]of Object.entries({cpunch:'lowkick',throwf:'punch',focus:'block',special2:'special',special3:'special',suitup:'win'}))if(!A2[k]&&A2[v])A2[k]=A2[v];
+  {const c=CH.mike,an=c&&sliceAnims('mikecow');if(an){const A2=an.A;for(const[k,v]of Object.entries({cpunch:'lowkick',throwf:'punch',focus:'block',special2:'special',special3:'special',suitup:'win',punch2:'punch',punch3:'punch',kick2:'kick',kick3:'kick'}))if(!A2[k]&&A2[v])A2[k]=A2[v];
     const s2={...c,skinKey:'mikecow',cowForm:true,anim:A2,H:an.H,spr:IMG.mikecow_spr||c.spr};s2.white=silhouette(s2.spr,'#ffffff');s2.blue=silhouette(s2.spr,'#5aa8ff');s2.auraS=silhouette(s2.spr,c.col.aura);s2.alt=altVersion(s2.spr);CH.mikecow=s2}}})}
 // the character data a player is actually using (their costume, if they picked one)
 const skinned=(id,i)=>RUN&&RUN.skin&&RUN.skin[i]&&CH[id].skin2&&CH[CH[id].skin2]?CH[CH[id].skin2]:CH[id];

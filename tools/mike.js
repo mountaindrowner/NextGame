@@ -14,7 +14,7 @@ const path = require('path');
       F.p1.x = x1; F.p2.x = x2; F.p1.face = 1; F.p2.face = -1; F.p2.cpu = false; F.p1.cpu = false; const step = n => { for (let i = 0; i < n; i++) { d.tick(); upd() } }; step(2); return { F, step } };
     const m = d.CH.mike;
     C('roster entry', d.ORDER.includes('mike') && m.anim && m.anim.special && m.anim.suitup, `anims ${Object.keys(m.anim || {}).length}`);
-    C('cow suit sprite set', !!(d.CH.mikecow && d.CH.mikecow.anim && d.CH.mikecow.anim.special && d.CH.mikecow.anim.cpunch), `anims ${Object.keys((d.CH.mikecow || {}).anim || {}).length}`);
+    C('cow suit sprite set (every move drawn)', !!(d.CH.mikecow && ['special', 'cpunch', 'punch2', 'punch3', 'kick2', 'kick3', 'throwf'].every(k => d.CH.mikecow.anim[k])), `anims ${Object.keys((d.CH.mikecow || {}).anim || {}).length}`);
     // Order Up!: a tray flies across the screen and hits
     { const { F, step } = setup('mike', 'karl', 60, 200); const h0 = F.p2.hp; d.startSpecial(F.p1, F.p2, 1); let tray = false;
       for (let i = 0; i < 80; i++) { step(1); if (F.proj.some(q => q.kind === 'tray')) tray = true }

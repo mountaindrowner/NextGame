@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.64.1
+
+- **Fix: Mike-Fila's target combo (Double Shift) drew as a stick figure in Mascot Mode.** In the cow suit, his chain hits now use the suit's own punch and kick. `tools/mike.js` checks that every move has art in the suit.
+
 ## 1.64.0
 
 - **Combo strings work the way Street Fighter's do, for every fighter:**
