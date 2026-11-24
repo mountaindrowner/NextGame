@@ -1,6 +1,6 @@
 # Bonfire Bash
 
-A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with twelve fighters — Papa-Léguas, Keksan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie, Marcus, Devanté, Estrella, Reyes and Paezano — plus Vex, a secret fighter unlocked by clearing Story mode, playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up with launchers, allies, hazards and stage ranks, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
+A handheld-styled pixel fighting game (the "Dojo Boy Advanced") with thirteen fighters — Papa-Léguas, Keksan, Vizor, Samson, Zeke, Hecky Xavier, Lawslie, Marcus, Devanté, Estrella, Reyes, Paezano and Mike-Fila — plus Vex, a secret fighter unlocked by clearing Story mode, playable in a browser on phone or desktop. Modes: **Story** (a side-scrolling beat 'em up with launchers, allies, hazards and stage ranks, see `STORY_MODE.md`), Arcade, Versus CPU, Online, Training, Trials and Records. The version is in `VERSION` (shown on the title screen); see `CHANGELOG.md`.
 
 ## Play
 
@@ -49,6 +49,7 @@ Every fighter has three specials (SP, DOWN + SP, BACK + SP), and no two work ali
 | Estrella | **High Note** — a slow, bobbing music note that floats across and lingers; foes near it walk slower | **Encore** — a ring of sound out in front of her that pulses five times (hits low). Third special (BK+SP): **Siren Scream** — a short cone of sound, 3 hits; it shatters projectiles |
 | Reyes | **Frontier Knuckle** — a dashing, flaming straight right that knocks down | **Drone Strike** — launches his SABR drone; it hovers ahead of him and fires three aimed laser bolts. Third special (BK+SP): **Eagle Rise** — an invincible rising uppercut, two hits, the anti-air. Air special (A+B or SP in the air, once per jump): **Rotor Kicks** — he hangs in the air flutter-kicking, floating up a little, up to five hits |
 | Paezano | **Fastball** — a windup and a fast straight pitch; every 3rd pitch in a row is a flaming 98 MPH heater that knocks down (a flame over his cap means the next one is hot) | **Steal Home** — a feet-first slide: low, goes under projectiles and high attacks, knocks down. Third special (back + A+B), **Home Run Swing**: he pulls a bat and swings it, knocking the opponent flying ("CRACK!", or "HOME RUN!" on a knockout); any projectile in the swing is batted back as a line drive, and his next pitch is a heater |
+| Mike-Fila | **Order Up!** — pulls out a serving tray and flings it like a frisbee | **Combo Meal** (DN+SP) — lobs a wrapped sandwich that drops from above (block it standing); if it misses it lands as a snack he can walk over and eat (+4 HP) | **Lemonade Splash** (BK+SP) — a cup of lemonade to the face at close range; it stings and leaves them sticky (65% walking speed for 2.5 s) |
 | Vex (secret: clear Story mode) | **Cane Shockwave** — a cane slam; a purple shockwave rolls along the floor (low) | **Every Man Has a Price** — tosses gold coins; a hit stuns the opponent for a long time (they stare at the money). Third special (back + A+B), **Vanish**: disappears in purple smoke and steps out behind the opponent |
 | Marcus | **Bass Drop** — twin low shockwaves roll along the floor both ways across the stage (block crouching, or jump them) | **Mic Check** — a sound wave that bats enemy projectiles back and blasts the opponent across the screen Third special (back + A+B): **Headbanger** — a rising bass swing; the anti-air. |
 
@@ -69,6 +70,7 @@ Forward + A+B with a full meter. Each fighter's super is unique (`SUPERS` in `sr
 | Estrella | Grand Finale | lights down and a spotlight; stage beams, a floor equalizer and five glowing rings of sound roll across the whole stage, each a sung note; the last knocks down, then fireworks and a cheering crowd |
 | Reyes | Air Support | dashing knuckle; on a hit his drone squadron flies in and strafes them, then Eagle Rise launches them ("MISSION COMPLETE!") |
 | Paezano | Strikeout | three pitches with the umpire's call ("STRIKE ONE!", "STRIKE TWO!"), then a blazing heater: "STRIKE THREE! YOU'RE OUT!"; a blocked pitch is a foul ball |
+| Mike-Fila | Mascot Mode | a spin and a puff of smoke (knocks back anyone close) and he fights in a cow costume for 10 seconds: +30% damage, -25% damage taken, only a super knocks him down, and every special becomes **Stampede** (a charging horned headbutt that knocks down) |
 | Marcus | Stage Dive | homing leap that crashes down (overhead), then a five-note bass jam |
 | Vex | The City Is Mine | vanishes and steps out behind you (blockable cross-up), four cane strikes from both sides, then a shockwave slam |
 
@@ -89,6 +91,7 @@ Each fighter is a different archetype (`ARCH` in `src/game.js`), checked by `nod
 | Estrella | Area control | 100 | her sound slows foes: anyone standing near her note or her Encore ring walks at 70% speed |
 | Reyes | All-rounder | 92 | squad leader: starts every round with a third of his super meter |
 | Paezano | Pitcher | 104 | high heat: every 3rd pitch in a row (or the first after he bats a projectile back) is a 98 MPH heater |
+| Mike-Fila | Mascot | 100 | dropped snacks heal him: a sandwich that misses stays on the floor, and he eats it for +4 |
 | Vex | The Boss | 114 | long cane reach; slow but hard to pin down (Vanish, and the cross-up super) |
 | Marcus | Long-range | 104 | slowest walk and dash, longest reach (×1.4, a sound blast off his bass) but normals start 2 frames slower; hits that land on the beat do +25% (a ring pulses at his feet on every beat; the beat runs off the shared frame counter, so it's identical online) |
 
@@ -144,6 +147,7 @@ Hitting someone during their attack's startup is a **counter-hit**: +20% damage 
 | Estrella | Stage Slam | low | A: High C | two-hit scream |
 | Reyes | Breach | advancing punch | A: Salute | rising strike, launches |
 | Paezano | Glove Swat | anti-air | A: Tag Out | glove tag, knocks down |
+| Mike-Fila | Tray Bash | a tray to the face | A: Double Shift | a hard cross |
 
 Trials mode teaches each fighter's tools: the basics, their bread-and-butter, an overhead link, their signature link (where they have one), their command normal, their target combo, and a super cancel. Every trial is cleared by `tools/links.js`.
 
@@ -156,6 +160,7 @@ Bread-and-butter combos (checked frame by frame by `tools/combos.js`):
 | Estrella | jab, kick > Siren Scream | 5 |
 | Reyes | jab, kick > Frontier Knuckle | 3 |
 | Paezano | jab, kick > Steal Home | 3 |
+| Mike-Fila | jab, kick > Order Up! | 3 |
 | Vizor | jab, kick > Shutter Flash | 3 |
 | Samson | jab, kick > Holy Tome | 3 |
 
@@ -175,6 +180,7 @@ Every stage and the title screen have a recorded song, played looped.
 | Control Room (Vizor) | synthwave arpeggios and pulsing bass |
 | Old Chapel (Samson) | church organ over hard rock |
 | MoundWorks Field (Paezano) | stadium rock walk-up anthem: ballpark organ riff, stomp-stomp-clap drums |
+| The Cluck Stop (Mike-Fila) | a fast food chicken restaurant after closing (shares the Street Court beat for now) |
 | Sunset Outpost (Reyes) | 80s action-movie rock anthem: marching snare, brass fanfare, palm-muted guitars |
 | Starlight Club (Estrella) | pop and R&B diva anthem: slap bass, claps, brass stabs and a soaring vocal-like synth lead |
 
@@ -226,7 +232,7 @@ Papa-Léguas has two looks. The default is his original sprite (`raw/karl`). The
 `tools/pixellab/sizes.py` sets every fighter's standing height (idle pose, head to feet). It packs each fighter at native size, runs the post-pack fixes (Estrella's covered top, Reyes's olive gear), then shrinks to the target in `tools/pixellab/sizes.json`. Fighters listed under `upscale` may also grow past native size; that uses pixel duplication, never blur (only Papa-Léguas, 91 to 94 px).
 
 - `sizes.py equal`: everyone at 91 px.
-- `sizes.py adjusted` (shipped, the owner's picks): Paezano 95; Papa-Léguas and Marcus 94; Keksan 93; Samson, Devanté and Ivan 91; Zeke, Hecky, Estrella and Reyes 88; Vizor 86; Lawslie 78. Costumes follow their fighter (WHITE GI 94, Fox Hecky 94, Idol Zeke 88).
+- `sizes.py adjusted` (shipped, the owner's picks): Paezano 95; Mike-Fila 91; Papa-Léguas and Marcus 94; Keksan 93; Samson, Devanté and Ivan 91; Zeke, Hecky, Estrella and Reyes 88; Vizor 86; Lawslie 78. Costumes follow their fighter (WHITE GI 94, Fox Hecky 94, Idol Zeke 88).
 - `sizes.py lineup OUT.png`: draws everyone on one floor line.
 
 Re-measure the hitboxes afterwards: `python3 tools/hitboxes.py`.

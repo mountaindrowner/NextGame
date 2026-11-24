@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw
 import pack
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.join(HERE, "..", ".."); A = os.path.join(ROOT, "assets")
 CFG = json.load(open(os.path.join(HERE, "sizes.json")))
-ROSTER = ["karl", "keksan", "vizor", "padre", "zeke", "hecky", "lawslie", "rex", "kai", "estrella", "reyes", "mateo", "ivan", "padreteen2", "heckyfox", "zekeidol", "karl2"]
+ROSTER = ["karl", "keksan", "vizor", "padre", "zeke", "hecky", "lawslie", "rex", "kai", "estrella", "reyes", "mateo", "mike", "ivan", "padreteen2", "heckyfox", "zekeidol", "karl2", "mikecow"]
 
 
 def idle_height(k):
@@ -20,6 +20,8 @@ def native(k):
     im = Image.open(os.path.join(HERE, "raw", k, "east.png")).convert("RGBA"); im.crop(im.getchannel("A").getbbox()).save(os.path.join(A, k + "_spr.png"))
     if k == "estrella":
         subprocess.run([sys.executable, os.path.join(HERE, "cover_midriff.py")], check=True, stdout=subprocess.DEVNULL)
+    if k == "mike":
+        subprocess.run([sys.executable, os.path.join(HERE, "fix_mike.py")], check=True, stdout=subprocess.DEVNULL)
     if k == "reyes":
         subprocess.run([sys.executable, os.path.join(ROOT, "tools", "recolor_reyes.py")], check=True, stdout=subprocess.DEVNULL)
 
@@ -38,7 +40,7 @@ def resize(k, K):
 
 
 def lineup(out):
-    ks = [k for k in ROSTER if k not in ("padreteen2", "heckyfox", "zekeidol", "karl2")]; frames = []
+    ks = [k for k in ROSTER if k not in ("padreteen2", "heckyfox", "zekeidol", "karl2", "mikecow")]; frames = []
     for k in ks:
         m = json.load(open(os.path.join(A, "fighters", k, "meta.json")))["anims"]["idle"]; st = Image.open(os.path.join(A, "fighters", k, "idle.png")).convert("RGBA")
         frames.append((k, st.crop((0, 0, m["w"], m["h"])), m["ax"], m["ay"]))

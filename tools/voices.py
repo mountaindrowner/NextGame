@@ -23,7 +23,7 @@ ANN = {
     "ko": "K. O.!", "perfect": "Perfect!", "time": "Time!", "you_win": "You win!", "you_lose": "You lose.",
     "player_one_wins": "Player one wins!", "player_two_wins": "Player two wins!", "game_over": "Game over.",
     "congratulations": "Congratulations!", "versus": "versus", "announcer_on": "Announcer on.",
-    "name_karl": "Pah-pah Lay-gwahs!", "name_ivan": "Ivan!", "name_vex": "Vex!",     "name_vizor": "Vizor!", "name_padre": "Samson!", "name_zeke": "Zeke!", "name_hecky": "Heck-ee Zay-vee-er!", "name_lawslie": "Laws-lee!", "name_rex": "Marcus!", "name_kai": "Deh-vahn-tay!", "name_keksan": "Kek-sahn!", "name_reyes": "Ray-yes!", "name_mateo": "Pah-eh-zah-no!", "name_estrella": "Es-tray-yah!",
+    "name_mike": "Mike Fil-ay!", "name_karl": "Pah-pah Lay-gwahs!", "name_ivan": "Ivan!", "name_vex": "Vex!",     "name_vizor": "Vizor!", "name_padre": "Samson!", "name_zeke": "Zeke!", "name_hecky": "Heck-ee Zay-vee-er!", "name_lawslie": "Laws-lee!", "name_rex": "Marcus!", "name_kai": "Deh-vahn-tay!", "name_keksan": "Kek-sahn!", "name_reyes": "Ray-yes!", "name_mateo": "Pah-eh-zah-no!", "name_estrella": "Es-tray-yah!",
 }
 # fighter -> (voice, speed, {line: text})
 CAST = {
@@ -40,6 +40,7 @@ CAST = {
     "mateo": ("am_puck+am_echo", 1.0, {"sp1": "Fastball!", "sp2": "Safe!", "sp3": "Batter up!", "heat": "Ninety-eight!", "super": "Strike three, you're out!", "win": "Ballgame. Thank you, Lord.", "ko": "Pulled... from the game..."}),
     "reyes": ("am_michael+am_adam", 0.98, {"sp1": "Frontier knuckle!", "sp2": "Drone, engage!", "sp3": "Eagle rise!", "air": "Rotor kicks!", "super": "Air support, now!", "win": "Area secure. Mission accomplished.", "ko": "Man down..."}),
     "estrella": ("af_bella", 1.02, {"sp1": "High note!", "sp2": "Encore!", "sp3": "Hear me!", "super": "Grand finale!", "win": "Thank you, Bonfire City!", "ko": "Losing... my voice..."}),
+    "mike": ("am_michael+am_puck", 1.05, {"sp1": "Order up!", "sp2": "Combo meal!", "sp3": "Fresh squeezed!", "super": "Mascot mode!", "win": "Happy to help!", "ko": "My shift... is over..."}),
     "padre": ("bm_george", 0.9, {"sp3": "Amen!", "sp1": "Holy tome!", "sp2": "Benediction!", "super": "Final sermon!", "win": "Go in peace, my son.", "ko": "Forgive me..."}),
 }
 TRIM = "silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse"

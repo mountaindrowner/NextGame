@@ -21,6 +21,13 @@ COMMON = {
     "focus":  {"mode": "v3", "frame_count": 8, "action_description": "plants his feet wide and pulls his fist far back at the hip, coiling his whole body to gather power, then explodes forward with a huge lunging straight punch, arm fully extended"},
 }
 SPECIAL = {
+    "mikecow": {"special": "stampede: lowers his horned cow hood and charges forward fast in a running headbutt, black hooves pounding, then skids to a stop",
+                "win": "victory pose: flexes both arms in the cow costume and lets out a big proud grin"},
+    "mike": {"special": "reaches behind his back, pulls out a round brown plastic serving tray and flings it forward sidearm like a frisbee, the flat tray spinning away out of his hand, then returns to a fighting stance",
+             "special2": "pulls a sandwich wrapped in white paper out of his apron pocket and lobs it forward underhand in a high arc, then returns to a fighting stance",
+             "special3": "pulls a big paper cup of lemonade with a straw from behind his back and splashes the yellow lemonade forward out of the cup in a wide spray, then returns to a fighting stance",
+             "suitup": "spins around once on the spot with his arms out wide, then plants his feet and throws both fists up high in a triumphant pose",
+             "win": "victory pose: tips his black visor with two fingers, then gives a big friendly thumbs up with a wide smile"},
     "karl":  {"special": "dashing forward fast throwing a rapid flurry of straight punches", "win": "victory pose: pumps one fist high in the air and smiles"},
     "karl2": {"special": "dashing forward fast throwing a rapid flurry of straight karate punches, glasses glinting, white gi flapping", "win": "victory pose: pumps one fist high in the air and smiles, pushing his glasses up with the other hand"},
     "akira": {"special": "throwing a ninja shuriken forward with a fast sidearm flick of the hand", "win": "victory pose: stands calmly with arms crossed, ponytail blowing"},
@@ -89,6 +96,9 @@ SPECIAL = {
 # finisher), kick2 = a kick that ends a chain, kick3 = a rising kick (Story mode's launcher, or a 2nd kick in a chain).
 _END = ", then returns to a fighting stance"
 COMBO = {
+    "mike": {"punch2": "a hard straight right cross with the rear fist at head height, the arm fully extended, his black apron swinging",
+             "kick2": "a side kick to the body: lifts the front knee, then thrusts the white sneaker straight out at waist height, the leg fully extended, both fists up in guard",
+             "kick3": "a high front kick: the front leg snaps straight up in front of him, the white sneaker rising above head height, the leg fully extended"},
     "karl": {"special3": "rising flying kick: springs up off the ground and drives one leg up and forward in a high flying side kick, rising into the air, white gi flapping, then lands", "punch2": "karate reverse punch: drives the rear fist straight forward at chest height with a sharp twist of the hips", "punch3": "karate rising uppercut: dips low and drives the lead fist straight up to chin height",
              "kick2": "karate roundhouse kick: pivots and swings the rear leg around high, striking with the top of the foot at head height", "kick3": "karate front snap kick that rises high, the foot snapping straight up above head height"},
     "keksan": {"punch2": "Muay Thai straight right cross, the rear fist driving forward at head height", "punch3": "Muay Thai upward elbow strike: steps in and drives the point of the elbow up through head height",
@@ -170,7 +180,7 @@ PROP = {"estrella": "the black microphone held in her right hand the whole time"
         "kai": "the basketball tucked tight under his left arm the whole time, never dribbling", "rex": "the bass guitar hanging on its strap in front of him the whole time",
         "mateo": "the baseball glove on his left hand, no baseball anywhere"}
 THROWS = {k: {"throwf": _TF + (", " + PROP[k] if k in PROP else ""), "throwb": _TB + (", " + PROP[k] if k in PROP else "")}
-          for k in ["karl", "keksan", "vizor", "padre", "zeke", "hecky", "lawslie", "rex", "kai", "estrella", "reyes", "mateo", "vex"]}
+          for k in ["karl", "keksan", "vizor", "padre", "zeke", "hecky", "lawslie", "rex", "kai", "estrella", "reyes", "mateo", "vex", "mike"]}
 for _k in ("estrella", "lawslie"):
     THROWS[_k] = {a: v.replace(" his ", " her ").replace("his whole", "her whole") for a, v in THROWS[_k].items()}
 

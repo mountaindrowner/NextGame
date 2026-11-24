@@ -349,5 +349,37 @@
    "take": "lowkick__a",
    "pk": 4
   }
+ },
+ "mike": {
+  "punch3": {
+   "take": "punch3__s1",
+   "pk": 5
+  },
+  "lowkick": {
+   "take": "lowkick__s2",
+   "pk": 5
+  },
+  "airpunch": {
+   "take": "airpunch__s2",
+   "pk": 1
+  },
+  "airkick": {
+   "take": "airkick__s1",
+   "pk": 4
+  }
+ },
+ "mikecow": {
+  "lowkick": {
+   "take": "lowkick__s2",
+   "pk": 5
+  },
+  "airpunch": {
+   "take": "airpunch__s1",
+   "pk": 3
+  },
+  "airkick": {
+   "take": "airkick__s1",
+   "pk": 4
+  }
  }
 }

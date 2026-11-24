@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.63.0
+
+- **New fighter: Mike-Fila, "Order Up"** (Fast Food Fu, the Cluck Stop). A counter worker who fights with whatever's behind the counter. Made from the owner's art with PixelLab, brand-free.
+  - **SP, Order Up!:** pulls out a serving tray and flings it like a frisbee.
+  - **DOWN+SP, Combo Meal:** lobs a wrapped sandwich that drops from above (block it standing). If it misses, it lands on the floor as a snack.
+  - **BACK+SP, Lemonade Splash:** a cup of lemonade to the face at close range. It stings, and the opponent walks at 65% speed for 2.5 seconds.
+  - **Trait, Snack Break:** a dropped sandwich heals him +4 when he walks over it. If the opponent steps on it first, it's squashed.
+  - **Super, Mascot Mode:** he spins, and a puff of smoke knocks back anyone close. He then fights for 10 seconds in a full cow costume, with its own animated sprite set:
+    - He hits 30% harder.
+    - He takes 25% less damage.
+    - Only a super can knock him down.
+    - Every special becomes **Stampede**, a charging horned headbutt that knocks down.
+    - "SHIFT'S OVER!" when the costume comes off.
+  - **Command move:** Tray Bash. **Target combo:** Double Shift.
+  - **Story mode:** Vex wants to launder money through Mike's restaurant. His rivals are Zeke, offered a clean slate for shutting Mike down, and Hecky, who is handling Vex's buyout.
+  - Also: voice lines, the announcer calling his name, combo trials, and CPU tactics.
+  - **The Cluck Stop stage:** a fast food chicken restaurant after closing.
+  - He shares the Street Court music for now. PixelLab charges for music in dollar credit, which this project doesn't spend.
+  - **Health 106.** The balance check puts him at 45% wins, and the whole roster at 42–60%.
+- **New test:** `tools/mike.js` checks every part of his kit (10 checks).
+- **Combo strings:** a chain move without a hit frame set no longer crashes the game.
+
 ## 1.62.0
 
 - **Every fighter now meets the move style guide**, except Vex, who keeps his cane style by choice. New PixelLab art (about 100 generations):

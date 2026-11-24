@@ -16,12 +16,14 @@
   "mateo": 95,
   "ivan": 91,
   "padreteen2": 91,
-  "karl2": 94
+  "karl2": 94,
+  "mike": 91
  },
  "skins": {
   "heckyfox": "hecky",
   "zekeidol": "zeke",
-  "karl2": "karl"
+  "karl2": "karl",
+  "mikecow": "mike"
  },
  "upscale": [
   "karl"
