@@ -193,7 +193,9 @@
   "airkick": {
    "take": "airkick__b",
    "pk": 4
-  }
+  },
+  "dashf": "dashf__s1",
+  "dashb": "dashb__s1"
  },
  "lawslie": {
   "crouch": {
@@ -348,7 +350,9 @@
   "lowkick": {
    "take": "lowkick__a",
    "pk": 5
-  }
+  },
+  "dashf": "dashf__s1",
+  "dashb": "dashb__s1"
  },
  "padreteen": {
   "airkick": {
@@ -390,7 +394,9 @@
   },
   "idle": {
    "take": "idle__x"
-  }
+  },
+  "dashf": "dashf__s1",
+  "dashb": "dashb__s1r (frames 0,1,2,3,3,2,1: he turned to the camera)"
  },
  "estrella": {
   "airkick": {
@@ -504,7 +510,9 @@
   "lowkick": {
    "take": "lowkick__b",
    "pk": 4
-  }
+  },
+  "dashf": "dashf__s1",
+  "dashb": "dashb__s1"
  },
  "mike": {
   "punch3": {
@@ -544,7 +552,9 @@
   "airkick": {
    "take": "airkick__s1",
    "pk": 4
-  }
+  },
+  "dashf": "dashf__s1",
+  "dashb": "dashb__s1"
  },
  "vex": {
   "dashf": {

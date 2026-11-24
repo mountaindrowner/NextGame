@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.66.0
+
+- **Ranged fighters dash shorter and less often than close-range fighters.**
+  - **Close-range** (Papa-Léguas, Hecky, Keksan, Samson, Kai, Reyes, Lawslie): dashes go 8% farther (about 55–62 px), and they can dash again straight away.
+  - **Mixed** (Mike-Fila, Vex): standard distance (about 43–53 px), then a 10-frame wait before the next dash.
+  - **Ranged** (Vizor, Zeke, Estrella, Mateo, Marcus): dashes are 20% shorter (about 35–43 px), then a 30-frame (half a second) wait before the next dash.
+  - A focus dash-cancel ignores the wait, because it already costs meter.
+  - Balance: every fighter now wins 44–56% in the CPU-vs-CPU check, down from a 43–58% range.
+- **Dash art for the costumes:** Papa-Léguas's gi, Zeke's idol outfit, Hecky's fox, Samson's teen look and Mike-Fila's Mascot Mode cow suit now have their own forward and back dashes.
+- **Test:** `tools/dash.js` checks each group's distance and wait.
+
 ## 1.65.0
 
 - **Real dashes, with their own animation, for every fighter.**

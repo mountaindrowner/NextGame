@@ -329,6 +329,13 @@ const ARCH={
   keksan:{type:'STRIKER',trait:'SHIN KICKS: HARDER KICKS',hp:88,shin:true,reach:1},
   rex:{type:'LONG-RANGE',trait:'HUGE REACH, BEAT = +DMG',hp:104,rhythm:true,amp:true,reach:1.4,slow:2,dash:.7}};
 const arch=c=>ARCH[c.id]||{};
+// RANGE: how each fighter wins, which sets how far and how often they dash. Close-range fighters live inside the opponent's
+// face: they dash a little farther and can dash again at once. Ranged fighters (zoners, the pitcher, the bass) want space
+// and should have to work to close it: shorter dashes, and a wait between them. Mixed fighters sit in between.
+const RANGE={close:{d:1.08,cd:0},mixed:{d:1,cd:10},ranged:{d:.8,cd:30}};
+const RANGE_OF={karl:'close',hecky:'close',keksan:'close',padre:'close',kai:'close',reyes:'close',lawslie:'close',ivan:'close',
+  mike:'mixed',vex:'mixed',vizor:'ranged',zeke:'ranged',estrella:'ranged',mateo:'ranged',rex:'ranged'};
+const rangeOf=c=>RANGE[RANGE_OF[c.id]||'mixed'];
 // RHYTHM trait: a steady 128-ish bpm beat on the shared frame counter (same on both sides online)
 const BEAT=28,onBeat=()=>{const m=frameNo%BEAT;return m<4||m>BEAT-4};
 const SUPER_NAME={"vex": "THE CITY IS MINE", "karl": "MIL LÉGUAS", "ivan": "SIBERIAN STORM", "vizor": "FULL EXPOSURE", "padre": "FINAL SERMON", "zeke": "PERFECT GAME", "hecky": "GOLDEN PARACHUTE", "lawslie": "FULL ARREST", "rex": "STAGE DIVE", "kai": "FAST BREAK", "keksan": "EIGHT LIMBS", "estrella": "GRAND FINALE", "reyes": "AIR SUPPORT", "mateo": "STRIKEOUT", "mike": "MASCOT MODE"};
@@ -875,7 +882,7 @@ function control(f,o,inp){
   if(bB&&(fwd||back)&&!inp.d&&canThrow(f,o)){use();startThrow(f,o,!!back);return}
   if(bA){use();startAtk(f,inp.d?'cjab':fwd?'leap':back&&CMD[f.c.id]?'cmd':'jab');return}
   if(bB){use();startAtk(f,inp.d?'sweep':'kick');return}
-  if(dash&&!inp.d&&!inp.u){doDash(f,dash);return}
+  if(dash&&!inp.d&&!inp.u&&!(f.dashCD>0)){doDash(f,dash);return}
   if(inp.u){setS(f,'prejump');f.crouch=false;f.jdir=fwd?1:back?-1:0;f.vx=0;return}
   if(inp.d){f.crouch=true;setS(f,'crouch');f.vx=0;return}
   f.crouch=false;
@@ -889,7 +896,7 @@ function startFocus(f){f.state='focus';f.st=0;f.vx=0;f.atk=null;f.sp=null;f.fArm
 // DASHES, as in Street Fighter: a committed burst you can't act out of. Forward: about 58 px in 18 frames. Back: about 49 px in
 // 20 frames, invincible for the first 8. Each fighter has a forward and a back dash animation (dashf / dashb).
 const DASH={f:{v:6.8,n:18},b:{v:5.6,n:20,inv:8}};
-function doDash(f,dash){const D=dash>0?DASH.f:DASH.b;setS(f,'dash');f.st=0;f.dashDir=dash;f.vx=f.face*dash*D.v*Math.max(.85,Math.min(1.25,Math.min(1.15,f.c.speed)*(arch(f.c).dash||1)));/* slow dashers still cover real ground */f.crouch=false;if(D.inv)f.inv=D.inv;SFX.whoosh();dust(f.x,3)}
+function doDash(f,dash){const D=dash>0?DASH.f:DASH.b;setS(f,'dash');f.st=0;f.dashDir=dash;f.vx=f.face*dash*D.v*Math.max(.85,Math.min(1.25,Math.min(1.15,f.c.speed)*(arch(f.c).dash||1)))*rangeOf(f.c).d;/* slow dashers still cover real ground */f.crouch=false;if(D.inv)f.inv=D.inv;SFX.whoosh();dust(f.x,3)}
 // COMBO STRINGS: each hit of a chain has its own animation (cross, hook/uppercut finisher, chain kicks), same timing as the jab/kick
 // the last hit of a string: harder, a big shove that ends the combo (it can still be cancelled into a special or super)
 function finisher(f){const a=f.atk;if(!a)return;a.fin=1;a.dmg+=1;a.kb=Math.max(a.kb||2,4.6);a.heavy=true;a.r+=3;f.lastFin=1}
@@ -1430,13 +1437,13 @@ function updateF(f,o){if(f.state==='attack'&&f.atk&&f.atk.name==='focus'){const 
   if(f.mascot>0){if(f.mascot>1||f.state!=='special')f.mascot--;if(frameNo%7===0)F.parts.push({x:f.x+rnd(-14,14),y:GY-f.y-rnd(4,f.H),vx:0,vy:-.5,l:14,c:RND()<.5?'#ffffff':'#ff9ab0',g:0});if(!f.mascot)mascotOff(f)}
   if(f.sticky>0){f.sticky--;if(frameNo%9===0)F.parts.push({x:f.x+rnd(-10,10),y:GY-f.y-rnd(10,f.H*.8),vx:0,vy:.6,l:16,c:'#ffe84a',g:.05})}
   f.st++;if(f.buff>0){f.buff--;if(frameNo%4===0)F.parts.push({x:f.x+rnd(-14,14),y:GY-f.y-rnd(4,f.H),vx:0,vy:-.6,l:16,c:RND()<.5?'#ffd23a':'#fff3a0',g:0})}if(f.spCD>0)f.spCD--;if(f.spCD2>0)f.spCD2--;if(f.spCD3>0)f.spCD3--;if(f.spCDA>0)f.spCDA--;if(f.cuffed>0)f.cuffed--;if(f.zap>0){f.zap--;if(f.zap%3===0)F.parts.push({x:f.x+rnd(-12,12),y:GY-f.y-rnd(8,f.H),vx:rnd(-1,1),vy:rnd(-1,1),l:8,c:RND()<.5?'#fff':'#7ad8ff',g:0})}if(f.throwInv>0)f.throwInv--;
-  if(!(f.state==='special'&&f.sp&&f.sp.kind==='replay')){(f.rh||(f.rh=[])).push({x:f.x,hp:f.hp});if(f.rh.length>100)f.rh.shift()}if(f.flash>0)f.flash--;if(f.inv>0)f.inv--;if(f.comboT>0&&--f.comboT===0)f.combo=0;
+  if(!(f.state==='special'&&f.sp&&f.sp.kind==='replay')){(f.rh||(f.rh=[])).push({x:f.x,hp:f.hp});if(f.rh.length>100)f.rh.shift()}if(f.flash>0)f.flash--;if(f.inv>0)f.inv--;if(f.dashCD>0)f.dashCD--;if(f.comboT>0&&--f.comboT===0)f.combo=0;
   f.trail=f.trail>f.hp?Math.max(f.hp,f.trail-0.4):f.hp;f.ghosts.forEach(g=>g.l--);f.ghosts=f.ghosts.filter(g=>g.l>0);
   switch(f.state){
     case'prejump':if(f.st>=3){f.state='jump';f.st=0;f.vy=5.4*f.c.jump;f.vx=f.jdir*f.face*1.8*f.c.speed;SFX.jump()}break;
     case'jump':if(f.atk){f.ast++;if(phaseOf(f)==='active'&&!f.hitDone){const a=f.atk,cy=f.y+f.H*a.hy;if(tryHit(f,o,{x1:f.face>0?f.x:f.x-a.reach,x2:f.face>0?f.x+a.reach:f.x,y1:a.y1!=null?f.y+a.y1:cy-a.hh/2,y2:a.y1!=null?f.y+a.y2:cy+a.hh/2},{...a,heavy:false}))f.hitDone=true}}break;
     case'land':f.vx=0;if(f.st>=5)setS(f,'idle');break;
-    case'dash':f.vx*=0.9;if(f.st%4===0&&f.st<12)dust(f.x-f.face*f.dashDir*8,1);if(f.st>=(f.dashDir>0?DASH.f.n:DASH.b.n)){f.vx=0;setS(f,'idle')}break;
+    case'dash':f.vx*=0.9;if(f.st%4===0&&f.st<12)dust(f.x-f.face*f.dashDir*8,1);if(f.st>=(f.dashDir>0?DASH.f.n:DASH.b.n)){f.vx=0;f.dashCD=rangeOf(f.c).cd;setS(f,'idle')}break;
     case'attack':{const a=f.atk,ph=phaseOf(f);if(ph==='active'&&!f.hitDone){const h=f.H*(a.crouch?.7:1),cy=f.y+h*a.hy;
         const last=a.multi&&f.mh===a.multi-1,r=tryHit(f,o,{x1:f.face>0?f.x:f.x-a.reach,x2:f.face>0?f.x+a.reach:f.x,y1:a.y1!=null?f.y+a.y1:cy-a.hh/2,y2:a.y1!=null?f.y+a.y2:cy+a.hh/2},a.lastKnock&&last?{...a,knock:true,heavy:true,kb:3}:a);
         if(r==='hit'&&a.crumple&&o.y<=0&&o.state==='hurt'){o.stun=Math.max(o.stun,52);o.crumple=1;addText(a.lvl===3?'UNBLOCKABLE CRUMPLE!':'CRUMPLE!',o.x,GY-o.H-14,'#ffb03a');F.hitstop=Math.max(F.hitstop,10)}
@@ -3444,5 +3451,5 @@ function loop(now){requestAnimationFrame(loop);acc+=Math.min(100,now-last);last=
 applyLayout();addEventListener('resize',applyLayout);addEventListener('orientationchange',()=>setTimeout(applyLayout,120));
 go(Power);requestAnimationFrame(loop);
 loadAssets().then(()=>{ASSETS_READY=true});
-window.__dbg={startSuper,MASCOT_T,doDash,setStat:v=>{STAT=v},getStat:()=>STAT,pose:f=>pose(f),poll:()=>pollInput(),Controls,CMD,TCM,TRIALS,ATK,ARCH,SPCD,Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,ARCS,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
+window.__dbg={startSuper,MASCOT_T,doDash,RANGE,RANGE_OF,setStat:v=>{STAT=v},getStat:()=>STAT,pose:f=>pose(f),poll:()=>pollInput(),Controls,CMD,TCM,TRIALS,ATK,ARCH,SPCD,Boot,clearToast:()=>{TOAST=null},Options,GameOver,textAudit:on=>{TA=on?{t:[],b:[]}:null;return TA},render:()=>render(),Brawl,Cutscene,StoryEnd,SCENES,ARCS,startStory,LEVELS,FOES,SET,onBeat,showBox:v=>{SHOWBOX=v},NET,LOB,netHost,netJoin,netQuit,Online,OnlineSelect,ORDER,Intro,BADGE_KEYS:BADGES.map(b=>b[0]),vox:VOX,rec:REC,inp2:{held2,pressed2},setTwo,Records,startThrow,canThrow,track:TRACK,mus:MUS,inp:{held,pressed},tick:()=>{frameNo++},startSpecial,startAtk,applyHit,get scene(){return scene},get F(){return F},go,Fight,Title,Select,VS,Result,Ending,Continue,set RUN(v){RUN=v},get RUN(){return RUN},CH};
 
