@@ -47,6 +47,11 @@ A chain is the same button pressed again right after a hit. Each hit in the chai
 | **Second kick** (`kick2`) | A, A, B | A **body kick** that is a real kick: a roundhouse, side kick or push kick, the leg extended | waist–chest | mid |
 | **Kick finisher** (`kick3`) | A, A, B, B (and the Brawl launcher) | A **rising** strike: a high kick or a jumping knee | chest–head | mid |
 
+**Chain timing (1.64.0, as in Street Fighter):**
+- The next hit of a string starts only once the last hit's active frames are over. That makes chained hits about 14 frames apart.
+- The finisher (`punch3` / `kick3`) ends the string. It hits harder, shoves the opponent away, and doesn't chain into anything. It can still be cancelled into a special or super.
+- The next press after the finisher starts a fresh string with a jab.
+
 ## Rules for every attack
 
 1. **One strike, one limb.** The fist or foot doing the hitting is clearly visible and clearly extended on the strike frame. Every frame has exactly two arms and two legs. A prop (cane, bass, book, ball) may be held, but it must not hide the striking limb. When the prop *is* the weapon (Vex's cane, Marcus's bass), the strike must still land at the right height.

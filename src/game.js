@@ -296,7 +296,7 @@ const CH={
     col:{skin:'#c88a5a',glove:'#c89040',leg:'#e8e8f4',foot:'#2a4ad0',aura:'#3a7aff'},sh:.72,hip:.5,
     quote:"THAT'S BALLGAME. SHAKE IT OFF, YOU'LL GET 'EM NEXT TIME.",lose:'PULLED... FROM THE GAME...',stageName:'MOUNDWORKS FIELD'},
   mike:{id:'mike',name:'MIKE-FILA',nick:'ORDER UP',style:'FAST FOOD FU',country:'CLUCK STOP',countryLabel:'WORKS AT',flag:'cow',ht:"5'10\" (178 CM)",wt:'175 LB (79 KG)',
-    speed:1.04,power:1.06,def:1,jump:1,stats:[3,3,4],special:'tray',spName:'ORDER UP',special2:'sandwich',sp2Name:'COMBO MEAL',special3:'lemon',sp3Name:'LEMONADE SPLASH',tr:0,song:'kai',
+    speed:1.04,power:1.08,def:1,jump:1,stats:[3,3,4],special:'tray',spName:'ORDER UP',special2:'sandwich',sp2Name:'COMBO MEAL',special3:'lemon',sp3Name:'LEMONADE SPLASH',tr:0,song:'kai',
     col:{skin:'#e0a070',glove:'#c8102e',leg:'#2a2630',foot:'#f0f0f4',aura:'#ff3a3a'},sh:.72,hip:.5,
     quote:"HAPPY TO HELP! COME BACK AND SEE US.",lose:'MY SHIFT... IS OVER...',stageName:'CLUCK STOP'},
   // secret fighter: unlocked by clearing Story mode (not in ORDER, so not in Story or the arcade ladder)
@@ -323,8 +323,8 @@ const ARCH={
   kai:{type:'HIGH FLYER',trait:'DOUBLE JUMP, BIG HOPS',hp:110,dj:true,reach:1},
   estrella:{type:'AREA CONTROL',trait:'HER SOUND SLOWS FOES',hp:100,sound:true,reach:1.05},
   mateo:{type:'PITCHER',trait:'3RD PITCH IS A HEATER',hp:104,heat:true,reach:1},
-  mike:{type:'MASCOT',trait:'DROPPED SNACKS HEAL HIM',hp:106,snack:true,reach:1},
-  vex:{type:'THE BOSS',trait:'CANE REACH, NEVER CORNERED',hp:114,reach:1.1,dash:.85},
+  mike:{type:'MASCOT',trait:'DROPPED SNACKS HEAL HIM',hp:108,snack:true,reach:1},
+  vex:{type:'THE BOSS',trait:'CANE REACH, NEVER CORNERED',hp:110,reach:1.1,dash:.85},
   reyes:{type:'ALL-ROUNDER',trait:'STARTS WITH 1/3 SUPER',hp:92,leader:true,reach:1},
   keksan:{type:'STRIKER',trait:'SHIN KICKS: HARDER KICKS',hp:88,shin:true,reach:1},
   rex:{type:'LONG-RANGE',trait:'HUGE REACH, BEAT = +DMG',hp:104,rhythm:true,amp:true,reach:1.4,slow:2,dash:.7}};
@@ -813,6 +813,9 @@ function qcf(h){let st=0;for(let i=Math.max(0,h.length-16);i<h.length;i++){const
 // Any grounded normal except the sweep can also be cancelled into the special once it connects.
 const BUF=7,MAXCHAIN=3,CHAIN={jab:['jab','cjab','kick','sweep'],cjab:['cjab','jab','sweep','kick'],jpunch:['jkick']};
 function cancelOk(f){const a=f.atk;if(!a||!f.hitDone)return false;const t=a.air?f.ast:f.st;return t>=a.s&&t<a.s+a.a+Math.max(6,a.r)}
+// CHAINS (normal into normal), as in Street Fighter: the next hit can only start once this one's active frames are over,
+// and never out of the finisher (the uppercut / rising kick that ends the string). Specials and supers still cancel on contact.
+function chainOk(f){const a=f.atk;if(!cancelOk(f)||a.fin)return false;const t=a.air?f.ast:f.st;return t>=a.s+a.a}
 function burst(f,o){f.burstOK=false;f.state=f.y>0?'jump':'idle';f.st=0;f.stun=0;f.vy=f.y>0?2:0;f.atk=null;f.inv=30;f.jug=0;f.vx=0;
   const dir=o.x>=f.x?1:-1;o.combo=0;o.comboT=0;o.ips=false;o.atk=null;o.sp=null;o.state='hurt';o.st=0;o.stun=22;o.vx=dir*4.2;o.hurtK='mid';
   F.hitstop=8;F.shake=7;SFX.burst();addText('BURST!',f.x,GY-f.y-f.H-12,'#3ae8ff');
@@ -820,7 +823,7 @@ function burst(f,o){f.burstOK=false;f.state=f.y>0?'jump':'idle';f.st=0;f.stun=0;
 function control(f,o,inp){
   const fwd=f.face>0?inp.r:inp.l,back=f.face>0?inp.l:inp.r,upE=inp.u&&!f.pu;f.pu=inp.u;
   f.hist.push(inp.d?(fwd?3:back?1:2):inp.u?(fwd?9:back?7:8):fwd?6:back?4:5);if(f.hist.length>24)f.hist.shift();
-  if(inp.aP){f.lastA=frameNo;f.bufA=frameNo}if(inp.bP){f.lastB=frameNo;f.bufB=frameNo}if(inp.fP)f.bufF=frameNo;
+  if(inp.aP){f.lastA=frameNo;f.bufA=frameNo;f.bufDA=!!inp.d}if(inp.bP){f.lastB=frameNo;f.bufB=frameNo;f.bufDB=!!inp.d}if(inp.fP)f.bufF=frameNo;
   const tch=TOUCHY&&!f.cpu&&!NET.lock&&f.side===0&&!TWO,BF=tch?BUF+4:BUF;// touch: 11-frame buffer, 6-frame A+B window
   const bA=frameNo-(f.bufA??-99)<=BF,bB=frameNo-(f.bufB??-99)<=BF,bF=frameNo-(f.bufF??-99)<=BF,btn=bA||bB,use=()=>{f.bufA=f.bufB=-99};
   const both=Math.abs(f.lastA-f.lastB)<=(tch?6:4)&&frameNo-Math.max(f.lastA,f.lastB)<=BF;
@@ -854,13 +857,13 @@ function control(f,o,inp){
     if(wantSp&&f.spCD<=0&&a.name!=='sweep'&&(f.st<5||cancelOk(f))){use();startSpecial(f,o);return}
     if(wantSp2&&f.spCD2<=0&&a.name!=='sweep'&&(f.st<5||cancelOk(f))){use();startSpecial(f,o,2);return}
     if(wantSp3&&f.spCD3<=0&&a.name!=='sweep'&&(f.st<5||cancelOk(f))){use();startSpecial(f,o,4);return}
-    {const T=TCM[f.c.id];if(T&&a.name==='kick'&&(T.btn==='a'?bA:bB)&&cancelOk(f)&&!inp.d){use();startAtk(f,'tc');return}}
-    if(btn&&cancelOk(f)&&(f.chain||0)<(arch(f.c).chain||MAXCHAIN)){const want=bA?(inp.d?'cjab':'jab'):(inp.d?'sweep':'kick');
+    {const T=TCM[f.c.id];if(T&&a.name==='kick'&&(T.btn==='a'?bA:bB)&&chainOk(f)&&!inp.d){use();startAtk(f,'tc');return}}
+    if(btn&&chainOk(f)&&(f.chain||0)<(arch(f.c).chain||MAXCHAIN)){const want=bA?(f.bufDA?'cjab':'jab'):(f.bufDB?'sweep':'kick');
       if((CHAIN[a.name]||[]).includes(want)){use();f.chain=(f.chain||0)+1;startAtk(f,want);return}}
     return}
   if(f.state==='jump'&&upE&&arch(f.c).dj&&!f.dj&&f.st>5&&!f.atk){f.dj=1;f.vy=4.8;f.vx=(fwd?1:back?-1:0)*f.face*1.9*f.c.speed;SFX.jump();f.ghosts.push({x:f.x,y:f.y,l:12});return}
   if(f.state==='jump'&&f.c.airSp&&wantSp&&!f.hov&&!(f.spCDA>0)&&f.y>14&&(!f.atk||f.ast<4)){use();startAir(f,o);return}
-  if(f.state==='jump'){if(btn){if(!f.atk){use();startAtk(f,bB?'jkick':'jpunch')}else if(bB&&cancelOk(f)&&f.atk.name==='jpunch'){use();startAtk(f,'jkick')}}return}
+  if(f.state==='jump'){if(btn){if(!f.atk){use();startAtk(f,bB?'jkick':'jpunch')}else if(bB&&chainOk(f)&&f.atk.name==='jpunch'){use();startAtk(f,'jkick')}}return}
   if(!canAct(f))return;
   f.chain=0;
   if(bF&&f.y<=0){f.bufF=-99;startFocus(f);return}
@@ -885,11 +888,15 @@ const FOCUS={lv2:18,lv3:42};
 function startFocus(f){f.state='focus';f.st=0;f.vx=0;f.atk=null;f.sp=null;f.fArm=0;f.crouch=false;SFX.focus()}
 function doDash(f,dash){setS(f,'dash');f.st=0;f.dashDir=dash;f.vx=f.face*dash*(dash>0?4.6:4.0)*Math.min(1.15,f.c.speed)*(arch(f.c).dash||1);f.crouch=false;if(dash<0)f.inv=7;SFX.whoosh();dust(f.x,3)}
 // COMBO STRINGS: each hit of a chain has its own animation (cross, hook/uppercut finisher, chain kicks), same timing as the jab/kick
+// the last hit of a string: harder, a big shove that ends the combo (it can still be cancelled into a special or super)
+function finisher(f){const a=f.atk;if(!a)return;a.fin=1;a.dmg+=1;a.kb=Math.max(a.kb||2,4.6);a.heavy=true;a.r+=3;f.lastFin=1}
 function comboAnim(f,an){const A=f.c.anim;if(A&&A[an]&&f.atk){f.atk.anim=an;f.atk.pk=(akOf(f.c,an)||{}).pk??Math.floor(A[an].n/2)}}
 function startAtk(f,n){const fo=typeof scene!=='undefined'&&scene===Fight&&F&&(f===F.p1||f===F.p2)&&(n==='jab'||n==='kick')?(f===F.p1?F.p2:F.p1):null,
     chain=fo&&((f.state==='attack'&&f.atk&&f.hitDone)||['hurt','knock'].includes(fo.state)||(fo.state==='block'&&fo.stun>0));f.atk={...ATK[n],...(n==='cmd'?CMD[f.c.id]:n==='tc'?TCM[f.c.id].m:FDATA[f.c.id]&&FDATA[f.c.id][n]),name:n,id:++atkId};f.mh=0;if(f.atk.leap){f.vy=2.7;f.y=Math.max(f.y,.5)}if(f.atk.hop){f.vy=f.atk.hop;f.y=Math.max(f.y,.5)}f.atk.reach*=arch(f.c).reach||1;f.atk.hh*=arch(f.c).hh||1;
   {const m=HBX[f.c.id]&&HBX[f.c.id].moves[n];if(m){const A=arch(f.c),R=A.reach||1,K=A.hh||1,c=(m.y1+m.y2)/2,h=(m.y2-m.y1)/2*K;f.atk.tip=m.reach-6;f.atk.reach=A.amp?Math.max(m.reach,f.atk.reach):Math.round(m.reach*R);f.atk.y1=c-h;f.atk.y2=c+h}}if(arch(f.c).slow){f.atk.s+=arch(f.c).slow;f.atk.r+=2}f.hitDone=false;if(f.atk.air)f.ast=0;else{f.state='attack';f.st=0;f.vx=0;f.crouch=!!f.atk.crouch}
-  if(fo){if(!chain){f.chI=0;f.chK=0}else{f.chI=(f.chI||0)+1;if(n==='jab')comboAnim(f,f.chI>=2?'punch3':'punch2');else{comboAnim(f,(f.chK||0)>=1?'kick3':'kick2');f.chK=(f.chK||0)+1}}}
+  if(fo){if(!chain||f.lastFin){f.chI=0;f.chK=0;f.lastFin=0}else{f.chI=(f.chI||0)+1;const last=(arch(f.c).chain||MAXCHAIN)-1;
+      if(n==='jab'){const fin=f.chI>=last;comboAnim(f,fin?'punch3':'punch2');if(fin)finisher(f)}
+      else{const fin=(f.chK||0)>=1;comboAnim(f,fin?'kick3':'kick2');f.chK=(f.chK||0)+1;if(fin)finisher(f)}}}
   (n==='kick'||n==='sweep'||n==='jkick'?SFX.whooshH:SFX.whoosh)()}
 const canThrow=(f,o)=>Math.abs(o.x-f.x)<48&&o.y<=0&&f.y<=0&&o.inv<=0&&!(o.throwInv>0)&&['idle','walk','crouch','attack','land','dash','prejump'].includes(o.state)&&!(o.state==='attack'&&phaseOf(o)==='active');
 const fw0=(dir,P)=>dir===P.face;// a forward throw flies flatter than a back throw
@@ -1157,8 +1164,12 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
     f.vx=0;if(t===10){F.proj.push({kind:'tray',x:f.x+f.face*22,y:f.H*.62,vx:f.face*4.6,owner:f,rot:0,life:100,lv:'mid',dmg:8,stun:20,kb:2,tag:'sp1'});SFX.whooshH()}
     if(t>=28)endSpecial(f)}
   else if(s.kind==='sandwich'){// Combo Meal: a sandwich lobbed high that drops from above (block standing); a miss lands on the floor as a snack for him
-    f.vx=0;if(t===14&&!F.proj.some(p=>p.owner===f&&p.kind==='sandwich')){const x0=f.x+f.face*14,y0=f.H*.62,vy=4.4,g=.2,T=(vy+Math.sqrt(vy*vy+2*g*(y0-4)))/g,d=clamp(Math.abs(o.x-x0),40,140);
-      F.proj.push({kind:'sandwich',x:x0,y:y0,vx:f.face*d/T,vy,g,owner:f,rot:0,life:140,lv:'high',dmg:9,stun:24,kb:2,tag:'sp2'});SFX.whoosh()}
+    f.vx=0;if(t===14&&!F.proj.some(p=>p.owner===f&&p.kind==='food')){const x0=f.x+f.face*14,y0=f.H*.62,vy=4.4,g=.2,T=(vy+Math.sqrt(vy*vy+2*g*(y0-4)))/g,d=clamp(Math.abs(o.x-x0),40,140);
+      const lob=(it,dd,dmg,big)=>F.proj.push({kind:'food',item:it,big,x:x0,y:y0,vx:f.face*dd/T,vy,g,owner:f,rot:0,life:160,lv:'high',dmg,stun:24,kb:2,tag:'sp2'});
+      const pick=f.forceItem;f.forceItem=null;// (tests pick the item)
+      if(pick==='family'||(!pick&&RND()<.1)){// FAMILY DEAL: the whole order at once
+        ['sandwich','fries','drink','sandwich'].forEach((it,i)=>lob(it,clamp(d*(.62+i*.25),30,190),5,false));addText('FAMILY DEAL!',f.x,GY-f.H-16,'#ffd23a');SFX.cheer&&SFX.cheer()}
+      else{const it=pick||['sandwich','fries','drink'][(RND()*3)|0];lob(it,d,it==='sandwich'?9:it==='fries'?9:7,true);addText({sandwich:'SANDWICH!',fries:'FRIES!',drink:'LEMONADE!'}[it],f.x+f.face*10,GY-f.H-8,'#ffe84a')}SFX.whoosh()}
     if(t>=32)endSpecial(f)}
   else if(s.kind==='lemon'){// Lemonade Splash: a cup of lemonade to the face; it stings, and it's sticky (they move slower for a while)
     f.vx=0;if(t===9)SFX.whoosh();
@@ -1237,7 +1248,7 @@ function updateSpecial(f,o){const s=f.sp,t=f.st;if(s.kind==='super')return updat
   else if(s.kind==='knuckle'){// Frontier Knuckle: a dashing, flaming straight right; knocks down on a hit
     if(t<6)f.vx=0;else if(t<22&&!s.hits){f.vx=f.face*6;if(t%2===0)f.ghosts.push({x:f.x,y:f.y,l:10});if(t===6)SFX.rush()}else f.vx*=.6;
     if(t>=8&&t<22&&!s.hits){const hb={x1:f.face>0?f.x:f.x-46,x2:f.face>0?f.x+46:f.x,y1:f.y+f.H*.35,y2:f.y+f.H*.85};
-      const r=tryHit(f,o,hb,{dmg:10,stun:22,bs:14,kb:3.2,lv:'mid',chip:2,knock:true,heavy:true});
+      const r=tryHit(f,o,hb,{dmg:9,stun:22,bs:14,kb:3.2,lv:'mid',chip:2,knock:true,heavy:true});
       if(r){s.hits=1;f.vx=r==='block'?-f.face*3:0;if(r==='hit'){F.shake=Math.max(F.shake,7);sparks(o.x-f.face*6,GY-o.y-o.H*.6,'#ff9a3a',14)}}}
     if(t>=34)endSpecial(f)}
   else if(s.kind==='eagle'){// Eagle Rise: an invincible rising uppercut, two hits; the anti-air
@@ -1484,7 +1495,7 @@ function updateProj(){for(const p of F.proj){if(p.kind==='snack'){p.life--;const
     if(p.kind==='bball'){p.vy-=.32;p.y+=p.vy;if(p.y<=5&&p.vy<0){p.y=5;p.vy=Math.max(3.2,-p.vy*.82);p.bounces++;SFX.land()}
       if(p.ret){const ow=p.owner;p.vx=Math.sign(ow.x-p.x)*4.6;if(Math.abs(ow.x-p.x)<14){p.life=0;ow.spCD=Math.min(ow.spCD,18);addText('CAUGHT!',ow.x,GY-ow.H-14,'#ffb43a');SFX.ok()}continue}}p.rot+=p.kind?p.vx*0.14:0.5;p.life--;const o=p.owner===F.p1?F.p2:F.p1;
     if(p.g){p.y+=p.vy;p.vy-=p.g;if(p.y<=4&&p.vy<0){p.life=0;dust(p.x,8);SFX.land();F.shake=Math.max(F.shake,2);
-      if(p.kind==='sandwich'&&arch(p.owner.c).snack&&!F.proj.some(q=>q.kind==='snack'&&q.owner===p.owner))F.proj.push({kind:'snack',x:clamp(p.x,XMIN,XMAX),y:3,vx:0,owner:p.owner,rot:0,life:300})}}
+      if(p.kind==='food'&&p.item==='sandwich'&&arch(p.owner.c).snack&&!F.proj.some(q=>q.kind==='snack'&&q.owner===p.owner))F.proj.push({kind:'snack',x:clamp(p.x,XMIN,XMAX),y:3,vx:0,owner:p.owner,rot:0,life:300})}}
     const R2=p.kind==='note'?10:p.kind?7:6,RY=p.kind==='note'?10:p.kind==='wave'?15:p.kind==='quake'?10:R2,r=tryHit(p.owner,o,{x1:p.x-R2,x2:p.x+R2,y1:p.y-RY,y2:p.y+RY},{dmg:p.dmg||9,stun:p.stun||18,bs:12,kb:p.kb||2.4,lv:p.lv||'mid',chip:2,knock:!!p.knock,heavy:!!p.knock,tag:p.tag||'sp1',dim:p.dim,ex:p.ex,tid:p.id||(p.id=++atkId)});
     if(r==='block'&&p.kind==='ball'&&arch(p.owner.c).spare){p.owner.spCD=Math.min(p.owner.spCD,25);addText('SPARE!',p.owner.x,GY-p.owner.H-14,'#d04aff');SFX.ok()}
     if(r&&p.kind==='bball'){p.ret=true;p.vy=Math.max(p.vy,3);if(r==='hit')SFX.thud()}
@@ -1494,6 +1505,8 @@ function updateProj(){for(const p of F.proj){if(p.kind==='snack'){p.life--;const
     else if(r&&p.kind==='pitch'){p.life=0;sparks(p.x,GY-p.y,p.heat?'#ff9a3a':'#ffffff',p.heat?14:8);if(!p.call&&r==='hit')addText(p.heat?'HEATER!':'STRIKE!',o.x,GY-o.H-14,p.heat?'#ff9a3a':'#ffffff');
       if(p.call){const C=['STRIKE ONE!','STRIKE TWO!',"STRIKE THREE! YOU'RE OUT!"];addText(r==='block'?'FOUL BALL!':C[p.call-1],o.x,GY-o.H-14-(p.call-1)*6,r==='block'?'#ffffff':'#ffd23a');SFX.bell();if(p.call===3&&r==='hit'){F.shake=12;F.camFlash=6;F.hitstop=12;CEL.burst(20)}}
       else if(r==='hit'){SFX.thud();if(p.heat)F.shake=Math.max(F.shake,7)}}
+    else if(r&&p.kind==='food'){p.life=0;if(r==='hit'){SFX.thud();if(p.item==='drink'){o.sticky=Math.max(o.sticky||0,90);addText('STICKY!',o.x,GY-o.H-14,'#ffe84a')}
+      for(let i=0;i<8;i++)F.parts.push({x:p.x,y:GY-p.y,vx:rnd(-2,2),vy:rnd(-3,-1),l:rnd(12,22)|0,c:p.item==='drink'?(i%2?'#ffe84a':'#fff6b0'):p.item==='fries'?(i%2?'#ffd23a':'#e8a020'):(i%2?'#f0d8a0':'#c87a30'),g:.15})}}
     else if(r&&p.kind==='coins'){p.life=0;sparks(p.x,GY-p.y,'#ffd23a',12);SFX.coin();if(r==='hit'){o.bribeT=frameNo;addText('EVERY MAN HAS A PRICE!',o.x,GY-o.H-16,'#ffd23a')}}
     else if(r&&p.kind==='note'){p.life=0;sparks(p.x,GY-p.y,'#ffd23a',12);if(r==='hit')SFX.thud()}
     else if(r){p.life=0;if(r==='hit'&&p.kind){SFX.thud();for(let i=0;i<6;i++)F.parts.push({x:p.x,y:GY-p.y,vx:rnd(-2,2),vy:rnd(-3,-1),l:rnd(12,20)|0,c:i%2?'#ffffff':'#e02a2a',g:.15})}}}
@@ -1737,7 +1750,7 @@ const Fight={enter(cfg){this.cfg=cfg;this.wins=[0,0];this.round=1;this.draws=0;t
     const order=(this.p2.state==='attack'||this.p2.state==='special'||this.p2.state==='slamming')?[this.p1,this.p2]:[this.p2,this.p1];
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='super'&&f.c.id==='estrella')drawFinaleBack(f);
     order.forEach(drawFighter);
-    for(const p of this.proj)(p.kind==='tray'||p.kind==='sandwich'||p.kind==='snack')?drawFood(p):p.kind==='tripod'?drawTripod(p):p.kind==='coins'?drawCoins(p):p.kind==='pitch'?drawPitch(p):p.kind==='drone'?drawDrone(p):p.kind==='bolt'?drawBolt(p):p.kind==='note'?drawNote(p):p.kind==='zone'?drawZone(p):p.kind==='prong'?drawProng(p):p.kind==='wave'?drawWave(p):p.kind==='quake'?drawQuake(p):p.kind==='bball'?drawBBall(p):p.kind?drawBall(p):drawStar(p);
+    for(const p of this.proj)(p.kind==='tray'||p.kind==='food'||p.kind==='snack')?drawFood(p):p.kind==='tripod'?drawTripod(p):p.kind==='coins'?drawCoins(p):p.kind==='pitch'?drawPitch(p):p.kind==='drone'?drawDrone(p):p.kind==='bolt'?drawBolt(p):p.kind==='note'?drawNote(p):p.kind==='zone'?drawZone(p):p.kind==='prong'?drawProng(p):p.kind==='wave'?drawWave(p):p.kind==='quake'?drawQuake(p):p.kind==='bball'?drawBBall(p):p.kind?drawBall(p):drawStar(p);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='bassdrop'&&f.st>=10&&f.st<24)drawRing(f.x,f.st-10,f.c.col.aura,14);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='tome'&&f.st>=14&&f.st<28)drawRing(f.x+f.face*44,f.st-14,'#ffd23a',13);
     for(const f of[this.p1,this.p2])if(f.state==='special'&&f.sp&&f.sp.kind==='super')drawSuperFx(f);
@@ -2061,10 +2074,13 @@ function drawDrone(p){const X=Math.round(p.x),Y=Math.round(GY-p.y),b=(frameNo>>1
 function drawBolt(p){const x=p.x,y=GY-p.y,l=Math.hypot(p.vx,p.vy)||1,ux=p.vx/l,uy=-p.vy/l;ctx.lineCap='round';
   ctx.strokeStyle='rgba(255,60,40,.35)';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x-ux*12,y-uy*12);ctx.lineTo(x,y);ctx.stroke();
   ctx.strokeStyle='#ff4a2a';ctx.lineWidth=2;ctx.stroke();ctx.strokeStyle='#fff0c0';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x-ux*6,y-uy*6);ctx.lineTo(x,y);ctx.stroke()}
-function drawFood(p){const im=IMG[p.kind==='tray'?'prop_tray':'prop_sandwich'];const x=Math.round(p.x),y=Math.round(GY-p.y);
-  if(!im){ctx.fillStyle=p.kind==='tray'?'#8a5a2a':'#f0e0b0';ctx.fillRect(x-6,y-3,12,6);return}
-  const sz=p.kind==='tray'?22:p.kind==='snack'?14:16;ctx.save();ctx.translate(x,p.kind==='snack'?y-sz/2+Math.round(Math.sin(frameNo*.15)):y);
-  if(p.kind==='tray')ctx.scale(1,.55);if(p.kind!=='snack')ctx.rotate(p.kind==='tray'?p.rot:p.rot*.5);ctx.drawImage(im,-sz/2,-sz/2,sz,sz);ctx.restore()}
+// Mike's props: the tray (flat, wobbling, with a motion trail), the Combo Meal items (tumbling) and a dropped snack
+function drawFood(p){const it=p.kind==='tray'?'tray':p.item||'sandwich',im=IMG['prop_'+it];const x=Math.round(p.x),y=Math.round(GY-p.y);
+  if(!im){ctx.fillStyle=it==='tray'?'#8a5a2a':'#f0e0b0';ctx.fillRect(x-6,y-3,12,6);return}
+  const W0=p.kind==='tray'?32:p.kind==='snack'?14:(p.big?26:20),H0=W0*im.height/im.width,d=Math.sign(p.vx)||1;
+  const one=(dx,al)=>{ctx.save();ctx.globalAlpha=al;ctx.translate(x+dx,p.kind==='snack'?y-H0/2+Math.round(Math.sin(frameNo*.15)):y);
+    if(p.kind==='tray')ctx.rotate(Math.sin(frameNo*.5)*.12-d*.08);else if(p.kind!=='snack')ctx.rotate(p.rot*.5);ctx.drawImage(im,-W0/2,-H0/2,W0,H0);ctx.restore()};
+  if(p.kind==='tray'){one(-d*14,.25);one(-d*7,.45)}one(0,1)}
 function drawPitch(p){const x=Math.round(p.x),y=Math.round(GY-p.y),d=Math.sign(p.vx);
   if(p.heat){for(let i=0;i<6;i++){ctx.fillStyle=i<2?'rgba(255,240,160,.9)':i<4?'rgba(255,150,40,.7)':'rgba(255,60,20,.45)';ctx.beginPath();ctx.arc(x-d*i*4,y+Math.sin(frameNo*.9+i)*1.2,Math.max(1,5-i*.6),0,Math.PI*2);ctx.fill()}}
   else{ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillRect(Math.min(x,x-d*22),y-2,22,1);ctx.fillRect(Math.min(x,x-d*30),y,30,1);ctx.fillRect(Math.min(x,x-d*16),y+2,16,1)}
@@ -2840,11 +2856,11 @@ const Brawl={
       if(P.meter>=100&&fwd)return this.superMove();if(P.state==='jump'||P.state==='prejump')return;
       const slot=i.d?1:back?2:0,id=(RUN.abil||[])[slot];if(!id){if(!(this.noAbT>0)){this.noAbT=60;this.addT(RUN.abil&&RUN.abil.length?'NOTHING ON '+ABIL_IN[slot]+' YET':'BEAT A BOSS TO LEARN A MOVE',P.x,P.z,'#9a98b0')}return}
       return this.useAbil(P,slot)}
-    if(P.state==='attack'){// JUMP + A together: back attack (an elbow behind you that knocks down)
+    if(P.state==='attack'){if(i.a)P.bA=frameNo;if(i.b)P.bB=frameNo;if(i.j)P.bJ=frameNo;const qa=frameNo-(P.bA??-99)<=8,qb=frameNo-(P.bB??-99)<=8,qj=frameNo-(P.bJ??-99)<=8,eat=()=>{P.bA=P.bB=P.bJ=-99};// JUMP + A together: back attack (an elbow behind you that knocks down)
       if(i.j&&P.atk.name==='jab'&&P.st<=4&&!P.hitDone&&!(P.chainN>0)){this.backAtk();return}
-      if(P.hitDone&&P.st>=P.atk.s&&!P.atk.fin){// A, A, A or finish early with B: the finisher knocks down; A, A, JUMP launches
-        if(i.j&&P.chainN===1){this.atk(P,'kick',true);P.atk={...P.atk,launch:true,dmg:6};comboAnim(P,'kick3');SFX.whooshH();return}
-        if(i.b){this.atk(P,'kick',true);comboAnim(P,'kick2');return}if(i.a&&(P.chainN||0)<2){P.chainN=(P.chainN||0)+1;this.atk(P,P.chainN===2?'kick':'jab',P.chainN===2);comboAnim(P,P.chainN===2?'punch3':'punch2')}}return}
+      if(P.hitDone&&P.st>=P.atk.s+P.atk.a&&!P.atk.fin){// A, A, A or finish early with B: the finisher knocks down; A, A, JUMP launches
+        if(qj&&P.chainN===1){eat();this.atk(P,'kick',true);P.atk={...P.atk,launch:true,dmg:6};comboAnim(P,'kick3');SFX.whooshH();return}
+        if(qb){eat();this.atk(P,'kick',true);comboAnim(P,'kick2');return}if(qa&&(P.chainN||0)<2){eat();P.chainN=(P.chainN||0)+1;this.atk(P,P.chainN===2?'kick':'jab',P.chainN===2);comboAnim(P,P.chainN===2?'punch3':'punch2')}}return}
     if(P.state==='jump'){if((i.a||i.b)&&!P.atk){startAtk(P,'jkick');P.hitIds={}}return}
     if(P.state==='prejump'&&i.a){this.backAtk();return}
     // GUARD: hold JUMP. Blocks hits from the front (grabs and the stage itself get through); too many in a row breaks it

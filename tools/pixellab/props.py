@@ -14,6 +14,7 @@ PROPS = {
     "tray":    (32, 32, "a round brown plastic fast food serving tray seen at a slight angle, a flat disc with a raised rim, plain, no logo"),
     "sandwich": (32, 32, "a fast food chicken sandwich wrapped in white paper, a golden fried chicken fillet and a toasted bun peeking out of the paper wrapper, no logo"),
     "lemonade": (32, 32, "a large white paper fast food cup full of yellow lemonade with a lid and a red and white striped straw, a lemon slice on the side, no logo"),
+    "fries":   (32, 32, "a red paper carton of golden crinkle-cut french fries, overflowing, plain, no logo"),
     "cash":    (32, 32, "a thick stack of green dollar bills held with a paper band"),
 }
 names = sys.argv[1:] or list(PROPS)

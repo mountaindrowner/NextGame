@@ -21,7 +21,8 @@ const path = require('path');
     check('HEALTH DIFFERS', new Set(Object.values(hp)).size >= 5, JSON.stringify(hp));
     { // RUSHDOWN: 4 chained jabs/kicks
       const { F, step } = setup('karl', 'padre', 100, 140); let n = 0;
-      for (const b of ['a', 'a', 'a', 'b']) { step(1, { [b]: 1 }); for (let w = 0; w < 30 && !(F.p1.hitDone && F.hitstop === 0); w++) step(1); }
+      // each press waits for the hit before it to come out and connect (chains open once a hit's active frames are over)
+      for (const b of ['a', 'a', 'a', 'b']) { const id0 = F.p1.atk ? F.p1.atk.id : null; step(1, { [b]: 1 }); for (let w = 0; w < 30 && !(F.p1.atk && F.p1.atk.id !== id0 && F.p1.hitDone && F.hitstop === 0); w++) step(1); }
       step(40); check('RUSHDOWN  4-hit chain', F.tBest >= 4, `best ${F.tBest}`); }
     { // GRAPPLER: kick start-up absorbs a jab
       const { F, step } = setup('ivan', 'karl', 100, 136); d.startAtk(F.p1, 'kick'); F.p1.state = 'attack'; F.p1.st = 1; d.startAtk(F.p2, 'jab'); F.p2.st = 3; step(30);

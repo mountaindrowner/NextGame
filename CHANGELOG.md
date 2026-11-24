@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.64.0
+
+- **Combo strings work the way Street Fighter's do, for every fighter:**
+  - **The next hit of a chain starts only once the last hit's active frames are over.** Before, it could start on the very frame the hit landed. Chained hits now land about 14 frames apart (Street Fighter: 11–14), instead of 8.
+  - **The finisher ends the string.** That's the third hit, the uppercut or rising kick (Papa-Léguas's 4-hit chain ends on its fourth). It hits harder, shoves the opponent away (push 4.6 instead of 1.6), and nothing chains out of it. It can still be cancelled into a special or super.
+  - **No repeated finisher.** The next press starts a fresh string with a jab. Mashing used to play the finisher over and over.
+  - **A chained hit uses the direction held when you pressed the button,** not when it comes out. Pressing B and then holding DOWN for your next move no longer turns the kick into a sweep.
+  - **Story mode strings follow the same timing.** Presses made while an attack plays are kept for 8 frames, so A, A, A or A, A, JUMP pressed early still comes out.
+- **Mike-Fila:**
+  - **Order Up!:** the tray is bigger, flies flat, and leaves a motion trail, so you can see it.
+  - **Combo Meal:** throws a random, bigger item:
+    - a sandwich (9 damage; it lands as a snack if it misses)
+    - fries (9)
+    - a lemonade (7, and the opponent is sticky for 1.5 s)
+    - one time in ten, a **Family Deal**: the whole order at once, four items spread across the screen.
+  - **Health 108, power ×1.08.**
+- **Balance after the combo change:** Vex's health 114 → 110, and Reyes's Frontier Knuckle damage 10 → 9. Every fighter now wins 42–57% (a 15-point spread).
+- **New test, `tools/strings.js`:** checks the finisher, the fresh string after it, and the chain gap. `tools/mike.js` now checks the Combo Meal items and the Family Deal.
+
 ## 1.63.0
 
 - **New fighter: Mike-Fila, "Order Up"** (Fast Food Fu, the Cluck Stop). A counter worker who fights with whatever's behind the counter. Made from the owner's art with PixelLab, brand-free.

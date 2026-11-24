@@ -24,10 +24,17 @@ const path = require('path');
       for (let i = 0; i < 90; i++) { if (F.p2.state === 'crouch' || F.p2.state === 'idle') { F.p2.crouch = true; F.p2.state = 'crouch' } step(1) }
       C('COMBO MEAL (overhead lob)', F.p2.hp < h0, `crouch-blocking: damage ${(h0 - F.p2.hp).toFixed(1)}`) }
     // a sandwich that misses lands as a snack; Mike walks over it and heals
-    { const { F, step } = setup('mike', 'karl', 60, 230); F.p1.hp = 50; d.startSpecial(F.p1, F.p2, 2); F.p2.x = 250; F.p2.inv = 400;// it misses
+    { const { F, step } = setup('mike', 'karl', 60, 230); F.p1.hp = 50; F.p1.forceItem = 'sandwich'; d.startSpecial(F.p1, F.p2, 2); F.p2.x = 250; F.p2.inv = 400;// it misses
       let snack = null; for (let i = 0; i < 170; i++) { step(1); snack = snack || F.proj.find(q => q.kind === 'snack') }
       let healed = false; if (snack) { F.p2.x = 30; F.p1.x = snack.x - 20; for (let i = 0; i < 30; i++) { F.p1.x += 1; step(1); if (F.p1.hp > 50) healed = true } }
       C('SNACK BREAK (dropped sandwich heals)', !!snack && healed, `snack ${!!snack}, hp 50 -> ${F.p1.hp.toFixed(1)}`) }
+    // Combo Meal items: lemonade makes them sticky; a Family Deal throws the whole order
+    { const { F, step } = setup('mike', 'karl', 80, 170); F.p1.forceItem = 'drink'; d.startSpecial(F.p1, F.p2, 2); let it = null;
+      for (let i = 0; i < 110; i++) { step(1); const q = F.proj.find(q => q.kind === 'food'); if (q) it = q.item }
+      C('COMBO MEAL: LEMONADE (sticky)', it === 'drink' && F.p2.sticky > 0, `item ${it}, sticky ${F.p2.sticky}`) }
+    { const { F, step } = setup('mike', 'karl', 80, 200); F.p1.forceItem = 'family'; d.startSpecial(F.p1, F.p2, 2); let n = 0;
+      for (let i = 0; i < 30; i++) { step(1); n = Math.max(n, F.proj.filter(q => q.kind === 'food').length) }
+      C('COMBO MEAL: FAMILY DEAL (whole order)', n === 4, `${n} items in the air`) }
     // Lemonade Splash: short range, makes them sticky (slow)
     { const { F, step } = setup('mike', 'karl', 100, 140); const h0 = F.p2.hp; d.startSpecial(F.p1, F.p2, 4); step(30);
       C('LEMONADE SPLASH (sticky)', F.p2.hp < h0 && F.p2.sticky > 0, `damage ${(h0 - F.p2.hp).toFixed(1)}, sticky ${F.p2.sticky}`) }
